@@ -1811,6 +1811,100 @@
                     ]
                 },
                 {
+                    "title": "HA System Monitor",
+                    "path": "ha-system-monitor",
+                    "icon": "mdi:home-analytics",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "cards": [
+                                {
+                                    "type": "gauge",
+                                    "entity": "sensor.disk_use_percent",
+                                    "min": 0,
+                                    "max": 100,
+                                    "severity": {
+                                        "green": 0,
+                                        "yellow": 85,
+                                        "red": 95
+                                    }
+                                },
+                                {
+                                    "type": "gauge",
+                                    "entity": "sensor.memory_use_percent",
+                                    "min": 0,
+                                    "max": 100,
+                                    "severity": {
+                                        "green": 0,
+                                        "yellow": 80,
+                                        "red": 90
+                                    }
+                                },
+                                {
+                                    "type": "gauge",
+                                    "entity": "sensor.processor_use_percent",
+                                    "min": 0,
+                                    "max": 100,
+                                    "severity": {
+                                        "green": 0,
+                                        "yellow": 80,
+                                        "red": 90
+                                    }
+                                },
+                                {
+                                    "type": "gauge",
+                                    "entity": "sensor.processor_temperature",
+                                    "min": 80,
+                                    "max": 180,
+                                    "severity": {
+                                        "green": 0,
+                                        "yellow": 131,
+                                        "red": 158
+                                    }
+                                }
+                            ],
+                            "square": false,
+                            "columns": 2
+                        },
+                        {
+                            "type": "grid",
+                            "cards": [
+                                {
+                                    "type": "sensor",
+                                    "entity": "sensor.network_throughput_in_enp0s3",
+                                    "graph": "line",
+                                    "name": "Throughput in",
+                                    "hours_to_show": 48
+                                },
+                                {
+                                    "type": "sensor",
+                                    "entity": "sensor.network_throughput_out_enp0s3",
+                                    "graph": "line",
+                                    "name": "Throughput out",
+                                    "hours_to_show": 48
+                                },
+                                {
+                                    "type": "sensor",
+                                    "entity": "sensor.network_in_enp0s3",
+                                    "graph": "line",
+                                    "name": "Network in",
+                                    "hours_to_show": 48
+                                },
+                                {
+                                    "type": "sensor",
+                                    "entity": "sensor.network_out_enp0s3",
+                                    "graph": "line",
+                                    "name": "Network out",
+                                    "hours_to_show": 48
+                                }
+                            ],
+                            "columns": 2,
+                            "square": false
+                        }
+                    ]
+                },
+                {
                     "title": "Automations",
                     "path": "automations",
                     "icon": "mdi:tools",

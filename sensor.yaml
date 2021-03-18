@@ -1,22 +1,18 @@
-#- platform: systemmonitor
-#  resources:
-#    - type: disk_use_percent
-#      arg: /ssl/fullchain.pem
-#    - type: disk_use_percent
-#      arg: /etc/localtime
-#    - type: disk_use_percent
-#      arg: /config
-#    - type: throughput_network_in
-#      arg: eno1
-#    - type: throughput_network_out
-#      arg: eno1
-#    - type: network_in
-#      arg: eno1
-#    - type: network_out
-#      arg: eno1
-#    - type: memory_use_percent
-#    - type: processor_use
-#    - type: processor_temperature
+- platform: systemmonitor
+  resources:
+    - type: disk_use_percent
+      arg: /
+    - type: throughput_network_in
+      arg: enp0s3
+    - type: throughput_network_out
+      arg: enp0s3
+    - type: network_in
+      arg: enp0s3
+    - type: network_out
+      arg: enp0s3
+    - type: memory_use_percent
+    - type: processor_use
+    - type: processor_temperature
 
 - name: "Shed Door Battery"
   platform: mqtt

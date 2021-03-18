@@ -40,7 +40,7 @@ announcement_nightly_security:
       - service: script.function_speakers_prep
         data:
           speaker: security_speakers
-      - service: tts.google_translate_say
+      - service: tts.cloud_say
         entity_id: media_player.all_speakers
         data:
           message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door\
@@ -259,9 +259,9 @@ testing_speaker_announcement_2:
   - service: script.function_speakers_prep
     data:
       speaker: security_speakers
-  - service: tts.google_translate_say
-    entity_id: media_player.security_speakers
+  - service: tts.cloud_say
     data:
+      entity_id: media_player.security_speakers
       message: Alert! The Security System has been triggered. The Home Owners and
         the police have been notified. Exit the premises immediately.
   - service: script.function_speakers_restore
@@ -271,13 +271,13 @@ testing_speaker_announcement_2:
 testing_speaker_annoucement_3:
   alias: Testing - Speaker Announcement 3
   sequence:
-  - service: tts.google_translate_say
-    entity_id: media_player.all_speakers
+  - service: tts.cloud_say
     data:
       message: 'Alert! The Security System has been triggered. The Home Owners and
         the police have been notified. Exit the premises immediately.
 
         '
+      entity_id: media_player.all_speakers
   mode: single
 testing_write_warning_to_log:
   alias: Testing - Write Warning to Log
@@ -314,10 +314,10 @@ testing_speaker_announcement:
           entity_id: person.michael_erdely
           state: home
       sequence:
-      - service: tts.google_translate_say
-        entity_id: media_player.all_speakers
+      - service: tts.cloud_say
         data:
           message: somebody is home
+          entity_id: media_player.all_speakers
     default: []
   mode: single
 testing_email_mike:
