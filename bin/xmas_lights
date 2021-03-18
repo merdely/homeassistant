@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+from datetime import date
+import calendar
+
+mo = date.today().month
+day = date.today().month
+
+tgiving = calendar.Calendar(3).monthdatescalendar(date.today().year, 11)[4][0].day
+second_monday_jan = calendar.Calendar(0).monthdatescalendar(date.today().year, 1)[2][0].day
+
+ret = 'off'
+#ret_code = 1
+ret_code = 0
+
+# If it's after Thanksgiving and before the second Monday in Jan, Christmas tree!
+if (mo == 11 and day >= tgiving) or mo == 12 or (mo == 1 and day <= second_monday_jan):
+  ret = 'on'
+  ret_code = 0
+
+print(ret)
+quit(ret_code)

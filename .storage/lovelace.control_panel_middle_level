@@ -1,0 +1,346 @@
+{
+    "version": 1,
+    "key": "lovelace.control_panel_middle_level",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "panel": true,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 2,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.time_formatted"
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Control Panel"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.middle_level",
+                                                                "show_icon": false
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.living_room",
+                                                                "show_icon": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 3,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.living_room_light",
+                                                                "name": "Near Black"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.far_living_room_lamp",
+                                                                "name": "Far Black"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.small_living_room_lamp",
+                                                                "name": "Small White"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 4,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.living_room_tv",
+                                                                "name": "TV"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_living_room_input_tivo",
+                                                                "name": "Tivo"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_living_room_input_roku",
+                                                                "icon": "mdi:cast",
+                                                                "name": "Roku"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_living_room_mute",
+                                                                "name": "Mute"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_select.select_option",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_select.living_room_channel",
+                                                                        "option": "The Tennis Channel"
+                                                                    }
+                                                                },
+                                                                "icon": "mdi:tennis",
+                                                                "show_name": false,
+                                                                "name": "Tennis Channel"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_select.select_option",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_select.living_room_channel",
+                                                                        "option": "TBS"
+                                                                    }
+                                                                },
+                                                                "name": "TBS"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_select.select_option",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_select.living_room_plex_show",
+                                                                        "option": "The Big Bang Theory"
+                                                                    }
+                                                                },
+                                                                "name": "BBT",
+                                                                "show_name": false,
+                                                                "icon": "mdi:atom"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_select.select_option",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_select.living_room_plex_show",
+                                                                        "option": "Friends"
+                                                                    }
+                                                                },
+                                                                "name": "Friends",
+                                                                "show_name": false,
+                                                                "icon": "mdi:account-group"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "picture",
+                                            "image": "/local/images/homeassistant-banner-back.png",
+                                            "tap_action": {
+                                                "action": "navigate",
+                                                "navigation_path": "/control-panel/home"
+                                            },
+                                            "hold_action": {
+                                                "action": "none"
+                                            }
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.kitchen",
+                                                                "show_icon": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 2,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.kitchen_table_light",
+                                                                "name": "Table Light",
+                                                                "icon_height": "50px"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.kitchen_light",
+                                                                "name": "Overhead Light",
+                                                                "icon_height": "50px"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 2,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "light.dining_room_light",
+                                                                "name": "Dining Room",
+                                                                "icon_height": "50px"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.dining_room_christmas_lights",
+                                                                "name": "DR Christmas",
+                                                                "icon_height": "50px"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.foyer_light",
+                                                                "name": "Foyer",
+                                                                "icon_height": "50px"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

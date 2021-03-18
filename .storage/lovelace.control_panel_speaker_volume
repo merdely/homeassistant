@@ -1,0 +1,98 @@
+{
+    "version": 1,
+    "key": "lovelace.control_panel_speaker_volume",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "panel": true,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 2,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.time_formatted"
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Control Panel"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "entities",
+                                            "entities": [
+                                                {
+                                                    "entity": "media_player.bedroom_display"
+                                                },
+                                                {
+                                                    "entity": "media_player.mikes_desk_speaker"
+                                                },
+                                                {
+                                                    "entity": "media_player.office_speaker"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "picture",
+                                            "image": "/local/images/homeassistant-banner-back.png",
+                                            "tap_action": {
+                                                "action": "navigate",
+                                                "navigation_path": "/control-panel/home"
+                                            },
+                                            "hold_action": {
+                                                "action": "none"
+                                            }
+                                        },
+                                        {
+                                            "type": "entities",
+                                            "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: 0px 0px;\n}\n",
+                                            "entities": [
+                                                {
+                                                    "entity": "media_player.kitchen_speaker"
+                                                },
+                                                {
+                                                    "entity": "media_player.living_room_speaker"
+                                                },
+                                                {
+                                                    "entity": "media_player.god_damn_speaker"
+                                                },
+                                                {
+                                                    "entity": "media_player.garage_speaker"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

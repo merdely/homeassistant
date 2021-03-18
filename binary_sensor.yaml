@@ -1,0 +1,125 @@
+- name: Chimney Gate
+  platform: mqtt
+  state_topic: stat/chimney_gate/RESULT
+  value_template: '{{value_json.POWER}}'
+  payload_off: 'OFF'
+  payload_on: 'ON'
+  device_class: opening
+  unique_id: chimney_gate
+  device:
+    identifiers:
+      - 'chimney_gate'
+    name: chimney_gate
+    manufacturer: Tasmota
+
+- platform: ping
+  name: Google
+  host: 8.8.8.8
+  scan_interval: 15
+  count: 4
+
+- platform: ping
+  name: Outside Christmas Lights
+  host: 192.168.25.225
+  scan_interval: 15
+  count: 4
+
+- platform: ping
+  name: Mike Bench Switch
+  host: 192.168.25.198
+  scan_interval: 15
+  count: 4
+
+- platform: ping
+  name: Mike's Pixel 4a
+  host: 192.168.25.174
+  scan_interval: 15
+  count: 4
+  
+- platform: ping
+  name: Holly's Pixel 3
+  host: 192.168.25.205
+  scan_interval: 15
+  count: 4
+  
+- platform: rest
+  name: Home Assistant Configuration Check
+  resource: "https://ha.erdely.in:38123/api/config/core/check_config"
+  method: POST
+  headers:
+    Authorization: !secret mike_long_lived_check_command
+    Content-Type: application/json
+  device_class: problem
+  value_template: >-
+    {% if value_json.result == 'valid' %}
+      Off
+    {% else %}
+      On
+    {% endif %}
+
+- platform: template
+  sensors:
+    garage_door:
+      friendly_name: Garage Door
+      device_class: opening
+      value_template: "{{ states('cover.garage_door') }}"
+    security_devices:
+      friendly_name: Security Devices
+      device_class: opening
+      value_template: "{{ states('group.security_devices') }}"
+    doors_windows:
+      friendly_name: Interior Security Devices
+      device_class: opening
+      value_template: "{{ states('group.doors_windows') }}"
+    exterior_security_devices:
+      friendly_name: Exterior Security Devices
+      device_class: opening
+      value_template: "{{ states('group.exterior_security_devices') }}"
+    oven_is_on:
+      friendly_name: Oven is On
+      value_template: "{{ states('sensor.oven_monitor_analog_ctenergy_power') | int > 200 }}"
+      delay_off:
+        minutes: 3
+
+    washer_running:
+      friendly_name: Laundry Room Washer
+      value_template: "{{ states('input_boolean.laundry_room_washer_running') }}"
+    dryer_running:
+      friendly_name: Laundry Room Dryer
+      value_template: "{{ states('input_boolean.laundry_room_dryer_running') }}"
+    show_ac_controls:
+      friendly_name: "Show AC Controls"
+      value_template: >-
+        {% if state_attr('weather.home', 'temperature') | int > 64 %}
+          On
+        {% else %}
+          Off
+        {% endif %}
+    software_update_available:
+      friendly_name: "Software Update Available"
+      value_template: >-
+        {% set ns = namespace(sensor = 'Off') -%}
+        {% for software in states("input_text.software_list").replace(' ', '').split(',') -%}
+          {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+            {% set ns.sensor = 'On' -%}
+          {% endif -%}
+        {% endfor -%}
+        {% if is_state('binary_sensor.updater', 'on') or states('sensor.hacs') | int > 0 %}
+          {% set ns.sensor = 'On' -%}
+        {% endif -%}
+        {{ ns.sensor }}
+
+- name: Christmas Lights Should Be On
+  platform: command_line
+  command: '/config/bin/xmas_lights'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: New TV Show List Ready
+  platform: command_line
+  command: 'test -f /config/.newtvshowfile && echo on || echo off'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- platform: workday
+  country: US

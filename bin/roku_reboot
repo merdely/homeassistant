@@ -1,0 +1,35 @@
+#!/bin/sh
+
+[ -z "$1" ] && echo "usage: $(basename $0) roku" && exit 1
+
+rokuname=$1
+echo $rokuname | grep -qv "^roku-" && rokuname="roku-$rokuname"
+echo $rokuname | grep -qv "\.erdely\.in$" && rokuname="$rokuname.erdely.in"
+
+# echo rebooting $rokuname
+rokuip=$(host $rokuname | cut -d' ' -f4)
+curl -d "" "http://$rokuip:8060/keypress/home"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/home"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/home"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/up"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/right"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/up"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/right"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/up"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/up"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/up"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/up"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/right"
+sleep .5
+curl -d "" "http://$rokuip:8060/keypress/select"

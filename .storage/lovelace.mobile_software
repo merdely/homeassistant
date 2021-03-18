@@ -1,0 +1,86 @@
+{
+    "version": 1,
+    "key": "lovelace.mobile_software",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": false,
+                                                        "name": "Software"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "markdown",
+                                                        "content": "<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in states(\"input_text.software_list\").replace(' ', '').split(',')  -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} </table>\n"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "picture",
+                                    "image": "/local/images/homeassistant-banner-back.png",
+                                    "tap_action": {
+                                        "action": "navigate",
+                                        "navigation_path": "/mobile-dashboard/mobile"
+                                    },
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

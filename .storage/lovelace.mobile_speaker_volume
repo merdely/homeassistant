@@ -1,0 +1,93 @@
+{
+    "version": 1,
+    "key": "lovelace.mobile_speaker_volume",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "panel": false,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": false,
+                                                        "name": "Speaker Volume"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "custom:auto-entities",
+                                                "card": {
+                                                    "type": "entities"
+                                                },
+                                                "filter": {
+                                                    "include": [
+                                                        {
+                                                            "domain": "media_player",
+                                                            "entity_id": "/.*(display|speaker).*/"
+                                                        }
+                                                    ]
+                                                },
+                                                "sort": {
+                                                    "method": "name"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "picture",
+                                    "image": "/local/images/homeassistant-banner-back.png",
+                                    "tap_action": {
+                                        "action": "navigate",
+                                        "navigation_path": "/mobile-dashboard/mobile"
+                                    },
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

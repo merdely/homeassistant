@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+""" Determine next episode for a show """
+
+# Output:
+# {"media_content_id":"{ \"library_name\": \"TV Shows\", \"show_name\": \"{{{show_name}}}\", \"season_number\": \"{{{season}}}\", \"episode_number\": \"{{{episode}}}\", \"shuffle\": 0 }","media_content_type":"episode"}
+
+import configparser
+import os
+import re
+import requests
+import sys
+import xml.etree.ElementTree as ET
+
+venv = '/srv/venv/plexapi'
+if os.path.isdir(venv):
+    for subdir in os.listdir(venv + '/lib'):
+        sys.path.append(venv + '/lib/' + subdir + '/site-packages')
+
+from plexapi.server import PlexServer
+from plexapi.gdm import GDM
+
+def main():
+    """ main function """
+
+    usage = 'Usage: ' + sys.argv[0] + ' [-c rcfile ] show_title'
+
+    if len(sys.argv) < 2 or (len(sys.argv) == 2 and sys.argv[1] == '-h') or len(sys.argv) != 2 and (len(sys.argv) != 4 and sys.argv[1] != '-c'):
+        print(usage)
+        sys.exit()
+    else:
+        if len(sys.argv) == 2:
+            show = sys.argv[1]
+        else:
+            show = sys.argv[3]
+
+    if show == "Select Show":
+        sys.exit(0)
+
+    if sys.argv[1] == '-c':
+        rcfile = sys.argv[2]
+    else:
+        rcfile = '~/.plexapi_rc'
+    conf_file = configparser.ConfigParser()
+    try:
+        conf_file.read_file(open(os.path.expanduser(rcfile)))
+    except FileNotFoundError as err:
+        print(err)
+        sys.exit()
+    except configparser.MissingSectionHeaderError as err:
+        print('Not a valid config file.')
+        print('Example:')
+        print('    [plexapi]')
+        print('    url: http://localhost:32400')
+        print('    token: MYTOKEN')
+        sys.exit()
+
+    plex_url = 'http://plex:32400'
+    try:
+        plex_url = conf_file.get('plexapi', 'url')
+        plex_token = conf_file.get('plexapi', 'token')
+    except configparser.NoSectionError as err:
+        print(err)
+        sys.exit()
+    except configparser.NoOptionError as err:
+        print(err)
+        sys.exit()
+
+    failure = 0
+    try:
+        plex = PlexServer(plex_url, plex_token)
+        tv_library = plex.library.section('TV Shows')
+        shows = tv_library.all()
+    except:
+        failure = 1
+
+    presence = "0"
+    count = 0
+
+    while presence == "0" and count < 500:
+        count += 1
+        resources_xml = requests.get('https://plex.tv/pms/resources.xml?X-Plex_Token=' + plex_token)
+        root = ET.fromstring(resources_xml.content)
+        elem = root.findall('.//Device/[@name="Office Roku"]')
+        try:
+            presence = elem[0].get('presence')
+        except:
+            presence = "-1"
+
+    if presence != "1":
+        print(presence)
+        sys.exit()
+
+    client = plex.client("Office Roku")
+    movie = plex.library.section("Movies").get('Die Hard')
+    print(client)
+    print(movie)
+    client.playMedia(movie)
+
+    # print(plex.systemAccounts())
+    # print(plex.sessions())
+
+    # print(plex.clients())
+
+    # gdm=GDM()
+    # print(gdm.scan(scan_for_clients=True))
+
+    #for client in plex.clients():
+    #    print(client.title)
+
+if __name__ == '__main__':
+    main()

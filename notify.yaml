@@ -1,0 +1,43 @@
+- name: syslog
+  platform: syslog
+
+- name: hangouts_security_alert
+  platform: hangouts
+  default_conversations:
+    - id: !secret hangouts_security_conversation
+
+- name: hangouts_mike
+  platform: hangouts
+  default_conversations:
+    - id: !secret hangouts_mike_conversation
+
+- name: gmail_to_mike
+  platform: smtp
+  server: smtp.gmail.com
+  port: 587
+  timeout: 15
+  sender: !secret gmail_username
+  encryption: starttls
+  username: !secret gmail_username
+  password: !secret gmail_password
+  recipient:
+    - !secret mike_email
+  sender_name: Home Assistant
+
+- name: gmail_to_mike_and_holly
+  platform: smtp
+  server: smtp.gmail.com
+  port: 587
+  timeout: 15
+  sender: !secret gmail_username
+  encryption: starttls
+  username: !secret gmail_username
+  password: !secret gmail_password
+  recipient:
+    - !secret mike_email
+    - !secret holly_email
+  sender_name: Home Assistant
+
+- name: Alarm State File
+  platform: file
+  filename: /config/www/alarm.state

@@ -1,0 +1,22 @@
+host: influxdb.erdely.in
+port: 8086
+ssl: true
+verify_ssl: true
+database: homeassistant
+username: homeassistant
+password: !secret influxdb_password
+tags_attributes:
+  - friendly_name
+exclude:
+  domains:
+    - camera
+    - zone
+  entity_globs:
+    - sensor.holly_desk_plug_energy_*
+    - sensor.date*
+    - sensor.time*
+  entities:
+    - binary_sensor.google
+    - binary_sensor.remote_ui
+    - sensor.internet_time
+

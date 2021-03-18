@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# There may be a problem when a version is new and 
+
+# Download list of OpenBSD Errata Available
+errata=$(curl -s https://www.openbsd.org/errata.html | awk -F '"' '{u=$2}END{print u}')
+! echo "$errata" | grep -qE "^errata[0-9]+\.html$" && echo "version_download_error"
+
+# Download the name of the latest Errata for the latest version of OpenBSD
+patch=$(curl -s http://www.openbsd.org/$errata | awk -F '"' '$1=="<li id="{u=$2}END{gsub(/^p/,"",u);print u}')
+if [ -z "$patch" ]; then
+  patch=000
+else
+  ! echo "$patch" | grep -qE "^[0-9]+_[a-zA-Z0-9_-]+$" && echo "$(basename $errata .html)_download_error"
+fi
+echo $patch

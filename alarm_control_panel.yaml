@@ -1,0 +1,14 @@
+- platform: manual
+  name: Home Alarm
+  code: !secret alarm_code
+  code_arm_required: false
+  # Time it stays in triggered state
+  trigger_time: 300
+  disarmed:
+    trigger_time: 0
+  armed_home:
+    delay_time: 0
+    arming_time: 0
+  armed_away:
+    delay_time: 50
+    arming_time: 48

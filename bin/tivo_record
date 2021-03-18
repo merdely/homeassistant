@@ -1,0 +1,15 @@
+#!/bin/sh
+
+[ -z "$1" ] && exit 1
+
+tivo=$1
+
+printf "IRCODE RECORD\r" | nc "$tivo" 31339
+sleep 2
+printf "IRCODE SELECT\r" | nc "$tivo" 31339
+sleep 2
+printf "IRCODE SELECT\r" | nc "$tivo" 31339
+sleep 2
+
+[ -d /config/log ] && \
+date +"%b %e %H:%M:%S $(hostname) $(basename $0 .sh)[$$]: Executing on '$tivo'" >> /config/log/$(basename $0 .sh).log

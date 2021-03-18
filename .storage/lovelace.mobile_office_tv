@@ -1,0 +1,306 @@
+{
+    "version": 1,
+    "key": "lovelace.mobile_office_tv",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "name": "Office TV",
+                                                        "show_icon": false
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 4,
+                                                "square": true,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.office_tv",
+                                                        "icon": "mdi:power"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "script.tv_office_input_tivo",
+                                                        "name": "Tivo"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "script.tv_office_input_roku",
+                                                        "name": "Roku"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "none"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "input_select.select_option",
+                                                            "service_data": {
+                                                                "entity_id": "input_select.office_plex_show",
+                                                                "option": "The Big Bang Theory"
+                                                            }
+                                                        },
+                                                        "name": "BBT",
+                                                        "show_name": true,
+                                                        "icon": "mdi:atom"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "input_select.select_option",
+                                                            "service_data": {
+                                                                "entity_id": "input_select.office_plex_show",
+                                                                "option": "Friends"
+                                                            }
+                                                        },
+                                                        "name": "Friends",
+                                                        "show_name": true,
+                                                        "icon": "mdi:account-group"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "input_select.select_option",
+                                                            "service_data": {
+                                                                "entity_id": "input_select.office_plex_show",
+                                                                "option": "Parks and Recreation"
+                                                            }
+                                                        },
+                                                        "name": "Parks&Rec",
+                                                        "show_name": true,
+                                                        "icon": "mdi:tree"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "input_select.select_option",
+                                                            "service_data": {
+                                                                "entity_id": "input_select.office_plex_show",
+                                                                "option": "Community"
+                                                            }
+                                                        },
+                                                        "name": "Community",
+                                                        "show_name": true,
+                                                        "icon": "mdi:school"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "input_select.select_option",
+                                                            "service_data": {
+                                                                "entity_id": "input_select.office_channel",
+                                                                "option": "The Tennis Channel"
+                                                            }
+                                                        },
+                                                        "icon": "mdi:tennis",
+                                                        "show_name": true,
+                                                        "name": "TC"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "input_select.select_option",
+                                                            "service_data": {
+                                                                "entity_id": "input_select.office_channel",
+                                                                "option": "TBS"
+                                                            }
+                                                        },
+                                                        "name": "TBS",
+                                                        "icon": "mdi:alpha-t"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "input_select.select_option",
+                                                            "service_data": {
+                                                                "entity_id": "input_select.office_channel",
+                                                                "option": "Nickelodeon"
+                                                            }
+                                                        },
+                                                        "icon": "mdi:svg",
+                                                        "name": "Nick"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "input_select.select_option",
+                                                            "service_data": {
+                                                                "entity_id": "input_select.office_channel",
+                                                                "option": "NBC"
+                                                            }
+                                                        },
+                                                        "name": "NBC",
+                                                        "icon": "mdi:alpha-n"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "media_player.media_play_pause",
+                                                            "service_data": {
+                                                                "entity_id": "media_player.office_roku"
+                                                            }
+                                                        },
+                                                        "name": "Roku",
+                                                        "icon": "mdi:pause"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "shell_command.tivo_button",
+                                                            "service_data": {
+                                                                "tv_device": "tivo-office",
+                                                                "tivo_button": "CHANNELUP"
+                                                            }
+                                                        },
+                                                        "name": "CH +",
+                                                        "icon": "mdi:plus"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "shell_command.tivo_button",
+                                                            "service_data": {
+                                                                "tv_device": "tivo-office",
+                                                                "tivo_button": "REPLAY"
+                                                            }
+                                                        },
+                                                        "name": "Tivo",
+                                                        "icon": "mdi:replay"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "script.tv_office_volume_up",
+                                                        "name": "Vol +"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "shell_command.tivo_button",
+                                                            "service_data": {
+                                                                "tv_device": "tivo-office",
+                                                                "tivo_button": "PAUSE"
+                                                            }
+                                                        },
+                                                        "name": "Tivo",
+                                                        "icon": "mdi:pause"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "shell_command.tivo_button",
+                                                            "service_data": {
+                                                                "tv_device": "tivo-office",
+                                                                "tivo_button": "CHANNELDOWN"
+                                                            }
+                                                        },
+                                                        "name": "CH -",
+                                                        "icon": "mdi:minus"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "script.tv_office_mute",
+                                                        "name": "Mute"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "script.tv_office_volume_down",
+                                                        "name": "Vol -"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "picture",
+                                    "image": "/local/images/homeassistant-banner-back.png",
+                                    "tap_action": {
+                                        "action": "navigate",
+                                        "navigation_path": "/mobile-tvs/home"
+                                    },
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

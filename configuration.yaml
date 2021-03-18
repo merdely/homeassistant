@@ -1,0 +1,60 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+# Disable default_config so we don't have EVERYTHING pulled in
+
+# default_config:
+alarm_control_panel: !include alarm_control_panel.yaml
+automation: !include automations.yaml
+binary_sensor: !include binary_sensor.yaml
+camera: !include camera.yaml
+# cloud: # don't want
+config:
+counter:
+cover: !include cover.yaml
+# dialogflow:
+fan: !include fan.yaml
+frontend: !include frontend.yaml
+google_assistant: !include google_assistant.yaml
+group: !include groups.yaml
+history: !include history.yaml
+homeassistant: !include homeassistant.yaml
+http: !include http.yaml
+image:
+influxdb: !include influxdb.yaml
+input_boolean:
+input_datetime:
+input_number:
+input_select: !include input_select.yaml
+input_text:
+intent_script: !include intent_script.yaml
+light: !include light.yaml
+logbook: !include logbook.yaml
+# logger: !include logger.yaml
+# map: # don't want
+media_player: !include media_player.yaml
+# media_source: # don't want
+mobile_app:
+my:
+notify: !include notify.yaml
+panel_custom: !include panel_custom.yaml
+panel_iframe: !include panel_iframe.yaml
+person:
+python_script:
+recorder: !include recorder.yaml
+rest_command: !include rest_command.yaml
+scene: !include scenes.yaml
+script: !include_dir_merge_named scripts
+sensor: !include sensor.yaml
+shell_command: !include shell_command.yaml
+spotify: !include spotify.yaml
+ssdp:
+stream:
+sun:
+switch: !include switch.yaml
+system_health:
+tag:
+timer:
+tplink: !include tplink.yaml
+tts: !include tts.yaml
+updater:
+zeroconf:
+zone:

@@ -1,0 +1,437 @@
+{
+    "version": 1,
+    "key": "lovelace.mbr_utilities",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "picture",
+                                            "image": "/local/images/homeassistant-banner-back.png",
+                                            "tap_action": {
+                                                "action": "navigate",
+                                                "navigation_path": "/mbr-panel/home"
+                                            },
+                                            "hold_action": {
+                                                "action": "none"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 4,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "call-service",
+                                                "service": "script.scene_good_night"
+                                            },
+                                            "entity": "script.scene_good_night",
+                                            "name": "Good Night",
+                                            "icon": "mdi:weather-night"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "call-service",
+                                                "service": "script.scene_night_night"
+                                            },
+                                            "entity": "script.scene_night_night",
+                                            "name": "Night Night",
+                                            "icon": "mdi:moon-waning-crescent"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "call-service",
+                                                "service": "script.scene_leaving_home"
+                                            },
+                                            "entity": "script.scene_leaving_home",
+                                            "name": "Leaving",
+                                            "icon": "mdi:exit-run"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "call-service",
+                                                "service": "script.scene_movie_time"
+                                            },
+                                            "entity": "script.scene_movie_time",
+                                            "name": "Movie Time",
+                                            "icon": "mdi:movie"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 4,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle",
+                                                "confirmation": {
+                                                    "text": "Are you sure you want to reset the Front Door Camera?"
+                                                }
+                                            },
+                                            "entity": "script.camera_front_door_cam_reset",
+                                            "name": "Front Door",
+                                            "icon_height": "50px"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle",
+                                                "confirmation": {
+                                                    "text": "Are you sure you want to reset the Garage Camera?"
+                                                }
+                                            },
+                                            "entity": "script.camera_garage_cam_reset",
+                                            "name": "Garage",
+                                            "icon_height": "50px"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle",
+                                                "confirmation": {
+                                                    "text": "Are you sure you want to reset the Chimney Camera?"
+                                                }
+                                            },
+                                            "entity": "script.camera_chimney_cam_reset",
+                                            "name": "Chimney",
+                                            "icon_height": "50px"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle",
+                                                "confirmation": {
+                                                    "text": "Are you sure you want to reset the Shed Camera?"
+                                                }
+                                            },
+                                            "entity": "script.camera_shed_cam_reset",
+                                            "name": "Shed",
+                                            "icon_height": "50px"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 2,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "entities",
+                                            "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
+                                            "entities": [
+                                                {
+                                                    "entity": "person.holly_erdely",
+                                                    "name": "Holly"
+                                                },
+                                                {
+                                                    "entity": "person.michael_erdely",
+                                                    "name": "Mike"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle",
+                                                "confirmation": {
+                                                    "text": "Are you sure you want to restart Home Assistant?"
+                                                }
+                                            },
+                                            "entity": "script.homeassistant_restart",
+                                            "name": "Restart Home Assistant",
+                                            "icon_height": "50px"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'black') | int <= 20 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int <= 20 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int <= 20 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int <= 20 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int <= 20 %}yellow{% endif %};\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "entities",
+                                                        "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -16px 0px;\n}\n",
+                                                        "entities": [
+                                                            {
+                                                                "entity": "alarm_control_panel.home_alarm",
+                                                                "name": "Security System",
+                                                                "type": "custom:multiple-entity-row",
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "binary_sensor.security_devices",
+                                                                        "styles": {
+                                                                            "padding-top": "5px",
+                                                                            "padding-bottom": "5px",
+                                                                            "margin-top": "0px",
+                                                                            "margin-bottom": "0px"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "entity": "alarm_control_panel.home_alarm",
+                                                                        "name": "Alarm",
+                                                                        "styles": {
+                                                                            "padding-top": "5px",
+                                                                            "padding-bottom": "5px",
+                                                                            "margin-top": "0px",
+                                                                            "margin-bottom": "0px"
+                                                                        }
+                                                                    }
+                                                                ],
+                                                                "show_state": false
+                                                            },
+                                                            {
+                                                                "type": "custom:multiple-entity-row",
+                                                                "entity": "sensor.family_room_temperature",
+                                                                "name": "Temp",
+                                                                "show_state": false,
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "sensor.bedroom_temperature",
+                                                                        "name": "BR",
+                                                                        "unit": []
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.office_temperature",
+                                                                        "name": "Ofc",
+                                                                        "unit": []
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.living_room_temperature",
+                                                                        "name": "LR",
+                                                                        "unit": []
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.family_room_temperature",
+                                                                        "name": "Down",
+                                                                        "unit": [],
+                                                                        "styles": {
+                                                                            "padding-top": "10px",
+                                                                            "padding-bottom": "10px",
+                                                                            "margin-top": "0px",
+                                                                            "margin-bottom": "0px"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "type": "custom:multiple-entity-row",
+                                                                "entity": "sensor.family_room_temperature",
+                                                                "name": "Temp",
+                                                                "show_state": false,
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "sensor.thermostat_temperature",
+                                                                        "name": "Tstat",
+                                                                        "unit": []
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.attic_temperature",
+                                                                        "name": "Attic",
+                                                                        "unit": []
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.garage_temperature",
+                                                                        "name": "Garage",
+                                                                        "unit": []
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.outside_temperature",
+                                                                        "name": "Out",
+                                                                        "unit": [],
+                                                                        "styles": {
+                                                                            "padding-top": "10px",
+                                                                            "padding-bottom": "10px",
+                                                                            "margin-top": "0px",
+                                                                            "margin-bottom": "0px"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "type": "custom:multiple-entity-row",
+                                                                "entity": "sensor.num_downstairs_lights_on",
+                                                                "name": "Lights",
+                                                                "show_state": false,
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "sensor.num_upstairs_lights_on",
+                                                                        "name": "Up"
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.num_middle_level_lights_on",
+                                                                        "name": "Middle"
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.num_downstairs_lights_on",
+                                                                        "name": "Down",
+                                                                        "styles": {
+                                                                            "padding-top": "5px",
+                                                                            "padding-bottom": "5px",
+                                                                            "margin-top": "0px",
+                                                                            "margin-bottom": "0px"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.num_garage_lights_on",
+                                                                        "name": "Garage"
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.num_outside_lights_on",
+                                                                        "name": "Out"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "entity": "sensor.washer_dryer_state_pretty"
+                                                            },
+                                                            {
+                                                                "entity": "binary_sensor.oven_is_on",
+                                                                "name": "Oven",
+                                                                "icon": "mdi:stove",
+                                                                "state_color": true
+                                                            },
+                                                            {
+                                                                "entity": "sensor.recycle",
+                                                                "style": ":host {\n  {% if is_state('sensor.recycle', 'Tomorrow') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Today') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_boolean.toggle",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_boolean.recycle_is_out"
+                                                                    }
+                                                                },
+                                                                "type": "custom:multiple-entity-row",
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "sensor.moco_recycle_day",
+                                                                        "styles": {
+                                                                            "padding-top": "5px",
+                                                                            "padding-bottom": "5px",
+                                                                            "margin-top": "0px",
+                                                                            "margin-bottom": "0px"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "entity": "sensor.recycle",
+                                                                        "name": "Next Pickup"
+                                                                    }
+                                                                ],
+                                                                "show_state": false
+                                                            },
+                                                            {
+                                                                "entity": "sensor.trash",
+                                                                "style": ":host {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_boolean.toggle",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_boolean.trash_is_out"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "custom:multiple-entity-row",
+                                                                "entity": "sensor.printer_ink",
+                                                                "show_state": false,
+                                                                "entities": [
+                                                                    {
+                                                                        "attribute": "black",
+                                                                        "name": "Black",
+                                                                        "styles": {
+                                                                            "color": "var(--black-color)",
+                                                                            "padding-top": "5px",
+                                                                            "padding-bottom": "5px",
+                                                                            "margin-top": "0px",
+                                                                            "margin-bottom": "0px"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "attribute": "cyan",
+                                                                        "name": "C",
+                                                                        "styles": {
+                                                                            "color": "var(--cyan-color)"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "attribute": "magenta",
+                                                                        "name": "M",
+                                                                        "styles": {
+                                                                            "color": "var(--magenta-color)"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "attribute": "yellow",
+                                                                        "name": "Y",
+                                                                        "styles": {
+                                                                            "color": "var(--yellow-color)"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "attribute": "photoblack",
+                                                                        "name": "K",
+                                                                        "styles": {
+                                                                            "color": "var(--photoblack-color)"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "entity": "sensor.plex_plex",
+                                                                "style": ":host {\n  {% if states('sensor.plex_plex') | int > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                "name": "Plex Status"
+                                                            },
+                                                            {
+                                                                "entity": "binary_sensor.software_update_available",
+                                                                "style": ":host {\n  {% if is_state('binary_sensor.software_update_available', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/mbr-software/home"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

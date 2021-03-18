@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+""" download list of shows from plex """
+
+import configparser
+import os
+import sys
+
+venv = '/srv/venv/plexapi'
+if os.path.isdir(venv):
+    for subdir in os.listdir(venv + '/lib'):
+        sys.path.append(venv + '/lib/' + subdir + '/site-packages')
+
+from plexapi.server import PlexServer
+
+def main():
+    """ main function """
+
+    if len(sys.argv) > 1:
+        rcfile = sys.argv[1]
+    else:
+        rcfile = '~/.plexapi_rc'
+    conf_file = configparser.ConfigParser()
+    try:
+        conf_file.read_file(open(os.path.expanduser(rcfile)))
+    except FileNotFoundError as err:
+        print(err)
+        sys.exit()
+    except configparser.MissingSectionHeaderError as err:
+        print('Not a valid config file.')
+        print('Example:')
+        print('    [plexapi]')
+        print('    url: http://localhost:32400')
+        print('    token: MYTOKEN')
+        sys.exit()
+
+    try:
+        plex_url = conf_file.get('plexapi', 'url')
+        plex_token = conf_file.get('plexapi', 'token')
+    except configparser.NoSectionError as err:
+        print(err)
+        sys.exit()
+    except configparser.NoOptionError as err:
+        print(err)
+        sys.exit()
+
+    try:
+        plex = PlexServer(plex_url, plex_token)
+    except:
+        print('Could not connect to Plex Server')
+        sys.exit()
+
+    try:
+        tv_library = plex.library.section('TV Shows')
+        shows = tv_library.all()
+    except:
+        print('Could not get the TV Shows Library')
+        sys.exit()
+
+    for show in shows:
+        print(show.title)
+
+if __name__ == '__main__':
+    main()

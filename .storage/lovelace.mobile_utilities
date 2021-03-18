@@ -1,0 +1,330 @@
+{
+    "version": 1,
+    "key": "lovelace.mobile_utilities",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": false,
+                                                        "name": "Utilities"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 4,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "script.scene_good_night"
+                                                        },
+                                                        "entity": "script.scene_good_night",
+                                                        "name": "Good Night",
+                                                        "icon": "mdi:weather-night"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "script.scene_night_night"
+                                                        },
+                                                        "entity": "script.scene_night_night",
+                                                        "name": "Night Night",
+                                                        "icon": "mdi:moon-waning-crescent"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "script.scene_leaving_home"
+                                                        },
+                                                        "entity": "script.scene_leaving_home",
+                                                        "name": "Leaving",
+                                                        "icon": "mdi:exit-run"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "script.scene_movie_time"
+                                                        },
+                                                        "entity": "script.scene_movie_time",
+                                                        "name": "Movie Time",
+                                                        "icon": "mdi:movie"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "grid",
+                                                "columns": 4,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle",
+                                                            "confirmation": {
+                                                                "text": "Are you sure you want to reset the Front Door Camera?"
+                                                            }
+                                                        },
+                                                        "entity": "script.camera_front_door_cam_reset",
+                                                        "name": "Front Door",
+                                                        "icon_height": "50px"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle",
+                                                            "confirmation": {
+                                                                "text": "Are you sure you want to reset the Garage Camera?"
+                                                            }
+                                                        },
+                                                        "entity": "script.camera_garage_cam_reset",
+                                                        "name": "Garage",
+                                                        "icon_height": "50px"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle",
+                                                            "confirmation": {
+                                                                "text": "Are you sure you want to reset the Chimney Camera?"
+                                                            }
+                                                        },
+                                                        "entity": "script.camera_chimney_cam_reset",
+                                                        "name": "Chimney",
+                                                        "icon_height": "50px"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle",
+                                                            "confirmation": {
+                                                                "text": "Are you sure you want to reset the Shed Camera?"
+                                                            }
+                                                        },
+                                                        "entity": "script.camera_shed_cam_reset",
+                                                        "name": "Shed",
+                                                        "icon_height": "50px"
+                                                    },
+                                                    {
+                                                        "type": "entity",
+                                                        "entity": "sensor.thermostat_set_point",
+                                                        "unit": "\u00b0F",
+                                                        "name": "Tstat",
+                                                        "icon": "mdi:thermostat"
+                                                    },
+                                                    {
+                                                        "type": "conditional",
+                                                        "conditions": [
+                                                            {
+                                                                "entity": "input_select.thermostat_mode",
+                                                                "state": "Heat"
+                                                            }
+                                                        ],
+                                                        "card": {
+                                                            "type": "button",
+                                                            "entity": "climate.thermostat",
+                                                            "icon": "mdi:fire",
+                                                            "show_state": true,
+                                                            "show_name": false,
+                                                            "show_icon": true,
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "input_select.select_option",
+                                                                "service_data": {
+                                                                    "entity_id": "input_select.thermostat_mode",
+                                                                    "option": "Cool"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "conditional",
+                                                        "conditions": [
+                                                            {
+                                                                "entity": "input_select.thermostat_mode",
+                                                                "state_not": "Heat"
+                                                            }
+                                                        ],
+                                                        "card": {
+                                                            "type": "button",
+                                                            "entity": "climate.thermostat",
+                                                            "icon": "mdi:snowflake",
+                                                            "show_state": true,
+                                                            "show_name": false,
+                                                            "show_icon": true,
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "input_select.select_option",
+                                                                "service_data": {
+                                                                    "entity_id": "input_select.thermostat_mode",
+                                                                    "option": "Heat"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "script.home_thermostat_down",
+                                                        "name": "Cooler"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "script.home_thermostat_up",
+                                                        "name": "Warmer"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "grid",
+                                                "columns": 2,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "call-service",
+                                                            "service": "homeassistant.update_entity",
+                                                            "service_data": {
+                                                                "entity_id": "binary_sensor.home_assistant_configuration_check"
+                                                            }
+                                                        },
+                                                        "entity": "binary_sensor.home_assistant_configuration_check",
+                                                        "name": "HA Config Check",
+                                                        "icon_height": "50px"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle",
+                                                            "confirmation": {
+                                                                "text": "Are you sure you want to restart Home Assistant?"
+                                                            }
+                                                        },
+                                                        "entity": "script.homeassistant_restart",
+                                                        "name": "Restart Home Assistant",
+                                                        "icon_height": "50px"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "entities",
+                                                        "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -16px 0px;\n}\n",
+                                                        "entities": [
+                                                            {
+                                                                "entity": "sensor.plex_plex"
+                                                            },
+                                                            {
+                                                                "entity": "sensor.ytube_playlist_item_count"
+                                                            },
+                                                            {
+                                                                "entity": "sensor.ssl_expiry_date"
+                                                            },
+                                                            {
+                                                                "entity": "sensor.home_assistant_version",
+                                                                "style": ":host {\n  {% if is_state('binary_sensor.updater', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                "name": "Home Version Version",
+                                                                "type": "custom:multiple-entity-row",
+                                                                "state_color": true,
+                                                                "show_state": false,
+                                                                "icon": "mdi:home-assistant",
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "sensor.home_assistant_version",
+                                                                        "name": "current",
+                                                                        "styles": {
+                                                                            "width": "60px"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "attribute": "newest_version",
+                                                                        "entity": "binary_sensor.updater",
+                                                                        "name": "latest",
+                                                                        "styles": {
+                                                                            "width": "60px"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "picture",
+                                    "image": "/local/images/homeassistant-banner-back.png",
+                                    "tap_action": {
+                                        "action": "navigate",
+                                        "navigation_path": "/mobile-dashboard/mobile"
+                                    },
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

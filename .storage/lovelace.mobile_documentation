@@ -1,0 +1,79 @@
+{
+    "version": 1,
+    "key": "lovelace.mobile_documentation",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": false,
+                                                        "name": "Documentation"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "markdown",
+                                                "content": "## Google Assistant\nBefore each command below, say: Hey Google\n## TV Commands\n### Tivo (\"channel\")\nSet _God Damn_ **channel** to _The Tennis Channel_.\nPause _Office_ Tivo.\n### Roku (\"show\")\nSet _Bedroom_ **show** to _The Big Bang Theory_.\nPause _Living Room_ Roku.\n### TV (\"input\")\nSet _Office_ **input** to _(Tivo | Roku | Chromecast | Cameras)_\n  \n### Volume\nMake _Living Room_ TV **louder**.\nMake _God Damn_ TV **quieter**.\nMute _Bedroom_ TV.\nFix the Soundbar."
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "picture",
+                                    "image": "/local/images/homeassistant-banner-back.png",
+                                    "tap_action": {
+                                        "action": "navigate",
+                                        "navigation_path": "/mobile-dashboard/mobile"
+                                    },
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

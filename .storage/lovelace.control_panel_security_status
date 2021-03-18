@@ -1,0 +1,136 @@
+{
+    "version": 1,
+    "key": "lovelace.control_panel_security_status",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "panel": true,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 2,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.time_formatted"
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Control Panel"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "alarm-panel",
+                                            "states": [
+                                                "arm_home",
+                                                "arm_away"
+                                            ],
+                                            "entity": "alarm_control_panel.home_alarm",
+                                            "name": " "
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "picture",
+                                            "image": "/local/images/homeassistant-banner-back.png",
+                                            "tap_action": {
+                                                "action": "navigate",
+                                                "navigation_path": "/control-panel/home"
+                                            },
+                                            "hold_action": {
+                                                "action": "none"
+                                            }
+                                        },
+                                        {
+                                            "type": "grid",
+                                            "columns": 1,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "entities",
+                                                    "style": "ha-card {\n}\n.card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -17px 0px;\n}\n",
+                                                    "entities": [
+                                                        {
+                                                            "entity": "binary_sensor.bedroom_slider"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.front_door"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.living_room_slider"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.dining_room_slider"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.back_door"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.family_room_slider"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.den_window"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.powder_room_window"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.garage_entry_door"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.shed_door"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.shed_gate"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.chimney_gate"
+                                                        },
+                                                        {
+                                                            "entity": "cover.garage_door"
+                                                        },
+                                                        {
+                                                            "entity": "input_boolean.test_security_device"
+                                                        },
+                                                        {
+                                                            "entity": "input_boolean.test_security_device_2"
+                                                        },
+                                                        {
+                                                            "entity": "input_boolean.test_security_device_3"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

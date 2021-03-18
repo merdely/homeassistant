@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+""" Determine next episode for a show """
+
+# Output:
+# {"media_content_id":"{ \"library_name\": \"TV Shows\", \"show_name\": \"{{{show_name}}}\", \"season_number\": \"{{{season}}}\", \"episode_number\": \"{{{episode}}}\", \"shuffle\": 0 }","media_content_type":"episode"}
+
+import configparser
+import os
+import re
+import sys
+
+venv = '/srv/venv/plexapi'
+if os.path.isdir(venv):
+    for subdir in os.listdir(venv + '/lib'):
+        sys.path.append(venv + '/lib/' + subdir + '/site-packages')
+
+from plexapi.server import PlexServer
+
+def main():
+    """ main function """
+
+    usage = 'Usage: ' + sys.argv[0] + ' [-c rcfile ] show_title'
+
+    if (len(sys.argv) == 2 and sys.argv[1] == '-h') or len(sys.argv) != 2 and (len(sys.argv) != 4 and sys.argv[1] != '-c'):
+        print(usage)
+        sys.exit()
+    else:
+        if len(sys.argv) == 2:
+            show = sys.argv[1]
+        else:
+            show = sys.argv[3]
+
+    if show == "Select Show":
+        sys.exit(0)
+
+    if sys.argv[1] == '-c':
+        rcfile = sys.argv[2]
+    else:
+        rcfile = '~/.plexapi_rc'
+    conf_file = configparser.ConfigParser()
+    try:
+        conf_file.read_file(open(os.path.expanduser(rcfile)))
+    except FileNotFoundError as err:
+        print(err)
+        sys.exit()
+    except configparser.MissingSectionHeaderError as err:
+        print('Not a valid config file.')
+        print('Example:')
+        print('    [plexapi]')
+        print('    url: http://localhost:32400')
+        print('    token: MYTOKEN')
+        sys.exit()
+
+    try:
+        plex_url = conf_file.get('plexapi', 'url')
+        plex_token = conf_file.get('plexapi', 'token')
+    except configparser.NoSectionError as err:
+        print(err)
+        sys.exit()
+    except configparser.NoOptionError as err:
+        print(err)
+        sys.exit()
+
+    def reversemap_action(action, show):
+        if action == 'reversemap':
+            print(show.title)
+            return 1
+        else:
+            try:
+                print(show.onDeck().key)
+                return 1
+            except:
+                for season in show.seasons():
+                    for episode in season.episodes():
+                        print(episode.key)
+                        return 1
+
+    def print_result(match, library, show):
+        # print('match: ' + str(match) + ', ' + show.title)
+        try:
+            next_episode = show.onDeck()
+            season = next_episode.seasonNumber
+            episode = next_episode.index
+        except:
+            stop = 0
+            for season in show.seasons():
+                for episode in season.episodes():
+                    next_episode = episode
+                    stop = 1
+                    break
+                if stop == 1:
+                    break
+            season = next_episode.seasonNumber
+            episode = next_episode.index
+
+        print('{{ "library_name": "{}", "show_name": "{}", "season_number": "{:02d}", "episode_number": "{:02d}", "shuffle": 0 }}'.format(library.title, show.title, season, episode))
+        return 1
+
+    failure = 0
+    try:
+        plex = PlexServer(plex_url, plex_token)
+        tv_library = plex.library.section('TV Shows')
+        shows = tv_library.all()
+    except:
+        failure = 1
+
+    done = 0
+    if failure != 1:
+        # Do this twice so that closer match will beat out lower match
+        for library_show in shows:
+            show_title = re.sub(r"(^DC's |^Marvel's |^Phillip K. Dick's |^Tom Clancy's |: Motion Comic)", '', re.sub(r"[^a-zA-Z0-9 '-]", '', library_show.title))
+            if show_title.lower() == show.lower():
+                done = print_result(1, tv_library, library_show)
+        if done == 0:
+            for library_show in shows:
+                show_title = re.sub(r"(^DC's |^Marvel's |^Phillip K. Dick's |^Tom Clancy's |: Motion Comic)", '', re.sub(r"[^a-zA-Z0-9 '-]", '', library_show.title))
+                if re.sub(r" [0-9][0-9][0-9][0-9]$", '', show_title).lower() == re.sub(r" [0-9][0-9][0-9][0-9]$", '', show).lower():
+                    done = print_result(1, tv_library, library_show)
+
+if __name__ == '__main__':
+    main()

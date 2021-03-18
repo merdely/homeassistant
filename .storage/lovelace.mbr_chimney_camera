@@ -1,0 +1,31 @@
+{
+    "version": 1,
+    "key": "lovelace.mbr_chimney_camera",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "panel": true,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "picture-entity",
+                            "entity": "camera.chimney_cam",
+                            "camera_image": "camera.chimney_cam",
+                            "camera_view": "live",
+                            "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "/mbr-panel/home"
+                            },
+                            "show_name": true,
+                            "show_state": false,
+                            "name": "Touch blank part of screen to view video"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

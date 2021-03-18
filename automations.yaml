@@ -1,0 +1,3031 @@
+- id: "1600364197585"
+  alias: 01 - Home Assistant -  Update Entity  Every 1s
+  description: ""
+  trigger:
+    - platform: time_pattern
+      seconds: /1
+  condition: []
+  action:
+    - service: homeassistant.update_entity
+      data: {}
+      entity_id: switch.family_room_light, switch.hallway_light
+  mode: single
+- id: "1600366108055"
+  alias: Lighting - Back Porch Lights Off
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_off
+      device_id: aaaa4405027511eb8123dd588dc19cb6
+      entity_id: switch.back_porch_light
+      domain: switch
+    - platform: device
+      type: turned_off
+      device_id: deffd18a027411eb89f237a0454e8ed5
+      entity_id: switch.back_porch_light_2
+      domain: switch
+  condition: []
+  action:
+    - service: switch.turn_off
+      data: {}
+      entity_id: switch.back_porch_light, switch.back_porch_light_2
+  mode: single
+- id: "1600366606538"
+  alias: Lighting - Family Room - God Damn Light On
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_on
+      device_id: df7cdba0027411eb87131d0a9ac3b321
+      entity_id: switch.family_room_light
+      domain: switch
+    - platform: state
+      entity_id: switch.god_damn_light
+      to: "on"
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.god_damn_light, switch.family_room_light
+  mode: single
+- id: "1600366629972"
+  alias: Lighting - Family Room Lights Off
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_off
+      device_id: df7cdba0027411eb87131d0a9ac3b321
+      entity_id: switch.family_room_light
+      domain: switch
+  condition: []
+  action:
+    - service: switch.turn_off
+      data: {}
+      entity_id: switch.fireplace_light, switch.god_damn_light, switch.three_headed_lamp
+  mode: single
+- id: "1600528857994"
+  alias: Lighting - Outside - Garage Arrival at Night
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: cover.garage_door
+      to: open
+  condition:
+    - condition: sun
+      before: sunrise
+      after: sunset
+  action:
+    - type: turn_on
+      device_id: df6fd973027411eb9cd98321d84c3299
+      entity_id: switch.front_porch_light
+      domain: switch
+    - type: turn_on
+      device_id: ab057405027511eba2682dbd0612842c
+      entity_id: switch.foyer_light
+      domain: switch
+  mode: single
+- id: "1600528964920"
+  alias: Lighting - Sunset Lights On
+  description: ""
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: -00:15:00
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: binary_sensor.outside_christmas_lights
+              state: "on"
+          sequence:
+            - service: switch.turn_on
+              data: {}
+              entity_id: switch.outside_xmas
+      default:
+        - service: switch.turn_on
+          data: {}
+          entity_id: switch.front_porch_light, switch.outside_garage_lights
+    - choose:
+        - conditions:
+            - condition: not
+              conditions:
+                - condition: state
+                  entity_id: group.holly_mike
+                  state: home
+          sequence:
+            - type: turn_on
+              device_id: df2727e9027411eba29ab11a193d35d5
+              entity_id: switch.kitchen_table_light
+              domain: switch
+      default: []
+    - type: turn_on
+      device_id: a6f232e80324c17680bc74fa22838116
+      entity_id: switch.dining_room_christmas_lights
+      domain: switch
+  mode: single
+- id: "1600529040720"
+  alias: Lighting - Sunset Lights Off at Night
+  description: ""
+  trigger:
+    - platform: time
+      at: input_datetime.turn_off_sunset_lights
+  condition: []
+  action:
+    - service: switch.turn_off
+      data: {}
+      entity_id:
+        switch.front_porch_light, switch.outside_garage_lights , switch.outside_xmas,
+        switch.dining_room_christmas_lights
+  mode: single
+- id: "1601406990160"
+  alias: 02 - Home Assistant - Update Entity Every 5s
+  description: ""
+  trigger:
+    - platform: time_pattern
+      seconds: /5
+  condition: []
+  action:
+    - service: homeassistant.update_entity
+      data: {}
+      entity_id: switch.back_porch_light,switch.back_porch_light_2,switch.living_room_light
+  mode: single
+- id: "1602628290703"
+  alias: Lighting - Den - Motion Laundry Light On
+  description: ""
+  trigger:
+    - type: motion
+      platform: device
+      device_id: 05559d0b8d90de1c7d54359fc01959e8
+      entity_id: binary_sensor.den_motion_sensor
+      domain: binary_sensor
+  condition: []
+  action:
+    - type: turn_on
+      device_id: df26f630027411eb8eba8d25e42c703b
+      entity_id: switch.laundry_room_light
+      domain: switch
+  mode: single
+- id: "1602628563183"
+  alias: Lighting - Den - Motion Laundry Light Off
+  description: ""
+  trigger:
+    - type: no_motion
+      platform: device
+      device_id: 05559d0b8d90de1c7d54359fc01959e8
+      entity_id: binary_sensor.den_motion_sensor
+      domain: binary_sensor
+      for:
+        hours: 0
+        minutes: 30
+        seconds: 0
+  condition: []
+  action:
+    - type: turn_off
+      device_id: df26f630027411eb8eba8d25e42c703b
+      entity_id: switch.laundry_room_light
+      domain: switch
+  mode: single
+- id: "1602683085874"
+  alias: Notifications - Battery Low Notification
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: group.doors_windows_battery_level
+      below: "20"
+      for: 00:05:00
+  condition: []
+  action:
+    - service: notify.gmail_to_mike
+      data:
+        title: Low Battery
+        message:
+          "{%- for entity_id in states.group.doors_windows_battery_level.attributes.entity_id\
+          \ %}\n  {%- set domain, device = entity_id.split('.') -%}\n  {{ state_attr(entity_id,\"\
+          friendly_name\") }}: {{ states[domain][device].state }}%\n{% endfor %}\n"
+  mode: single
+- id: "1602886827817"
+  alias: Lighting - Shed - Shed Light Toggle
+  description: ""
+  trigger:
+    - platform: event
+      event_type: zha_event
+      event_data:
+        device_ieee: 00:15:8d:00:02:83:c5:c8
+        command: single
+  condition: []
+  action:
+    - type: toggle
+      device_id: e0339fcc080811eb94426145f0b763d7
+      entity_id: switch.shed_lamp
+      domain: switch
+  mode: single
+- id: "1602887078304"
+  alias: Lighting - Shed - Flood Light Toggle
+  description: ""
+  trigger:
+    - platform: event
+      event_type: zha_event
+      event_data:
+        device_ieee: 00:15:8d:00:02:83:c5:c8
+        command: double
+  condition: []
+  action:
+    - type: toggle
+      device_id: e0339fcc080811eb94426145f0b763d7
+      entity_id: switch.flood_light
+      domain: switch
+  mode: single
+- id: "1602887137225"
+  alias: Lighting - Shed - Shed/Flood Light Toggle
+  description: ""
+  trigger:
+    - platform: event
+      event_type: zha_event
+      event_data:
+        device_ieee: 00:15:8d:00:02:83:c5:c8
+        command: hold
+  condition: []
+  action:
+    - service: switch.toggle
+      data: {}
+      entity_id: switch.flood_light, switch.shed_lamp
+  mode: single
+- id: "1602952724393"
+  alias: Notifications - 0 - Water Leak Detected
+  description: ""
+  trigger:
+    - type: moist
+      platform: device
+      device_id: ae213e4bff686fdec1447a67f13774d0
+      entity_id: binary_sensor.laundry_room_water_leak_sensor
+      domain: binary_sensor
+  condition: []
+  action:
+    - service: script.function_speakers_prep
+      data:
+        speaker: security_speakers
+      entity_id: media_player.all_speakers
+    - service: media_player.play_media
+      entity_id: media_player.security_speakers
+      data:
+        media_content_id: /local/sounds/water_leak.mp3
+        media_content_type: music
+    - service: notify.hangouts_security_alert
+      data:
+        message: Water leak detected on {{ trigger.to_state.name }}
+    - service: script.function_speakers_restore
+      data:
+        speaker: security_speakers
+      entity_id: media_player.all_speakers
+    - service: mqtt.publish
+      data:
+        topic: cmnd/siren/backlog
+        payload: TuyaSend4 102,15; TuyaSend2 103,10
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.siren
+  mode: single
+- id: "1603064762451"
+  alias: Lighting - Office - Motion Office Light On
+  description: ""
+  trigger:
+    - type: motion
+      platform: device
+      device_id: 99cdedbcfd3ce36c42267c287e73b0cb
+      entity_id: binary_sensor.office_motion_sensor
+      domain: binary_sensor
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 0
+  condition: []
+  action:
+    - service: light.turn_on
+      data: {}
+      entity_id: light.office_light
+  mode: single
+- id: "1603115550660"
+  alias: Lighting - Office - Motion Office Light Off
+  description: ""
+  trigger:
+    - type: no_motion
+      platform: device
+      device_id: 99cdedbcfd3ce36c42267c287e73b0cb
+      entity_id: binary_sensor.office_motion_sensor
+      domain: binary_sensor
+      for:
+        hours: 2
+        minutes: 0
+        seconds: 0
+  condition: []
+  action:
+    - service: light.turn_off
+      data: {}
+      entity_id: light.office_light
+  mode: single
+- id: "1603148838343"
+  alias: 00 - Home Assistant - Startup
+  description: ""
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition: []
+  action:
+    - service: shell_command.rm_newshows_flag
+      data: {}
+  mode: single
+- id: "1603391662402"
+  alias:
+    Security - 40 Armed - Disarm Security System in the morning if someone is
+    home
+  description: ""
+  trigger:
+    - platform: time
+      at: input_datetime.automatic_security_disarm
+  condition:
+    - condition: state
+      entity_id: group.holly_mike
+      state: home
+  action:
+    - service: script.security_disarm_system
+    - condition: state
+      entity_id: binary_sensor.christmas_lights_should_be_on
+      state: "on"
+    - type: turn_on
+      device_id: e55a21cf07e311ebb58cb906d28ca146
+      entity_id: switch.christmas_tree
+      domain: switch
+  mode: single
+- id: "1603407121485"
+  alias: Notifications - Laundry Room Washer Started
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.laundry_room_outlet_energy_power
+      above: "2"
+      for: 00:05:00
+  condition:
+    - condition: state
+      entity_id: input_boolean.laundry_room_washer_running
+      state: "off"
+  action:
+    - service: input_boolean.turn_on
+      data: {}
+      entity_id: input_boolean.laundry_room_washer_running
+  mode: single
+- id: "1603407289385"
+  alias: Notifications - Laundry Room Washer Stopped
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.laundry_room_outlet_energy_power
+      below: "3"
+      for: 00:03:00
+  condition:
+    - condition: state
+      entity_id: input_boolean.laundry_room_washer_running
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      data: {}
+      entity_id: input_boolean.laundry_room_washer_running
+    - service: notify.hangouts_security_alert
+      data:
+        message: The washing machine is done
+  mode: single
+- id: "1603490987709"
+  alias: Notifications - Battery Low Notification (Tasmota)
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: sensor.chimney_gate_battery
+      to: low
+    - platform: state
+      entity_id: sensor.shed_door_battery
+      to: low
+    - platform: state
+      entity_id: sensor.shed_gate_battery
+      to: low
+  condition: []
+  action:
+    - service: notify.gmail_to_mike
+      data:
+        title: Low Battery
+        message: "{{ state_attr('sensor.chimney_gate_battery', 'friendly_name')
+          }} is {{ states('sensor.chimney_gate_battery') }}
+
+          {{ state_attr('sensor.shed_gate_battery', 'friendly_name') }} is {{ states('sensor.shed_gate_battery')
+          }}
+
+          {{ state_attr('sensor.shed_door_battery', 'friendly_name') }} is {{ states('sensor.shed_door_battery')
+          }}
+
+          "
+  mode: single
+- id: "1604378332593"
+  alias: Security - 90 Triggered - Alert of Always Monitored Door Open (Always)
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.chimney_gate, binary_sensor.shed_gate, binary_sensor.shed_door
+      for: 00:00:01
+      from: "off"
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.chimney_gate, binary_sensor.shed_gate, binary_sensor.shed_door
+      for: 00:00:01
+      from: "on"
+      to: "off"
+  condition:
+    - condition: state
+      entity_id: input_boolean.gate_notifications
+      state: "on"
+  action:
+    - service: notify.hangouts_security_alert
+      data:
+        message:
+          "{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
+          == 'off' %} closed{%- else %} open{% endif %}."
+  mode: single
+- id: "1604420272678"
+  alias: Security - 20 Disarmed - Security System Disarmed
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      to: disarmed
+  condition: []
+  action:
+    - service: switch.turn_off
+      data: {}
+      entity_id: switch.siren
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=loadStartUrl
+  mode: single
+- id: "1604422426174"
+  alias: Security - 90 Triggered - Alert of Exterior Doors (Away)
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: group.exterior_security_devices
+      to: "on"
+      for: 00:00:01
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_away
+  action:
+    - service: notify.hangouts_security_alert
+      data:
+        message:
+          "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []\
+          \ -%} {%- for entity_id in states.group.exterior_security_devices.attributes.entity_id\
+          \ -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state\
+          \ != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities\
+          \ = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-\
+          \ endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n\
+          \  {{ open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities\
+          \ | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n\
+          \  {%- if ns.count == ns.open_entities | length - 1 %} and {% endif -%}\n\
+          {%- endfor -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %}\
+          \ are{% endif %} {%- if ns.count > 0 %}open{% else %}No devices are open{%\
+          \ endif %}"
+  mode: single
+- id: "1604422951001"
+  alias: Security - 90 Triggered - Start Siren
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      to: triggered
+  condition: []
+  action:
+    - service: script.security_message_open_security_devices
+      data: {}
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/alarm-panel
+    - service: script.function_speakers_prep
+      data:
+        speaker: security_speakers
+    - service: notify.hangouts_security_alert
+      data:
+        message: "{{ states('input_text.security_message') }}
+
+          "
+    - service: media_player.play_media
+      data:
+        media_content_id: /local/sounds/security_trigger.mp3
+        media_content_type: music
+      entity_id: media_player.security_speakers
+    - service: script.function_speakers_restore
+      data:
+        speaker: security_speakers
+    - repeat:
+        while:
+          - condition: state
+            entity_id: alarm_control_panel.home_alarm
+            state: triggered
+        sequence:
+          - service: mqtt.publish
+            data:
+              topic: cmnd/siren/backlog
+              payload: TuyaSend4 102,14; TuyaSend2 103,59
+          - service: switch.turn_on
+            data: {}
+            entity_id: switch.siren
+          - delay: "60"
+    - service: notify.mobile_app_pixel_4a
+      data:
+        title: Security System
+        message: The System System has been Triggered!
+        data:
+          clickAction: /alarm-panel/home
+  mode: single
+- id: "1604856519122"
+  alias: Notifications - Laundry Room Dryer Started
+  description: ""
+  trigger:
+    - platform: numeric_state
+      for: 00:02:00
+      entity_id: sensor.dryer_monitor_analog_ctenergy_power
+      above: "750"
+  condition:
+    - condition: state
+      entity_id: input_boolean.laundry_room_dryer_running
+      state: "off"
+  action:
+    - service: input_boolean.turn_on
+      data: {}
+      entity_id: input_boolean.laundry_room_dryer_running
+  mode: single
+- id: "1604856580927"
+  alias: Notifications - Laundry Room Dryer Stopped
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.dryer_monitor_analog_ctenergy_power
+      for: 00:01:00
+      below: "500"
+  condition:
+    - condition: state
+      entity_id: input_boolean.laundry_room_dryer_running
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      data: {}
+      entity_id: input_boolean.laundry_room_dryer_running
+    - service: notify.hangouts_security_alert
+      data:
+        message: The dryer is done
+  mode: single
+- id: "1605633972450"
+  alias: Security - 40 Armed - Re-enable Gate Notifications
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      from: disarmed
+  condition: []
+  action:
+    - service: input_boolean.turn_on
+      data: {}
+      entity_id: input_boolean.gate_notifications
+  mode: single
+- id: "1606763802325"
+  alias: Security - 30 Arming - Announcement (45 seconds to exit)
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      to: arming
+      from: disarmed
+  condition:
+    - condition: state
+      entity_id: group.security_devices
+      state: "off"
+  action:
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=setAudioVolume&level=100
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45_seconds_to_exit.mp3
+    - delay: "10"
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=setAudioVolume&level=60
+  mode: single
+- id: "1606764059402"
+  alias: Security - 30 Arming - Announcement (Cannot Arm)
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      to: arming
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      to: armed_home
+      from: disarmed
+  condition:
+    - condition: state
+      entity_id: group.doors_windows
+      state: "on"
+  action:
+    - service: script.security_disarm_system
+      data: {}
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=setAudioVolume&level=100
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/cannot_arm.mp3
+    - delay: "10"
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=setAudioVolume&level=60
+  mode: single
+- id: "1606765482798"
+  alias: Security - 80 Pending - Alarm Pending (45 seconds to Disarm)
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      to: pending
+  condition: []
+  action:
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=setAudioVolume&level=100
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/alarm-panel/home
+    - delay: "5"
+    - service: rest_command.control_panel_command
+      entity_id: media_player.all_speakers
+      data:
+        command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45_seconds_to_enter_code.mp3
+    - delay: "10"
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=setAudioVolume&level=60
+    - service: input_text.set_value
+      data:
+        value:
+          "{%- set ns = namespace(count = 0) %} {%- for entity_id in states.group.doors_windows.attributes.entity_id\
+          \ %}\n  {%- set domain, device = entity_id.split('.') %}\n  {%- if states[domain][device].state\
+          \ == 'on' -%}\n    {%- set ns.count = ns.count + 1 -%}\n    {%- if ns.count\
+          \ > 1 %} and {% endif -%}\n    {{ state_attr(entity_id,\"friendly_name\")\
+          \ }}\n  {%- endif %}\n{%- endfor %} {%- if not is_state('cover.garage_door',\
+          \ 'closed') -%}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.count\
+          \ > 1 %} and {% endif -%}\n  Garage Door\n{%- endif %} {%- if ns.count ==\
+          \ 0 %} No doors or windows are {%- elif ns.count > 1 %} are{% else %} is{%\
+          \ endif %} Open\n"
+      entity_id: input_text.security_message
+  mode: single
+- id: "1606772769370"
+  alias: Security - 60 Tripped - Trigger Alarm Home
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: group.security_devices
+      to: "on"
+      for: 00:00:01
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_home
+  action:
+    - service: alarm_control_panel.alarm_trigger
+      data: {}
+      entity_id: alarm_control_panel.home_alarm
+  mode: single
+- id: "1606776219305"
+  alias: Security - 40 Armed - Set Control Panel to Alarm Panel
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      from: disarmed
+  condition: []
+  action:
+    - service: rest_command.control_panel_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/alarm-panel/home
+  mode: single
+- id: "1606776305027"
+  alias: Security - 60 Tripped - Trigger Alarm Away
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: group.doors_windows
+      to: "on"
+      for: 00:00:01
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_away
+  action:
+    - service: alarm_control_panel.alarm_trigger
+      data: {}
+      entity_id: alarm_control_panel.home_alarm
+  mode: single
+- id: "1606835846142"
+  alias: Security - 10 All - Update alarm.state File
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+  condition: []
+  action:
+    - service: notify.alarm_state_file
+      data:
+        message: "{{ states('alarm_control_panel.home_alarm') }}"
+  mode: single
+- id: "1607034242017"
+  alias: Controls - Control Panel Screen Change
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.control_panel
+      from: Select Screen
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Lights
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Lights Screen
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/lights
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Alarm Panel
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Alarm Panel Screen
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/alarm-panel
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Security
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Security Screen
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/security-status
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: TV Screen
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: TVs
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/tvs
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Front Door Camera
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Front Door Cam
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Front Door
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/front-door
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Garage Camera
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Garage Cam
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Garage
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/garage-cam
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Chimney Camera
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Chimney Cam
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Chimney
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/chimney-cam
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Shed Camera
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Shed Cam
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Shed
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/shed-camera
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Wake Up
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Screensaver Off
+                - condition: state
+                  entity_id: input_select.control_panel
+                  state: Stop Screensaver
+          sequence:
+            - service: rest_command.control_panel_command
+              data:
+                command_string: cmd=stopScreensaver
+      default:
+        - service: rest_command.control_panel_command
+          data:
+            command_string: cmd=loadStartUrl
+        - service: rest_command.control_panel_command
+          data:
+            command_string: cmd=stopScreensaver
+          entity_id: input_select.control_panel
+    - service: input_select.select_option
+      data:
+        option: Select Screen
+      entity_id: input_select.control_panel
+  mode: single
+- id: "1607035299850"
+  alias: Lighting - Office - Mike Bench Light Power Back On
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_off
+      device_id: d1d4a0e484fab324f004fcb4e7ab2d69
+      entity_id: switch.mike_bench_lamp
+      domain: switch
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 5
+  condition: []
+  action:
+    - type: turn_on
+      device_id: d1d4a0e484fab324f004fcb4e7ab2d69
+      entity_id: switch.mike_bench_lamp
+      domain: switch
+  mode: single
+- id: "1607035454754"
+  alias: Lighting - Office - Mike Desk Lamp Toggle
+  description: ""
+  trigger:
+    - platform: device
+      domain: tasmota
+      device_id: 5e4b4538179e98100fb71b5c84da9ec2
+      type: button_short_press
+      subtype: switch_1
+      discovery_id: 483FDA596B28_switch_1_TOGGLE
+  condition: []
+  action:
+    - service: homeassistant.toggle
+      data: {}
+      entity_id: switch.mike_desk_lamp
+  mode: single
+- id: "1607035511482"
+  alias: Lighting - Office - Mike Bench Light Off
+  description: ""
+  trigger:
+    - platform: device
+      domain: tasmota
+      device_id: 5e4b4538179e98100fb71b5c84da9ec2
+      type: button_long_press
+      subtype: switch_1
+      discovery_id: 483FDA596B28_switch_1_HOLD
+  condition: []
+  action:
+    - service: homeassistant.turn_off
+      data: {}
+      entity_id: switch.mike_bench_lamp
+  mode: single
+- id: "1607035845406"
+  alias: Lighting - Outside Xmas On
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_on
+      device_id: 339c280231cae4390fe9c5ed7c22b6ab
+      entity_id: switch.xmas1
+      domain: switch
+    - platform: device
+      type: turned_on
+      device_id: 339c280231cae4390fe9c5ed7c22b6ab
+      entity_id: switch.xmas2
+      domain: switch
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.outside_xmas
+  mode: single
+- id: "1607035878758"
+  alias: Lighting - Outside Xmas Off
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_off
+      device_id: 339c280231cae4390fe9c5ed7c22b6ab
+      entity_id: switch.xmas1
+      domain: switch
+    - platform: device
+      type: turned_off
+      device_id: 339c280231cae4390fe9c5ed7c22b6ab
+      entity_id: switch.xmas2
+      domain: switch
+  condition: []
+  action:
+    - service: switch.turn_off
+      data: {}
+      entity_id: switch.outside_xmas
+  mode: single
+- id: "1607035951583"
+  alias: Lighting - Living Room Lights Off
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_off
+      device_id: deff9b85027411eb86d1ff80088a1f32
+      entity_id: switch.living_room_light
+      domain: switch
+  condition: []
+  action:
+    - service: switch.turn_off
+      data: {}
+      entity_id: switch.far_living_room_lamp, switch.small_living_room_lamp
+  mode: single
+- id: "1607036057399"
+  alias: Lighting - Back Porch Lights On
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_on
+      device_id: aaaa4405027511eb8123dd588dc19cb6
+      entity_id: switch.back_porch_light
+      domain: switch
+    - platform: device
+      type: turned_on
+      device_id: deffd18a027411eb89f237a0454e8ed5
+      entity_id: switch.back_porch_light_2
+      domain: switch
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.back_porch_light, switch.back_porch_light_2
+  mode: single
+- id: "1607093471372"
+  alias: Notifications - Presence - Holly
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: person.holly_erdely
+      from: not_home
+      for: 00:01:00
+    - platform: state
+      entity_id: person.holly_erdely
+      to: not_home
+  condition:
+    - condition: time
+      after: input_datetime.holly_presence_notifications_on
+      before: input_datetime.holly_presence_notifications_off
+    - condition: state
+      entity_id: person.michael_erdely
+      state: home
+  action:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: person.holly_erdely
+              state: not_home
+          sequence:
+            - service: homeassistant.update_entity
+              data: {}
+              entity_id: sensor.holly_previous_location
+            - service: media_player.play_media
+              data:
+                media_content_id:
+                  https://ha.erdely.in:38123/local/sounds/Holly has left
+                  {{ states("sensor.holly_previous_location") | replace("_", " ") | title
+                  }}.mp3
+                media_content_type: music
+              entity_id: media_player.security_speakers
+      default:
+        - service: media_player.play_media
+          entity_id: media_player.security_speakers
+          data:
+            media_content_id:
+              https://ha.erdely.in:38123/local/sounds/Holly is at {{ states('person.holly_erdely')
+              | replace('_', ' ') | title }}.mp3
+            media_content_type: music
+    - service: media_player.media_stop
+      data: {}
+      entity_id: media_player.security_speakers
+  mode: single
+- id: "1607095172887"
+  alias: Notifications - Presence - Mike
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: person.michael_erdely
+      from: not_home
+      for: 00:01:00
+    - platform: state
+      entity_id: person.michael_erdely
+      to: not_home
+  condition:
+    - condition: time
+      after: input_datetime.mike_presence_notifications_on
+      before: input_datetime.mike_presence_notifications_off
+    - condition: state
+      entity_id: person.holly_erdely
+      state: home
+  action:
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 6
+        milliseconds: 0
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: person.michael_erdely
+              state: not_home
+          sequence:
+            - service: homeassistant.update_entity
+              data: {}
+              entity_id: sensor.mike_previous_location
+            - service: media_player.play_media
+              data:
+                media_content_id:
+                  https://ha.erdely.in:38123/local/sounds/Mike has left
+                  {{ states("sensor.mike_previous_location") | replace("_", " ") | title
+                  }}.mp3
+                media_content_type: music
+              entity_id: media_player.security_speakers
+      default:
+        - service: media_player.play_media
+          entity_id: media_player.security_speakers
+          data:
+            media_content_id:
+              https://ha.erdely.in:38123/local/sounds/Mike is at {{ states('person.michael_erdely')
+              | replace("_", " ") | title}}.mp3
+            media_content_type: music
+    - service: media_player.media_stop
+      data: {}
+      entity_id: media_player.security_speakers
+  mode: single
+- id: "1607108298703"
+  alias: TV - Office - Change Channel
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.office_channel
+      from: Select Channel
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.office_tv
+    - choose:
+        - conditions:
+            - condition: numeric_state
+              entity_id: sensor.office_tv_plug
+              below: "45"
+          sequence:
+            - repeat:
+                until:
+                  - condition: numeric_state
+                    entity_id: sensor.office_tv_plug
+                    above: "45"
+                sequence:
+                  - service: system_log.write
+                    data:
+                      message: office tv waiting 1s waiting for power on
+                  - delay: "1"
+            - service: system_log.write
+              data:
+                message: office tv waiting 4s after power on
+            - delay: "4"
+      default: []
+    - service: shell_command.change_channel
+      data:
+        tv_device: tivo-office
+        channel: "{{ states('input_select.office_channel') }}"
+    - service: script.function_tv_change_input
+      data:
+        tv: office
+        input: tivo
+    - service: input_select.select_option
+      data:
+        option: Select Channel
+      entity_id: input_select.office_channel
+  mode: single
+- id: "1607110802992"
+  alias: TV - Office - Change Input
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.office_input
+      from: Select Input
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.office_tv
+    - choose:
+        - conditions:
+            - condition: numeric_state
+              entity_id: sensor.office_tv_plug
+              below: "45"
+          sequence:
+            - repeat:
+                until:
+                  - condition: numeric_state
+                    entity_id: sensor.office_tv_plug
+                    above: "45"
+                sequence:
+                  - service: system_log.write
+                    data:
+                      message: office tv waiting 1s waiting for power on
+                  - delay: "1"
+            - service: system_log.write
+              data:
+                message: office tv waiting 4s after power on
+            - delay: "4"
+      default: []
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: input_select.office_input
+              state: Tivo
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: office
+                input: tivo
+      default:
+        - service: script.function_tv_change_input
+          data:
+            tv: office
+            input: roku
+        - choose:
+            - conditions:
+                - condition: state
+                  entity_id: input_select.office_input
+                  state: Cameras
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: office
+                    camera: split
+            - conditions:
+                - condition: state
+                  entity_id: input_select.office_input
+                  state: Front Door Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: office
+                    camera: front_door
+            - conditions:
+                - condition: state
+                  entity_id: input_select.office_input
+                  state: Garage Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: office
+                    camera: garage
+            - conditions:
+                - condition: state
+                  entity_id: input_select.office_input
+                  state: Chimney Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: office
+                    camera: chimney
+            - conditions:
+                - condition: state
+                  entity_id: input_select.office_input
+                  state: Shed Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: office
+                    camera: shed
+          default: []
+    - service: input_select.select_option
+      data:
+        option: Select Input
+      entity_id: input_select.office_input
+  mode: single
+- id: "1607116148848"
+  alias: TV - Bedroom - Change Channel
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.bedroom_channel
+      from: Select Channel
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.bedroom_tv
+    - service: shell_command.change_channel
+      data:
+        tv_device: tivo-bedroom
+        channel: "{{ states('input_select.bedroom_channel') }}"
+    - service: script.function_tv_change_input
+      data:
+        tv: bedroom
+        input: tivo
+    - service: input_select.select_option
+      data:
+        option: Select Channel
+      entity_id: input_select.bedroom_channel
+  mode: single
+- id: "1607116571938"
+  alias: TV - Bedroom - Change Input
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.bedroom_input
+      from: Select Input
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.bedroom_tv
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: input_select.bedroom_input
+              state: Tivo
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: bedroom
+                input: tivo
+        - conditions:
+            - condition: state
+              entity_id: input_select.bedroom_input
+              state: Chromecast
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: bedroom
+                input: chromecast
+        - conditions:
+            - condition: state
+              entity_id: input_select.bedroom_input
+              state: BluRay
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: bedroom
+                input: bluray
+      default:
+        - service: script.function_tv_change_input
+          data:
+            tv: bedroom
+            input: roku
+        - choose:
+            - conditions:
+                - condition: state
+                  entity_id: input_select.bedroom_input
+                  state: Cameras
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: bedroom
+                    camera: split
+            - conditions:
+                - condition: state
+                  entity_id: input_select.bedroom_input
+                  state: Front Door Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: bedroom
+                    camera: front_door
+            - conditions:
+                - condition: state
+                  entity_id: input_select.bedroom_input
+                  state: Garage Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: bedroom
+                    camera: garage
+            - conditions:
+                - condition: state
+                  entity_id: input_select.bedroom_input
+                  state: Chimney Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: bedroom
+                    camera: chimney
+            - conditions:
+                - condition: state
+                  entity_id: input_select.bedroom_input
+                  state: Shed Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: bedroom
+                    camera: shed
+          default: []
+    - service: input_select.select_option
+      data:
+        option: Select Input
+      entity_id: input_select.bedroom_input
+  mode: single
+- id: "1607118334187"
+  alias: TV - Family Room - Change Input
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.god_damn_input
+      from: Select Input
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.god_damn_tv
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: input_select.god_damn_input
+              state: Tivo
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: god_damn
+                input: tivo
+        - conditions:
+            - condition: state
+              entity_id: input_select.god_damn_input
+              state: Chromecast
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: god_damn
+                input: chromecast
+        - conditions:
+            - condition: state
+              entity_id: input_select.god_damn_input
+              state: Playstation
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: god_damn
+                input: playstation
+        - conditions:
+            - condition: state
+              entity_id: input_select.god_damn_input
+              state: Wii
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: god_damn
+                input: wii
+      default:
+        - service: script.function_tv_change_input
+          data:
+            tv: god_damn
+            input: roku
+        - choose:
+            - conditions:
+                - condition: state
+                  entity_id: input_select.god_damn_input
+                  state: Cameras
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: god_damn
+                    camera: split
+            - conditions:
+                - condition: state
+                  entity_id: input_select.god_damn_input
+                  state: Front Door Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: god_damn
+                    camera: front_door
+            - conditions:
+                - condition: state
+                  entity_id: input_select.god_damn_input
+                  state: Garage Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: god_damn
+                    camera: garage
+            - conditions:
+                - condition: state
+                  entity_id: input_select.god_damn_input
+                  state: Chimney Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: god_damn
+                    camera: chimney
+            - conditions:
+                - condition: state
+                  entity_id: input_select.god_damn_input
+                  state: Shed Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: god_damn
+                    camera: shed
+          default: []
+    - service: input_select.select_option
+      data:
+        option: Select Input
+      entity_id: input_select.god_damn_input
+  mode: single
+- id: "1607118422801"
+  alias: TV - Family Room - Change Channel
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.god_damn_channel
+      from: Select Channel
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.god_damn_tv
+    - service: shell_command.change_channel
+      data:
+        tv_device: tivo-familyroom
+        channel: "{{ states('input_select.god_damn_channel') }}"
+    - service: script.function_tv_change_input
+      data:
+        tv: god_damn
+        input: tivo
+    - service: input_select.select_option
+      data:
+        option: Select Channel
+      entity_id: input_select.god_damn_channel
+  mode: single
+- id: "1607118972808"
+  alias: TV - Living Room - Change Input
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.living_room_input
+      from: Select Input
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.living_room_tv
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: input_select.living_room_input
+              state: Tivo
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: living_room
+                input: tivo
+        - conditions:
+            - condition: state
+              entity_id: input_select.living_room_input
+              state: Chromecast
+          sequence:
+            - service: script.function_tv_change_input
+              data:
+                tv: living_room
+                input: chromecast
+      default:
+        - service: script.function_tv_change_input
+          data:
+            tv: living_room
+            input: roku
+        - choose:
+            - conditions:
+                - condition: state
+                  entity_id: input_select.living_room_input
+                  state: Cameras
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: living_room
+                    camera: split
+            - conditions:
+                - condition: state
+                  entity_id: input_select.living_room_input
+                  state: Front Door Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: living_room
+                    camera: front_door
+            - conditions:
+                - condition: state
+                  entity_id: input_select.living_room_input
+                  state: Garage Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: living_room
+                    camera: garage
+            - conditions:
+                - condition: state
+                  entity_id: input_select.living_room_input
+                  state: Chimney Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: living_room
+                    camera: chimney
+            - conditions:
+                - condition: state
+                  entity_id: input_select.living_room_input
+                  state: Shed Camera
+              sequence:
+                - service: script.function_tv_roku_choose_camera
+                  data:
+                    roku: living_room
+                    camera: shed
+          default: []
+    - service: input_select.select_option
+      data:
+        option: Select Input
+      entity_id: input_select.living_room_input
+  mode: single
+- id: "1607119082409"
+  alias: TV - Living Room - Change Channel
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.living_room_channel
+      from: Select Channel
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.living_room_tv
+    - service: script.function_tv_change_input
+      data:
+        tv: living_room
+        input: tivo
+    - service: shell_command.change_channel
+      data:
+        tv_device: tivo-livingroom
+        channel: "{{ states('input_select.living_room_channel') }}"
+    - service: input_select.select_option
+      data:
+        option: Select Channel
+      entity_id: input_select.living_room_channel
+  mode: single
+- id: "1607188975863"
+  alias: TV - Office - Change Roku/Plex Show
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.office_plex_show
+  condition:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: input_select.office_plex_show
+          state: Select Show
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.office_tv
+    - service: homeassistant.update_entity
+      data: {}
+      entity_id: sensor.office_tv_next_episode
+    - choose:
+        - conditions:
+            - condition: numeric_state
+              entity_id: sensor.office_tv_plug
+              below: "45"
+          sequence:
+            - repeat:
+                until:
+                  - condition: numeric_state
+                    entity_id: sensor.office_tv_plug
+                    above: "45"
+                sequence:
+                  - service: system_log.write
+                    data:
+                      message: office tv waiting 1s waiting for power on
+                  - delay:
+                      hours: 0
+                      minutes: 0
+                      seconds: 1
+                      milliseconds: 0
+            - service: system_log.write
+              data:
+                message: office tv waiting 4s after power on
+            - delay:
+                hours: 0
+                minutes: 0
+                seconds: 4
+                milliseconds: 0
+      default: []
+    - service: script.function_tv_change_input
+      data:
+        tv: office
+        input: roku
+    - choose:
+        - conditions:
+            - condition: not
+              conditions:
+                - condition: state
+                  entity_id: media_player.office_roku
+                  attribute: app_name
+                  state: Plex - Stream for Free
+          sequence:
+            - service: media_player.select_source
+              data:
+                source: Plex - Stream for Free
+              entity_id: media_player.office_roku
+      default: []
+    - repeat:
+        until:
+          - condition: template
+            value_template:
+              "{{ states('media_player.plex_plex_for_roku_office_roku')
+              in ['idle', 'playing', 'paused', 'stopped' ] }}"
+        sequence:
+          - service: system_log.write
+            data:
+              message:
+                "state of office roku plex client: {{ states('media_player.plex_plex_for_roku_office_roku')
+                }} and Office Roku is currently on: {{ state_attr('media_player.office_roku',
+                'app_name') }}"
+              level: warning
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 1
+              milliseconds: 0
+          - service: plex.scan_for_clients
+            data: {}
+    - service: system_log.write
+      data:
+        message:
+          "state of office roku plex client: {{ states('media_player.plex_plex_for_roku_office_roku')
+          }}"
+        level: info
+    - service: system_log.write
+      data:
+        message: waiting 1 seconds
+        level: info
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 1
+        milliseconds: 0
+    - service: system_log.write
+      data:
+        message: starting {{ states('sensor.office_tv_next_episode') }}
+        level: info
+    - service: media_player.play_media
+      data:
+        media_content_id: "{{ states('sensor.office_tv_next_episode') }}"
+        media_content_type: episode
+      entity_id: media_player.plex_plex_for_roku_office_roku
+    - service: input_select.select_option
+      data:
+        option: Select Show
+      entity_id: input_select.office_plex_show
+    - service: system_log.write
+      data:
+        message: office tv plex show automation done
+        level: error
+  mode: single
+- id: "1607192213578"
+  alias: TV - Bedroom - Change Roku/Plex Show
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.bedroom_plex_show
+      from: Select Show
+  condition: []
+  action:
+    - service: homeassistant.update_entity
+      data: {}
+      entity_id: sensor.bedroom_tv_next_episode
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.bedroom_tv
+    - service: script.function_tv_change_input
+      data:
+        tv: bedroom
+        input: roku
+    - choose:
+        - conditions:
+            - condition: not
+              conditions:
+                - condition: state
+                  entity_id: media_player.bedroom_roku
+                  attribute: app_id
+                  state: "13535"
+          sequence:
+            - service: media_player.select_source
+              data:
+                source: Plex - Stream for Free
+              entity_id: media_player.bedroom_roku
+      default: []
+    - repeat:
+        until:
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_bedroom_roku
+                state: idle
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_bedroom_roku
+                state: playing
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_bedroom_roku
+                state: paused
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_bedroom_roku
+                state: stopped
+        sequence:
+          - service: system_log.write
+            data:
+              message:
+                "state of bedroom roku plex client: {{ states('media_player.plex_plex_for_roku_bedroom_roku')
+                }}"
+              level: info
+          - service: plex.scan_for_clients
+            data: {}
+          - delay: "1"
+    - service: system_log.write
+      data:
+        message:
+          "state of bedroom roku plex client: {{ states('media_player.plex_plex_for_roku_bedroom_roku')
+          }}"
+        level: info
+    - service: system_log.write
+      data:
+        message: waiting 4 seconds
+        level: info
+    - delay: "4"
+    - service: system_log.write
+      data:
+        message: starting {{ states('sensor.bedroom_tv_next_episode') }}
+        level: info
+    - service: media_player.play_media
+      data:
+        media_content_id: "{{ states('sensor.bedroom_tv_next_episode') }}"
+        media_content_type: episode
+      entity_id: media_player.plex_plex_for_roku_bedroom_roku
+    - service: input_select.select_option
+      data:
+        option: Select Show
+      entity_id: input_select.bedroom_plex_show
+  mode: single
+- id: "1607195248442"
+  alias: TV - Family Room - Change Roku/Plex Show
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.god_damn_plex_show
+      from: Select Show
+  condition: []
+  action:
+    - service: script.function_tv_change_input
+      data:
+        tv: god_damn
+        input: roku
+    - service: homeassistant.update_entity
+      data: {}
+      entity_id: sensor.god_damn_tv_next_episode
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.god_damn_tv
+    - choose:
+        - conditions:
+            - condition: numeric_state
+              entity_id: sensor.god_damn_tv_plug
+              below: "36"
+          sequence:
+            - repeat:
+                until:
+                  - condition: numeric_state
+                    entity_id: sensor.god_damn_tv_plug
+                    above: "35"
+                sequence:
+                  - delay: "1"
+            - delay: "2"
+      default: []
+    - service: system_log.write
+      data:
+        message:
+          "God Damn Roku is currently on: {{ state_attr('media_player.god_damn_roku',
+          'app_name') }}"
+        level: warning
+    - repeat:
+        until:
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_god_damn_roku
+                state: idle
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_god_damn_roku
+                state: playing
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_god_damn_roku
+                state: paused
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_god_damn_roku
+                state: stopped
+        sequence:
+          - service: system_log.write
+            data:
+              message:
+                "state of god_damn roku plex client: {{ states('media_player.plex_plex_for_roku_god_damn_roku')
+                }}"
+              level: warning
+          - choose:
+              - conditions:
+                  - condition: not
+                    conditions:
+                      - condition: state
+                        entity_id: media_player.god_damn_roku
+                        attribute: app_name
+                        state: Plex - Stream for Free
+                sequence:
+                  - repeat:
+                      until:
+                        - condition: state
+                          entity_id: media_player.god_damn_roku
+                          attribute: app_name
+                          state: Plex - Stream for Free
+                      sequence:
+                        - service: media_player.select_source
+                          data:
+                            source: Plex - Stream for Free
+                          entity_id: media_player.god_damn_roku
+                        - delay: "4"
+                        - service: system_log.write
+                          data:
+                            message:
+                              "God Damn Roku is currently on: {{ state_attr('media_player.god_damn_roku',
+                              'app_name') }}"
+                            level: warning
+          - service: plex.scan_for_clients
+            data: {}
+          - delay: "1"
+    - service: system_log.write
+      data:
+        message:
+          "state of god_damn roku plex client: {{ states('media_player.plex_plex_for_roku_god_damn_roku')
+          }}"
+        level: warning
+    - service: system_log.write
+      data:
+        message: waiting 1 second
+        level: warning
+    - delay: "1"
+    - service: system_log.write
+      data:
+        message: starting {{ states('sensor.god_damn_tv_next_episode') }}
+        level: warning
+    - service: media_player.play_media
+      data:
+        media_content_id: "{{ states('sensor.god_damn_tv_next_episode') }}"
+        media_content_type: episode
+      entity_id: media_player.plex_plex_for_roku_god_damn_roku
+    - service: input_select.select_option
+      data:
+        option: Select Show
+      entity_id: input_select.god_damn_plex_show
+  mode: single
+- id: "1607196597834"
+  alias: TV - Office - Power Off
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: switch.office_tv
+      from: "on"
+      to: "off"
+  condition:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: sensor.office_tv_plug
+          state: unavailable
+  action:
+    - service: media_player.media_stop
+      data: {}
+      entity_id: media_player.plex_plex_for_roku_office_roku
+  mode: single
+- id: "1607196620269"
+  alias: TV - Bedroom - Power Off
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: switch.bedroom_tv
+      from: "on"
+      to: "off"
+  condition:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: sensor.bedroom_tv_plug
+          state: unavailable
+  action:
+    - service: media_player.media_stop
+      data: {}
+      entity_id: media_player.plex_plex_for_roku_bedroom_roku
+  mode: single
+- id: "1607196694845"
+  alias: TV - Living Room - Power Off
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: switch.living_room_tv
+      from: "on"
+      to: "off"
+  condition:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: sensor.living_room_tv_plug
+          state: unavailable
+  action:
+    - service: media_player.media_stop
+      data: {}
+      entity_id: media_player.plex_plex_for_roku_living_room_roku
+  mode: single
+- id: "1607196736782"
+  alias: TV - Family Room - Power Off
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: switch.god_damn_tv
+      from: "on"
+      to: "off"
+  condition:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: sensor.god_damn_tv_plug
+          state: unavailable
+  action:
+    - service: media_player.media_stop
+      data: {}
+      entity_id: media_player.plex_plex_for_roku_god_damn_roku
+  mode: single
+- id: "1607208301956"
+  alias: TV - Living Room - Change Roku/Plex Show
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.living_room_plex_show
+      from: Select Show
+  condition: []
+  action:
+    - service: homeassistant.update_entity
+      data: {}
+      entity_id: sensor.living_room_tv_next_episode
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.living_room_tv
+    - choose:
+        - conditions:
+            - condition: numeric_state
+              entity_id: sensor.living_room_tv_plug
+              below: "36"
+          sequence:
+            - repeat:
+                until:
+                  - condition: numeric_state
+                    entity_id: sensor.living_room_tv_plug
+                    above: "36"
+                sequence:
+                  - delay: "1"
+            - delay: "2"
+      default: []
+    - service: script.function_tv_change_input
+      data:
+        tv: living_room
+        input: roku
+    - choose:
+        - conditions:
+            - condition: not
+              conditions:
+                - condition: state
+                  entity_id: media_player.living_room_roku
+                  attribute: app_id
+                  state: "13535"
+          sequence:
+            - service: media_player.select_source
+              data:
+                source: Plex - Stream for Free
+              entity_id: media_player.living_room_roku
+      default: []
+    - repeat:
+        until:
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_living_room_roku
+                state: idle
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_living_room_roku
+                state: playing
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_living_room_roku
+                state: paused
+              - condition: state
+                entity_id: media_player.plex_plex_for_roku_living_room_roku
+                state: stopped
+        sequence:
+          - service: system_log.write
+            data:
+              message:
+                "state of living room roku plex client: {{ states('media_player.plex_plex_for_roku_living_room_roku')
+                }}"
+              level: info
+          - service: plex.scan_for_clients
+            data: {}
+          - delay: "1"
+    - service: system_log.write
+      data:
+        message:
+          "state of living room roku plex client: {{ states('media_player.plex_plex_for_roku_living_room_roku')
+          }}"
+        level: info
+    - service: system_log.write
+      data:
+        message: waiting 4 seconds
+        level: info
+    - delay: "4"
+    - service: system_log.write
+      data:
+        message: starting {{ states('sensor.living_room_tv_next_episode') }}
+        level: info
+    - service: media_player.play_media
+      data:
+        media_content_id: "{{ states('sensor.living_room_tv_next_episode') }}"
+        media_content_type: episode
+      entity_id: media_player.plex_plex_for_roku_living_room_roku
+    - service: input_select.select_option
+      data:
+        option: Select Show
+      entity_id: input_select.living_room_plex_show
+  mode: single
+- id: "1607709474562"
+  alias: Controls - Youtube Music Source Sync
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.youtube_music_custom_source
+      from: Select Source
+  condition: []
+  action:
+    - service: input_select.select_option
+      data:
+        option: "{{ states('input_select.youtube_music_custom_source') }}"
+      entity_id: input_select.ytube_music_player_source
+    - delay: "5"
+    - service: input_select.select_option
+      data:
+        option: Select Source
+      entity_id: input_select.youtube_music_custom_source
+  mode: single
+- id: "1607709571779"
+  alias: Controls - Youtube Music Speakers Sync
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.youtube_music_custom_speakers
+  condition: []
+  action:
+    - service: input_select.select_option
+      data:
+        option: "{{ states('input_select.youtube_music_custom_speakers') }}"
+      entity_id: input_select.ytube_music_player_speakers
+  mode: single
+- id: "1607709644687"
+  alias: Controls - Youtube Music Playlist Sync
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.youtube_music_custom_playlist
+  condition: []
+  action:
+    - service: input_select.select_option
+      data:
+        option: "{{ states('input_select.youtube_music_custom_playlist') }}"
+      entity_id: input_select.ytube_music_player_playlist
+  mode: single
+- id: "1607717328639"
+  alias: Lighting - Automatic Lights When We Come Home
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: group.holly_mike
+      from: not_home
+      to: home
+      for: 00:00:30
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: time
+              after: input_datetime.mantle_lights_on
+              before: input_datetime.mantle_lights_off
+          sequence:
+            - type: turn_on
+              device_id: 38d539fb07d811eb9c3c99fea225c21a
+              entity_id: switch.mantle_lights
+              domain: switch
+      default: []
+    - condition: state
+      entity_id: binary_sensor.christmas_lights_should_be_on
+      state: "on"
+    - type: turn_on
+      device_id: e55a21cf07e311ebb58cb906d28ca146
+      entity_id: switch.christmas_tree
+      domain: switch
+  mode: single
+- id: "1608322108259"
+  alias: 10 - Home Assistant - Restart HA for SSL/TV List
+  description: ""
+  trigger:
+    - platform: time
+      at: 04:12:00
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.new_ssl_cert_ready
+          state: "on"
+        - condition: state
+          entity_id: binary_sensor.new_tv_show_list_ready
+          state: "on"
+  action:
+    - service: homeassistant.update_entity
+      data: {}
+      entity_id: binary_sensor.home_assistant_configuration_check
+    - condition: state
+      entity_id: binary_sensor.home_assistant_configuration_check
+      state: "off"
+    - service: homeassistant.restart
+      data: {}
+  mode: single
+- id: "1608338936403"
+  alias: 15 - Home Assistant - Download SSL Cert
+  description: ""
+  trigger:
+    - platform: time
+      at: 04:01:02
+  condition: []
+  action:
+    - service: shell_command.ssl_download
+      data: {}
+  mode: single
+- id: "1608624485604"
+  alias: 99 - Testing - Actionable Notification
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: person.michael_erdely
+      to: The Barn
+  condition: []
+  action:
+    - service: notify.mobile_app_pixel_4a
+      data:
+        title: Location
+        message: You're at the barn!
+        data:
+          actions:
+            - action: STAY
+              title: Stay
+            - action: LEAVE
+              title: Leave
+  mode: single
+- id: "1608624623942"
+  alias: 99 - Testing - Mobile App Notification Action
+  description: ""
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: STAY
+      context:
+        user_id:
+          - 80ad218b0cf54379b5ee622fbb721c6b
+  condition: []
+  action:
+    - service: notify.mobile_app_pixel_4a
+      data:
+        title: Barn
+        message: Enjoy
+        data:
+          clickAction: /alarm-panel/home
+  mode: single
+- id: "1608699279426"
+  alias: Tag - Mike Desk - Unlock Mercury
+  description: ""
+  trigger:
+    - platform: tag
+      tag_id: 5a9e7a04-bf20-4e49-95db-e599b1335a56
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: template
+              value_template:
+                "{{ trigger.event.context.user_id == '80ad218b0cf54379b5ee622fbb721c6b'
+                }}"
+          sequence:
+            - service: homeassistant.update_entity
+              data: {}
+              entity_id: switch.mercury_screensaver
+            - service: system_log.write
+              data:
+                message: Mike scanned at Mike's Desk
+                level: warning
+            - condition: state
+              entity_id: switch.mercury_screensaver
+              state: "on"
+            - service: system_log.write
+              data:
+                message: Unlocking mercury for Mike
+                level: warning
+            - service: script.computer_mercury_unlock
+              data: {}
+      default:
+        - service: notify.hangouts_mike
+          data:
+            message: Someone scanned at Mike's Desk
+        - service: system_log.write
+          data:
+            message:
+              Someone (not Mike) scanned at Mike's Desk ({{ trigger.event.context.user_id
+              }})
+            level: error
+  mode: single
+- id: "1608701107067"
+  alias: Tag - Foyer/Garage - Disarm Security System
+  description: ""
+  trigger:
+    - platform: tag
+      tag_id: 741a22c8-f682-4319-8d86-eeaa31516012
+    - platform: tag
+      tag_id: 494e4399-01f7-4ad4-91e4-940b1377cf60
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: or
+              conditions:
+                - condition: template
+                  value_template: "{{ users[trigger.event.context.user_id] == 'Mike' }}"
+                - condition: template
+                  value_template: "{{ users[trigger.event.context.user_id] == 'Holly' }}"
+          sequence:
+            - service: script.security_disarm_system
+              data: {}
+            - service: system_log.write
+              data:
+                message:
+                  "{{ users[trigger.event.context.user_id] }} scanned at the {{ tags[trigger.event.data.tag_id]
+                  }} tag to Disarm the Security System"
+                level: warning
+      default:
+        - service: notify.hangouts_security_alert
+          data:
+            message:
+              "Warning: Someone scanned the {{ tags[trigger.event.data.tag_id]
+              }} tag  (user_id: {{ trigger.event.context.user_id }})"
+        - service: system_log.write
+          data:
+            message:
+              "Someone scanned the {{ tags[trigger.event.data.tag_id] }} tag  (user_id:
+              {{ trigger.event.context.user_id }})"
+            level: error
+  mode: single
+  variables:
+    tags:
+      741a22c8-f682-4319-8d86-eeaa31516012: Foyer
+      494e4399-01f7-4ad4-91e4-940b1377cf60: Garage
+    users:
+      80ad218b0cf54379b5ee622fbb721c6b: Mike
+      3109b2f6d085440f92db502bc4e30a3b: Holly
+- id: "1609371273449"
+  alias: Thermostat - Program
+  description: ""
+  trigger:
+    - platform: time
+      at: input_datetime.thermostat_evening
+    - platform: time
+      at: input_datetime.thermostat_sleep
+    - platform: time
+      at: input_datetime.thermostat_wake
+    - platform: time
+      at: input_datetime.thermostat_wake_weekend
+    - platform: state
+      entity_id: input_select.thermostat_mode
+    - platform: state
+      entity_id: group.holly_mike
+      from: home
+      to: not_home
+    - platform: state
+      entity_id: group.holly_mike
+      from: not_home
+      to: home
+  condition:
+    - condition: template
+      value_template:
+        '{{ (trigger is not defined) or (trigger is defined and trigger.entity_id
+        == "input_datetime.thermostat_wake" and is_state("binary_sensor.workday_sensor",
+        "on")) or (trigger is defined and trigger.entity_id == "input_datetime.thermostat_wake_weekend"
+        and is_state("binary_sensor.workday_sensor", "off")) or (trigger is defined
+        and trigger.entity_id != "input_datetime.thermostat_wake" and trigger.entity_id
+        != "input_datetime.thermostat_wake_weekend") }}'
+  action:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: input_select.thermostat_mode
+              state: "Off"
+          sequence:
+            - service: system_log.write
+              data:
+                level: warning
+                message: Turning Thermostat Off
+            - service: climate.turn_off
+              data: {}
+              entity_id: climate.thermostat
+      default:
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template:
+                    '{{ trigger is defined and trigger.entity_id == "input_select.thermostat_mode"
+                    }}'
+              sequence:
+                - service: system_log.write
+                  data:
+                    level: warning
+                    message:
+                      Switching to {{ states.input_select.thermostat_mode.state }}ing
+                      @ {{ states('input_number.thermostat_' + states.sensor.thermostat_program.state
+                      + '_' + states.input_select.thermostat_mode.state | lower + '_' + states.group.holly_mike.state)
+                      }} °F
+          default: []
+        - service: system_log.write
+          data:
+            message:
+              Running {{ states.sensor.thermostat_program.state | replace('_',
+              ' ') | title }}/{{ states.group.holly_mike.state | replace('not_home', 'Away')
+              | title }} program for {{ states.input_select.thermostat_mode.state | title
+              }}ing -- setting temperature to {{ states('input_number.thermostat_' + states.sensor.thermostat_program.state
+              + '_' + states.input_select.thermostat_mode.state | lower + '_' + states.group.holly_mike.state)
+              }} °F
+            level: warning
+        - delay: "10"
+        - service: climate.set_temperature
+          data:
+            temperature:
+              "{{ states('input_number.thermostat_' + states.sensor.thermostat_program.state
+              + '_' + states.input_select.thermostat_mode.state | lower + '_' + states.group.holly_mike.state)
+              }}"
+            hvac_mode: "{{ states.input_select.thermostat_mode.state | lower }}"
+          entity_id: climate.thermostat
+  mode: single
+- id: "1609607242283"
+  alias: 20 - Home Assistant - Nightly Tasks
+  description: ""
+  trigger:
+    - platform: time
+      at: input_datetime.home_assistant_nightly_tasks
+  condition: []
+  action:
+    - service: system_log.write
+      data:
+        message: Starting Nightly Tasks
+        level: warning
+    - service: rest_command.assistant_relay
+      data:
+        command: Synchronize Devices
+    - service: shell_command.clean_alarm_state
+      data: {}
+    - choose:
+        - conditions:
+            - condition: template
+              value_template:
+                "{{ now().weekday() == (states('sensor.recycle_weekday')
+                | int + 1) % 7 }}"
+          sequence:
+            - service: input_boolean.turn_off
+              data: {}
+              entity_id: input_boolean.recycle_is_out
+      default: []
+    - choose:
+        - conditions:
+            - condition: template
+              value_template:
+                "{{ now().weekday() == (states('sensor.trash_weekday_1')
+                | int + 1) % 7 or now().weekday() == (states('sensor.trash_weekday_2')
+                | int + 1) % 7 }}"
+          sequence:
+            - service: input_boolean.turn_off
+              data: {}
+              entity_id: input_boolean.trash_is_out
+      default: []
+    - service: shell_command.update_tv_shows
+      data: {}
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: binary_sensor.new_tv_show_list_ready
+              state: "on"
+          sequence:
+            - service: script.homeassistant_restart
+              data: {}
+      default: []
+    - service: system_log.write
+      data:
+        message: Finishing Nightly Tasks
+        level: warning
+  mode: single
+- id: "1610231390167"
+  alias: Notifications - Nobody Home
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: group.holly_mike
+      from: home
+      to: not_home
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      from: disarmed
+  condition:
+    - condition: state
+      entity_id: binary_sensor.oven_is_on
+      state: "on"
+  action:
+    - service: notify.hangouts_security_alert
+      data:
+        message: The Oven is on!
+  mode: single
+- id: "1610329722929"
+  alias: TV - Family Room - Power On
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.god_damn_tv_plug
+      above: "16"
+  condition: []
+  action:
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.god_damn_soundbar
+  mode: single
+- id: "1612040347239"
+  alias: TV - Living Room - TV Volume to Soundbar Volume
+  description: ""
+  trigger:
+    - platform: mqtt
+      topic: tele/living_room_tv_remote/RESULT
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0E01F" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x070707F8"
+                or trigger.payload_json.IrReceived.DataLSB == "0x70707F8" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_tv_remote/backlog
+                payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0}
+            - service: system_log.write
+              data:
+                message: sony soundbar volume up
+                level: warning
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0D02F" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x07070BF4"
+                or trigger.payload_json.IrReceived.DataLSB == "0x7070BF4" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_tv_remote/backlog
+                payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0}
+            - service: system_log.write
+              data:
+                message: sony soundbar volume down
+                level: warning
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0F00F" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x07070FF0"
+                or trigger.payload_json.IrReceived.DataLSB == "0x7070FF0" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_tv_remote/backlog
+                payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x140C","DataLSB":"0x2830","Repeat":0}
+            - service: system_log.write
+              data:
+                message: sony soundbar mute
+                level: warning
+      default:
+        - service: system_log.write
+          data:
+            message: "no condition met: {{ trigger.payload_json.IrReceived }}"
+            level: error
+    - service: system_log.write
+      data:
+        message: "sony soundbar received: {{ trigger.payload_json.IrReceived }}"
+        level: warning
+  mode: single
+- id: "1612041755835"
+  alias: TV - Family Room - Change Roku/Plex Show (Testing)
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_select.god_damn_plex_show
+      from: Select Show
+  condition: []
+  action:
+    - service: script.function_tv_change_input
+      data:
+        tv: god_damn
+        input: roku
+    - service: homeassistant.update_entity
+      data: {}
+      entity_id: sensor.god_damn_tv_next_episode
+    - service: homeassistant.turn_on
+      data: {}
+      entity_id: switch.god_damn_tv
+    - service: system_log.write
+      data:
+        message:
+          "state of god_damn roku plex client: {{ states('media_player.plex_plex_for_roku_god_damn_roku')
+          }} and God Damn Roku is currently on: {{ state_attr('media_player.god_damn_roku',
+          'app_name') }}"
+        level: warning
+    - choose:
+        - conditions:
+            - condition: not
+              conditions:
+                - condition: state
+                  entity_id: media_player.god_damn_roku
+                  attribute: app_name
+                  state: Plex - Stream for Free
+          sequence:
+            - service: media_player.select_source
+              data:
+                source: Plex - Stream for Free
+              entity_id: media_player.god_damn_roku
+      default: []
+    - repeat:
+        until:
+          - condition: template
+            value_template:
+              "{{ states('media_player.plex_plex_for_roku_god_damn_roku')
+              in ['idle', 'playing', 'paused', 'stopped' ] }}"
+        sequence:
+          - service: system_log.write
+            data:
+              message:
+                "state of god_damn roku plex client: {{ states('media_player.plex_plex_for_roku_god_damn_roku')
+                }} and God Damn Roku is currently on: {{ state_attr('media_player.god_damn_roku',
+                'app_name') }}"
+              level: warning
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 1
+              milliseconds: 0
+          - service: plex.scan_for_clients
+            data: {}
+    - service: system_log.write
+      data:
+        message:
+          "state of god_damn roku plex client: {{ states('media_player.plex_plex_for_roku_god_damn_roku')
+          }} and God Damn Roku is currently on: {{ state_attr('media_player.god_damn_roku',
+          'app_name') }}"
+        level: warning
+    - service: system_log.write
+      data:
+        message: waiting 1 second
+        level: warning
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 1
+        milliseconds: 0
+    - service: system_log.write
+      data:
+        message: starting {{ states('sensor.god_damn_tv_next_episode') }}
+        level: warning
+    - service: media_player.play_media
+      data:
+        media_content_id: "{{ states('sensor.god_damn_tv_next_episode') }}"
+        media_content_type: episode
+      entity_id: media_player.plex_plex_for_roku_god_damn_roku
+    - service: input_select.select_option
+      data:
+        option: Select Show
+      entity_id: input_select.god_damn_plex_show
+    - service: system_log.write
+      data:
+        message: god damn tv plex show automation done
+        level: error
+  mode: single
+- id: "1613160102079"
+  alias: Lighting - Mantle Lights On
+  description: ""
+  trigger:
+    - platform: time
+      at: input_datetime.mantle_lights_on
+  condition: []
+  action:
+    - type: turn_on
+      device_id: 38d539fb07d811eb9c3c99fea225c21a
+      entity_id: switch.mantle_lights
+      domain: switch
+  mode: single
+- id: "1613160122811"
+  alias: Lighting - Mantle Lights Off
+  description: ""
+  trigger:
+    - platform: time
+      at: input_datetime.mantle_lights_off
+  condition: []
+  action:
+    - type: turn_off
+      device_id: 38d539fb07d811eb9c3c99fea225c21a
+      entity_id: switch.mantle_lights
+      domain: switch
+  mode: single
+- id: "1613520122707"
+  alias: TV - Living Room - HDMI Input Passthrough
+  description: ""
+  trigger:
+    - platform: mqtt
+      topic: tele/living_room_tv_remote/RESULT
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF00FF" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD00FF"
+                or trigger.payload_json.IrReceived.DataLSB == "0x2FD00FF" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_hdmi_remote/backlog
+                payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF00FF","DataLSB":"0x02FD00FF","Repeat":0}
+            - service: system_log.write
+              data:
+                message:
+                  "hdmi passthrough: hdmi up: {{ trigger.payload_json.IrReceived
+                  }}"
+                level: warning
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF20DF" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD04FB"
+                or trigger.payload_json.IrReceived.DataLSB == "0x2FD04FB" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_hdmi_remote/backlog
+                payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF20DF","DataLSB":"0x02FD04FB","Repeat":0}
+            - service: system_log.write
+              data:
+                message:
+                  "hdmi passthrough: hdmi down: {{ trigger.payload_json.IrReceived
+                  }}"
+                level: warning
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF609F" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD06F9"
+                or trigger.payload_json.IrReceived.DataLSB == "0x2FD06F9" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_hdmi_remote/backlog
+                payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF609F","DataLSB":"0x02FD06F9","Repeat":0}
+            - service: system_log.write
+              data:
+                message: "hdmi passthrough: hdmi 1: {{ trigger.payload_json.IrReceived }}"
+                level: warning
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF50AF" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD0AF5"
+                or trigger.payload_json.IrReceived.DataLSB == "0x2FD0AF5" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_hdmi_remote/backlog
+                payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF50AF","DataLSB":"0x02FD0AF5","Repeat":0}
+            - service: system_log.write
+              data:
+                message: "hdmi passthrough: hdmi 2: {{ trigger.payload_json.IrReceived }}"
+                level: warning
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF708F" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD0EF1"
+                or trigger.payload_json.IrReceived.DataLSB == "0x2FD0EF1" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_hdmi_remote/backlog
+                payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF708F","DataLSB":"0x02FD0EF1","Repeat":0}
+            - service: system_log.write
+              data:
+                message: "hdmi passthrough: hdmi 3: {{ trigger.payload_json.IrReceived }}"
+                level: warning
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF906F" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD09F6"
+                or trigger.payload_json.IrReceived.DataLSB == "0x2FD09F6" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_hdmi_remote/backlog
+                payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF906F","DataLSB":"0x02FD09F6","Repeat":0}
+            - service: system_log.write
+              data:
+                message: "hdmi passthrough: hdmi 4: {{ trigger.payload_json.IrReceived }}"
+                level: warning
+        - conditions:
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
+                }}'
+            - condition: template
+              value_template: "{{ trigger.payload_json.IrReceived.Bits | int == 32 }}"
+            - condition: template
+              value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BFB04F" }}'
+            - condition: template
+              value_template:
+                '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD0DF2"
+                or trigger.payload_json.IrReceived.DataLSB == "0x2FD0DF2" }}'
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: cmnd/living_room_hdmi_remote/backlog
+                payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BFB04F","DataLSB":"0x02FD0DF2","Repeat":0}
+            - service: system_log.write
+              data:
+                message: "hdmi passthrough: hdmi 5: {{ trigger.payload_json.IrReceived }}"
+                level: warning
+      default:
+        - service: system_log.write
+          data:
+            message:
+              "hdmi passthrough: no condition met: {{ trigger.payload_json.IrReceived
+              }}"
+            level: warning
+  mode: single
+- id: "1614981790208"
+  alias: Notifications - Mailbox Notify
+  description: ""
+  trigger:
+    - platform: mqtt
+      topic: tele/rf_bridge/RESULT
+  condition:
+    - condition: template
+      value_template: '{{ trigger.payload_json.RfReceived.Data | upper == "D1496E" }}'
+    - condition: state
+      entity_id: input_boolean.mailbox_sensor_wait
+      state: "off"
+  action:
+    - service: notify.hangouts_security_alert
+      data:
+        message: The mail's here!  The mail's here!  Woo-hoo!
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.mailbox_sensor_wait
+  mode: single
+- id: "1615411227750"
+  alias: Notifications - Mailbox Wait Reset
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_boolean.mailbox_sensor_wait
+      to: "on"
+      for: 00:01:00
+  condition: []
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.mailbox_sensor_wait
+  mode: single
+- id: "1615594192596"
+  alias: Thermostat - Turn on AC
+  description: ""
+  trigger:
+    - platform: template
+      value_template:
+        "{{ (states('sensor.warmest_temperature_in_house') | float)
+        >= (states('input_number.ac_threshold') | float) }}"
+  condition: []
+  action:
+    - service: system_log.write
+      data:
+        message: Turning on AC
+        level: warning
+    - service: input_select.select_option
+      data:
+        option: Cool
+      target:
+        entity_id: input_select.thermostat_mode
+  mode: single
+- id: "1615594635153"
+  alias: Thermostat - Turn on Heat
+  description: ""
+  trigger:
+    - platform: template
+      value_template:
+        "{{ (states('sensor.coolest_temperature_in_house') | float)
+        <= (states('input_number.heat_threshold') | float) }}"
+  condition: []
+  action:
+    - service: system_log.write
+      data:
+        message: Turning on Heat
+        level: warning
+    - service: input_select.select_option
+      data:
+        option: Heat
+      target:
+        entity_id: input_select.thermostat_mode
+  mode: single

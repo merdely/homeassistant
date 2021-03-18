@@ -1,0 +1,36 @@
+- name: ha_server_con
+  sidebar_title: Server Control
+  sidebar_icon: mdi:cog-transfer
+  js_url: /api/hassio/app/entrypoint.js
+  url_path: 'config/server_control'
+  embed_iframe: true
+  require_admin: true
+  config:
+    ingress: core_configurator  
+- name: ha_dash
+  sidebar_title: Home Assistant
+  sidebar_icon: mdi:home-assistant
+  js_url: /api/hassio/app/entrypoint.js
+  url_path: 'desktop-dashboard/home-assistant'
+  embed_iframe: true
+  require_admin: true
+  config:
+    ingress: core_configurator  
+- name: ha_zha_dashboard
+  sidebar_title: ZHA Dashboard
+  sidebar_icon: mdi:zigbee
+  js_url: /api/hassio/app/entrypoint.js
+  url_path: 'config/zha/dashboard'
+  embed_iframe: true
+  require_admin: true
+  config:
+    ingress: core_configurator  
+- name: ha_automations
+  sidebar_title: Automations
+  sidebar_icon: mdi:home-automation
+  js_url: /api/hassio/app/entrypoint.js
+  url_path: 'config/automation/dashboard'
+  embed_iframe: true
+  require_admin: true
+  config:
+    ingress: core_configurator  

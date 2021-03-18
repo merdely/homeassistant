@@ -1,0 +1,47 @@
+db_url: !secret mysql_uri
+purge_keep_days: 14
+auto_purge: true
+exclude:
+  domains:
+    - automation
+    - camera
+    - hangouts
+    - input_datetime
+    - input_number
+    - input_select
+    - input_text
+    - script
+    - sun
+    - updater
+    - zone
+  entity_globs:
+    - binary_sensor.lumi_lumi_*
+    - media_player.plex_anne_henderson_*
+    - media_player.plex_stuckonu5_*
+    - media_player.plex_heyitsmikey128_*
+    - sensor.*_tv_next_episode
+    - sensor.*_plug_analog_input
+    - sensor.*_version
+    - sensor.*_version_latest
+    - sensor.date*
+    - sensor.holly_desk_plug_energy_*
+    - sensor.lumi_lumi_*
+    - sensor.time*
+    - sensor.weather_*
+    - zone.*
+  entities:
+    - binary_sensor.google
+    - binary_sensor.remote_ui
+    - input_boolean.christmas_tree_is_up
+    - input_boolean.fake_door_sensor
+    - input_boolean.fake_gate_sensor
+    - input_boolean.fake_window_sensor
+    - input_boolean.gate_notifications
+    - input_boolean.security_test_mode
+    - input_boolean.test_security_device
+    - input_boolean.test_security_device_2
+    - input_boolean.test_security_device_3
+    - sensor.internet_time
+    - sensor.last_boot  # Comes from 'systemmonitor' sensor platform
+  event_types:
+    - call_service      # Don't record service calls

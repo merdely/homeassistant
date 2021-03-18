@@ -1,0 +1,13 @@
+#!/bin/sh
+
+[ "$1" = "-h" ] && printf "usage: $0 TIVO BUTTONCODE\nExample codes:\n\tENTER\n\tLIVETV\n\tPAUSE\n\tSELECT\n\tSKIP\n\tTIVO\n" && exit
+[ -z "$2" ] && exit 1
+
+tivo=$1
+button=$2
+
+printf "IRCODE $button\r" | nc -w1 "$tivo" 31339
+sleep 2
+
+[ -d /config/log ] && \
+date +"%b %e %H:%M:%S $(hostname) $(basename $0 .sh)[$$]: Executing on '$tivo'" >> /config/log/$(basename $0 .sh).log

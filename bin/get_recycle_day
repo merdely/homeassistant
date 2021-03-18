@@ -1,0 +1,64 @@
+#!/bin/sh
+
+datecmd() {
+  if [ "$datetype" = "busybox" ]; then
+    date -D "%A, %B %d, %Y" $*
+  else
+    date $*
+  fi
+}
+datetype=gnu
+date --version 2>&1 | grep -iq busybox && datetype=busybox
+default_day=Friday
+
+secrets_file="$(readlink -f $(dirname "$0")/../secrets.yaml)"
+[ ! -f "$secrets_file" ] && echo "Error: Could not find secrets.yaml" && exit 1
+
+county_url=$(awk "\$1 == \"recycle_url:\" { s=\$2;gsub(/(^\"|\"$)/,\"\",s);print s }" $secrets_file)
+
+# Check the county day for my address; if unreadable, throw a warning and use $default_day
+county_data=$(curl -fs "$county_url")
+[ $? != 0 ] && echo "$0: Warning: Could not download county data" > /dev/stderr
+county_day=$(echo "$county_data" | awk -F '[><]' '$2=="p class=\"day\"" { print $5;exit }')
+case $county_day in
+  Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)
+    ;;
+  *)
+    county_day=$default_day
+    ;;
+esac
+
+IFS=$(printf "\n\b")
+
+current_year=$(date "+%Y")
+current_week_number=$(date "+%U")
+
+# For testing
+#current_week_number=$((current_week_number - 1))
+#current_week_number=$((current_week_number + 1))
+
+# Download holiday data
+holiday_data=$(curl -fs "https://www.montgomerycountymd.gov/sws/holidays/")
+[ $? != 0 ] && echo "$0: Error: Could not download county holiday data" > /dev/stderr && echo $county_day && exit 1
+
+# Loop through holiday data
+for f in $(echo "$holiday_data" | grep -A1 ">$county_day<" | sed 's/&nbsp;/ /g' | awk "\$0!~/>$county_day</&&\$0!=\"--\"{s=substr(\$0,index(\$0,\">\")+1);s=substr(s,1,index(s,\"<\")-1);gsub(/ \(no change\)/, \"\", s);print s}")
+do
+  ! echo "$f" | grep -Eq "^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday), (January|February|March|April|May|June|July|August|September|October|November|December) [123]?[0-9], [0-9]{4}$" && echo "$0: Warning: Invalid date string '$f'" > /dev/stderr && continue
+  this_year=$(datecmd -d "$f" "+%Y")
+  [ $? != 0 ] && echo "$0: Warning: Cannot get year for '$f'" > /dev/stderr && continue
+
+  this_week_number=$(datecmd -d "$f" "+%U")
+  [ $? != 0 ] && echo "$0: Warning: Cannot get week number for '$f'" > /dev/stderr && continue
+
+  [ $current_year = $this_year ] && [ $current_week_number = $this_week_number ] && this_week_day=$(date -d "$f" "+%A")
+done
+
+case $this_week_day in
+  Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)
+    echo $this_week_day
+    ;;
+  *)
+    echo $county_day
+    ;;
+esac

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+hapath=/srv/docker/homeassistant
+[ -f /config/.HA_VERSION ] && hapath=/config
+
+curstate=$(tail -n1 $hapath/www/alarm.state)
+echo "$curstate" > $hapath/www/alarm.state

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+[ "$1" = "-h" ] && { echo "usage: $(basename $0) [-h]"; exit 0; }
+[ $(id -u) != 0 ] && { echo "Error: This program must be run as root"; exit 1; }
+hass_group=1013
+
+hapath=/srv/docker/homeassistant
+[ -f /config/.HA_VERSION ] && hapath=/config
+
+chown -R root:$hass_group $hapath
+find $hapath -type f -exec chmod -R ug=rwx,o= "{}" \;
+find $hapath -type d -exec chmod -R u=rwx,g=rwxs,o= "{}" \;
+chmod go= $hapath/.ssh/homeassistant $hapath/.storage/auth*
+

@@ -1,0 +1,7 @@
+tivo_setch: '/config/bin/tivo_setch {{ tv_device }}.erdely.in "{{ channel }}"'
+tivo_record: "/config/bin/tivo_record {{ tv_device }}.erdely.in"
+tivo_button: "/config/bin/tivo_button {{ tv_device }}.erdely.in {{ tivo_button }}"
+manage_screensaver: "/usr/bin/ssh -i /config/.ssh/homeassistant"
+update_tv_shows: "/config/bin/create_tv_list.sh"
+rm_newshows_flag: "rm -f /config/.newtvshowfile"
+clean_alarm_state: /config/bin/clean_alarm_state

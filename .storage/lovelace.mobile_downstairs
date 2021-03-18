@@ -1,0 +1,205 @@
+{
+    "version": 1,
+    "key": "lovelace.mobile_downstairs",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.downstairs",
+                                                        "show_icon": false
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.family_room",
+                                                        "show_icon": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "grid",
+                                                "columns": 4,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.family_room_light",
+                                                        "name": "God Damn Light"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.fireplace_light"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.three_headed_lamp"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.christmas_tree",
+                                                        "icon": "mdi:pine-tree"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.den",
+                                                        "show_icon": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "grid",
+                                                "columns": 3,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.den_light",
+                                                        "icon_height": "50px"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.laundry_room_light",
+                                                        "icon_height": "50px"
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "light.powder_room_light"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "toggle"
+                                                        },
+                                                        "entity": "switch.mantle_lights",
+                                                        "icon_height": "50px"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "picture",
+                                    "image": "/local/images/homeassistant-banner-back.png",
+                                    "tap_action": {
+                                        "action": "navigate",
+                                        "navigation_path": "/mobile-dashboard/mobile"
+                                    },
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

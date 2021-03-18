@@ -1,0 +1,387 @@
+project_id: smart-home-697a0
+service_account: !include secrets_google.json
+report_state: true
+expose_by_default: false
+exposed_domains:
+  - alarm_control_panel
+  - cover
+  - climate
+  - group
+  - input_boolean
+  - input_select
+  - scene
+  - script
+  - switch
+  - light
+  - fan
+secure_devices_pin: !secret alarm_code
+
+entity_config:
+  cover.garage_door:
+    name: Garage Door
+    room: Garage
+  switch.downstairs:
+    name: Downstairs
+    room: Zoo
+  switch.middle_level:
+    name: Middle Level
+    room: Zoo
+  switch.upstairs:
+    name: Upstairs
+    room: Zoo
+  switch.outside:
+    name: Outside
+    room: Zoo
+  switch.front_yard:
+    name: Front Yard
+    room: Zoo
+  switch.back_yard:
+    name: Back Yard
+    room: Zoo
+  
+  # Upstairs
+  switch.guest_room_light:
+    name: Guest Room Light
+    room: Guest Room
+  switch.hallway_light:
+    name: Hallway Light
+    room: Hallway
+
+  # Bedroom
+  switch.bedroom_light:
+    name: Dresser Lamp
+    room: Bedroom
+  light.bedroom_fan_light:
+    name: Bedroom Fan Light
+    room: Bedroom
+  fan.bedroom_fan:
+    name: Bedroom Fan
+    room: Bedroom
+  switch.bedroom_tv:
+    name: Bedroom TV
+    room: Bedroom
+  light.master_bath_light:
+    name: Master Bath Light
+    room: Bedroom
+  switch.master_bath_fan:
+    name: Master Bath Fan
+    room: Bedroom
+
+  # Hall Bath
+  light.hall_bath_light:
+    name: Hall Bath Light
+    room: Hall Bath
+  switch.hall_bath_fan:
+    name: Hall Bath Fan
+    room: Hall Bath
+
+    # Office
+  light.office_light:
+    name: Office Fan Light
+    room: Office
+  fan.office_fan:
+    name: Office Fan
+    room: Office
+  switch.mike_desk_lamp:
+    name: Mike Desk Lamp
+    room: Office
+  switch.mike_bench_lamp:
+    name: Mike Bench Lamp
+    room: Office
+  switch.office_tv:
+    name: Office TV
+    room: Office
+
+  # Middle Level
+  light.dining_room_light:
+    name: Dining Room Light
+    room: Dining Room
+  switch.dining_room_christmas_lights:
+    name: Dining Room Christmas Lights
+    room: Dining Room
+  switch.foyer_light:
+    name: Foyer Light
+    room: Foyer
+
+  # Kitchen
+  switch.oven:
+    name: Oven
+    room: Kitchen
+  switch.kitchen_light:
+    name: Kitchen Overhead Light
+    room: Kitchen
+  switch.kitchen_table_light:
+    name: Kitchen Table Light
+    room: Kitchen
+
+  # Living Room
+  group.black_lamps:
+    name: Black Lamps
+    room: Living Room
+  switch.living_room_light:
+    name: Near Black Lamp
+    room: Living Room
+  switch.far_living_room_lamp:
+    name: Far Black Lamp
+    room: Living Room
+  switch.small_living_room_Lamp:
+    name: White Lamp
+    room: Living Room
+  switch.living_room_tv:
+    name: Living Room TV
+    room: Living Room
+
+    # Den
+  switch.den_light:
+    name: Den Overhead Light
+    room: Den
+  switch.laundry_room_light:
+    name: Laundry Room Light
+    room: Den
+  light.powder_room_light:
+    name: Powder Room Light
+    room: Powder Room
+
+    # Family Room
+  switch.fireplace_light:
+    name: Fireplace Light
+    room: Family Room
+  switch.family_room_light:
+    name: God Damn Light
+    room: Family Room
+  switch.three_headed_lamp:
+    name: Three Headed Lamp
+    room: Family Room
+  switch.christmas_tree:
+    name: Christmas Tree
+    room: Family Room
+  switch.god_damn_tv:
+    name: God Damn TV
+    room: Family Room
+  switch.god_damn_soundbar:
+    name: God Damn Soundbar
+    room: Family Room
+
+  # Outside
+  switch.back_porch_light:
+    name: Back Porch Light
+    room: Back Porch
+  switch.front_porch_light:
+    name: Front Porch Light
+    room: Front Porch
+  switch.shed_lamp:
+    name: Shed Lamp
+    room: Shed
+  switch.flood_light:
+    name: Flood Light
+    room: Shed
+  switch.bench_light:
+    name: Bench Light
+    room: Garage
+  switch.middle_garage_light:
+    name: Middle Garage Light
+    room: Garage
+  switch.far_garage_light:
+    name: Far Garage Light
+    room: Garage
+  switch.outside_garage_lights:
+    name: Outside Garage Lights
+    room: Driveway
+  switch.outside_xmas:
+    name: Outside Christmas Lights
+    room: Driveway
+
+# Scripts
+  script.homeassistant_restart:
+    name: Restart Home Assistant
+
+  script.tv_bedroom_mute:
+    name: Script - TV - Bedroom - Mute
+  script.tv_bedroom_roku_ok:
+    name: Script - TV - Bedroom - Roku - OK
+  script.tv_bedroom_roku_pause:
+    name: Script - TV - Bedroom - Roku - Pause
+  script.tv_bedroom_roku_replay:
+    name: Script - TV - Bedroom - Roku - Replay
+  script.tv_bedroom_sleep:
+    name: Script - TV - Bedroom - Sleep
+  script.tv_bedroom_sleep_cancel:
+    name: Script - TV - Bedroom - Sleep Cancel
+  script.tv_bedroom_tivo_pause:
+    name: Script - TV - Bedroom - Tivo - Pause
+  script.tv_bedroom_tivo_replay:
+    name: Script - TV - Bedroom - Tivo - Replay
+  script.tv_bedroom_volume_down:
+    name: Script - TV - Bedroom - Volume Down
+  script.tv_bedroom_volume_up:
+    name: Script - TV - Bedroom - Volume Up
+
+  script.tv_god_damn_mute:
+    name: Script - TV - God Damn - Mute
+  script.tv_god_damn_roku_pause:
+    name: Script - TV - God Damn - Roku - Pause
+  script.tv_god_damn_roku_replay:
+    name: Script - TV - God Damn - Roku - Replay
+  script.tv_god_damn_soundbar_input:
+    name: Script - TV - God Damn - Soundbar Input
+  script.tv_god_damn_roku_ok:
+    name: Script - TV - God Damn - Roku - OK
+  script.tv_god_damn_tivo_pause:
+    name: Script - TV - God Damn - Tivo - Pause
+  script.tv_god_damn_tivo_replay:
+    name: Script - TV - God Damn - Tivo - Replay
+  script.tv_god_damn_volume_down:
+    name: Script - TV - God Damn - Volume Down
+  script.tv_god_damn_volume_up:
+    name: Script - TV - God Damn - Volume Up
+
+  script.tv_living_room_mute:
+    name: Script - TV - Living Room - Mute
+  script.tv_living_room_roku_ok:
+    name: Script - TV - Living Room - Roku - OK
+  script.tv_living_room_roku_pause:
+    name: Script - TV - Living Room - Roku - Pause
+  script.tv_living_room_roku_replay:
+    name: Script - TV - Living Room - Roku - Replay
+  script.tv_living_room_tivo_pause:
+    name: Script - TV - Living Room - Tivo - Pause
+  script.tv_living_room_tivo_replay:
+    name: Script - TV - Living Room - Tivo - Replay
+  script.tv_living_room_volume_down:
+    name: Script - TV - Living Room - Volume Down
+  script.tv_living_room_volume_up:
+    name: Script - TV - Living Room - Volume Up
+
+  script.tv_office_mute:
+    name: Script - TV - Office - Mute
+  script.tv_office_roku_ok:
+    name: Script - TV - Office - Roku - OK
+  script.tv_office_roku_pause:
+    name: Script - TV - Office - Roku - Pause
+  script.tv_office_roku_replay:
+    name: Script - TV - Office - Roku - Replay
+  script.tv_office_tivo_pause:
+    name: Script - TV - Office - Tivo - Pause
+  script.tv_office_tivo_replay:
+    name: Script - TV - Office - Tivo - Replay
+  script.tv_office_volume_down:
+    name: Script - TV - Office - Volume Down
+  script.tv_office_volume_up:
+    name: Script - TV - Office - Volume Up
+
+  # Scenes
+  script.scene_good_night:
+    name: Scene - Good Night
+  script.scene_night_night:
+    name: Scene - Night Night
+  script.scene_leaving_home:
+    name: Scene - Leaving Home
+  script.scene_movie_time:
+    name: Scene - Movie Time
+
+  # Sensors
+  binary_sensor.bedroom_slider:
+    name: Bedroom Slider
+    room: Bedroom
+  binary_sensor.front_door:
+    name: Front Door
+    room: Foyer
+  binary_sensor.living_room_slider:
+    name: Living Room Slider
+    room: Living Room
+  binary_sensor.dining_room_slider:
+    name: Dining Room Slider
+    room: Dining Room
+  binary_sensor.back_door:
+    name: Back Door
+    room: Kitchen
+  binary_sensor.family_room_slider:
+    name: Family Room Slider
+    room: Family Room
+  binary_sensor.den_window:
+    name: Den Window
+    room: Den
+  binary_sensor.powder_room_window:
+    name: Powder Room Window
+    room: Powder Room
+  binary_sensor.garage_entry_door:
+    name: Garage Entry Door
+    room: Garage
+  binary_sensor.shed_door:
+    name: Shed Door
+    room: Back Porch
+  binary_sensor.shed_gate:
+    name: Shed Gate
+    room: Back Porch
+  binary_sensor.chimney_gate:
+    name: Chimney Gate
+    room: Back Porch
+
+  # TV Stuff:
+  input_select.control_panel:
+    name: Control Panel
+    room: Zoo
+  input_select.bedroom_channel:
+    name: Bedroom Channel
+    room: Zoo
+  input_select.bedroom_input:
+    name: Bedroom Input
+    room: Zoo
+  input_select.bedroom_plex_show:
+    name: Bedroom Show
+    room: Zoo
+  input_select.bedroom_sleep:
+    name: Bedroom Sleep
+    room: Zoo
+  input_select.god_damn_channel:
+    name: God Damn Channel
+    room: Zoo
+  input_select.god_damn_input:
+    name: God Damn Input
+    room: Zoo
+  input_select.god_damn_plex_show:
+    name: God Damn Show
+    room: Zoo
+  input_select.god_damn_sleep:
+    name: God Damn Sleep
+    room: Zoo
+  input_select.living_room_channel:
+    name: Living Room Channel
+    room: Zoo
+  input_select.living_room_input:
+    name: Living Room Input
+    room: Zoo
+  input_select.living_room_plex_show:
+    name: Living Room Show
+    room: Zoo
+  input_select.living_room_sleep:
+    name: Living Room Sleep
+    room: Zoo
+  input_select.office_channel:
+    name: Office Channel
+    room: Zoo
+  input_select.office_input:
+    name: Office Input
+    room: Zoo
+  input_select.office_plex_show:
+    name: Office Show
+    room: Zoo
+  input_select.office_sleep:
+    name: Office Sleep
+    room: Zoo
+
+  alarm_control_panel.home_alarm:
+    name: Security System
+    room: Zoo
+
+  climate.thermostat:
+    name: Thermostat
+    room: Hallway
+
+  # - camera
+  # - lock
+  # - cover
+  # - media_player
+  # - vacuum
+  # - sensor
+  # - humidifier

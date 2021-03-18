@@ -1,0 +1,43 @@
+- platform: mqtt
+  name: "Bedroom Fan"
+  unique_id: "bedroom_fan"
+  qos: 0
+  state_topic: "stat/bedroom_fan/POWER1"
+  command_topic: "cmnd/bedroom_fan/POWER1"
+  speed_state_topic: "stat/bedroom_fan/speed"
+  speed_command_topic: "cmnd/bedroom_fan/tuyasend4"
+  availability_topic: "tele/bedroom_fan/LWT"
+  payload_available: "Online"
+  payload_not_available: "Offline"    
+  payload_on: "ON"
+  payload_off: "OFF"
+  payload_low_speed: "3,0"
+  payload_medium_speed: "3,1"
+  payload_high_speed: "3,2"
+  speeds:
+    - low
+    - medium
+    - high
+  retain: false
+
+- platform: mqtt
+  name: "Office Fan"
+  unique_id: "office_fan"
+  qos: 0
+  state_topic: "stat/office_fan/POWER1"
+  command_topic: "cmnd/office_fan/POWER1"
+  speed_state_topic: "stat/office_fan/speed"
+  speed_command_topic: "cmnd/office_fan/tuyasend4"
+  availability_topic: "tele/office_fan/LWT"
+  payload_available: "Online"
+  payload_not_available: "Offline"    
+  payload_on: "ON"
+  payload_off: "OFF"
+  payload_low_speed: "3,1"
+  payload_medium_speed: "3,2"
+  payload_high_speed: "3,3"
+  speeds:
+    - low
+    - medium
+    - high
+  retain: false

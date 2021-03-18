@@ -1,0 +1,388 @@
+#!/bin/sh
+
+[ -z "$2" ] && exit 1
+
+tivo=$1
+channel=$(echo $2 | tr [A-Z] [a-z])
+
+case $channel in
+  "cw"|"the cw")
+    channel=503
+    ;;
+  "nbc")
+    channel=504
+    ;;
+  "fox")
+    channel=505
+    ;;
+  "my tv")
+    channel=506
+    ;;
+  "abc")
+    channel=507
+    ;;
+  "wjla news")
+    channel=508
+    ;;
+  "cbs")
+    channel=509
+    ;;
+  "ion")
+    channel=513
+    ;;
+  "mpt"|"maryland public television")
+    channel=526
+    ;;
+  "pbs")
+    channel=526
+    ;;
+  "usa")
+    channel=550
+    ;;
+  "tnt")
+    channel=551
+    ;;
+  "tbs")
+    channel=552
+    ;;
+  "fx")
+    channel=553
+    ;;
+  "wgn")
+    channel=568
+    ;;
+  "axs"|"access")
+    channel=569
+  ;;
+  "espn")
+    channel=570
+    ;;
+  "acc network"|"the acc network"|"accn")
+    channel=571
+    ;;
+  "espnu"|"espn u"|"espn you")
+    channel=573
+    ;;
+  "espn2"|"espn 2"|"espn two"|"espn to"|"espn too")
+    channel=574
+    ;;
+  "sec network")
+    channel=575
+    ;;
+  "nbc sports washington")
+    channel=576
+    ;;
+  "masn"|"madsen"|"massen")
+    channel=577
+    ;;
+  "nbc sports washington Plus")
+    channel=578
+    ;;
+  "masn2"|"madsen2"|"massen2")
+    channel=579
+    ;;
+  "fox sports 1"|"fox sports")
+    channel=583
+    ;;
+  "fox sports 2")
+    channel=584
+    ;;
+  "big ten network")
+    channel=585
+    ;;
+  "nfl network"|"the nfl network")
+    channel=588
+    ;;
+  "nbc sports network"|"the nbc sports network")
+    channel=590
+    ;;
+  "tennis channel"|"the tennis channel")
+    channel=592
+    ;;
+  "bein sports")
+    channel=596
+    ;;
+  "cnn")
+    channel=600
+    ;;
+  "cnbc")
+    channel=602
+    ;;
+  "msnbc")
+    channel=603
+    ;;
+  "yahoo finance")
+    channel=604
+    ;;
+  "bloomberg television"|"bloomberg")
+    channel=605
+    ;;
+  "weather channel"|"the weather channel")
+    channel=611
+    ;;
+  "newsy")
+    channel=613
+    ;;
+  "news max tv"|"news max")
+    channel=615
+    ;;
+  "one america news newtork"|"one america news")
+    channel=616
+    ;;
+  "fox business")
+    channel=617
+    ;;
+  "fox news")
+    channel=618
+    ;;
+  "accuweather")
+    channel=619
+    ;;
+  "discovery channel"|"the discovery channel")
+    channel=620
+    ;;
+  "national geographic")
+    channel=621
+    ;;
+  "science"|"science channel"|"the science channel")
+    channel=622
+    ;;
+  "investigation discovery")
+    channel=623
+    ;;
+  "history channel"|"the history channel")
+    channel=628
+    ;;
+  "fyi")
+    channel=629
+    ;;
+  "animal planet")
+    channel=630
+    ;;
+  "motortrend")
+    channel=631
+    ;;
+  "ride tv")
+    channel=635
+    ;;
+  "tlc")
+    channel=639
+    ;;
+  "lifetime")
+    channel=640
+    ;;
+  "oxygen")
+    channel=644
+    ;;
+  "we"|"we tv")
+    channel=649
+    ;;
+  "qvc")
+    channel=650
+    ;;
+  "home shopping network"|"the home shopping newtork"|"hsn")
+    channel=651
+    ;;
+  "jewelry television")
+    channel=652
+    ;;
+  "qvc2")
+    channel=653
+    ;;
+  "home shopping network 2"|"the home shopping newtork 2"|"hsn2")
+    channel=654
+    ;;
+  "qvc3")
+    channel=656
+    ;;
+  "shop hq")
+    channel=657
+    ;;
+  "gemnet")
+    channel=658
+    ;;
+  "food network"|"the food network")
+    channel=664
+    ;;
+  "hgtv")
+    channel=665
+    ;;
+  "awe"|"a w e")
+    channel=669
+    ;;
+  "travel channel")
+    channel=670
+    ;;
+  "law and crime network"|"the law and crime network")
+    channel=678
+    ;;
+  "syfy"|"sci-fi")
+    channel=680
+    ;;
+  "a n e"|"a and e"|"ane"|"andy"|"annie")
+    channel=681
+    ;;
+  "trutv")
+    channel=683
+    ;;
+  "bravo")
+    channel=685
+    ;;
+  "ovation")
+    channel=688
+    ;;
+  "bbc america")
+    channel=689
+    ;;
+  "comedy central")
+    channel=690
+    ;;
+  "fxx"|"fx x")
+    channel=691
+    ;;
+  "reelz"|"reels")
+    channel=692
+    ;;
+  "pop"|"pop tv")
+    channel=694
+    ;;
+  "comedy.tv")
+    channel=695
+    ;;
+  "e"|"e tv"|"entertainment television")
+    channel=696
+    ;;
+  "vice")
+    channel=697
+    ;;
+  "freeform"|"free form")
+    channel=699
+    ;;
+  "mtv")
+    channel=710
+    ;;
+  "mtv2")
+    channel=711
+    ;;
+  "vh1")
+    channel=717
+    ;;
+  "bet her"|"b e t her")
+    channel=720
+    ;;
+  "cmt"|"country music television")
+    channel=721
+    ;;
+  "amc")
+    channel=731
+    ;;
+  "fxm"|"fx m")
+    channel=732
+    ;;
+  "ifc")
+    channel=734
+    ;;
+  "hallmark drama")
+    channel=737
+    ;;
+  "up tv")
+    channel=738
+    ;;
+  "hallmark movies and mysteries")
+    channel=739
+    ;;
+  "hallmark channel"|"the hallmark channel")
+    channel=740
+    ;;
+  "tv land")
+    channel=741
+    ;;
+  "hd net movies"|"h d net movies")
+    channel=746
+    ;;
+  "nickelodeon"|"nick")
+    channel=752
+    ;;
+  "nick toons")
+    channel=754
+    ;;
+  "teen nick")
+    channel=755
+    ;;
+  "nick jr"|"nick junior")
+    channel=756
+    ;;
+  "cartoon network"|"the cartoon network")
+    channel=757
+    ;;
+  "universal kids")
+    channel=763
+    ;;
+  "bet"|"b e t"|"black entertainment television")
+    channel=770
+    ;;
+  "tv one")
+    channel=771
+    ;;
+  "disney channel"|"the disney channel")
+    channel=780
+    ;;
+  "disney xd")
+    channel=781
+    ;;
+  "hbo")
+    channel=899
+    ;;
+  "hbo west")
+    channel=901
+    ;;
+  "hbo2"|"hbo 2"|"hbo two"|"hbo to"|"hbo too")
+    channel=902
+    ;;
+  "hbo2 west"|"hbo 2 west"|"hbo two west"|"hbo to west"|"hbo too west")
+    channel=903
+    ;;
+  "hbo signature")
+    channel=904
+    ;;
+  "hbo signature west")
+    channel=905
+    ;;
+  "hbo family")
+    channel=906
+    ;;
+  "hbo family west")
+    channel=907
+    ;;
+  "hbo comedy")
+    channel=908
+    ;;
+  "hbo comedy west")
+    channel=909
+    ;;
+  "hbo zone")
+    channel=909
+    ;;
+  "hbo zone west")
+    channel=910
+    ;;
+esac
+
+channel=$(echo $channel | sed 's/Channel //')
+
+OUT=$(nc -w 1 "$tivo" 31339)
+
+if [ -z "$OUT" ]; then
+  printf "IRCODE TIVO\r" | nc -w1 "$tivo" 31339
+  sleep 2
+  printf "IRCODE LIVETV" | nc -w1 "$tivo" 31339
+  sleep 2
+fi
+
+{ printf "IRCODE CLEAR\r"; for f in $(echo $channel | sed -e 's/\(.\)/\1\n/g'); do
+  printf "IRCODE NUM$f\r"
+done; printf "IRCODE ENTER\r"; } | nc -w1 "$tivo" 31339
+sleep 2
+
+[ -d /config/log ] && \
+date +"%b %e %H:%M:%S $(hostname) $(basename $0 .sh)[$$]: Setting $tivo to $channel (original input '$1' '$2')" >> /config/log/$(basename $0 .sh).log

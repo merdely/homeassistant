@@ -1,0 +1,49 @@
+{
+    "version": 1,
+    "key": "lovelace.alarm_panel",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 2,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "entity",
+                                            "entity": "sensor.time_formatted"
+                                        },
+                                        {
+                                            "type": "entity",
+                                            "entity": "sensor.fully_kiosk_browser",
+                                            "name": "Control Panel"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "alarm-panel",
+                                    "states": [
+                                        "arm_home",
+                                        "arm_away"
+                                    ],
+                                    "entity": "alarm_control_panel.home_alarm",
+                                    "name": " "
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,853 @@
+#- platform: systemmonitor
+#  resources:
+#    - type: disk_use_percent
+#      arg: /ssl/fullchain.pem
+#    - type: disk_use_percent
+#      arg: /etc/localtime
+#    - type: disk_use_percent
+#      arg: /config
+#    - type: throughput_network_in
+#      arg: eno1
+#    - type: throughput_network_out
+#      arg: eno1
+#    - type: network_in
+#      arg: eno1
+#    - type: network_out
+#      arg: eno1
+#    - type: memory_use_percent
+#    - type: processor_use
+#    - type: processor_temperature
+
+- name: "Shed Door Battery"
+  platform: mqtt
+  state_topic: stat/shed_door/BATTERY
+  value_template: "{{ value }}"
+  icon: "mdi:battery"
+  unique_id: "shed_door_battery"
+  device:
+    identifiers:
+      - "shed_door"
+    name: shed_door
+    manufacturer: Tasmota
+- name: "Shed Gate Battery"
+  platform: mqtt
+  state_topic: stat/shed_gate/BATTERY
+  value_template: "{{ value }}"
+  icon: "mdi:battery"
+  unique_id: "shed_gate_battery"
+  device:
+    identifiers:
+      - "shed_gate"
+    name: shed_gate
+    manufacturer: Tasmota
+- name: "Chimney Gate Battery"
+  platform: mqtt
+  state_topic: stat/chimney_gate/BATTERY
+  value_template: "{{ value }}"
+  icon: "mdi:battery"
+  unique_id: "chimney_gate_battery"
+  device:
+    identifiers:
+      - "chimney_gate"
+    name: chimney_gate
+    manufacturer: Tasmota
+
+- platform: mqtt
+  name: Fully Kiosk Browser
+  json_attributes_topic: fully/deviceInfo/32e18972-a62f66fd
+  unit_of_measurement: "%"
+  device_class: "battery"
+  state_topic: fully/deviceInfo/32e18972-a62f66fd
+  value_template: "{{ value_json.batteryLevel }}"
+
+- platform: mqtt
+  name: Fully Kiosk Browser MBR
+  json_attributes_topic: fully/deviceInfo/fe195503-ca16fc27
+  unit_of_measurement: "%"
+  device_class: "battery"
+  state_topic: fully/deviceInfo/fe195503-ca16fc27
+  value_template: "{{ value_json.batteryLevel }}"
+
+- platform: template
+  sensors:
+    washer_dryer_state:
+      friendly_name: Washer and Dryer State
+      value_template: >-
+        {% if states('sensor.dryer_monitor_analog_ctenergy_power') | int > 750 and states('sensor.laundry_room_outlet_energy_power') | int >= 3 %}
+          both
+        {% elif states('sensor.dryer_monitor_analog_ctenergy_power') | int > 750 %}
+          dryer
+        {% elif states('sensor.laundry_room_outlet_energy_power') | int >= 3 %}
+          washer
+        {% else %}
+          off
+        {% endif %}
+      icon_template: mdi:washing-machine
+    washer_dryer_state_pretty:
+      friendly_name: Washer and Dryer State
+      value_template: >-
+        {% if states('sensor.dryer_monitor_analog_ctenergy_power') | int > 750 and states('sensor.laundry_room_outlet_energy_power') | int >= 3 %}
+          Washer & Dryer
+        {% elif states('sensor.dryer_monitor_analog_ctenergy_power') | int > 750 %}
+          Dryer
+        {% elif states('sensor.laundry_room_outlet_energy_power') | int >= 3 %}
+          Washer
+        {% else %}
+          Laundry Idle
+        {% endif %}
+      icon_template: mdi:washing-machine
+    fully_kiosk_screensaver:
+      friendly_name: "Fully Kiosk Browser Screensaver"
+      value_template: >-
+        {% if state_attr('sensor.fully_kiosk_browser', 'isInScreensaver') == True %}
+          On
+        {% else %}
+          Off
+        {% endif %}
+    fully_kiosk_screensaver_mbr:
+      friendly_name: "Fully Kiosk Browser MBR Screensaver"
+      value_template: >-
+        {% if state_attr('sensor.fully_kiosk_browser_mbr', 'isInScreensaver') == True %}
+          On
+        {% else %}
+          Off
+        {% endif %}
+    ytube_playlist_item_count:
+      friendly_name: Youtube Music Playlist Item
+      value_template: >-
+        {% if state_attr("input_select.ytube_music_player_playlist", "options") | length == 1 %}
+          Broken
+        {% else %}
+          Ok
+        {% endif %}
+    alarm_state:
+      friendly_name: "Alarm State"
+      value_template: >-
+        {% if is_state("alarm_control_panel.home_alarm", "disarmed") and is_state("binary_sensor.security_devices", "off") %}
+        disarmed_secure
+        {% elif is_state("alarm_control_panel.home_alarm", "disarmed") and is_state("binary_sensor.security_devices", "on") %}
+        disarmed_insecure
+        {% else %}
+        armed
+        {% endif %}
+    thermostat_temperature:
+      friendly_name: "Thermostat Temperature"
+      unit_of_measurement: "°F"
+      value_template: "{{ state_attr('climate.thermostat', 'current_temperature') }}"
+    thermostat_set_point:
+      friendly_name: "Thermostat Set Point"
+      unit_of_measurement: "°F"
+      value_template: "{{ state_attr('climate.thermostat', 'temperature') | round }}"
+    thermostat_program:
+      friendly_name: "Thermostat Program"
+      value_template: >-
+        {%- if as_timestamp(now()) >= as_timestamp(states.sensor.date.state ~ ' ' + states.input_datetime.thermostat_sleep.state | string) %}
+        sleep
+        {% elif as_timestamp(now()) >= as_timestamp(states.sensor.date.state ~ ' ' + states.input_datetime.thermostat_evening.state | string) %}
+        evening
+        {% elif as_timestamp(now()) >= as_timestamp(states.sensor.date.state ~ ' ' + states.input_datetime.thermostat_wake.state | string)
+                and is_state('binary_sensor.workday_sensor', 'on') %}
+        wake
+        {% elif as_timestamp(now()) >= as_timestamp(states.sensor.date.state ~ ' ' + states.input_datetime.thermostat_wake_weekend.state | string)
+                and is_state('binary_sensor.workday_sensor', 'off') %}
+        wake_weekend
+        {% else %}
+        sleep
+        {% endif %}
+
+    coolest_temperature_in_house:
+      friendly_name: "Coolest Temperature in House"
+      unit_of_measurement: "°F"
+      value_template: >-
+        {%- set ns=namespace(temp=100.0) %}
+        {%- for temp in expand('group.house_temperature') -%}
+          {%- if temp.state|float < ns.temp|float -%}
+            {%- set ns.temp=temp.state|float -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if ns.temp|float == 100.0 -%}
+          {%- set ns.temp = states('input_number.heat_threshold')|float + 2.0 -%}
+        {%- endif -%}
+        {{ ns.temp }}
+    warmest_temperature_in_house:
+      friendly_name: "Warmest Temperature in House"
+      unit_of_measurement: "°F"
+      value_template: >-
+        {%- set ns=namespace(temp=0.0) %}
+        {%- for temp in expand('group.house_temperature') -%}
+          {%- if temp.state|float > ns.temp|float -%}
+            {%- set ns.temp=temp.state|float -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if ns.temp|float == 0.0 -%}
+          {%- set ns.temp = states('input_number.ac_threshold')|float - 2.0 -%}
+        {%- endif -%}
+        {{ ns.temp }}
+
+    outside_temperature_met_no:
+      friendly_name: "Outside Temperature"
+      unit_of_measurement: "°F"
+      value_template: "{{ state_attr('weather.home_2', 'temperature') | round(1) }}"
+    time_formatted:
+      friendly_name: "Time"
+      value_template:
+        "{{ as_timestamp(states('sensor.date_time_iso')) | timestamp_custom('%I:%M %p')
+        | regex_replace(find=' AM', replace='a')
+        | regex_replace(find=' PM', replace='p')
+        | regex_replace(find='^0', replace='') }}"
+      icon_template: mdi:clock
+    weekday:
+      friendly_name: Weekday
+      icon_template: mdi:calendar-star
+      value_template: >-
+        {% if now().weekday() in (0,) %}
+          Monday
+        {% elif now().weekday() in (1,) %}
+          Tuesday
+        {% elif now().weekday() in (2,) %}
+          Wednesday
+        {% elif now().weekday() in (3,) %}
+          Thursday
+        {% elif now().weekday() in (4,) %}
+          Friday
+        {% elif now().weekday() in (5,) %}
+          Saturday
+        {% else %}
+          Sunday
+        {% endif %}
+    tomorrow:
+      friendly_name: Weekday Tomorrow
+      icon_template: mdi:calendar-plus
+      value_template: >-
+        {% if now().weekday() + 1 in (7,) %}
+          Monday
+        {% elif now().weekday() + 1 in (1,) %}
+          Tuesday
+        {% elif now().weekday() + 1 in (2,) %}
+          Wednesday
+        {% elif now().weekday() + 1 in (3,) %}
+          Thursday
+        {% elif now().weekday() + 1 in (4,) %}
+          Friday
+        {% elif now().weekday() + 1 in (5,) %}
+          Saturday
+        {% else %}
+          Sunday
+        {% endif %}
+    recycle_weekday:
+      friendly_name: Recycle Weekday Number
+      value_template: >-
+        {% if states('sensor.moco_recycle_day') == 'Monday' %}
+          0
+        {% elif states('sensor.moco_recycle_day') == 'Tuesday' %}
+          1
+        {% elif states('sensor.moco_recycle_day') == 'Wednesday' %}
+          2
+        {% elif states('sensor.moco_recycle_day') == 'Thursday' %}
+          3
+        {% elif states('sensor.moco_recycle_day') == 'Friday' %}
+          4
+        {% elif states('sensor.moco_recycle_day') == 'Saturday' %}
+          5
+        {% else %}
+          6
+        {% endif %}
+    trash_weekday_1:
+      friendly_name: Trash Weekday 1 Number
+      value_template: >-
+        {% if states('input_select.trash_day_1') == 'Monday' %}
+          0
+        {% elif states('input_select.trash_day_1') == 'Tuesday' %}
+          1
+        {% elif states('input_select.trash_day_1') == 'Wednesday' %}
+          2
+        {% elif states('input_select.trash_day_1') == 'Thursday' %}
+          3
+        {% elif states('input_select.trash_day_1') == 'Friday' %}
+          4
+        {% elif states('input_select.trash_day_1') == 'Saturday' %}
+          5
+        {% else %}
+          6
+        {% endif %}
+    trash_weekday_2:
+      friendly_name: Trash Weekday 2 Number
+      value_template: >-
+        {% if states('input_select.trash_day_2') == 'Monday' %}
+          0
+        {% elif states('input_select.trash_day_2') == 'Tuesday' %}
+          1
+        {% elif states('input_select.trash_day_2') == 'Wednesday' %}
+          2
+        {% elif states('input_select.trash_day_2') == 'Thursday' %}
+          3
+        {% elif states('input_select.trash_day_2') == 'Friday' %}
+          4
+        {% elif states('input_select.trash_day_2') == 'Saturday' %}
+          5
+        {% else %}
+          6
+        {% endif %}
+    recycle:
+      friendly_name: Recycle
+      icon_template: mdi:recycle
+      value_template: >-
+        {% if states('sensor.weekday') == states('sensor.moco_recycle_day') %}
+          Today
+        {% elif states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+          Tomorrow
+        {% else %}
+          {% set days = states('sensor.recycle_weekday') | int - now().weekday() %}
+          {% if days < 0 %}{% set days = 7 + days %}{% endif %}
+          {{ days }} days
+        {% endif %}
+    trash:
+      friendly_name: Trash
+      icon_template: mdi:trash-can
+      value_template: >-
+        {% if states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') %}
+          Today
+        {% elif states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+          Tomorrow
+        {% else %}
+          {% set days = states('sensor.trash_weekday_1') | int - now().weekday() %}
+          {% set days2 = states('sensor.trash_weekday_2') | int - now().weekday() %}
+          {% if days < 0 %}{% set days = 7 + days %}{% endif %}
+          {% if days2 < 0 %}{% set days2 = 7 + days2 %}{% endif %}
+          {% if days2 < days%}{% set days = days2 %}{% endif %}
+          {{ days }} days
+        {% endif %}
+
+    trash_or_recycle:
+      friendly_name: Trash or Recycle
+      icon_template: mdi:recycle
+        {% if states('sensor.weekday') == states('sensor.moco_recycle_day') or states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+        mdi:recycle
+        {% elif states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') or states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+        mdi:trash-can
+        {% else %}
+        mdi:minus
+        {% endif %}
+      value_template: >-
+        {% set recycle = '' %}
+        {% set trash = '' %}
+        {% if states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') %}
+          {% set trash = 'Trash' %}
+        {% elif states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+          {% set trash = 'Trash' %}
+        {% endif %}
+        {% if states('sensor.weekday') == states('sensor.moco_recycle_day') %}
+          {% set recycle = 'Recycle' %}
+        {% elif states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+          {% set recycle = '*Recycle*' %}
+        {% endif %}
+        {{ trash }}
+        {% if trash | length > 0 and recycle | length > 0 %}/{% endif %}
+        {{ recycle }}
+    num_downstairs_lights_on:
+      friendly_name: Downstairs Lights On
+      icon_template: mdi:string-lights
+      value_template: >-
+        {%- set count = 0 -%}
+        {%- if is_state('switch.family_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.three_headed_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.fireplace_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.christmas_tree', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.den_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.laundry_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.powder_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {{ count }}
+    num_middle_level_lights_on:
+      friendly_name: Middle Level Lights On
+      icon_template: mdi:string-lights
+      value_template: >-
+        {%- set count = 0 -%}
+        {%- if is_state('switch.kitchen_table_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.kitchen_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.dining_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.living_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.far_living_room_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.small_living_room_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.foyer_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {{ count }}
+    num_upstairs_lights_on:
+      friendly_name: Upstairs Lights On
+      icon_template: mdi:string-lights
+      value_template: >-
+        {%- set count = 0 -%}
+        {%- if is_state('switch.hallway_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.bedroom_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.bedroom_fan_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('fan.bedroom_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.master_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.master_bath_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.hall_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.hall_bath_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.office_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('fan.office_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.mike_desk_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.guest_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {{ count }}
+    num_outside_lights_on:
+      friendly_name: Outside Lights On
+      icon_template: mdi:string-lights
+      value_template: >-
+        {%- set count = 0 -%}
+        {%- if is_state('switch.front_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.outside_garage_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.outside_xmas', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.shed_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.flood_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.back_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {{ count }}
+    num_garage_lights_on:
+      friendly_name: Garage Lights On
+      icon_template: mdi:string-lights
+      value_template: >-
+        {%- set count = 0 -%}
+        {%- if is_state('switch.bench_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.middle_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.far_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {{ count }}
+    ytube_playlist:
+      friendly_name: Youtube Music Playlist
+      icon_template: mdi:playlist-music
+      value_template: "{{ states('input_select.ytube_music_player_playlist') }}"
+    ytube_source:
+      friendly_name: Youtube Music Source
+      icon_template: mdi:music-box-multiple
+      value_template: "{{ states('input_select.ytube_music_player_source') }}"
+    ytube_speakers:
+      friendly_name: Youtube Music Speakers
+      icon_template: mdi:speaker
+      value_template: "{{ states('input_select.ytube_music_player_speakers') }}"
+    ha_count_alerts:
+      friendly_name: Alerts
+      icon_template: mdi:pound
+      value_template: "{{ states.alert | list | count }}"
+    ha_count_automations:
+      friendly_name: Automations
+      icon_template: mdi:pound
+      value_template: "{{ states.automation | list | count }}"
+    ha_count_binary_sensors:
+      friendly_name: Binary Sensors
+      icon_template: mdi:pound
+      value_template: "{{ states.binary_sensor | list | count }}"
+    ha_count_cameras:
+      friendly_name: Cameras
+      icon_template: mdi:pound
+      value_template: "{{ states.camera | list | count }}"
+    ha_count_entities:
+      friendly_name: Entities
+      icon_template: mdi:pound
+      value_template: "{{ states | list | count }}"
+    ha_count_input_booleans:
+      friendly_name: Input Booleans
+      icon_template: mdi:pound
+      value_template: "{{ states.input_boolean | list | count }}"
+    ha_count_input_datetimes:
+      friendly_name: Input DateTimes
+      icon_template: mdi:pound
+      value_template: "{{ states.input_datetime | list | count }}"
+    ha_count_input_numbers:
+      friendly_name: Input Numbers
+      icon_template: mdi:pound
+      value_template: "{{ states.input_number | list | count }}"
+    ha_count_input_selects:
+      friendly_name: Input Selects
+      icon_template: mdi:pound
+      value_template: "{{ states.input_select | list | count }}"
+    ha_count_input_texts:
+      friendly_name: Input Texts
+      icon_template: mdi:pound
+      value_template: "{{ states.input_text | list | count }}"
+    ha_count_lights:
+      friendly_name: Lights
+      icon_template: mdi:pound
+      value_template: "{{ states.light | list | count }}"
+    ha_count_scripts:
+      friendly_name: Scripts
+      icon_template: mdi:pound
+      value_template: "{{ states.script | list | count }}"
+    ha_count_sensors:
+      friendly_name: Sensors
+      icon_template: mdi:pound
+      value_template: "{{ states.sensor | list | count }}"
+    ha_count_switches:
+      friendly_name: Switches
+      icon_template: mdi:pound
+      value_template: "{{ states.switch | list | count }}"
+
+    ha_count_unavailable:
+      friendly_name: Unavailable Entities
+      icon_template: mdi:cloud-question
+      value_template: "{{ states | rejectattr('entity_id','in',['switch.chimney_gate', 'group.house_temperature', 'sensor.siren_status', 'binary_sensor.remote_ui', 'switch.xmas1', 'switch.xmas2', 'sensor.pixel_3_charger_type', 'sensor.pixel_4a_charger_type', 'sensor.ir_receiver_status', 'sensor.living_room_hdmi_remote_status', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown', 'none']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | length }}"
+      attribute_templates:
+        entity_list: "{{ states | rejectattr('entity_id','in',['switch.chimney_gate', 'group.house_temperature', 'sensor.siren_status', 'binary_sensor.remote_ui', 'switch.xmas1', 'switch.xmas2', 'sensor.pixel_3_charger_type', 'sensor.pixel_4a_charger_type', 'sensor.ir_receiver_status', 'sensor.living_room_hdmi_remote_status', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown', 'none']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | join(', ') }}"
+
+    home_assistant_version_latest:
+      friendly_name: Home Assistant Version Latest
+      value_template: "{{ state_attr('binary_sensor.updater', 'newest_version') }}"
+
+    hacs_version:
+      friendly_name: HACS Update Count Version
+      value_template: 0
+
+    hacs_version_latest:
+      friendly_name: HACS Update Count Latest Version
+      value_template: "{{ states('sensor.hacs') }}"
+
+    openbsd_mars_version:
+      friendly_name: OpenBSD Mars Version
+      value_template: '{{ states("input_text.openbsd_mars_version") }}'
+
+- platform: command_line
+  name: HA Count YAML LOC
+  command: "find /config/ -name '*.yaml' | xargs cat | wc -l"
+
+- platform: command_line
+  name: MoCo Recycle Day
+  command: bin/get_recycle_day
+  # Request every 8 hours
+  scan_interval: 28800
+
+- platform: version
+  name: home_assistant_version
+  source: local
+
+- platform: mqtt
+  name: Assistant Relay Version
+  state_topic: "software_versions/assistant_relay"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: Assistant Relay Version Latest
+  resource: "https://api.github.com/repos/greghesp/assistant-relay/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name | replace('v', '') }}
+  scan_interval: 3660
+
+- platform: rest
+  name: Chronograf Version Latest
+  resource: "https://api.github.com/repos/influxdata/chronograf/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: Codium Version
+  state_topic: "software_versions/codium"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: Codium Version Latest
+  resource: "https://api.github.com/repos/VSCodium/vscodium/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: Docker Compose Version
+  state_topic: "software_versions/docker_compose"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: Docker Compose Version Latest
+  resource: "https://api.github.com/repos/docker/compose/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: GitLab Version
+  state_topic: "software_versions/gitlab"
+  value_template: "{{ value_json.version }}"
+
+- platform: command_line
+  name: GitLab Version Latest
+  command: '/usr/bin/curl -s https://gitlab.com/gitlab-org/gitlab-foss/-/tags|/bin/grep "^Version v[0-9]"|/usr/bin/sort -nr|/usr/bin/awk -Fv "\$0!~/-rc[0-9]/{print \$2;exit}"'
+  scan_interval: 3600
+
+- platform: rest
+  name: Grafana Version Latest
+  resource: "https://api.github.com/repos/grafana/grafana/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: rest
+  name: InfluxDB Version Latest
+  resource: "https://api.github.com/repos/influxdata/influxdb/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: rest
+  name: Kapacitor Version Latest
+  resource: "https://api.github.com/repos/influxdata/kapacitor/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: Mosquitto Version
+  state_topic: "$SYS/broker/version"
+  value_template: "v{{ value.split()[2] }}"
+
+- platform: scrape
+  name: Mosquitto Version Latest
+  resource: "https://mosquitto.org/download/"
+  select: "li a"
+  value_template: "{{ value | replace('mosquitto-', 'v') | replace('.tar.gz', '') }}"
+  scan_interval: 3660
+
+- platform: scrape
+  name: Nagios Version
+  resource: "https://nagios.erdely.in/main.php"
+  select: "div.version"
+  value_template: "{{ value | replace('Version ', '') }}"
+  scan_interval: 3600
+
+- platform: scrape
+  name: Nagios Version Latest
+  resource: "https://www.nagios.org/checkforupdates/?product=nagioscore"
+  select: "div.col-xs-12"
+  value_template: "{{ value.split(' ')[21] }}"
+  scan_interval: 3600
+
+# OpenBSD Mars Version is a template sensor above
+- platform: command_line
+  name: OpenBSD Mars Version Latest
+  command: bin/get_openbsd_patch
+  scan_interval: 7320
+
+- platform: mqtt
+  name: PiHole Version
+  state_topic: "software_versions/pihole"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: PiHole Version Latest
+  resource: "https://api.github.com/repos/pi-hole/pi-hole/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: rest
+  name: Plex Version
+  resource: !secret plex_server_info
+  value_template: '{{ value_json["MediaContainer"]["@version"].split("-")[0] }}'
+  scan_interval: 3600
+  #json_attributes_path: "$.MediaContainer"
+  #json_attributes:
+  #  - version
+
+- platform: rest
+  name: Plex Version Latest
+  resource: "https://plex.tv/pms/downloads/5.json?channel=plexpass"
+  value_template: '{{ value_json["computer"]["Linux"].version.split("-")[0] }}'
+  scan_interval: 3600
+
+- platform: rest
+  name: Restreamer Version
+  resource: "https://cameras.erdely.in/frontdoorcam/v1/version"
+  value_template: "v{{ value_json.version }}"
+  scan_interval: 3600
+
+- platform: rest
+  name: Restreamer Version Latest
+  resource: "https://api.github.com/repos/datarhei/restreamer/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: "{{ value_json.tag_name }}"
+  scan_interval: 3660
+
+- platform: mqtt
+  name: TasmoBackup Version
+  state_topic: "software_versions/tasmobackup"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: TasmoBackup Version Latest
+  resource: "https://api.github.com/repos/danmed/TasmoBackupV1/tags"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json[0].name }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: Tasmota Decode Config Version
+  state_topic: "software_versions/decode_config"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: Tasmota Decode Config Version Latest
+  resource: "https://api.github.com/repos/tasmota/decode-config/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: rest
+  name: Tautulli Version Latest
+  resource: "https://api.github.com/repos/Tautulli/Tautulli/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: rest
+  name: Telegraf Version Latest
+  resource: "https://api.github.com/repos/influxdata/telegraf/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: tmux Version
+  state_topic: "software_versions/tmux"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: tmux Version Latest
+  resource: "https://api.github.com/repos/tmux/tmux/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name | replace('v', '') }}
+  scan_interval: 3660
+
+- platform: rest
+  name: Unifi-Poller Version Latest
+  resource: "https://api.github.com/repos/unifi-poller/unifi-poller/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: rest
+  name: Varken Version Latest
+  resource: "https://api.github.com/repos/Boerderij/Varken/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: vscode Code Server Version
+  state_topic: "software_versions/vscode"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: vscode Code Server Version Latest
+  resource: "https://api.github.com/repos/cdr/code-server/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name | replace('v', '') }}
+  scan_interval: 3660
+
+- platform: rest
+  name: Yourls Version
+  resource: "https://erde.ly/ver.php"
+  value_template: "{{ value_json.version }}"
+  scan_interval: 3600
+
+- platform: rest
+  name: Yourls Version Latest
+  resource: "https://api.github.com/repos/YOURLS/YOURLS/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: Zigbee2MQTT Version
+  state_topic: "software_versions/zigbee2mqtt"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: Zigbee2MQTT Version Latest
+  resource: "https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name | replace('v', '') }}
+  scan_interval: 3660
+
+- platform: mqtt
+  name: Printer Ink
+  state_topic: "ink2mqtt/192.168.25.25"
+  value_template: "{{ value_json.printer }}"
+  json_attributes_topic: "ink2mqtt/192.168.25.25"
+
+- platform: time_date
+  display_options:
+    - "time"
+    - "date"
+    - "date_time"
+    - "date_time_utc"
+    - "date_time_iso"
+    - "time_date"
+    - "time_utc"
+    - "beat"
+
+- name: Bedroom TV Next Episode
+  platform: command_line
+  command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.bedroom_plex_show") }}"'
+
+- name: God Damn TV Next Episode
+  platform: command_line
+  command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.god_damn_plex_show") }}"'
+
+- name: Living Room TV Next Episode
+  platform: command_line
+  command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.living_room_plex_show") }}"'
+
+- name: Office TV Next Episode
+  platform: command_line
+  command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.office_plex_show") }}"'
+
+- platform: command_line
+  name: Holly Previous Location
+  command: "bin/get_prev_state person.holly_erdely {{ states('person.holly_erdely') }}"
+
+- platform: command_line
+  name: Mike Previous Location
+  command: "bin/get_prev_state person.michael_erdely {{ states('person.holly_erdely') }}"
+
+- platform: command_line
+  name: SSL Expiry Date
+  command: "bin/get_ssl_expire.py"
+
+- platform: sql
+  db_url: !secret mysql_uri
+  queries:
+    - name: DB size
+      query: 'SELECT table_schema "database", Round(Sum(data_length + index_length) / 1024 / 1024, 1) "value" FROM information_schema.tables WHERE table_schema="homeassistant_recorder" GROUP BY table_schema;'
+      column: "value"
+      unit_of_measurement: MB

@@ -1,0 +1,263 @@
+{
+    "version": 1,
+    "key": "lovelace.control_panel_outside",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "panel": true,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 2,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.time_formatted"
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Control Panel"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.outside",
+                                                                "show_icon": false
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.garage",
+                                                                "show_icon": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 3,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.bench_light",
+                                                                "name": "Bench"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.middle_garage_light",
+                                                                "name": "Middle"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.far_garage_light",
+                                                                "name": "Far"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "picture",
+                                            "image": "/local/images/homeassistant-banner-back.png",
+                                            "tap_action": {
+                                                "action": "navigate",
+                                                "navigation_path": "/control-panel/home"
+                                            },
+                                            "hold_action": {
+                                                "action": "none"
+                                            }
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.front_yard",
+                                                                "show_icon": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 3,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.front_porch_light",
+                                                                "name": "Front Porch"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.outside_garage_lights",
+                                                                "name": "Garage Lights"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.outside_xmas",
+                                                                "name": "Christmas Lights"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.back_yard",
+                                                                "show_icon": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 3,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.back_porch_light",
+                                                                "name": "Back Porch"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.shed_lamp",
+                                                                "name": "Shed"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.flood_light",
+                                                                "name": "Shed Flood"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
