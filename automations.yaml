@@ -8,7 +8,7 @@
   action:
     - service: homeassistant.update_entity
       data: {}
-      entity_id: switch.family_room_light, switch.hallway_light
+      entity_id: switch.god_damn_light, switch.hallway_light
   mode: single
 - id: "1600366108055"
   alias: Lighting - Back Porch Lights Off
@@ -37,16 +37,16 @@
     - platform: device
       type: turned_on
       device_id: df7cdba0027411eb87131d0a9ac3b321
-      entity_id: switch.family_room_light
+      entity_id: switch.god_damn_light
       domain: switch
     - platform: state
-      entity_id: switch.god_damn_light
+      entity_id: switch.fr_light
       to: "on"
   condition: []
   action:
     - service: switch.turn_on
       data: {}
-      entity_id: switch.god_damn_light, switch.family_room_light
+      entity_id: switch.god_damn_light, switch.fr_light
   mode: single
 - id: "1600366629972"
   alias: Lighting - Family Room Lights Off
@@ -55,13 +55,13 @@
     - platform: device
       type: turned_off
       device_id: df7cdba0027411eb87131d0a9ac3b321
-      entity_id: switch.family_room_light
+      entity_id: switch.god_damn_light
       domain: switch
   condition: []
   action:
     - service: switch.turn_off
       data: {}
-      entity_id: switch.fireplace_light, switch.god_damn_light, switch.three_headed_lamp
+      entity_id: switch.fireplace_light, switch.fr_light, switch.three_headed_lamp
   mode: single
 - id: "1600528857994"
   alias: Lighting - Outside - Garage Arrival at Night
@@ -148,7 +148,7 @@
   action:
     - service: homeassistant.update_entity
       data: {}
-      entity_id: switch.back_porch_light,switch.back_porch_light_2,switch.living_room_light
+      entity_id: switch.back_porch_light,switch.back_porch_light_2,switch.near_black_lamp
   mode: single
 - id: "1602628290703"
   alias: Lighting - Den - Motion Laundry Light On
@@ -303,7 +303,7 @@
   action:
     - service: light.turn_on
       data: {}
-      entity_id: light.office_light
+      entity_id: light.office_fan_light
   mode: single
 - id: "1603115550660"
   alias: Lighting - Office - Motion Office Light Off
@@ -322,7 +322,7 @@
   action:
     - service: light.turn_off
       data: {}
-      entity_id: light.office_light
+      entity_id: light.office_fan_light
   mode: single
 - id: "1603148838343"
   alias: 00 - Home Assistant - Startup
@@ -1025,13 +1025,13 @@
     - platform: device
       type: turned_off
       device_id: deff9b85027411eb86d1ff80088a1f32
-      entity_id: switch.living_room_light
+      entity_id: switch.near_black_lamp
       domain: switch
   condition: []
   action:
     - service: switch.turn_off
       data: {}
-      entity_id: switch.far_living_room_lamp, switch.small_living_room_lamp
+      entity_id: switch.far_black_lamp, switch.white_lamp
   mode: single
 - id: "1607036057399"
   alias: Lighting - Back Porch Lights On

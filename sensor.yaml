@@ -345,11 +345,11 @@
       icon_template: mdi:string-lights
       value_template: >-
         {%- set count = 0 -%}
-        {%- if is_state('switch.family_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.god_damn_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.three_headed_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.fireplace_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.christmas_tree', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.den_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.den_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.laundry_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.powder_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {{ count }}
@@ -359,11 +359,11 @@
       value_template: >-
         {%- set count = 0 -%}
         {%- if is_state('switch.kitchen_table_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.kitchen_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.kitchen_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('light.dining_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.living_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.far_living_room_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.small_living_room_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.near_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.far_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.white_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.foyer_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {{ count }}
     num_upstairs_lights_on:
@@ -372,14 +372,14 @@
       value_template: >-
         {%- set count = 0 -%}
         {%- if is_state('switch.hallway_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.bedroom_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.dresser_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('light.bedroom_fan_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('fan.bedroom_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.master_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.master_bath_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.hall_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.hall_bath_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('light.office_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.office_fan_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('fan.office_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.mike_desk_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.guest_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
