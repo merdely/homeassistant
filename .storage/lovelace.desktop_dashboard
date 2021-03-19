@@ -28,7 +28,7 @@
                                             "position": "right",
                                             "buttons": [
                                                 {
-                                                    "entity": "switch.bedroom_light",
+                                                    "entity": "switch.dresser_lamp",
                                                     "name": "BR"
                                                 },
                                                 {
@@ -60,7 +60,7 @@
                                             "position": "right",
                                             "buttons": [
                                                 {
-                                                    "entity": "light.office_light",
+                                                    "entity": "light.office_fan_light",
                                                     "name": "Ofc"
                                                 },
                                                 {
@@ -121,7 +121,7 @@
                                                     "name": "KT"
                                                 },
                                                 {
-                                                    "entity": "switch.kitchen_light",
+                                                    "entity": "switch.kitchen_overhead_light",
                                                     "name": "KO"
                                                 },
                                                 {
@@ -139,15 +139,15 @@
                                             "position": "right",
                                             "buttons": [
                                                 {
-                                                    "entity": "switch.living_room_light",
+                                                    "entity": "switch.near_black_lamp",
                                                     "name": "LRN"
                                                 },
                                                 {
-                                                    "entity": "switch.far_living_room_lamp",
+                                                    "entity": "switch.far_black_lamp",
                                                     "name": "LRF"
                                                 },
                                                 {
-                                                    "entity": "switch.small_living_room_lamp",
+                                                    "entity": "switch.white_lamp",
                                                     "name": "LRS"
                                                 },
                                                 {
@@ -168,7 +168,7 @@
                                             "position": "right",
                                             "buttons": [
                                                 {
-                                                    "entity": "switch.family_room_light",
+                                                    "entity": "switch.god_damn_light",
                                                     "name": "GD"
                                                 },
                                                 {
@@ -194,7 +194,7 @@
                                             "position": "right",
                                             "buttons": [
                                                 {
-                                                    "entity": "switch.den_light",
+                                                    "entity": "switch.den_overhead_light",
                                                     "name": "Den"
                                                 },
                                                 {
@@ -1561,12 +1561,12 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/developer-tools"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "Developer Tools",
                                             "icon": "mdi:hammer",
                                             "hold_action": {
                                                 "action": "none"
-                                            }
+                                            },
+                                            "show_state": false
                                         },
                                         {
                                             "type": "button",
@@ -1574,7 +1574,6 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/config/automation/dashboard"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "Automations",
                                             "icon": "mdi:home-automation",
                                             "hold_action": {
@@ -1596,7 +1595,6 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/config"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "Configuration",
                                             "icon": "mdi:cog",
                                             "hold_action": {
@@ -1609,7 +1607,6 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/config/server_control"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "Server Control",
                                             "icon": "mdi:cog-transfer",
                                             "hold_action": {
@@ -1620,7 +1617,7 @@
                                             "type": "custom:button-card",
                                             "tap_action": {
                                                 "action": "url",
-                                                "url_path": "https://vscode.erdely.in"
+                                                "url_path": "/hassio/ingress/a0d7b954_vscode"
                                             },
                                             "name": "VSCode",
                                             "icon": "mdi:microsoft-visual-studio-code",
@@ -1635,7 +1632,6 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/hacs"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "HACS",
                                             "icon": "hacs:hacs",
                                             "hold_action": {
@@ -1648,7 +1644,6 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/lovelace-everything"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "Everything Dashboard",
                                             "icon": "mdi:infinity",
                                             "hold_action": {
@@ -1661,7 +1656,6 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/control-panel"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "Control Panel",
                                             "icon": "mdi:tablet-dashboard",
                                             "hold_action": {
@@ -1674,7 +1668,6 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/mbr-panel"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "MBR Panel Dashboard",
                                             "icon": "mdi:cellphone-text",
                                             "hold_action": {
@@ -1687,7 +1680,6 @@
                                                 "action": "navigate",
                                                 "navigation_path": "/mobile-dashboard"
                                             },
-                                            "entity": "sensor.home_assistant_version",
                                             "name": "Mobile Dashboard",
                                             "icon": "mdi:cellphone-android",
                                             "hold_action": {

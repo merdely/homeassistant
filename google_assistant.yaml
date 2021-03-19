@@ -4,16 +4,16 @@ report_state: true
 expose_by_default: false
 exposed_domains:
   - alarm_control_panel
-  - cover
   - climate
+  - cover
+  - fan
   - group
   - input_boolean
   - input_select
+  - light
   - scene
   - script
   - switch
-  - light
-  - fan
 secure_devices_pin: !secret alarm_code
 
 entity_config:
@@ -48,7 +48,7 @@ entity_config:
     room: Hallway
 
   # Bedroom
-  switch.bedroom_light:
+  switch.dresser_lamp:
     name: Dresser Lamp
     room: Bedroom
   light.bedroom_fan_light:
@@ -76,7 +76,7 @@ entity_config:
     room: Hall Bath
 
     # Office
-  light.office_light:
+  light.office_fan_light:
     name: Office Fan Light
     room: Office
   fan.office_fan:
@@ -107,7 +107,7 @@ entity_config:
   switch.oven:
     name: Oven
     room: Kitchen
-  switch.kitchen_light:
+  switch.kitchen_overhead_light:
     name: Kitchen Overhead Light
     room: Kitchen
   switch.kitchen_table_light:
@@ -118,13 +118,13 @@ entity_config:
   group.black_lamps:
     name: Black Lamps
     room: Living Room
-  switch.living_room_light:
+  switch.near_black_lamp:
     name: Near Black Lamp
     room: Living Room
-  switch.far_living_room_lamp:
+  switch.far_black_lamp:
     name: Far Black Lamp
     room: Living Room
-  switch.small_living_room_Lamp:
+  switch.white_lamp:
     name: White Lamp
     room: Living Room
   switch.living_room_tv:
@@ -132,7 +132,7 @@ entity_config:
     room: Living Room
 
     # Den
-  switch.den_light:
+  switch.den_overhead_light:
     name: Den Overhead Light
     room: Den
   switch.laundry_room_light:
@@ -146,7 +146,7 @@ entity_config:
   switch.fireplace_light:
     name: Fireplace Light
     room: Family Room
-  switch.family_room_light:
+  switch.god_damn_light:
     name: God Damn Light
     room: Family Room
   switch.three_headed_lamp:

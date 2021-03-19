@@ -511,42 +511,42 @@
   name: home_assistant_version
   source: local
 
-- platform: mqtt
-  name: Assistant Relay Version
-  state_topic: "software_versions/assistant_relay"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: Assistant Relay Version
+#  state_topic: "software_versions/assistant_relay"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Assistant Relay Version Latest
-  resource: "https://api.github.com/repos/greghesp/assistant-relay/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name | replace('v', '') }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Assistant Relay Version Latest
+#  resource: "https://api.github.com/repos/greghesp/assistant-relay/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name | replace('v', '') }}
+#  scan_interval: 3660
 
-- platform: rest
-  name: Chronograf Version Latest
-  resource: "https://api.github.com/repos/influxdata/chronograf/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Chronograf Version Latest
+#  resource: "https://api.github.com/repos/influxdata/chronograf/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
-- platform: mqtt
-  name: Codium Version
-  state_topic: "software_versions/codium"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: Codium Version
+#  state_topic: "software_versions/codium"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Codium Version Latest
-  resource: "https://api.github.com/repos/VSCodium/vscodium/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Codium Version Latest
+#  resource: "https://api.github.com/repos/VSCodium/vscodium/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
 - platform: mqtt
   name: Docker Compose Version
@@ -562,54 +562,54 @@
     {{ value_json.tag_name }}
   scan_interval: 3660
 
-- platform: mqtt
-  name: GitLab Version
-  state_topic: "software_versions/gitlab"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: GitLab Version
+#  state_topic: "software_versions/gitlab"
+#  value_template: "{{ value_json.version }}"
 
-- platform: command_line
-  name: GitLab Version Latest
-  command: '/usr/bin/curl -s https://gitlab.com/gitlab-org/gitlab-foss/-/tags|/bin/grep "^Version v[0-9]"|/usr/bin/sort -nr|/usr/bin/awk -Fv "\$0!~/-rc[0-9]/{print \$2;exit}"'
-  scan_interval: 3600
+#- platform: command_line
+#  name: GitLab Version Latest
+#  command: '/usr/bin/curl -s https://gitlab.com/gitlab-org/gitlab-foss/-/tags|/bin/grep "^Version v[0-9]"|/usr/bin/sort -nr|/usr/bin/awk -Fv "\$0!~/-rc[0-9]/{print \$2;exit}"'
+#  scan_interval: 3600
 
-- platform: rest
-  name: Grafana Version Latest
-  resource: "https://api.github.com/repos/grafana/grafana/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Grafana Version Latest
+#  resource: "https://api.github.com/repos/grafana/grafana/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
-- platform: rest
-  name: InfluxDB Version Latest
-  resource: "https://api.github.com/repos/influxdata/influxdb/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: InfluxDB Version Latest
+#  resource: "https://api.github.com/repos/influxdata/influxdb/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
-- platform: rest
-  name: Kapacitor Version Latest
-  resource: "https://api.github.com/repos/influxdata/kapacitor/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Kapacitor Version Latest
+#  resource: "https://api.github.com/repos/influxdata/kapacitor/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
-- platform: mqtt
-  name: Mosquitto Version
-  state_topic: "$SYS/broker/version"
-  value_template: "v{{ value.split()[2] }}"
+#- platform: mqtt
+#  name: Mosquitto Version
+#  state_topic: "$SYS/broker/version"
+#  value_template: "v{{ value.split()[2] }}"
 
-- platform: scrape
-  name: Mosquitto Version Latest
-  resource: "https://mosquitto.org/download/"
-  select: "li a"
-  value_template: "{{ value | replace('mosquitto-', 'v') | replace('.tar.gz', '') }}"
-  scan_interval: 3660
+#- platform: scrape
+#  name: Mosquitto Version Latest
+#  resource: "https://mosquitto.org/download/"
+#  select: "li a"
+#  value_template: "{{ value | replace('mosquitto-', 'v') | replace('.tar.gz', '') }}"
+#  scan_interval: 3660
 
 - platform: scrape
   name: Nagios Version
@@ -631,20 +631,18 @@
   command: bin/get_openbsd_patch
   scan_interval: 7320
 
-- platform: mqtt
-  name: PiHole Version
-  state_topic: "software_versions/pihole"
-  value_template: "{{ value_json.version }}"
-
-- platform: rest
-  name: PiHole Version Latest
-  resource: "https://api.github.com/repos/pi-hole/pi-hole/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
-
+#- platform: mqtt
+#  name: PiHole Version
+#  state_topic: "software_versions/pihole"
+#  value_template: "{{ value_json.version }}"
+#- platform: rest
+#  name: PiHole Version Latest
+#  resource: "https://api.github.com/repos/pi-hole/pi-hole/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 - platform: rest
   name: Plex Version
   resource: !secret plex_server_info
@@ -674,33 +672,33 @@
   value_template: "{{ value_json.tag_name }}"
   scan_interval: 3660
 
-- platform: mqtt
-  name: TasmoBackup Version
-  state_topic: "software_versions/tasmobackup"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: TasmoBackup Version
+#  state_topic: "software_versions/tasmobackup"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: TasmoBackup Version Latest
-  resource: "https://api.github.com/repos/danmed/TasmoBackupV1/tags"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json[0].name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: TasmoBackup Version Latest
+#  resource: "https://api.github.com/repos/danmed/TasmoBackupV1/tags"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json[0].name }}
+#  scan_interval: 3660
 
-- platform: mqtt
-  name: Tasmota Decode Config Version
-  state_topic: "software_versions/decode_config"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: Tasmota Decode Config Version
+#  state_topic: "software_versions/decode_config"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Tasmota Decode Config Version Latest
-  resource: "https://api.github.com/repos/tasmota/decode-config/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Tasmota Decode Config Version Latest
+#  resource: "https://api.github.com/repos/tasmota/decode-config/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
 - platform: rest
   name: Tautulli Version Latest
@@ -711,14 +709,14 @@
     {{ value_json.tag_name }}
   scan_interval: 3660
 
-- platform: rest
-  name: Telegraf Version Latest
-  resource: "https://api.github.com/repos/influxdata/telegraf/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Telegraf Version Latest
+#  resource: "https://api.github.com/repos/influxdata/telegraf/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
 - platform: mqtt
   name: tmux Version
@@ -752,19 +750,19 @@
     {{ value_json.tag_name }}
   scan_interval: 3660
 
-- platform: mqtt
-  name: vscode Code Server Version
-  state_topic: "software_versions/vscode"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: vscode Code Server Version
+#  state_topic: "software_versions/vscode"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: vscode Code Server Version Latest
-  resource: "https://api.github.com/repos/cdr/code-server/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name | replace('v', '') }}
-  scan_interval: 3660
+#- platform: rest
+#  name: vscode Code Server Version Latest
+#  resource: "https://api.github.com/repos/cdr/code-server/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name | replace('v', '') }}
+#  scan_interval: 3660
 
 - platform: rest
   name: Yourls Version
@@ -781,19 +779,19 @@
     {{ value_json.tag_name }}
   scan_interval: 3660
 
-- platform: mqtt
-  name: Zigbee2MQTT Version
-  state_topic: "software_versions/zigbee2mqtt"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: Zigbee2MQTT Version
+#  state_topic: "software_versions/zigbee2mqtt"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Zigbee2MQTT Version Latest
-  resource: "https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name | replace('v', '') }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Zigbee2MQTT Version Latest
+#  resource: "https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name | replace('v', '') }}
+#  scan_interval: 3660
 
 - platform: mqtt
   name: Printer Ink
