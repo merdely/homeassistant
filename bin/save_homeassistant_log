@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Generate filename based on first timestamp found in log file
+newname=$(awk '/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} / {printf "home-assistant-%s-%s.log\n",$1,gensub(/:/,"-","g",$2);exit}' /config/home-assistant.log)
+
+# Copy live logfile to temporary file
+cp /config/home-assistant.log /config/log/$newname.new
+
+# Get line count from the copy of the live file and the previously saved file
+oldfile=$(cat /config/log/$newname 2> /dev/null|wc -l)
+newfile=$(cat /config/log/$newname.new 2> /dev/null|wc -l)
+
+# If the copy of the live file has more lines, overwrite the previously saved file
+[ $newfile -gt $oldfile ] && echo updating logfile && mv /config/log/$newname.new /config/log/$newname
+
+# Remove temp file if it wasn't moved
+rm -f /config/log/$newname.new
