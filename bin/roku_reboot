@@ -2,12 +2,16 @@
 
 [ -z "$1" ] && echo "usage: $(basename $0) roku" && exit 1
 
-rokuname=$1
-echo $rokuname | grep -qv "^roku-" && rokuname="roku-$rokuname"
-echo $rokuname | grep -qv "\.erdely\.in$" && rokuname="$rokuname.erdely.in"
+if ! echo "$1" | grep -Eq "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"; then
+  rokuname=$1
+  echo $rokuname | grep -qv "^roku-" && rokuname="roku-$rokuname"
+  echo $rokuname | grep -qv "\.erdely\.in$" && rokuname="$rokuname.erdely.in"
 
-# echo rebooting $rokuname
-rokuip=$(host $rokuname | cut -d' ' -f4)
+  # echo rebooting $rokuname
+  rokuip=$(host $rokuname | cut -d' ' -f4)
+else
+  rokuip=$1
+fi
 curl -d "" "http://$rokuip:8060/keypress/home"
 sleep .5
 curl -d "" "http://$rokuip:8060/keypress/home"
