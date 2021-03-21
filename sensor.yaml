@@ -181,7 +181,11 @@
         {{ ns.temp }}
 
     outside_temperature_met_no:
-      friendly_name: "Outside Temperature"
+      friendly_name: "Outside Temperature met.no"
+      unit_of_measurement: "°F"
+      value_template: "{{ state_attr('weather.home', 'temperature') | round(1) }}"
+    outside_temperature_accuweather:
+      friendly_name: "Outside Temperature Accuweather"
       unit_of_measurement: "°F"
       value_template: "{{ state_attr('weather.home_2', 'temperature') | round(1) }}"
     time_formatted:
