@@ -485,6 +485,26 @@
       attribute_templates:
         entity_list: "{{ states | rejectattr('entity_id','in',['switch.chimney_gate', 'group.house_temperature', 'sensor.siren_status', 'binary_sensor.remote_ui', 'switch.xmas1', 'switch.xmas2', 'sensor.pixel_3_charger_type', 'sensor.pixel_4a_charger_type', 'sensor.ir_receiver_status', 'sensor.living_room_hdmi_remote_status', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown', 'none']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | join(', ') }}"
 
+    ha_count_updates_available:
+      friendly_name: "Software Updates Available Count"
+      value_template: >-
+        {% set ns = namespace(updates = 0) -%}
+        {% for software in states("input_text.software_list").replace(' ', '').split(',') -%}
+          {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+            {% set ns.updates = ns.updates + 1 -%}
+          {% endif -%}
+        {% endfor -%}
+        {{ ns.updates }}
+      attribute_templates:
+        entity_list: >-
+          {% set ns = namespace(list = "") -%}
+          {% for software in states("input_text.software_list").replace(' ', '').split(',') -%}
+            {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+              {% set ns.list = ns.list + " " + software -%}
+            {% endif -%}
+          {% endfor -%}
+          {{ ns.list | trim }}
+
     home_assistant_version_latest:
       friendly_name: Home Assistant Version Latest
       value_template: "{{ state_attr('binary_sensor.updater', 'newest_version') }}"
