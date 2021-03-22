@@ -2471,6 +2471,7 @@
       command: Synchronize Devices
   - service: shell_command.clean_alarm_state
     data: {}
+  - service: shell_command.rotate_ha_logs
   - choose:
     - conditions:
       - condition: template
@@ -2936,7 +2937,16 @@
   - platform: template
     value_template: '{{ (states(''sensor.warmest_temperature_in_house'') | float)
       >= (states(''input_number.ac_threshold'') | float) }}'
-  condition: []
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: input_select.thermostat_mode
+      state: Cool
+    - condition: state
+      entity_id: climate.thermostat
+      state: '[3]/cool'
+      attribute: system_mode
   action:
   - service: system_log.write
     data:
@@ -2958,7 +2968,15 @@
   - platform: template
     value_template: '{{ (states(''sensor.coolest_temperature_in_house'') | float)
       <= (states(''input_number.heat_threshold'') | float) }}'
-  condition: []
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: input_select.thermostat_mode
+      state: Heat
+    - condition: state
+      entity_id: climate.thermostat
+      state: '[4]/heat'
   action:
   - service: system_log.write
     data:

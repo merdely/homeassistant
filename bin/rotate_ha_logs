@@ -1,0 +1,8 @@
+#!/bin/sh
+
+
+current_save_file=$(awk '/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} / {printf "home-assistant-%s-%s.log\n",$1,gensub(/:/,"-","g",$2);exit}' /config/home-assistant.log)
+
+for file in /config/log/home-assistant*.log; do
+  [ $(basename $file) != $current_save_file ] && gzip -9 $file
+done
