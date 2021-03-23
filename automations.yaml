@@ -262,20 +262,21 @@
   action:
   - service: script.function_speakers_prep
     data:
-      speaker: security_speakers
-    entity_id: media_player.all_speakers
+      speaker: all_speakers
+      entity_id: media_player.all_speakers
   - service: media_player.play_media
-    entity_id: media_player.security_speakers
     data:
       media_content_id: /local/sounds/water_leak.mp3
       media_content_type: music
+    target:
+      entity_id: media_player.all_speakers
   - service: notify.hangouts_security_alert
     data:
       message: Water leak detected on {{ trigger.to_state.name }}
   - service: script.function_speakers_restore
     data:
-      speaker: security_speakers
-    entity_id: media_player.all_speakers
+      speaker: all_speakers
+      entity_id: media_player.all_speakers
   - service: mqtt.publish
     data:
       topic: cmnd/siren/backlog
@@ -504,7 +505,7 @@
       command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/alarm-panel
   - service: script.function_speakers_prep
     data:
-      speaker: security_speakers
+      speaker: all_speakers
   - service: notify.hangouts_security_alert
     data:
       message: '{{ states(''input_text.security_message'') }}
@@ -514,10 +515,11 @@
     data:
       media_content_id: /local/sounds/security_trigger.mp3
       media_content_type: music
-    entity_id: media_player.security_speakers
+    target:
+      entity_id: media_player.all_speakers
   - service: script.function_speakers_restore
     data:
-      speaker: security_speakers
+      speaker: all_speakers
   - repeat:
       while:
       - condition: state
@@ -1081,17 +1083,18 @@
             {{ states("sensor.holly_previous_location") | replace("_", " ") | title
             }}.mp3
           media_content_type: music
-        entity_id: media_player.security_speakers
+        entity_id: media_player.all_speakers
     default:
     - service: media_player.play_media
-      entity_id: media_player.security_speakers
+      entity_id: media_player.all_speakers
       data:
         media_content_id: https://ha.erdely.in:38123/local/sounds/Holly is at {{ states('person.holly_erdely')
           | replace('_', ' ') | title }}.mp3
         media_content_type: music
   - service: media_player.media_stop
     data: {}
-    entity_id: media_player.security_speakers
+    target:
+      entity_id: media_player.all_speakers
   mode: single
 - id: '1607095172887'
   alias: Notifications - Presence - Mike
@@ -1132,17 +1135,18 @@
             {{ states("sensor.mike_previous_location") | replace("_", " ") | title
             }}.mp3
           media_content_type: music
-        entity_id: media_player.security_speakers
+        entity_id: media_player.all_speakers
     default:
     - service: media_player.play_media
-      entity_id: media_player.security_speakers
+      entity_id: media_player.all_speakers
       data:
         media_content_id: https://ha.erdely.in:38123/local/sounds/Mike is at {{ states('person.michael_erdely')
           | replace("_", " ") | title}}.mp3
         media_content_type: music
   - service: media_player.media_stop
     data: {}
-    entity_id: media_player.security_speakers
+    target:
+      entity_id: media_player.all_speakers
   mode: single
 - id: '1607108298703'
   alias: TV - Office - Change Channel

@@ -77,7 +77,7 @@
                                                                 "service": "script.scene_leaving_home"
                                                             },
                                                             "entity": "script.scene_leaving_home",
-                                                            "name": "Leaving Home",
+                                                            "name": "Leaving",
                                                             "icon": "mdi:exit-run"
                                                         },
                                                         {
@@ -204,7 +204,7 @@
                                                                 }
                                                             },
                                                             "entity": "script.camera_chimney_cam_reset",
-                                                            "name": "Reset Chimney Cam"
+                                                            "name": "Reset Chim Cam"
                                                         },
                                                         {
                                                             "type": "button",
@@ -513,7 +513,11 @@
                                                                     },
                                                                     {
                                                                         "entity": "binary_sensor.software_update_available",
-                                                                        "style": ":host {\n  {% if is_state('binary_sensor.software_update_available', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                                        "style": ":host {\n  {% if is_state('binary_sensor.software_update_available', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                        "tap_action": {
+                                                                            "action": "navigate",
+                                                                            "navigation_path": "/control-panel-software/home"
+                                                                        }
                                                                     }
                                                                 ]
                                                             }
