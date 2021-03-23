@@ -1135,10 +1135,10 @@
             {{ states("sensor.mike_previous_location") | replace("_", " ") | title
             }}.mp3
           media_content_type: music
-        entity_id: media_player.all_speakers
+        entity_id: media_player.security_speakers
     default:
     - service: media_player.play_media
-      entity_id: media_player.all_speakers
+      entity_id: media_player.security_speakers
       data:
         media_content_id: https://ha.erdely.in:38123/local/sounds/Mike is at {{ states('person.michael_erdely')
           | replace("_", " ") | title}}.mp3
@@ -1146,7 +1146,7 @@
   - service: media_player.media_stop
     data: {}
     target:
-      entity_id: media_player.all_speakers
+      entity_id: media_player.security_speakers
   mode: single
 - id: '1607108298703'
   alias: TV - Office - Change Channel

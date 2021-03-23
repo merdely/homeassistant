@@ -505,11 +505,9 @@
             {% set ns.updates = ns.updates + 1 -%}
           {% endif -%}
         {% endfor -%}
-        {% for addon in state_attr("sensor.ha_add_ons", "addons") %}
-          {% if addon['installed'] %}
-            {% if addon['version'] != addon['version_latest'] %}
-              {% set ns.updates = ns.updates + 1 -%}
-            {% endif %}
+        {% for addon in state_attr("sensor.ha_add_ons", "addons") | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
+          {% if addon['version'] != addon['version_latest'] %}
+            {% set ns.updates = ns.updates + 1 -%}
           {% endif %}
         {% endfor -%}
         {{ ns.updates }}
@@ -521,11 +519,9 @@
               {% set ns.list = ns.list + " " + software -%}
             {% endif -%}
           {% endfor -%}
-          {% for addon in state_attr("sensor.ha_add_ons", "addons") %}
-            {% if addon['installed'] %}
-              {% if addon['version'] != addon['version_latest'] %}
-                {% set ns.list = ns.list + " " + addon['name'] + " Add-On" -%}
-              {% endif %}
+          {% for addon in state_attr("sensor.ha_add_ons", "addons") | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
+            {% if addon['version'] != addon['version_latest'] %}
+              {% set ns.list = ns.list + " " + addon['name'] + " Add-On" -%}
             {% endif %}
           {% endfor -%}
           {{ ns.list | trim }}

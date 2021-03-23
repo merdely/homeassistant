@@ -104,11 +104,9 @@
             {% set ns.sensor = 'On' -%}
           {% endif -%}
         {% endfor -%}
-        {% for addon in state_attr("sensor.ha_add_ons", "addons") %}
-          {% if addon['installed'] %}
-            {% if addon['version'] != addon['version_latest'] %}
-              {% set ns.sensor = 'On' -%}
-            {% endif %}
+        {% for addon in state_attr("sensor.ha_add_ons", "addons") | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
+          {% if addon['version'] != addon['version_latest'] %}
+            {% set ns.sensor = 'On' -%}
           {% endif %}
         {% endfor -%}
         {{ ns.sensor }}
