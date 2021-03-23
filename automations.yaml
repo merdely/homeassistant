@@ -2397,6 +2397,9 @@
     entity_id: group.holly_mike
     from: not_home
     to: home
+  - platform: state
+    entity_id: climate.thermostat
+    attribute: hvac_action
   condition:
   - condition: template
     value_template: '{{ (trigger is not defined) or (trigger is defined and trigger.entity_id
