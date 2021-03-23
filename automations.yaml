@@ -2390,8 +2390,6 @@
   - platform: time
     at: input_datetime.thermostat_wake_weekend
   - platform: state
-    entity_id: input_select.thermostat_mode
-  - platform: state
     entity_id: group.holly_mike
     from: home
     to: not_home
@@ -2407,52 +2405,32 @@
       and is_state("binary_sensor.workday_sensor", "off")) or (trigger is defined
       and trigger.entity_id != "input_datetime.thermostat_wake" and trigger.entity_id
       != "input_datetime.thermostat_wake_weekend") }}'
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: input_select.thermostat_mode
-        state: 'Off'
-      sequence:
-      - service: system_log.write
-        data:
-          level: warning
-          message: Turning Thermostat Off
-      - service: climate.turn_off
-        data: {}
-        entity_id: climate.thermostat
-    default:
-    - choose:
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger is defined and trigger.entity_id == "input_select.thermostat_mode"
-            }}'
-        sequence:
-        - service: system_log.write
-          data:
-            level: warning
-            message: Switching to {{ states.input_select.thermostat_mode.state }}ing
-              @ {{ states('input_number.thermostat_' + states.sensor.thermostat_program.state
-              + '_' + states.input_select.thermostat_mode.state | lower + '_' + states.group.holly_mike.state)
-              }} °F
-      default: []
-    - service: system_log.write
-      data:
-        message: Running {{ states.sensor.thermostat_program.state | replace('_',
-          ' ') | title }}/{{ states.group.holly_mike.state | replace('not_home', 'Away')
-          | title }} program for {{ states.input_select.thermostat_mode.state | title
-          }}ing -- setting temperature to {{ states('input_number.thermostat_' + states.sensor.thermostat_program.state
-          + '_' + states.input_select.thermostat_mode.state | lower + '_' + states.group.holly_mike.state)
-          }} °F
-        level: warning
-    - delay: '10'
-    - service: climate.set_temperature
-      data:
-        temperature: '{{ states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
-          + ''_'' + states.input_select.thermostat_mode.state | lower + ''_'' + states.group.holly_mike.state)
-          }}'
-        hvac_mode: '{{ states.input_select.thermostat_mode.state | lower }}'
+  - condition: not
+    conditions:
+    - condition: state
       entity_id: climate.thermostat
+      state: '[0]/off'
+  action:
+  - service: system_log.write
+    data:
+      message: Running {{ states.sensor.thermostat_program.state | replace('_', '
+        ') | title }}/{{ states.group.holly_mike.state | replace('not_home', 'Away')
+        | title }} program for {{ state_attr('climate.thermostat', 'system_mode')[4:]
+        | title }}ing -- setting temperature to {{ states('input_number.thermostat_'
+        + states.sensor.thermostat_program.state + '_' + state_attr('climate.thermostat',
+        'system_mode')[4:] + '_' + states.group.holly_mike.state) }} °F
+      level: warning
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - service: climate.set_temperature
+    data:
+      temperature: '{{ states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+        + ''_'' + state_attr(''climate.thermostat'', ''system_mode'')[4:] + ''_''
+        + states.group.holly_mike.state) }}'
+    entity_id: climate.thermostat
   mode: single
 - id: '1609607242283'
   alias: 20 - Home Assistant - Nightly Tasks
@@ -2935,17 +2913,19 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ (states(''sensor.warmest_temperature_in_house'') | float)
-      >= (states(''input_number.ac_threshold'') | float) }}'
+    value_template: '{{ (state_attr(''climate.thermostat'', ''temperature'') | float)
+      >= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+      + ''_cool_'' + states.group.holly_mike.state) | float) }}'
   condition:
   - condition: not
     conditions:
     - condition: state
-      entity_id: input_select.thermostat_mode
-      state: Cool
-    - condition: state
       entity_id: climate.thermostat
       state: '[3]/cool'
+      attribute: system_mode
+    - condition: state
+      entity_id: climate.thermostat
+      state: '[0]/off'
       attribute: system_mode
   action:
   - service: system_log.write
@@ -2955,28 +2935,31 @@
   - service: notify.hangouts_security_alert
     data:
       message: Switching to AC
-  - service: input_select.select_option
-    data:
-      option: Cool
+  - service: climate.set_hvac_mode
     target:
-      entity_id: input_select.thermostat_mode
+      entity_id: climate.thermostat
+    data:
+      hvac_mode: cool
   mode: single
 - id: '1615594635153'
   alias: Thermostat - Turn on Heat
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ (states(''sensor.coolest_temperature_in_house'') | float)
-      <= (states(''input_number.heat_threshold'') | float) }}'
+    value_template: '{{ (state_attr(''climate.thermostat'', ''temperature'') | float)
+      <= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+      + ''_heat_'' + states.group.holly_mike.state) | float) }}'
   condition:
   - condition: not
     conditions:
     - condition: state
-      entity_id: input_select.thermostat_mode
-      state: Heat
-    - condition: state
       entity_id: climate.thermostat
       state: '[4]/heat'
+      attribute: system_mode
+    - condition: state
+      entity_id: climate.thermostat
+      state: '[0]/off'
+      attribute: system_mode
   action:
   - service: system_log.write
     data:
@@ -2985,11 +2968,11 @@
   - service: notify.hangouts_security_alert
     data:
       message: Switching to Heat
-  - service: input_select.select_option
-    data:
-      option: Heat
+  - service: climate.set_hvac_mode
     target:
-      entity_id: input_select.thermostat_mode
+      entity_id: climate.thermostat
+    data:
+      hvac_mode: heat
   mode: single
 - id: '1616344353322'
   alias: 03-Save Home Assistant Logfile
