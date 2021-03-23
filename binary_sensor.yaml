@@ -99,14 +99,18 @@
       friendly_name: "Software Update Available"
       value_template: >-
         {% set ns = namespace(sensor = 'Off') -%}
-        {% for software in states("input_text.software_list").replace(' ', '').split(',') -%}
+        {% for software in ['home_assistant', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
           {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
             {% set ns.sensor = 'On' -%}
           {% endif -%}
         {% endfor -%}
-        {% if is_state('binary_sensor.updater', 'on') or states('sensor.hacs') | int > 0 %}
-          {% set ns.sensor = 'On' -%}
-        {% endif -%}
+        {% for addon in state_attr("sensor.ha_add_ons", "addons") %}
+          {% if addon['installed'] %}
+            {% if addon['version'] != addon['version_latest'] %}
+              {% set ns.sensor = 'On' -%}
+            {% endif %}
+          {% endif %}
+        {% endfor -%}
         {{ ns.sensor }}
 
 - name: Christmas Lights Should Be On
