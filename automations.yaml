@@ -2399,7 +2399,12 @@
     to: home
   - platform: state
     entity_id: climate.thermostat
-    attribute: hvac_action
+    attribute: system_mode
+    to: '[3]/cool'
+  - platform: state
+    entity_id: climate.thermostat
+    attribute: system_mode
+    to: '[4]/heat'
   condition:
   - condition: template
     value_template: '{{ (trigger is not defined) or (trigger is defined and trigger.entity_id
@@ -2423,11 +2428,6 @@
         + states.sensor.thermostat_program.state + '_' + state_attr('climate.thermostat',
         'system_mode')[4:] + '_' + states.group.holly_mike.state) }} °F
       level: warning
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
   - service: climate.set_temperature
     data:
       temperature: '{{ states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
