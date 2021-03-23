@@ -180,6 +180,17 @@
         {%- endif -%}
         {{ ns.temp }}
 
+    thermostat_mode:
+      friendly_name: "Thermostat Mode"
+      value_template: >-
+        {% if state_attr('climate.thermostat', 'system_mode') == '[4]/heat' %}
+          heat
+        {% elif state_attr('climate.thermostat', 'system_mode') == '[3]/cool' %}
+          cool
+        {% else %}
+          off
+        {% endif %}
+
     outside_temperature_met_no:
       friendly_name: "Outside Temperature met.no"
       unit_of_measurement: "°F"
