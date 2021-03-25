@@ -500,9 +500,19 @@
   action:
   - service: script.security_message_open_security_devices
     data: {}
-  - service: rest_command.control_panel_command
-    data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/alarm-panel
+  - choose:
+    - conditions:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.fully_kiosk_browser
+          attribute: currentPageUrl
+          state: https://ha.erdely.in:38123/alarm-panel/home
+      sequence:
+      - service: rest_command.control_panel_command
+        data:
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/alarm-panel/home
+    default: []
   - service: script.function_speakers_prep
     data:
       speaker: all_speakers
