@@ -546,6 +546,10 @@
       friendly_name: HACS Update Count Latest Version
       value_template: "{{ states('sensor.hacs') }}"
 
+    fully_kiosk_browser_version:
+      friendly_name: Fully Kiosk Browser Version
+      value_template: "{{ state_attr('sensor.fully_kiosk_browser', 'version') }}"
+
     openbsd_mars_version:
       friendly_name: OpenBSD Mars Version
       value_template: '{{ states("input_text.openbsd_mars_version") }}'
@@ -556,7 +560,7 @@
   headers:
     Authorization: !secret mike_long_lived_check_command
     Content-Type: application/json
-  value_template: '{{ value_json.data.update_available }}'
+  value_template: "{{ value_json.data.update_available }}"
   json_attributes_path: "$.data"
   json_attributes:
     - version
@@ -569,7 +573,7 @@
   headers:
     Authorization: !secret mike_long_lived_check_command
     Content-Type: application/json
-  value_template: '{{ value_json.result }}'
+  value_template: "{{ value_json.result }}"
   json_attributes_path: "$.data"
   json_attributes:
     - addons
@@ -638,6 +642,14 @@
   value_template: >-
     {{ value_json.tag_name }}
   scan_interval: 3660
+
+# version is above with templates
+- platform: scrape
+  name: Fully Kiosk Browser Version Latest
+  resource: "https://www.fully-kiosk.com/en/"
+  select: "a.su-button"
+  value_template: "{{ value.split(' ')[6] }}"
+  scan_interval: 3600
 
 #- platform: mqtt
 #  name: GitLab Version
