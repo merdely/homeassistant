@@ -278,7 +278,7 @@
                                                 },
                                                 {
                                                     "entity": "switch.flood_light",
-                                                    "name": "flood"
+                                                    "name": "Flood"
                                                 }
                                             ]
                                         },
@@ -1159,6 +1159,30 @@
                                     "type": "picture-entity",
                                     "entity": "camera.garage_cam",
                                     "camera_image": "camera.garage_cam",
+                                    "show_state": false,
+                                    "show_name": false,
+                                    "camera_view": "live"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Cameras 2",
+                    "path": "cameras-2",
+                    "icon": "mdi:cctv",
+                    "panel": true,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "picture-entity",
+                                    "entity": "camera.backyard_cam",
+                                    "camera_image": "camera.backyard_cam",
                                     "show_state": false,
                                     "show_name": false,
                                     "camera_view": "live"
@@ -2375,7 +2399,8 @@
                                         "entity_id": "*holly*desk*",
                                         "options": {
                                             "secondary_info": "last-changed"
-                                        }
+                                        },
+                                        "domain": "switch"
                                     }
                                 ],
                                 "exclude": [
