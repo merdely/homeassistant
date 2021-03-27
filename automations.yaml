@@ -2941,8 +2941,8 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ (state_attr(''climate.thermostat'', ''temperature'') | float)
-      >= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+    value_template: '{{ (state_attr(''climate.thermostat'', ''current_temperature'')
+      | float) >= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
       + ''_cool_'' + states.group.holly_mike.state) | float) }}'
   condition:
   - condition: not
@@ -2974,8 +2974,8 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ (state_attr(''climate.thermostat'', ''temperature'') | float)
-      <= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+    value_template: '{{ (state_attr(''climate.thermostat'', ''current_temperature'')
+      | float) <= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
       + ''_heat_'' + states.group.holly_mike.state) | float) }}'
   condition:
   - condition: not
