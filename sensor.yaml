@@ -492,9 +492,9 @@
     ha_count_unavailable:
       friendly_name: Unavailable Entities
       icon_template: mdi:cloud-question
-      value_template: "{{ states | rejectattr('entity_id','in',['switch.chimney_gate', 'group.house_temperature', 'sensor.siren_status', 'binary_sensor.remote_ui', 'switch.xmas1', 'switch.xmas2', 'sensor.pixel_3_charger_type', 'sensor.pixel_4a_charger_type', 'sensor.ir_receiver_status', 'sensor.living_room_hdmi_remote_status', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown', 'none']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | length }}"
+      value_template: "{{ states | rejectattr('entity_id','in',['group.house_temperature', 'sensor.ir_receiver_status', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | length }}"
       attribute_templates:
-        entity_list: "{{ states | rejectattr('entity_id','in',['switch.chimney_gate', 'group.house_temperature', 'sensor.siren_status', 'binary_sensor.remote_ui', 'switch.xmas1', 'switch.xmas2', 'sensor.pixel_3_charger_type', 'sensor.pixel_4a_charger_type', 'sensor.ir_receiver_status', 'sensor.living_room_hdmi_remote_status', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown', 'none']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | join(', ') }}"
+        entity_list: "{{ states | rejectattr('entity_id','in',['group.house_temperature', 'sensor.ir_receiver_status', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | join(', ') }}"
 
     ha_count_updates_available:
       friendly_name: "Software Updates Available Count"

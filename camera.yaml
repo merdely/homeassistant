@@ -1,4 +1,11 @@
 - platform: generic
+  name: Backyard Cam
+  still_image_url: http://backyardcam.erdely.in/tmpfs/auto.jpg
+  stream_source: !secret backyardcam_stream
+  username: backyardcam
+  password: !secret backyardcam_password
+
+- platform: generic
   name: Front Door Cam
   still_image_url: http://frontdoorcam.erdely.in/tmpfs/auto.jpg
   stream_source: !secret frontdoorcam_stream
