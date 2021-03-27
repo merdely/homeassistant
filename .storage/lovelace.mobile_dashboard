@@ -201,6 +201,7 @@
                                                     },
                                                     {
                                                         "entity": "binary_sensor.oven_is_on",
+                                                        "style": ":host {\n  {% if is_state('binary_sensor.oven_is_on', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
                                                         "name": "Oven",
                                                         "icon": "mdi:stove",
                                                         "state_color": true

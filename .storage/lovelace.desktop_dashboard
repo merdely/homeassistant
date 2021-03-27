@@ -480,6 +480,7 @@
                                         },
                                         {
                                             "entity": "binary_sensor.oven_is_on",
+                                            "style": ":host {\n  {% if is_state('binary_sensor.oven_is_on', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
                                             "name": "Oven",
                                             "icon": "mdi:stove",
                                             "state_color": true
@@ -1604,17 +1605,16 @@
                                             }
                                         },
                                         {
-                                            "type": "custom:button-card",
+                                            "type": "button",
                                             "tap_action": {
-                                                "action": "url",
-                                                "url_path": "/hassio/ingress/a0d7b954_vscode"
+                                                "action": "navigate",
+                                                "navigation_path": "/hassio/ingress/a0d7b954_vscode"
                                             },
-                                            "name": "VSCode",
+                                            "name": "VS Code",
                                             "icon": "mdi:microsoft-visual-studio-code",
-                                            "colortype": "icon",
-                                            "color": "var(--paper-item-icon-color)",
-                                            "aspect_ratio": "1/1",
-                                            "layout": "vertical"
+                                            "hold_action": {
+                                                "action": "none"
+                                            }
                                         },
                                         {
                                             "type": "button",
@@ -2291,34 +2291,13 @@
                                         "options": {
                                             "secondary_info": "last-changed"
                                         },
-                                        "entity_id": "*battery*",
-                                        "name": "*Door*"
+                                        "name": ".*(Door|Gate)*",
+                                        "entity_id": "*battery*"
                                     }
                                 ],
                                 "exclude": [
                                     {
-                                        "name": "/(Back|Shed) Door/"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Tasmota Sensors"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "entity_id": ".*(shed_door|gate).*"
+                                        "name": "/(Back) Door/"
                                     }
                                 ]
                             },
@@ -2358,6 +2337,9 @@
                                     },
                                     {
                                         "entity_id": "sensor.pixel*"
+                                    },
+                                    {
+                                        "entity_id": "*version*"
                                     }
                                 ]
                             },

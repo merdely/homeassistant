@@ -2903,6 +2903,17 @@
   - condition: state
     entity_id: input_boolean.mailbox_sensor_wait
     state: 'off'
+  - condition: time
+    after: 09:00:00
+    before: '18:00:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+    - sun
   action:
   - service: notify.hangouts_security_alert
     data:
