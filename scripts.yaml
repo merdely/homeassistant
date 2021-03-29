@@ -1185,7 +1185,7 @@ scene_good_night:
   - service: homeassistant.turn_off
     data: {}
     entity_id: switch.downstairs, switch.middle_level, switch.back_yard, switch.garage,
-      switch.front_porch_light,switch.mantle_lights
+      light.front_porch_light,switch.mantle_lights
   - service: media_player.turn_off
     target:
       entity_id: media_player.ytube_music_player
@@ -1213,7 +1213,7 @@ scene_leaving_home:
   - service: homeassistant.turn_off
     data: {}
     entity_id: switch.downstairs, switch.upstairs, switch.back_yard, switch.garage,
-      light.dining_room, switch.kitchen_overhead_light, switch.far_black_lamp, switch.near_black_lamp,
+      light.dining_room, light.kitchen_overhead_light, switch.far_black_lamp, light.near_black_lamp,
       switch.white_lamp, switch.living_room_tv, switch.mantle_lights
   - service: media_player.turn_off
     data: {}
@@ -1228,8 +1228,8 @@ scene_movie_time:
     entity_id: switch.god_damn_tv, switch.fireplace_light, switch.christmas_tree
   - service: homeassistant.turn_off
     data: {}
-    entity_id: switch.middle_level, switch.hallway_light, switch.den_overhead_light,
-      switch.laundry_room_light, switch.three_headed_lamp
+    entity_id: switch.middle_level, switch.hallway_light, light.den_overhead_light,
+      light.laundry_room_light, switch.three_headed_lamp
   - service: media_player.turn_off
     data: {}
     entity_id: media_player.ytube_music_player
@@ -1244,9 +1244,9 @@ scene_night_night:
       entity_id: alarm_control_panel.home_alarm
   - service: homeassistant.turn_off
     data: {}
-    entity_id: fan.bedroom_fan, light.bedroom_fan_light, switch.dresser_lamp, fan.office_fan,
+    entity_id: fan.bedroom_fan, light.bedroom_fan_light, light.dresser_lamp, fan.office_fan,
       switch.hallway_light, switch.hall_bath, switch.office, switch.downstairs, switch.middle_level,
-      switch.back_yard, switch.garage, switch.front_porch_light, switch.mantle_lights
+      switch.back_yard, switch.garage, light.front_porch_light, switch.mantle_lights
   - service: media_player.turn_off
     target:
       entity_id: media_player.ytube_music_player

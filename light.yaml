@@ -1,0 +1,19 @@
+- platform: mqtt
+  name: "God Damn Light"
+  state_topic: "stat/god_damn_light/POWER1"
+  command_topic: "cmnd/god_damn_light/EVENT"
+  availability_topic: "tele/god_damn_light/LWT"
+  payload_on: "ON"
+  payload_off: "OFF"
+  payload_available: "Online"
+  payload_not_available: "Offline"
+
+- platform: mqtt
+  name: "Kitchen Overhead Light"
+  state_topic: "stat/kitchen_overhead_light/POWER1"
+  command_topic: "cmnd/kitchen_overhead_light/EVENT"
+  availability_topic: "tele/kitchen_overhead_light/LWT"
+  payload_on: "ON"
+  payload_off: "OFF"
+  payload_available: "Online"
+  payload_not_available: "Offline"

@@ -1,67 +1,18 @@
-- id: '1600364197585'
-  alias: 01 - Home Assistant -  Update Entity  Every 1s
-  description: ''
-  trigger:
-  - platform: time_pattern
-    seconds: /1
-  condition: []
-  action:
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: switch.god_damn_light, switch.hallway_light
-  mode: single
-- id: '1600366108055'
-  alias: Lighting - Back Porch Lights Off
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_off
-    device_id: aaaa4405027511eb8123dd588dc19cb6
-    entity_id: switch.back_porch_light
-    domain: switch
-  - platform: device
-    type: turned_off
-    device_id: deffd18a027411eb89f237a0454e8ed5
-    entity_id: switch.back_porch_light_2
-    domain: switch
-  condition: []
-  action:
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.back_porch_light, switch.back_porch_light_2
-  mode: single
-- id: '1600366606538'
-  alias: Lighting - Family Room - God Damn Light On
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_on
-    device_id: df7cdba0027411eb87131d0a9ac3b321
-    entity_id: switch.god_damn_light
-    domain: switch
-  - platform: state
-    entity_id: switch.fr_light
-    to: 'on'
-  condition: []
-  action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.god_damn_light, switch.fr_light
-  mode: single
 - id: '1600366629972'
   alias: Lighting - Family Room Lights Off
   description: ''
   trigger:
-  - platform: device
-    type: turned_off
-    device_id: df7cdba0027411eb87131d0a9ac3b321
-    entity_id: switch.god_damn_light
-    domain: switch
+  - platform: state
+    entity_id: light.god_damn_light
+    to: 'off'
   condition: []
   action:
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.fireplace_light, switch.fr_light, switch.three_headed_lamp
+  - service: homeassistant.turn_off
+    target:
+      entity_id:
+      - switch.fireplace_light
+      - switch.fr_light
+      - switch.three_headed_lamp
   mode: single
 - id: '1600528857994'
   alias: Lighting - Outside - Garage Arrival at Night
@@ -75,14 +26,11 @@
     before: sunrise
     after: sunset
   action:
-  - type: turn_on
-    device_id: df6fd973027411eb9cd98321d84c3299
-    entity_id: switch.front_porch_light
-    domain: switch
-  - type: turn_on
-    device_id: ab057405027511eba2682dbd0612842c
-    entity_id: switch.foyer_light
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      entity_id:
+      - light.front_porch_light
+      - light.foyer_light
   mode: single
 - id: '1600528964920'
   alias: Lighting - Sunset Lights On
@@ -99,13 +47,15 @@
         entity_id: binary_sensor.outside_christmas_lights
         state: 'on'
       sequence:
-      - service: switch.turn_on
-        data: {}
-        entity_id: switch.outside_xmas
+      - service: homeassistant.turn_on
+        target:
+          entity_id: switch.outside_xmas
     default:
-    - service: switch.turn_on
-      data: {}
-      entity_id: switch.front_porch_light, switch.outside_garage_lights
+    - service: homeassistant.turn_on
+      target:
+        entity_id:
+        - light.front_porch_light
+        - light.outside_garage_lights
   - choose:
     - conditions:
       - condition: not
@@ -114,15 +64,13 @@
           entity_id: group.holly_mike
           state: home
       sequence:
-      - type: turn_on
-        device_id: df2727e9027411eba29ab11a193d35d5
-        entity_id: switch.kitchen_table_light
-        domain: switch
+      - service: homeassistant.turn_on
+        target:
+          entity_id: light.kitchen_table_light
     default: []
-  - type: turn_on
-    device_id: a6f232e80324c17680bc74fa22838116
-    entity_id: switch.dining_room_christmas_lights
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.dining_room_christmas_lights
   mode: single
 - id: '1600529040720'
   alias: Lighting - Sunset Lights Off at Night
@@ -132,58 +80,40 @@
     at: input_datetime.turn_off_sunset_lights
   condition: []
   action:
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.front_porch_light, switch.outside_garage_lights , switch.outside_xmas,
-      switch.dining_room_christmas_lights
-  mode: single
-- id: '1601406990160'
-  alias: 02 - Home Assistant - Update Entity Every 5s
-  description: ''
-  trigger:
-  - platform: time_pattern
-    seconds: /5
-  condition: []
-  action:
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: switch.back_porch_light,switch.back_porch_light_2,switch.near_black_lamp
+  - service: homeassistant.turn_off
+    target:
+      entity_id:
+      - light.front_porch_light
+      - light.outside_garage_lights
+      - switch.outside_xmas
+      - switch.dining_room_christmas_lights
   mode: single
 - id: '1602628290703'
   alias: Lighting - Den - Motion Laundry Light On
   description: ''
   trigger:
-  - type: motion
-    platform: device
-    device_id: 05559d0b8d90de1c7d54359fc01959e8
+  - platform: state
     entity_id: binary_sensor.den_motion_sensor
-    domain: binary_sensor
+    to: 'on'
   condition: []
   action:
-  - type: turn_on
-    device_id: df26f630027411eb8eba8d25e42c703b
-    entity_id: switch.laundry_room_light
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      entity_id: light.laundry_room_light
   mode: single
 - id: '1602628563183'
   alias: Lighting - Den - Motion Laundry Light Off
   description: ''
   trigger:
-  - type: no_motion
-    platform: device
-    device_id: 05559d0b8d90de1c7d54359fc01959e8
+  - platform: state
     entity_id: binary_sensor.den_motion_sensor
-    domain: binary_sensor
-    for:
-      hours: 0
-      minutes: 30
-      seconds: 0
+    to: 'off'
+    for: 00:30:00
   condition: []
   action:
-  - type: turn_off
-    device_id: df26f630027411eb8eba8d25e42c703b
-    entity_id: switch.laundry_room_light
-    domain: switch
+  - service: homeassistant.turn_off
+    target:
+      entity_id: light.laundry_room_light
   mode: single
 - id: '1602683085874'
   alias: Notifications - Battery Low Notification
@@ -213,10 +143,9 @@
       command: single
   condition: []
   action:
-  - type: toggle
-    device_id: e0339fcc080811eb94426145f0b763d7
+  - service: homeassistant.toggle
+    data: {}
     entity_id: switch.shed_lamp
-    domain: switch
   mode: single
 - id: '1602887078304'
   alias: Lighting - Shed - Flood Light Toggle
@@ -229,10 +158,9 @@
       command: double
   condition: []
   action:
-  - type: toggle
-    device_id: e0339fcc080811eb94426145f0b763d7
+  - service: homeassistant.toggle
+    data: {}
     entity_id: switch.flood_light
-    domain: switch
   mode: single
 - id: '1602887137225'
   alias: Lighting - Shed - Shed/Flood Light Toggle
@@ -253,11 +181,10 @@
   alias: Notifications - 0 - Water Leak Detected
   description: ''
   trigger:
-  - type: moist
-    platform: device
-    device_id: ae213e4bff686fdec1447a67f13774d0
+  - platform: state
     entity_id: binary_sensor.laundry_room_water_leak_sensor
-    domain: binary_sensor
+    to: 'on'
+    for: 00:01:00
   condition: []
   action:
   - service: script.function_speakers_prep
@@ -281,47 +208,36 @@
     data:
       topic: cmnd/siren/backlog
       payload: TuyaSend4 102,15; TuyaSend2 103,10
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.siren
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.siren
   mode: single
 - id: '1603064762451'
   alias: Lighting - Office - Motion Office Light On
   description: ''
   trigger:
-  - type: motion
-    platform: device
-    device_id: 99cdedbcfd3ce36c42267c287e73b0cb
+  - platform: state
     entity_id: binary_sensor.office_motion_sensor
-    domain: binary_sensor
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 0
+    to: 'on'
   condition: []
   action:
-  - service: light.turn_on
-    data: {}
-    entity_id: light.office_fan_light
+  - service: homeassistant.turn_on
+    target:
+      entity_id: light.office_fan_light
   mode: single
 - id: '1603115550660'
   alias: Lighting - Office - Motion Office Light Off
   description: ''
   trigger:
-  - type: no_motion
-    platform: device
-    device_id: 99cdedbcfd3ce36c42267c287e73b0cb
+  - platform: state
     entity_id: binary_sensor.office_motion_sensor
-    domain: binary_sensor
-    for:
-      hours: 2
-      minutes: 0
-      seconds: 0
+    to: 'off'
+    for: 02:00:00
   condition: []
   action:
-  - service: light.turn_off
-    data: {}
-    entity_id: light.office_fan_light
+  - service: homeassistant.turn_off
+    target:
+      entity_id: light.office_fan_light
   mode: single
 - id: '1603148838343'
   alias: 00 - Home Assistant - Startup
@@ -350,10 +266,9 @@
   - condition: state
     entity_id: binary_sensor.christmas_lights_should_be_on
     state: 'on'
-  - type: turn_on
-    device_id: e55a21cf07e311ebb58cb906d28ca146
-    entity_id: switch.christmas_tree
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.christmas_tree
   mode: single
 - id: '1603407121485'
   alias: Notifications - Laundry Room Washer Started
@@ -454,9 +369,9 @@
     to: disarmed
   condition: []
   action:
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.siren
+  - service: homeassistant.turn_off
+    target:
+      entity_id: switch.siren
   - service: rest_command.control_panel_command
     data:
       command_string: cmd=loadStartUrl
@@ -540,9 +455,9 @@
         data:
           topic: cmnd/siren/backlog
           payload: TuyaSend4 102,14; TuyaSend2 103,59
-      - service: switch.turn_on
-        data: {}
-        entity_id: switch.siren
+      - service: homeassistant.turn_on
+        target:
+          entity_id: switch.siren
       - delay: '60'
   - service: notify.mobile_app_pixel_4a
     data:
@@ -936,21 +851,15 @@
   alias: Lighting - Office - Mike Bench Light Power Back On
   description: ''
   trigger:
-  - platform: device
-    type: turned_off
-    device_id: d1d4a0e484fab324f004fcb4e7ab2d69
+  - platform: state
     entity_id: switch.mike_bench_lamp
-    domain: switch
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 5
+    to: 'off'
+    for: 00:00:05
   condition: []
   action:
-  - type: turn_on
-    device_id: d1d4a0e484fab324f004fcb4e7ab2d69
-    entity_id: switch.mike_bench_lamp
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.mike_bench_lamp
   mode: single
 - id: '1607035454754'
   alias: Lighting - Office - Mike Desk Lamp Toggle
@@ -981,83 +890,23 @@
   condition: []
   action:
   - service: homeassistant.turn_off
-    data: {}
-    entity_id: switch.mike_bench_lamp
-  mode: single
-- id: '1607035845406'
-  alias: Lighting - Outside Xmas On
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_on
-    device_id: 339c280231cae4390fe9c5ed7c22b6ab
-    entity_id: switch.xmas1
-    domain: switch
-  - platform: device
-    type: turned_on
-    device_id: 339c280231cae4390fe9c5ed7c22b6ab
-    entity_id: switch.xmas2
-    domain: switch
-  condition: []
-  action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.outside_xmas
-  mode: single
-- id: '1607035878758'
-  alias: Lighting - Outside Xmas Off
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_off
-    device_id: 339c280231cae4390fe9c5ed7c22b6ab
-    entity_id: switch.xmas1
-    domain: switch
-  - platform: device
-    type: turned_off
-    device_id: 339c280231cae4390fe9c5ed7c22b6ab
-    entity_id: switch.xmas2
-    domain: switch
-  condition: []
-  action:
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.outside_xmas
+    target:
+      entity_id: switch.mike_bench_lamp
   mode: single
 - id: '1607035951583'
   alias: Lighting - Living Room Lights Off
   description: ''
   trigger:
-  - platform: device
-    type: turned_off
-    device_id: deff9b85027411eb86d1ff80088a1f32
-    entity_id: switch.near_black_lamp
-    domain: switch
+  - platform: state
+    entity_id: light.near_black_lamp
+    to: 'off'
   condition: []
   action:
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.far_black_lamp, switch.white_lamp
-  mode: single
-- id: '1607036057399'
-  alias: Lighting - Back Porch Lights On
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_on
-    device_id: aaaa4405027511eb8123dd588dc19cb6
-    entity_id: switch.back_porch_light
-    domain: switch
-  - platform: device
-    type: turned_on
-    device_id: deffd18a027411eb89f237a0454e8ed5
-    entity_id: switch.back_porch_light_2
-    domain: switch
-  condition: []
-  action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.back_porch_light, switch.back_porch_light_2
+  - service: homeassistant.turn_off
+    target:
+      entity_id:
+      - switch.far_black_lamp
+      - switch.white_lamp
   mode: single
 - id: '1607093471372'
   alias: Notifications - Presence - Holly
@@ -1167,9 +1016,9 @@
     from: Select Channel
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.office_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.office_tv
   - choose:
     - conditions:
       - condition: numeric_state
@@ -1213,9 +1062,9 @@
     from: Select Input
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.office_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.office_tv
   - choose:
     - conditions:
       - condition: numeric_state
@@ -1313,9 +1162,9 @@
     from: Select Channel
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.bedroom_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.bedroom_tv
   - service: shell_command.change_channel
     data:
       tv_device: tivo-bedroom
@@ -1338,9 +1187,9 @@
     from: Select Input
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.bedroom_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.bedroom_tv
   - choose:
     - conditions:
       - condition: state
@@ -1435,9 +1284,9 @@
     from: Select Input
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.god_damn_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.god_damn_tv
   - choose:
     - conditions:
       - condition: state
@@ -1541,9 +1390,9 @@
     from: Select Channel
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.god_damn_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.god_damn_tv
   - service: shell_command.change_channel
     data:
       tv_device: tivo-familyroom
@@ -1566,9 +1415,9 @@
     from: Select Input
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.living_room_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.living_room_tv
   - choose:
     - conditions:
       - condition: state
@@ -1654,9 +1503,9 @@
     from: Select Channel
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.living_room_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.living_room_tv
   - service: script.function_tv_change_input
     data:
       tv: living_room
@@ -1683,9 +1532,9 @@
       entity_id: input_select.office_plex_show
       state: Select Show
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.office_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.office_tv
   - service: homeassistant.update_entity
     data: {}
     entity_id: sensor.office_tv_next_episode
@@ -1799,9 +1648,9 @@
   - service: homeassistant.update_entity
     data: {}
     entity_id: sensor.bedroom_tv_next_episode
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.bedroom_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.bedroom_tv
   - service: script.function_tv_change_input
     data:
       tv: bedroom
@@ -1885,9 +1734,9 @@
   - service: homeassistant.update_entity
     data: {}
     entity_id: sensor.god_damn_tv_next_episode
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.god_damn_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.god_damn_tv
   - choose:
     - conditions:
       - condition: numeric_state
@@ -2071,9 +1920,9 @@
   - service: homeassistant.update_entity
     data: {}
     entity_id: sensor.living_room_tv_next_episode
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.living_room_tv
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.living_room_tv
   - choose:
     - conditions:
       - condition: numeric_state
@@ -2218,94 +2067,16 @@
         after: input_datetime.mantle_lights_on
         before: input_datetime.mantle_lights_off
       sequence:
-      - type: turn_on
-        device_id: 38d539fb07d811eb9c3c99fea225c21a
-        entity_id: switch.mantle_lights
-        domain: switch
+      - service: homeassistant.turn_on
+        target:
+          entity_id: switch.mantle_lights
     default: []
   - condition: state
     entity_id: binary_sensor.christmas_lights_should_be_on
     state: 'on'
-  - type: turn_on
-    device_id: e55a21cf07e311ebb58cb906d28ca146
-    entity_id: switch.christmas_tree
-    domain: switch
-  mode: single
-- id: '1608322108259'
-  alias: 10 - Home Assistant - Restart HA for SSL/TV List
-  description: ''
-  trigger:
-  - platform: time
-    at: 04:12:00
-  condition:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: binary_sensor.new_ssl_cert_ready
-      state: 'on'
-    - condition: state
-      entity_id: binary_sensor.new_tv_show_list_ready
-      state: 'on'
-  action:
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: binary_sensor.home_assistant_configuration_check
-  - condition: state
-    entity_id: binary_sensor.home_assistant_configuration_check
-    state: 'off'
-  - service: homeassistant.restart
-    data: {}
-  mode: single
-- id: '1608338936403'
-  alias: 15 - Home Assistant - Download SSL Cert
-  description: ''
-  trigger:
-  - platform: time
-    at: 04:01:02
-  condition: []
-  action:
-  - service: shell_command.ssl_download
-    data: {}
-  mode: single
-- id: '1608624485604'
-  alias: 99 - Testing - Actionable Notification
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: person.michael_erdely
-    to: The Barn
-  condition: []
-  action:
-  - service: notify.mobile_app_pixel_4a
-    data:
-      title: Location
-      message: You're at the barn!
-      data:
-        actions:
-        - action: STAY
-          title: Stay
-        - action: LEAVE
-          title: Leave
-  mode: single
-- id: '1608624623942'
-  alias: 99 - Testing - Mobile App Notification Action
-  description: ''
-  trigger:
-  - platform: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: STAY
-    context:
-      user_id:
-      - 80ad218b0cf54379b5ee622fbb721c6b
-  condition: []
-  action:
-  - service: notify.mobile_app_pixel_4a
-    data:
-      title: Barn
-      message: Enjoy
-      data:
-        clickAction: /alarm-panel/home
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.christmas_tree
   mode: single
 - id: '1608699279426'
   alias: Tag - Mike Desk - Unlock Mercury
@@ -2533,9 +2304,9 @@
     above: '16'
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.god_damn_soundbar
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.god_damn_soundbar
   mode: single
 - id: '1612040347239'
   alias: TV - Living Room - TV Volume to Soundbar Volume
@@ -2633,8 +2404,8 @@
     data: {}
     entity_id: sensor.god_damn_tv_next_episode
   - service: homeassistant.turn_on
-    data: {}
-    entity_id: switch.god_damn_tv
+    target:
+      entity_id: switch.god_damn_tv
   - service: system_log.write
     data:
       message: 'state of god_damn roku plex client: {{ states(''media_player.plex_plex_for_roku_god_damn_roku'')
@@ -2715,10 +2486,9 @@
     at: input_datetime.mantle_lights_on
   condition: []
   action:
-  - type: turn_on
-    device_id: 38d539fb07d811eb9c3c99fea225c21a
-    entity_id: switch.mantle_lights
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.mantle_lights
   mode: single
 - id: '1613160122811'
   alias: Lighting - Mantle Lights Off
@@ -2728,10 +2498,9 @@
     at: input_datetime.mantle_lights_off
   condition: []
   action:
-  - type: turn_off
-    device_id: 38d539fb07d811eb9c3c99fea225c21a
-    entity_id: switch.mantle_lights
-    domain: switch
+  - service: homeassistant.turn_off
+    target:
+      entity_id: switch.mantle_lights
   mode: single
 - id: '1613520122707'
   alias: TV - Living Room - HDMI Input Passthrough

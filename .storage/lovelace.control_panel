@@ -469,7 +469,7 @@
                                         },
                                         {
                                             "type": "grid",
-                                            "columns": 3,
+                                            "columns": 4,
                                             "square": false,
                                             "cards": [
                                                 {
@@ -515,12 +515,34 @@
                                                                     "navigation_path": "/control-panel-security-status/home"
                                                                 },
                                                                 "hold_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:security",
+                                                                "name": "Security Status"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
                                                                     "action": "navigate",
                                                                     "navigation_path": "/alarm-panel/home"
                                                                 },
                                                                 "show_icon": true,
                                                                 "show_name": false,
-                                                                "icon": "mdi:security",
+                                                                "icon": "mdi:calculator",
                                                                 "name": "Security Status"
                                                             }
                                                         ]
@@ -598,6 +620,32 @@
                                                                 "show_name": false,
                                                                 "icon": "mdi:tools",
                                                                 "name": "Utilities",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-software/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:home-assistant",
+                                                                "name": "HA",
                                                                 "hold_action": {
                                                                     "action": "none"
                                                                 }
@@ -697,6 +745,36 @@
                                                                 "style": "ha-card.type-button {\n  height: 60px;\n}\n",
                                                                 "tap_action": {
                                                                     "action": "navigate",
+                                                                    "navigation_path": "/control-panel-media-player/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "media_player.toggle",
+                                                                    "service_data": {
+                                                                        "entity_id": "media_player.ytube_music_player"
+                                                                    }
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:music",
+                                                                "name": "Music"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
                                                                     "navigation_path": "/control-panel-chimney-camera/home"
                                                                 },
                                                                 "show_icon": true,
@@ -749,20 +827,42 @@
                                                                 "type": "button",
                                                                 "style": "ha-card.type-button {\n  height: 60px;\n}\n",
                                                                 "tap_action": {
-                                                                    "action": "navigate",
-                                                                    "navigation_path": "/control-panel-media-player/home"
+                                                                    "action": "none"
                                                                 },
                                                                 "hold_action": {
-                                                                    "action": "call-service",
-                                                                    "service": "media_player.toggle",
-                                                                    "service_data": {
-                                                                        "entity_id": "media_player.ytube_music_player"
-                                                                    }
+                                                                    "action": "none"
+                                                                },
+                                                                "entity": "switch.outside",
+                                                                "show_icon": false,
+                                                                "show_name": false,
+                                                                "icon": "mdi:image",
+                                                                "name": "Outside"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-backyard-camera/home"
                                                                 },
                                                                 "show_icon": true,
                                                                 "show_name": false,
-                                                                "icon": "mdi:music",
-                                                                "name": "Music"
+                                                                "icon": "mdi:tree",
+                                                                "name": "Backyard Cam",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
                                                             }
                                                         ]
                                                     }
