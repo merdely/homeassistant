@@ -164,30 +164,70 @@
                                             "icon": "mdi:stairs-down"
                                         },
                                         {
-                                            "type": "custom:paper-buttons-row",
-                                            "position": "right",
-                                            "buttons": [
+                                            "type": "conditional",
+                                            "conditions": [
                                                 {
-                                                    "entity": "light.god_damn_light",
-                                                    "name": "GD"
-                                                },
-                                                {
-                                                    "entity": "switch.fireplace_light",
-                                                    "name": "FP"
-                                                },
-                                                {
-                                                    "entity": "switch.three_headed_lamp",
-                                                    "name": "3H"
-                                                },
-                                                {
-                                                    "entity": "switch.christmas_tree",
-                                                    "name": "CT"
-                                                },
-                                                {
-                                                    "entity": "switch.god_damn_tv",
-                                                    "name": "GD"
+                                                    "entity": "sensor.christmas_tree_available",
+                                                    "state": "On"
                                                 }
-                                            ]
+                                            ],
+                                            "row": {
+                                                "type": "custom:paper-buttons-row",
+                                                "position": "right",
+                                                "buttons": [
+                                                    {
+                                                        "entity": "light.god_damn_light",
+                                                        "name": "GD"
+                                                    },
+                                                    {
+                                                        "entity": "switch.fireplace_light",
+                                                        "name": "FP"
+                                                    },
+                                                    {
+                                                        "entity": "switch.three_headed_lamp",
+                                                        "name": "3H"
+                                                    },
+                                                    {
+                                                        "entity": "switch.christmas_tree",
+                                                        "name": "Christmas Tree"
+                                                    },
+                                                    {
+                                                        "entity": "switch.god_damn_tv",
+                                                        "name": "GD"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "type": "conditional",
+                                            "conditions": [
+                                                {
+                                                    "entity": "sensor.christmas_tree_available",
+                                                    "state": "Off"
+                                                }
+                                            ],
+                                            "row": {
+                                                "type": "custom:paper-buttons-row",
+                                                "position": "right",
+                                                "buttons": [
+                                                    {
+                                                        "entity": "light.god_damn_light",
+                                                        "name": "GD"
+                                                    },
+                                                    {
+                                                        "entity": "switch.fireplace_light",
+                                                        "name": "FP"
+                                                    },
+                                                    {
+                                                        "entity": "switch.three_headed_lamp",
+                                                        "name": "3H"
+                                                    },
+                                                    {
+                                                        "entity": "switch.god_damn_tv",
+                                                        "name": "GD"
+                                                    }
+                                                ]
+                                            }
                                         },
                                         {
                                             "type": "custom:paper-buttons-row",
@@ -774,13 +814,12 @@
                                             "entity": "binary_sensor.garage_door"
                                         },
                                         {
-                                            "entity": "binary_sensor.office_motion_sensor"
+                                            "entity": "group.motion_sensors",
+                                            "icon": "mdi:walk"
                                         },
                                         {
-                                            "entity": "binary_sensor.den_motion_sensor"
-                                        },
-                                        {
-                                            "entity": "binary_sensor.laundry_room_water_leak_sensor"
+                                            "entity": "group.water_leak",
+                                            "icon": "mdi:water"
                                         }
                                     ],
                                     "title": "Security",
@@ -1062,6 +1101,31 @@
                                 {
                                     "type": "markdown",
                                     "content": "## Last Security Message\n{{ states('input_text.security_message') }}"
+                                },
+                                {
+                                    "type": "grid",
+                                    "cards": [
+                                        {
+                                            "type": "entities",
+                                            "entities": [
+                                                {
+                                                    "entity": "switch.siren",
+                                                    "secondary_info": "last-changed"
+                                                },
+                                                {
+                                                    "entity": "cover.garage_door",
+                                                    "secondary_info": "last-changed"
+                                                },
+                                                {
+                                                    "entity": "input_boolean.gate_notifications",
+                                                    "secondary_info": "last-changed"
+                                                }
+                                            ],
+                                            "title": "Additional Devices",
+                                            "show_header_toggle": false
+                                        }
+                                    ],
+                                    "columns": 1
                                 }
                             ]
                         },
@@ -1092,46 +1156,39 @@
                             }
                         },
                         {
-                            "type": "entities",
-                            "entities": [
-                                {
-                                    "entity": "switch.siren",
-                                    "secondary_info": "last-changed"
-                                },
-                                {
-                                    "entity": "cover.garage_door",
-                                    "secondary_info": "last-changed"
-                                },
-                                {
-                                    "entity": "binary_sensor.laundry_room_water_leak_sensor"
-                                },
-                                {
-                                    "entity": "input_boolean.gate_notifications",
-                                    "secondary_info": "last-changed"
-                                },
-                                {
-                                    "entity": "binary_sensor.den_motion_sensor",
-                                    "secondary_info": "last-changed"
-                                },
-                                {
-                                    "entity": "binary_sensor.office_motion_sensor",
-                                    "secondary_info": "last-changed"
-                                },
-                                {
-                                    "entity": "input_boolean.test_security_device",
-                                    "secondary_info": "last-changed"
-                                },
-                                {
-                                    "entity": "input_boolean.test_security_device_2",
-                                    "secondary_info": "last-changed"
-                                },
-                                {
-                                    "entity": "input_boolean.test_security_device_3",
-                                    "secondary_info": "last-changed"
-                                }
-                            ],
-                            "title": "Additional Devices",
-                            "show_header_toggle": false
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Water Leak Sensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "domain": "binary_sensor",
+                                        "entity_id": ".*water_leak_sensor"
+                                    }
+                                ],
+                                "exclude": []
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Motion Sensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "domain": "binary_sensor",
+                                        "entity_id": ".*motion_sensor"
+                                    }
+                                ],
+                                "exclude": []
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
                         }
                     ]
                 },
@@ -2263,7 +2320,7 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "Phones"
+                                "title": "A-J Other Sensors"
                             },
                             "filter": {
                                 "include": [
@@ -2272,7 +2329,29 @@
                                         "options": {
                                             "secondary_info": "last-changed"
                                         },
-                                        "entity_id": "sensor.pixel*battery_level"
+                                        "entity_id": "*battery*",
+                                        "name": "[A-Ja-j]*"
+                                    },
+                                    {
+                                        "domain": "sensor",
+                                        "options": {
+                                            "secondary_info": "last-changed"
+                                        },
+                                        "entity_id": "*fully_kiosk_browser*"
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "name": "/(Door|Slider)/"
+                                    },
+                                    {
+                                        "entity_id": ".*(shed_door|gate).*"
+                                    },
+                                    {
+                                        "entity_id": "sensor.pixel*"
+                                    },
+                                    {
+                                        "entity_id": "*version*"
                                     }
                                 ]
                             },
@@ -2284,7 +2363,7 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "Sliders"
+                                "title": "K-Z Other Sensors"
                             },
                             "filter": {
                                 "include": [
@@ -2294,7 +2373,42 @@
                                             "secondary_info": "last-changed"
                                         },
                                         "entity_id": "*battery*",
-                                        "name": "/(Back Door|Slider)/"
+                                        "name": "[K-Zk-z0-9]*"
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "name": "/(Door|Slider)/"
+                                    },
+                                    {
+                                        "entity_id": ".*(shed_door|gate).*"
+                                    },
+                                    {
+                                        "entity_id": "sensor.pixel*"
+                                    },
+                                    {
+                                        "entity_id": "*version*"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Phones"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "domain": "sensor",
+                                        "options": {
+                                            "secondary_info": "last-changed"
+                                        },
+                                        "entity_id": "sensor.pixel*battery_level"
                                     }
                                 ]
                             },
@@ -2333,7 +2447,7 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "Other Sensors"
+                                "title": "Sliders"
                             },
                             "filter": {
                                 "include": [
@@ -2342,28 +2456,8 @@
                                         "options": {
                                             "secondary_info": "last-changed"
                                         },
-                                        "entity_id": "*battery*"
-                                    },
-                                    {
-                                        "domain": "sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "entity_id": "sensor.fully_kiosk_browser*"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "name": "/(Door|Slider)/"
-                                    },
-                                    {
-                                        "entity_id": ".*(shed_door|gate).*"
-                                    },
-                                    {
-                                        "entity_id": "sensor.pixel*"
-                                    },
-                                    {
-                                        "entity_id": "*version*"
+                                        "entity_id": "*battery*",
+                                        "name": "/(Back Door|Slider)/"
                                     }
                                 ]
                             },

@@ -65,27 +65,60 @@
                                     ]
                                 },
                                 {
-                                    "type": "grid",
-                                    "columns": 2,
-                                    "square": false,
-                                    "cards": [
+                                    "type": "conditional",
+                                    "conditions": [
                                         {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "toggle"
-                                            },
-                                            "entity": "switch.mantle_lights",
-                                            "icon_height": "50px"
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "toggle"
-                                            },
-                                            "entity": "switch.christmas_tree",
-                                            "icon_height": "50px"
+                                            "entity": "sensor.christmas_tree_available",
+                                            "state": "On"
                                         }
-                                    ]
+                                    ],
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 2,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "button",
+                                                "tap_action": {
+                                                    "action": "toggle"
+                                                },
+                                                "entity": "switch.mantle_lights",
+                                                "icon_height": "50px"
+                                            },
+                                            {
+                                                "type": "button",
+                                                "tap_action": {
+                                                    "action": "toggle"
+                                                },
+                                                "entity": "switch.christmas_tree",
+                                                "icon_height": "50px"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "conditional",
+                                    "conditions": [
+                                        {
+                                            "entity": "sensor.christmas_tree_available",
+                                            "state": "Off"
+                                        }
+                                    ],
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "button",
+                                                "tap_action": {
+                                                    "action": "toggle"
+                                                },
+                                                "entity": "switch.mantle_lights",
+                                                "icon_height": "50px"
+                                            }
+                                        ]
+                                    }
                                 },
                                 {
                                     "type": "grid",

@@ -526,6 +526,35 @@
           {% endfor -%}
           {{ ns.list | trim }}
 
+    christmas_tree_available:
+      friendly_name: Christmas Tree Available
+      value_template: >-
+        {% if states('switch.christmas_tree') == 'unknown' %}
+          Off
+        {% else %}
+          On
+        {% endif %}
+
+    low_battery:
+      friendly_name: Low Battery
+      value_template: >-
+        {% set ns=namespace(state="Off") %}
+        {% for state in states.sensor -%}
+          {% if state.entity_id.endswith('_battery') and state.entity_id != 'sensor.low_battery' and state.state | int < 10 -%}
+            {% set ns.state = "On" %}
+          {% endif -%}
+        {% endfor -%}
+        {{ ns.state }}
+      attribute_templates:
+        entity_list: >-
+          {% set ns=namespace(list="") %}
+          {% for state in states.sensor -%}
+            {% if state.entity_id.endswith('_battery') and state.entity_id != 'sensor.low_battery' and state.state | int < 10 -%}
+              {% set ns.list = ns.list + state.name + ' (' + state.state + '%), ' -%}
+            {% endif -%}
+          {% endfor -%}
+          {{ ns.list[:-2] }}
+
     home_assistant_version_latest:
       friendly_name: Home Assistant Version Latest
       value_template: "{{ state_attr('binary_sensor.updater', 'newest_version') }}"

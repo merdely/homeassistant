@@ -191,40 +191,90 @@
                                                         ]
                                                     },
                                                     {
-                                                        "type": "grid",
-                                                        "columns": 4,
-                                                        "square": false,
-                                                        "cards": [
+                                                        "type": "conditional",
+                                                        "conditions": [
                                                             {
-                                                                "type": "button",
-                                                                "tap_action": {
-                                                                    "action": "toggle"
-                                                                },
-                                                                "entity": "light.god_damn_light"
-                                                            },
-                                                            {
-                                                                "type": "button",
-                                                                "tap_action": {
-                                                                    "action": "toggle"
-                                                                },
-                                                                "entity": "switch.fireplace_light"
-                                                            },
-                                                            {
-                                                                "type": "button",
-                                                                "tap_action": {
-                                                                    "action": "toggle"
-                                                                },
-                                                                "entity": "switch.three_headed_lamp",
-                                                                "name": "3-Headed Lamp"
-                                                            },
-                                                            {
-                                                                "type": "button",
-                                                                "tap_action": {
-                                                                    "action": "toggle"
-                                                                },
-                                                                "entity": "switch.christmas_tree"
+                                                                "entity": "sensor.christmas_tree_available",
+                                                                "state": "On"
                                                             }
-                                                        ]
+                                                        ],
+                                                        "card": {
+                                                            "type": "grid",
+                                                            "columns": 4,
+                                                            "square": false,
+                                                            "cards": [
+                                                                {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "toggle"
+                                                                    },
+                                                                    "entity": "light.god_damn_light"
+                                                                },
+                                                                {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "toggle"
+                                                                    },
+                                                                    "entity": "switch.fireplace_light"
+                                                                },
+                                                                {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "toggle"
+                                                                    },
+                                                                    "entity": "switch.three_headed_lamp",
+                                                                    "name": "3-Headed Lamp"
+                                                                },
+                                                                {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "toggle"
+                                                                    },
+                                                                    "entity": "switch.christmas_tree"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "conditional",
+                                                        "conditions": [
+                                                            {
+                                                                "entity": "sensor.christmas_tree_available",
+                                                                "state": "Off"
+                                                            }
+                                                        ],
+                                                        "card": {
+                                                            "type": "grid",
+                                                            "columns": 3,
+                                                            "square": false,
+                                                            "cards": [
+                                                                {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "toggle"
+                                                                    },
+                                                                    "entity": "light.god_damn_light",
+                                                                    "icon_height": "50px"
+                                                                },
+                                                                {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "toggle"
+                                                                    },
+                                                                    "entity": "switch.fireplace_light",
+                                                                    "icon_height": "50px"
+                                                                },
+                                                                {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "toggle"
+                                                                    },
+                                                                    "entity": "switch.three_headed_lamp",
+                                                                    "name": "3-Headed Lamp",
+                                                                    "icon_height": "50px"
+                                                                }
+                                                            ]
+                                                        }
                                                     },
                                                     {
                                                         "type": "grid",

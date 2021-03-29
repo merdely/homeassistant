@@ -56,8 +56,7 @@ announcement_nightly_security:
             \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_gate',\
             \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate',\
             \ 'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
-            \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n{% if is_state('input_boolean.test_security_device',\
-            \ 'on') %}\n  Test Security Device is Open.\n{% endif %}\n"
+            \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: notify.hangouts_security_alert
         data:
           message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door\
@@ -71,8 +70,7 @@ announcement_nightly_security:
             \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window',\
             \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_2',\
             \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
-            \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n{% if is_state('input_boolean.test_security_device',\
-            \ 'on') %}\n  Test Security Device is Open.\n{% endif %}\n"
+            \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: script.function_speakers_restore
         data:
           speaker: all_speakers

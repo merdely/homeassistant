@@ -55,9 +55,6 @@ security_devices:
     - binary_sensor.living_room_slider
     - binary_sensor.den_window
     - binary_sensor.powder_room_window
-    - input_boolean.test_security_device
-    - input_boolean.test_security_device_2
-    - input_boolean.test_security_device_3
 
 exterior_security_devices:
   name: Exterior Security Devices
@@ -79,6 +76,25 @@ doors_windows:
     - binary_sensor.living_room_slider
     - binary_sensor.den_window
     - binary_sensor.powder_room_window
-    - input_boolean.test_security_device
-    - input_boolean.test_security_device_2
-    - input_boolean.test_security_device_3
+
+motion_sensors:
+  name: Motion Sensors
+  entities:
+    - binary_sensor.den_motion_sensor
+    - binary_sensor.family_room_motion_sensor
+    - binary_sensor.laundry_room_motion_sensor
+    - binary_sensor.living_room_motion_sensor
+    - binary_sensor.office_motion_sensor
+
+water_leak:
+  name: Water Leak Sensors
+  entities:
+    - binary_sensor.den_water_leak_sensor
+    - binary_sensor.dining_room_water_leak_sensor
+    - binary_sensor.family_room_water_leak_sensor
+    - binary_sensor.hall_bath_water_leak_sensor
+    - binary_sensor.kitchen_water_leak_sensor
+    - binary_sensor.laundry_room_water_leak_sensor
+    - binary_sensor.living_room_water_leak_sensor
+    - binary_sensor.master_bath_water_leak_sensor
+    - binary_sensor.powder_room_water_leak_sensor

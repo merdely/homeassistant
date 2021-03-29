@@ -89,11 +89,11 @@
       - switch.dining_room_christmas_lights
   mode: single
 - id: '1602628290703'
-  alias: Lighting - Den - Motion Laundry Light On
+  alias: Lighting - Laundry Room - Motion Laundry Light On
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.den_motion_sensor
+    entity_id: binary_sensor.laundry_room_motion_sensor
     to: 'on'
   condition: []
   action:
@@ -102,11 +102,11 @@
       entity_id: light.laundry_room_light
   mode: single
 - id: '1602628563183'
-  alias: Lighting - Den - Motion Laundry Light Off
+  alias: Lighting - Laundry Room - Motion Laundry Light Off
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.den_motion_sensor
+    entity_id: binary_sensor.laundry_room_motion_sensor
     to: 'off'
     for: 00:30:00
   condition: []
@@ -119,18 +119,17 @@
   alias: Notifications - Battery Low Notification
   description: ''
   trigger:
-  - platform: numeric_state
-    entity_id: group.doors_windows_battery_level
-    below: '20'
-    for: 00:05:00
-  condition: []
+  - platform: time
+    at: '10:00:00'
+  condition:
+  - condition: state
+    entity_id: sensor.low_battery
+    state: 'On'
   action:
   - service: notify.gmail_to_mike
     data:
       title: Low Battery
-      message: "{%- for entity_id in states.group.doors_windows_battery_level.attributes.entity_id\
-        \ %}\n  {%- set domain, device = entity_id.split('.') -%}\n  {{ state_attr(entity_id,\"\
-        friendly_name\") }}: {{ states[domain][device].state }}%\n{% endfor %}\n"
+      message: '{{ state_attr(''sensor.low_battery'', ''entity_list'') }}'
   mode: single
 - id: '1602886827817'
   alias: Lighting - Shed - Shed Light Toggle
@@ -306,35 +305,6 @@
   - service: notify.hangouts_security_alert
     data:
       message: The washing machine is done
-  mode: single
-- id: '1603490987709'
-  alias: Notifications - Battery Low Notification (Tasmota)
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.chimney_gate_battery
-    to: low
-  - platform: state
-    entity_id: sensor.shed_door_battery
-    to: low
-  - platform: state
-    entity_id: sensor.shed_gate_battery
-    to: low
-  condition: []
-  action:
-  - service: notify.gmail_to_mike
-    data:
-      title: Low Battery
-      message: '{{ state_attr(''sensor.chimney_gate_battery'', ''friendly_name'')
-        }} is {{ states(''sensor.chimney_gate_battery'') }}
-
-        {{ state_attr(''sensor.shed_gate_battery'', ''friendly_name'') }} is {{ states(''sensor.shed_gate_battery'')
-        }}
-
-        {{ state_attr(''sensor.shed_door_battery'', ''friendly_name'') }} is {{ states(''sensor.shed_door_battery'')
-        }}
-
-        '
   mode: single
 - id: '1604378332593'
   alias: Security - 90 Triggered - Alert of Always Monitored Door Open (Always)
@@ -2780,4 +2750,31 @@
   condition: []
   action:
   - service: shell_command.save_homeassistant_log
+  mode: single
+- id: '1617059343081'
+  alias: Lighting - Den - Motion Den Light On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.den_motion_sensor
+    to: 'on'
+  condition: []
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id: light.den_overhead_light
+  mode: single
+- id: '1617059380424'
+  alias: Lighting - Den - Motion Den Light Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.den_motion_sensor
+    to: 'off'
+    for: 00:30:00
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: light.den_overhead_light
   mode: single
