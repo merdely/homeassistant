@@ -814,12 +814,13 @@
                                             "entity": "binary_sensor.garage_door"
                                         },
                                         {
-                                            "entity": "group.motion_sensors",
-                                            "icon": "mdi:walk"
+                                            "entity": "binary_sensor.garage_door_sensor"
                                         },
                                         {
-                                            "entity": "group.water_leak",
-                                            "icon": "mdi:water"
+                                            "entity": "group.motion_sensors"
+                                        },
+                                        {
+                                            "entity": "group.water_leak"
                                         }
                                     ],
                                     "title": "Security",
@@ -2607,12 +2608,40 @@
                     "badges": [],
                     "cards": [
                         {
-                            "type": "button",
-                            "tap_action": {
-                                "action": "toggle"
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Security Devices",
+                                "show_header_toggle": false,
+                                "state_color": true
                             },
-                            "entity": "switch.outside_xmas",
-                            "icon": "file:roku"
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "alarm_control_panel.home_alarm"
+                                    },
+                                    {
+                                        "domain": "binary_sensor",
+                                        "entity_id": ".*_(gate|door|slider|window|door_sensor)",
+                                        "sort": {
+                                            "method": "friendly_name"
+                                        }
+                                    },
+                                    {
+                                        "entity_id": "group.motion_sensors"
+                                    },
+                                    {
+                                        "entity_id": "group.water_leak"
+                                    },
+                                    {
+                                        "entity_id": "cover.garage_door"
+                                    }
+                                ],
+                                "exclude": []
+                            },
+                            "sort": {
+                                "method": "none"
+                            }
                         },
                         {
                             "type": "history-graph",
@@ -2638,10 +2667,6 @@
                             "title": "Inside Temperature"
                         },
                         {
-                            "type": "markdown",
-                            "content": "<table width=100%>\n<tr>\n<td width=50%>{{ states('sensor.time_formatted') }}</td>\n<td width=25%>{{ states('sensor.washer_dryer_state_pretty') }}</td>\n<td>{{ states('sensor.fully_kiosk_browser') }}</td>\n</tr>\n</table>\n<table width=100%>\n<tr>\n<td width=33%>{{ states('sensor.bedroom_temperature') }}</td>\n<td width=33%>{{ states('sensor.office_temperature') }}</td>\n<td>{{ states('sensor.living_room_temperature') }}</td>\n</tr>\n<tr>\n<td>{{ states('sensor.family_room_temperature') }}</td>\n<td>{{ states('sensor.attic_temperature') }}</td>\n<td>{{ states('sensor.outside_temperature') }}</td>\n</tr>\n</table>"
-                        },
-                        {
                             "type": "history-graph",
                             "entities": [
                                 {
@@ -2657,15 +2682,6 @@
                             "hours_to_show": 24,
                             "refresh_interval": 0,
                             "title": "Outside Temperature"
-                        },
-                        {
-                            "type": "button",
-                            "tap_action": {
-                                "action": "toggle"
-                            },
-                            "entity": "switch.family_room",
-                            "theme": "yellow-button",
-                            "icon": "file:living_room"
                         }
                     ]
                 },
