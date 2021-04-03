@@ -16,10 +16,13 @@
   switches:
     mercury_screensaver:
       friendly_name: Mercury Screensaver
+      #command_on: '/bin/true'
+      #command_off: '/bin/true'
+      #command_state: '/bin/true'
       command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_lock'
       command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_unlock'
-      # command_off: '/bin/false'
       command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_status'
+      # command_off: '/bin/false'
     venus_screensaver:
       friendly_name: Venus Screensaver
       command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock'
@@ -254,7 +257,7 @@
     upstairs:
       friendly_name: "Upstairs"
       value_template: >-
-        {% if is_state('switch.hallway_light', 'on') or
+        {% if is_state('light.hallway_light', 'on') or
               is_state('switch.bedroom', 'on') or
               is_state('switch.office', 'on') or
               is_state('light.guest_room_light', 'on') or
@@ -265,10 +268,10 @@
         {% endif %}
       turn_on:
         - service: homeassistant.turn_on
-          entity_id: switch.hallway_light, light.bedroom_fan_light, light.master_bath_light, light.office_fan_light, light.guest_room_light, light.hall_bath_light
+          entity_id: light.hallway_light, light.bedroom_fan_light, light.master_bath_light, light.office_fan_light, light.guest_room_light, light.hall_bath_light
       turn_off:
         - service: homeassistant.turn_off
-          entity_id: switch.hallway_light, switch.bedroom, switch.office, light.guest_room_light, switch.hall_bath
+          entity_id: light.hallway_light, switch.bedroom, switch.office, light.guest_room_light, switch.hall_bath
 
     bedroom:
       friendly_name: "Bedroom"

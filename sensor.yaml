@@ -360,65 +360,67 @@
       icon_template: mdi:string-lights
       value_template: >-
         {%- set count = 0 -%}
-        {%- if is_state('switch.god_damn_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.god_damn_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.three_headed_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.fireplace_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.mantle_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.christmas_tree', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.den_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.laundry_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.powder_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.den_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.laundry_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.powder_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {{ count }}
     num_middle_level_lights_on:
       friendly_name: Middle Level Lights On
       icon_template: mdi:string-lights
       value_template: >-
         {%- set count = 0 -%}
-        {%- if is_state('switch.kitchen_table_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.kitchen_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.kitchen_table_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.kitchen_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('light.dining_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.near_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('switch.dining_room_christmas_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.near_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.far_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.white_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.foyer_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.foyer_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {{ count }}
     num_upstairs_lights_on:
       friendly_name: Upstairs Lights On
       icon_template: mdi:string-lights
       value_template: >-
         {%- set count = 0 -%}
-        {%- if is_state('switch.hallway_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.dresser_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.hallway_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.dresser_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('light.bedroom_fan_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('fan.bedroom_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.master_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.master_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.master_bath_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.hall_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.hall_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.hall_bath_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('light.office_fan_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('fan.office_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.mike_desk_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.guest_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.guest_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {{ count }}
     num_outside_lights_on:
       friendly_name: Outside Lights On
       icon_template: mdi:string-lights
       value_template: >-
         {%- set count = 0 -%}
-        {%- if is_state('switch.front_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.outside_garage_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.front_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.outside_garage_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.outside_xmas', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.shed_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.flood_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.back_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.back_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {{ count }}
     num_garage_lights_on:
       friendly_name: Garage Lights On
       icon_template: mdi:string-lights
       value_template: >-
         {%- set count = 0 -%}
-        {%- if is_state('switch.bench_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.middle_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('switch.far_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.bench_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.middle_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.far_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {{ count }}
     ytube_playlist:
       friendly_name: Youtube Music Playlist
