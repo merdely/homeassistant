@@ -177,7 +177,7 @@
     entity_id: switch.flood_light, switch.shed_lamp
   mode: single
 - id: '1602952724393'
-  alias: Notifications - 0 - Water Leak Detected
+  alias: Notifications - 0 - Water Leak Detected - Laundry Room
   description: ''
   trigger:
   - platform: state
@@ -2777,4 +2777,27 @@
   - service: homeassistant.turn_off
     target:
       entity_id: light.den_overhead_light
+  mode: single
+- id: '1617741916452'
+  alias: Notifications - 1 - Water Leak Detected - All Sensors
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.water_leak
+    to: 'on'
+    for: 00:01:00
+  condition: []
+  action:
+  - service: notify.persistent_notification
+    data:
+      title: Water Leak Detected
+      message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id\
+        \ -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')\
+        \ }}\n{% endif -%}{% endfor -%}"
+  - service: notify.hangouts_security_alert
+    data:
+      message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id\
+        \ -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')\
+        \ }}\n{% endif -%}{% endfor -%}"
+      title: Water Leak Detected
   mode: single
