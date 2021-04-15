@@ -1166,24 +1166,48 @@ home_thermostat_up:
   alias: 000-Test Script
   sequence:
   - service: homeassistant.turn_off
-    entity_id: light.office_fan_light, switch.mike_desk_lamp, switch.mike_bench_lamp,
-      fan.office_fan
+    target:
+      entity_id:
+      - light.office_fan_light
+      - switch.mike_desk_lamp
+      - switch.mike_bench_lamp
+      - fan.office_fan
   mode: single
   icon: mdi:tools
 scene_good_night:
   alias: Scene - Good Night
   sequence:
-  - service: homeassistant.turn_on
-    data: {}
-    entity_id: light.hallway_light
+  - choose:
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: light.dresser_lamp
+          state: 'off'
+        - condition: state
+          entity_id: light.bedroom_fan_light
+          state: 'off'
+        - condition: state
+          entity_id: light.office_fan_light
+          state: 'off'
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id: light.hallway_light
+    default: []
   - service: alarm_control_panel.alarm_arm_home
     data: {}
     target:
       entity_id: alarm_control_panel.home_alarm
   - service: homeassistant.turn_off
-    data: {}
-    entity_id: switch.downstairs, switch.middle_level, switch.back_yard, switch.garage,
-      light.front_porch_light,switch.mantle_lights
+    target:
+      entity_id:
+      - switch.downstairs
+      - switch.middle_level
+      - switch.back_yard
+      - switch.garage
+      - light.front_porch_light
+      - switch.mantle_lights
   - service: media_player.turn_off
     target:
       entity_id: media_player.ytube_music_player
@@ -1209,10 +1233,19 @@ scene_leaving_home:
     data: {}
     entity_id: alarm_control_panel.home_alarm
   - service: homeassistant.turn_off
-    data: {}
-    entity_id: switch.downstairs, switch.upstairs, switch.back_yard, switch.garage,
-      light.dining_room, light.kitchen_overhead_light, switch.far_black_lamp, light.near_black_lamp,
-      switch.white_lamp, switch.living_room_tv, switch.mantle_lights
+    target:
+      entity_id:
+      - switch.downstairs
+      - switch.upstairs
+      - switch.back_yard
+      - switch.garage
+      - light.dining_room
+      - light.kitchen_overhead_light
+      - switch.far_black_lamp
+      - light.near_black_lamp
+      - switch.white_lamp
+      - switch.living_room_tv
+      - switch.mantle_lights
   - service: media_player.turn_off
     data: {}
     entity_id: media_player.ytube_music_player
@@ -1222,12 +1255,19 @@ scene_movie_time:
   alias: Scene - Movie Time
   sequence:
   - service: homeassistant.turn_on
-    data: {}
-    entity_id: switch.god_damn_tv, switch.fireplace_light, switch.christmas_tree
+    target:
+      entity_id:
+      - switch.god_damn_tv
+      - switch.fireplace_light
+      - switch.christmas_tree
   - service: homeassistant.turn_off
-    data: {}
-    entity_id: switch.middle_level, light.hallway_light, light.den_overhead_light,
-      light.laundry_room_light, switch.three_headed_lamp
+    target:
+      entity_id:
+      - switch.middle_level
+      - light.hallway_light
+      - light.den_overhead_light
+      - light.laundry_room_light
+      - switch.three_headed_lamp
   - service: media_player.turn_off
     data: {}
     entity_id: media_player.ytube_music_player
@@ -1241,10 +1281,21 @@ scene_night_night:
     target:
       entity_id: alarm_control_panel.home_alarm
   - service: homeassistant.turn_off
-    data: {}
-    entity_id: fan.bedroom_fan, light.bedroom_fan_light, light.dresser_lamp, fan.office_fan,
-      light.hallway_light, switch.hall_bath, switch.office, switch.downstairs, switch.middle_level,
-      switch.back_yard, switch.garage, light.front_porch_light, switch.mantle_lights
+    target:
+      entity_id:
+      - fan.bedroom_fan
+      - light.bedroom_fan_light
+      - light.dresser_lamp
+      - fan.office_fan
+      - light.hallway_light
+      - switch.hall_bath
+      - switch.office
+      - switch.downstairs
+      - switch.middle_level
+      - switch.back_yard
+      - switch.garage
+      - light.front_porch_light
+      - switch.mantle_lights
   - service: media_player.turn_off
     target:
       entity_id: media_player.ytube_music_player
@@ -1257,7 +1308,11 @@ tv_all_off:
   alias: TV - All - Off
   sequence:
   - service: homeassistant.turn_off
-    data: {}
-    entity_id: switch.god_damn_tv,switch.office_tv,switch.bedroom_tv,switch.living_room_tv
+    target:
+      entity_id:
+      - switch.god_damn_tv
+      - switch.office_tv
+      - switch.bedroom_tv
+      - switch.living_room_tv
   mode: single
   icon: mdi:television

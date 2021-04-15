@@ -95,7 +95,11 @@
   - platform: state
     entity_id: binary_sensor.laundry_room_motion_sensor
     to: 'on'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: light.laundry_room_light
+    state: 'off'
+    for: 00:01:00
   action:
   - service: homeassistant.turn_on
     target:
@@ -218,7 +222,11 @@
   - platform: state
     entity_id: binary_sensor.office_motion_sensor
     to: 'on'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: light.office_fan_light
+    state: 'off'
+    for: 00:01:00
   action:
   - service: homeassistant.turn_on
     target:
@@ -2758,7 +2766,11 @@
   - platform: state
     entity_id: binary_sensor.den_motion_sensor
     to: 'on'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: light.den_overhead_light
+    state: 'off'
+    for: 00:01:00
   action:
   - service: homeassistant.turn_on
     target:
@@ -2800,4 +2812,16 @@
         \ -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')\
         \ }}\n{% endif -%}{% endfor -%}"
       title: Water Leak Detected
+  mode: single
+- id: '1618083518993'
+  alias: Lighting - Living Room - Far Black Lamp
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: cmnd/far_black_lamp/power1
+  condition: []
+  action:
+  - service: homeassistant.toggle
+    target:
+      entity_id: switch.far_black_lamp
   mode: single
