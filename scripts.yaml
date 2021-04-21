@@ -296,7 +296,7 @@ testing_hangouts_mike:
   sequence:
   - service: notify.hangouts_mike
     data:
-      message: '{{ states.sensor.washer_power_monitor.state }}'
+      message: test message
   mode: single
 testing_speaker_announcement:
   alias: Testing - Speaker Announcement
@@ -1129,39 +1129,21 @@ home_thermostat_down:
   sequence:
   - service: system_log.write
     data:
-      message: Lowering {% if state_attr('climate.thermostat', 'system_mode').split('/')[1]
-        == 'heat' %} heat {% else %} AC {% endif %} from {{ state_attr('climate.thermostat',
-        'temperature') | float | round }} to {{ state_attr('climate.thermostat', 'temperature')
-        | float | round - 1 }}
+      message: Lowering thermostat from {{ state_attr('climate.thermostat', 'target_temp_high')
+        }}/{{ state_attr('climate.thermostat', 'target_temp_low') }} to {{ state_attr('climate.thermostat',
+        'target_temp_high') | float | round - 1.0 }}/{{ state_attr('climate.thermostat',
+        'target_temp_low') | float | round - 1.0 }}
       level: warning
   - service: climate.set_temperature
     data:
-      temperature: '{{ state_attr(''climate.thermostat'', ''temperature'') | float
-        | round - 1 }}'
-      hvac_mode: '{{ state_attr(''climate.thermostat'', ''system_mode'').split(''/'')[1]
-        }}'
-    entity_id: climate.thermostat
+      target_temp_high: '{{ state_attr(''climate.thermostat'', ''target_temp_high'')
+        | float | round - 1.0 }}'
+      target_temp_low: '{{ state_attr(''climate.thermostat'', ''target_temp_low'')
+        | float | round - 1.0 }}'
+    target:
+      entity_id: climate.thermostat
   mode: single
   icon: mdi:thermometer-minus
-home_thermostat_up:
-  alias: Home - Thermostat - Up
-  sequence:
-  - service: system_log.write
-    data:
-      message: Raising {% if state_attr('climate.thermostat', 'system_mode').split('/')[1]
-        == 'heat' %} heat {% else %} AC {% endif %} from {{ state_attr('climate.thermostat',
-        'temperature') | float | round }} to {{ state_attr('climate.thermostat', 'temperature')
-        | float | round + 1 }}
-      level: warning
-  - service: climate.set_temperature
-    data:
-      temperature: '{{ state_attr(''climate.thermostat'', ''temperature'') | float
-        | round + 1 }}'
-      hvac_mode: '{{ state_attr(''climate.thermostat'',''system_mode'').split(''/'')[1]
-        }}'
-    entity_id: climate.thermostat
-  mode: single
-  icon: mdi:thermometer-plus
 000_test_script:
   alias: 000-Test Script
   sequence:
@@ -1316,3 +1298,23 @@ tv_all_off:
       - switch.living_room_tv
   mode: single
   icon: mdi:television
+home_thermostat_up:
+  alias: Home - Thermostat - up
+  sequence:
+  - service: system_log.write
+    data:
+      message: Raising thermostat from {{ state_attr('climate.thermostat', 'target_temp_high')
+        }}/{{ state_attr('climate.thermostat', 'target_temp_low') }} to {{ state_attr('climate.thermostat',
+        'target_temp_high') | float | round + 1.0 }}/{{ state_attr('climate.thermostat',
+        'target_temp_low') | float | round + 1.0 }}
+      level: warning
+  - service: climate.set_temperature
+    data:
+      target_temp_high: '{{ state_attr(''climate.thermostat'', ''target_temp_high'')
+        | float | round + 1.0 }}'
+      target_temp_low: '{{ state_attr(''climate.thermostat'', ''target_temp_low'')
+        | float | round + 1.0 }}'
+    target:
+      entity_id: climate.thermostat
+  mode: single
+  icon: mdi:thermometer-plus

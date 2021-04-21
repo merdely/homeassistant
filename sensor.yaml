@@ -126,30 +126,10 @@
         {% else %}
         armed
         {% endif %}
-    thermostat_temperature:
-      friendly_name: "Thermostat Temperature"
-      unit_of_measurement: "°F"
-      value_template: "{{ state_attr('climate.thermostat', 'current_temperature') }}"
-    thermostat_set_point:
-      friendly_name: "Thermostat Set Point"
-      unit_of_measurement: "°F"
-      value_template: "{{ state_attr('climate.thermostat', 'temperature') | round }}"
-    thermostat_program:
-      friendly_name: "Thermostat Program"
+    thermostat_setpoints:
+      friendly_name: 'Thermostat Setpoints'
       value_template: >-
-        {%- if as_timestamp(now()) >= as_timestamp(states.sensor.date.state ~ ' ' + states.input_datetime.thermostat_sleep.state | string) %}
-        sleep
-        {% elif as_timestamp(now()) >= as_timestamp(states.sensor.date.state ~ ' ' + states.input_datetime.thermostat_evening.state | string) %}
-        evening
-        {% elif as_timestamp(now()) >= as_timestamp(states.sensor.date.state ~ ' ' + states.input_datetime.thermostat_wake.state | string)
-                and is_state('binary_sensor.workday_sensor', 'on') %}
-        wake
-        {% elif as_timestamp(now()) >= as_timestamp(states.sensor.date.state ~ ' ' + states.input_datetime.thermostat_wake_weekend.state | string)
-                and is_state('binary_sensor.workday_sensor', 'off') %}
-        wake_weekend
-        {% else %}
-        sleep
-        {% endif %}
+        {{ state_attr('climate.thermostat', 'target_temp_high') | int }}/{{ state_attr('climate.thermostat', 'target_temp_low') | int }}
 
     coolest_temperature_in_house:
       friendly_name: "Coolest Temperature in House"
@@ -179,17 +159,6 @@
           {%- set ns.temp = states('input_number.ac_threshold')|float - 2.0 -%}
         {%- endif -%}
         {{ ns.temp }}
-
-    thermostat_mode:
-      friendly_name: "Thermostat Mode"
-      value_template: >-
-        {% if state_attr('climate.thermostat', 'system_mode') == '[4]/heat' %}
-          heat
-        {% elif state_attr('climate.thermostat', 'system_mode') == '[3]/cool' %}
-          cool
-        {% else %}
-          off
-        {% endif %}
 
     outside_temperature_met_no:
       friendly_name: "Outside Temperature met.no"

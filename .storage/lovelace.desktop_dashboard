@@ -637,64 +637,17 @@
                                     "cards": [
                                         {
                                             "type": "entity",
-                                            "entity": "sensor.thermostat_set_point",
+                                            "entity": "climate.thermostat",
                                             "unit": "\u00b0F",
-                                            "name": "Tstat",
+                                            "name": "Temp",
+                                            "icon": "mdi:thermostat",
+                                            "attribute": "current_temperature"
+                                        },
+                                        {
+                                            "type": "entity",
+                                            "entity": "sensor.thermostat_setpoints",
+                                            "name": "SetPt",
                                             "icon": "mdi:thermostat"
-                                        },
-                                        {
-                                            "type": "conditional",
-                                            "conditions": [
-                                                {
-                                                    "entity": "sensor.thermostat_mode",
-                                                    "state": "heat"
-                                                }
-                                            ],
-                                            "card": {
-                                                "type": "button",
-                                                "entity": "climate.thermostat",
-                                                "icon": "mdi:fire",
-                                                "show_state": true,
-                                                "show_name": false,
-                                                "show_icon": true,
-                                                "tap_action": {
-                                                    "action": "call-service",
-                                                    "service": "climate.set_hvac_mode",
-                                                    "service_data": {
-                                                        "hvac_mode": "cool"
-                                                    },
-                                                    "target": {
-                                                        "entity_id": "climate.thermostat"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "type": "conditional",
-                                            "conditions": [
-                                                {
-                                                    "entity": "sensor.thermostat_mode",
-                                                    "state": "cool"
-                                                }
-                                            ],
-                                            "card": {
-                                                "type": "button",
-                                                "entity": "climate.thermostat",
-                                                "icon": "mdi:snowflake",
-                                                "show_state": true,
-                                                "show_name": false,
-                                                "show_icon": true,
-                                                "tap_action": {
-                                                    "action": "call-service",
-                                                    "service": "climate.set_hvac_mode",
-                                                    "service_data": {
-                                                        "hvac_mode": "heat"
-                                                    },
-                                                    "target": {
-                                                        "entity_id": "climate.thermostat"
-                                                    }
-                                                }
-                                            }
                                         },
                                         {
                                             "type": "button",
@@ -842,162 +795,8 @@
                     "badges": [],
                     "cards": [
                         {
-                            "type": "grid",
-                            "columns": 1,
-                            "square": false,
-                            "cards": [
-                                {
-                                    "type": "thermostat",
-                                    "entity": "climate.thermostat",
-                                    "name": "Thermostat"
-                                },
-                                {
-                                    "type": "entities",
-                                    "title": "Thermostat Settings",
-                                    "heading_name": "",
-                                    "heading_state": "",
-                                    "entities": [
-                                        {
-                                            "entity": "climate.thermostat"
-                                        },
-                                        {
-                                            "type": "custom:entity-attributes-card",
-                                            "entity": "climate.thermostat",
-                                            "heading_name": " ",
-                                            "heading_state": " ",
-                                            "filter": {
-                                                "include": [
-                                                    {
-                                                        "key": "climate.thermostat.*"
-                                                    }
-                                                ],
-                                                "exclude": [
-                                                    {
-                                                        "key": "climate.thermostat.target_temp*"
-                                                    },
-                                                    {
-                                                        "key": "climate.thermostat.occupied_*"
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "type": "entities",
-                            "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -9px 0px;\n}\n",
-                            "entities": [
-                                {
-                                    "entity": "input_datetime.thermostat_wake",
-                                    "name": "Wake Program Start Time"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_cool_home",
-                                    "name": "Home Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_heat_home",
-                                    "name": "Home Heat"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_cool_not_home",
-                                    "name": "Away Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_heat_not_home",
-                                    "name": "Away Heat"
-                                },
-                                {
-                                    "type": "divider",
-                                    "style": {
-                                        "height": "2px",
-                                        "background-color": "gray",
-                                        "margin-top": "5px",
-                                        "margin-bottom": "3px"
-                                    }
-                                },
-                                {
-                                    "entity": "input_datetime.thermostat_wake_weekend",
-                                    "name": "Wake Weekend Program Start Time"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_weekend_cool_home",
-                                    "name": "Home Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_weekend_heat_home",
-                                    "name": "Home Heat"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_weekend_cool_not_home",
-                                    "name": "Away Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_weekend_heat_not_home",
-                                    "name": "Away Heat"
-                                },
-                                {
-                                    "type": "divider",
-                                    "style": {
-                                        "height": "2px",
-                                        "background-color": "gray",
-                                        "margin-top": "5px",
-                                        "margin-bottom": "3px"
-                                    }
-                                },
-                                {
-                                    "entity": "input_datetime.thermostat_evening",
-                                    "name": "Evening Program Start Time"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_evening_cool_home",
-                                    "name": "Home Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_evening_heat_home",
-                                    "name": "Home Heat"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_evening_cool_not_home",
-                                    "name": "Away Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_evening_heat_not_home",
-                                    "name": "Away Heat"
-                                },
-                                {
-                                    "type": "divider",
-                                    "style": {
-                                        "height": "2px",
-                                        "background-color": "gray",
-                                        "margin-top": "5px",
-                                        "margin-bottom": "3px"
-                                    }
-                                },
-                                {
-                                    "entity": "input_datetime.thermostat_sleep",
-                                    "name": "Sleep Program Start Time"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_sleep_cool_home",
-                                    "name": "Home Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_sleep_heat_home",
-                                    "name": "Home Heat"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_sleep_cool_not_home",
-                                    "name": "Away Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_sleep_heat_not_home",
-                                    "name": "Away Heat"
-                                }
-                            ],
-                            "title": "Thermostat Programming"
+                            "type": "thermostat",
+                            "entity": "climate.thermostat"
                         }
                     ]
                 },
@@ -2683,6 +2482,120 @@
                             "hours_to_show": 24,
                             "refresh_interval": 0,
                             "title": "Outside Temperature"
+                        },
+                        {
+                            "type": "entities",
+                            "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -9px 0px;\n}\n",
+                            "entities": [
+                                {
+                                    "entity": "input_datetime.thermostat_wake",
+                                    "name": "Wake Program Start Time"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_wake_cool_home",
+                                    "name": "Home Cool"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_wake_heat_home",
+                                    "name": "Home Heat"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_wake_cool_not_home",
+                                    "name": "Away Cool"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_wake_heat_not_home",
+                                    "name": "Away Heat"
+                                },
+                                {
+                                    "type": "divider",
+                                    "style": {
+                                        "height": "2px",
+                                        "background-color": "gray",
+                                        "margin-top": "5px",
+                                        "margin-bottom": "3px"
+                                    }
+                                },
+                                {
+                                    "entity": "input_datetime.thermostat_wake_weekend",
+                                    "name": "Wake Weekend Program Start Time"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_wake_weekend_cool_home",
+                                    "name": "Home Cool"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_wake_weekend_heat_home",
+                                    "name": "Home Heat"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_wake_weekend_cool_not_home",
+                                    "name": "Away Cool"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_wake_weekend_heat_not_home",
+                                    "name": "Away Heat"
+                                },
+                                {
+                                    "type": "divider",
+                                    "style": {
+                                        "height": "2px",
+                                        "background-color": "gray",
+                                        "margin-top": "5px",
+                                        "margin-bottom": "3px"
+                                    }
+                                },
+                                {
+                                    "entity": "input_datetime.thermostat_evening",
+                                    "name": "Evening Program Start Time"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_evening_cool_home",
+                                    "name": "Home Cool"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_evening_heat_home",
+                                    "name": "Home Heat"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_evening_cool_not_home",
+                                    "name": "Away Cool"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_evening_heat_not_home",
+                                    "name": "Away Heat"
+                                },
+                                {
+                                    "type": "divider",
+                                    "style": {
+                                        "height": "2px",
+                                        "background-color": "gray",
+                                        "margin-top": "5px",
+                                        "margin-bottom": "3px"
+                                    }
+                                },
+                                {
+                                    "entity": "input_datetime.thermostat_sleep",
+                                    "name": "Sleep Program Start Time"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_sleep_cool_home",
+                                    "name": "Home Cool"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_sleep_heat_home",
+                                    "name": "Home Heat"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_sleep_cool_not_home",
+                                    "name": "Away Cool"
+                                },
+                                {
+                                    "entity": "input_number.thermostat_sleep_heat_not_home",
+                                    "name": "Away Heat"
+                                }
+                            ],
+                            "title": "Thermostat Programming"
                         }
                     ]
                 },

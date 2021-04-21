@@ -130,9 +130,9 @@
                                         {
                                             "type": "entity",
                                             "style": ".value {\n  font-size: 19px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n",
-                                            "entity": "sensor.thermostat_temperature",
-                                            "name": "Tstat",
-                                            "icon": "mdi:thermostat"
+                                            "entity": "sensor.living_room_temperature",
+                                            "name": "LR",
+                                            "icon": "mdi:sofa"
                                         },
                                         {
                                             "type": "entity",
@@ -443,64 +443,18 @@
                                     "cards": [
                                         {
                                             "type": "entity",
-                                            "entity": "sensor.thermostat_set_point",
+                                            "entity": "climate.thermostat",
                                             "unit": "\u00b0F",
                                             "name": "Tstat",
-                                            "icon": "mdi:thermostat"
+                                            "icon": "mdi:thermostat",
+                                            "attribute": "current_temperature"
                                         },
                                         {
-                                            "type": "conditional",
-                                            "conditions": [
-                                                {
-                                                    "entity": "sensor.thermostat_mode",
-                                                    "state": "heat"
-                                                }
-                                            ],
-                                            "card": {
-                                                "type": "button",
-                                                "entity": "climate.thermostat",
-                                                "icon": "mdi:fire",
-                                                "show_state": true,
-                                                "show_name": false,
-                                                "show_icon": true,
-                                                "tap_action": {
-                                                    "action": "call-service",
-                                                    "service": "climate.set_hvac_mode",
-                                                    "service_data": {
-                                                        "hvac_mode": "cool"
-                                                    },
-                                                    "target": {
-                                                        "entity_id": "climate.thermostat"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "type": "conditional",
-                                            "conditions": [
-                                                {
-                                                    "entity": "sensor.thermostat_mode",
-                                                    "state": "cool"
-                                                }
-                                            ],
-                                            "card": {
-                                                "type": "button",
-                                                "entity": "climate.thermostat",
-                                                "icon": "mdi:snowflake",
-                                                "show_state": true,
-                                                "show_name": false,
-                                                "show_icon": true,
-                                                "tap_action": {
-                                                    "action": "call-service",
-                                                    "service": "climate.set_hvac_mode",
-                                                    "service_data": {
-                                                        "hvac_mode": "heat"
-                                                    },
-                                                    "target": {
-                                                        "entity_id": "climate.thermostat"
-                                                    }
-                                                }
-                                            }
+                                            "type": "entity",
+                                            "entity": "sensor.thermostat_setpoints",
+                                            "icon": "mdi:thermostat",
+                                            "name": "SP",
+                                            "style": ".value {\n  font-size: 20px !important;\n}\n"
                                         },
                                         {
                                             "type": "button",
