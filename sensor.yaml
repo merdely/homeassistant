@@ -345,7 +345,7 @@
         {%- set count = 0 -%}
         {%- if is_state('light.kitchen_table_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('light.kitchen_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-        {%- if is_state('light.dining_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+        {%- if is_state('light.dining_room_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.dining_room_christmas_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('light.near_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
         {%- if is_state('switch.far_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
@@ -747,9 +747,23 @@
   value_template: '{{ value_json["computer"]["Linux"].version.split("-")[0] }}'
   scan_interval: 3600
 
+- platform: mqtt
+  name: Rclone Version
+  state_topic: "software_versions/rclone"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: Rclone Version Latest
+  resource: "https://api.github.com/repos/rclone/rclone/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
 - platform: rest
   name: Restreamer Version
-  resource: "https://cameras.erdely.in/frontdoorcam/v1/version"
+  resource: "https://restreamer.erdely.in/frontdoorcam/v1/version"
   value_template: "v{{ value_json.version }}"
   scan_interval: 3600
 

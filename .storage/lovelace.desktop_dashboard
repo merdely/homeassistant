@@ -125,7 +125,7 @@
                                                     "name": "KO"
                                                 },
                                                 {
-                                                    "entity": "light.dining_room_light",
+                                                    "entity": "light.dining_room_overhead_light",
                                                     "name": "DR"
                                                 },
                                                 {
@@ -641,18 +641,23 @@
                                             "unit": "\u00b0F",
                                             "name": "Temp",
                                             "icon": "mdi:thermostat",
-                                            "attribute": "current_temperature"
+                                            "attribute": "current_temperature",
+                                            "style": ".name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
                                         },
                                         {
                                             "type": "entity",
                                             "entity": "sensor.thermostat_setpoints",
                                             "name": "SetPt",
-                                            "icon": "mdi:thermostat"
+                                            "icon": "mdi:thermostat",
+                                            "style": ".value {\n  font-size: 22px !important;\n}\n.name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
                                         },
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "toggle"
+                                                "action": "call-service",
+                                                "service": "script.home_thermostat_down",
+                                                "service_data": {},
+                                                "target": {}
                                             },
                                             "entity": "script.home_thermostat_down",
                                             "name": "Cooler"
@@ -660,7 +665,10 @@
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "toggle"
+                                                "action": "call-service",
+                                                "service": "script.home_thermostat_up",
+                                                "service_data": {},
+                                                "target": {}
                                             },
                                             "entity": "script.home_thermostat_up",
                                             "name": "Warmer"

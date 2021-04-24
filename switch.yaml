@@ -369,17 +369,17 @@
         {% if is_state('switch.kitchen', 'on') or
               is_state('switch.living_room', 'on') or
               is_state('light.foyer_light', 'on') or
-              is_state('light.dining_room_light', 'on') %}
+              is_state('light.dining_room_overhead_light', 'on') %}
           on
         {% else %}
           off
         {% endif %}
       turn_on:
         - service: homeassistant.turn_on
-          entity_id: switch.kitchen, light.near_black_lamp, switch.far_black_lamp, switch.white_lamp, light.foyer_light, light.dining_room_light
+          entity_id: switch.kitchen, light.near_black_lamp, switch.far_black_lamp, switch.white_lamp, light.foyer_light, light.dining_room_overhead_light
       turn_off:
         - service: homeassistant.turn_off
-          entity_id: switch.kitchen, switch.living_room, light.foyer_light, light.dining_room_light
+          entity_id: switch.kitchen, switch.living_room, light.foyer_light, light.dining_room_overhead_light
 
     outside:
       friendly_name: "Outside"

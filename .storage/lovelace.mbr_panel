@@ -395,7 +395,7 @@
                                 },
                                 {
                                     "type": "grid",
-                                    "columns": 4,
+                                    "columns": 5,
                                     "square": false,
                                     "cards": [
                                         {
@@ -433,6 +433,15 @@
                                             },
                                             "entity": "camera.shed_cam",
                                             "icon": "mdi:cellphone-android"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "navigate",
+                                                "navigation_path": "/mbr-backyard-camera/home"
+                                            },
+                                            "entity": "camera.backyard_cam",
+                                            "icon": "mdi:cellphone-android"
                                         }
                                     ]
                                 },
@@ -447,19 +456,23 @@
                                             "unit": "\u00b0F",
                                             "name": "Tstat",
                                             "icon": "mdi:thermostat",
-                                            "attribute": "current_temperature"
+                                            "attribute": "current_temperature",
+                                            "style": ".name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
                                         },
                                         {
                                             "type": "entity",
                                             "entity": "sensor.thermostat_setpoints",
                                             "icon": "mdi:thermostat",
                                             "name": "SP",
-                                            "style": ".value {\n  font-size: 20px !important;\n}\n"
+                                            "style": ".value {\n  font-size: 20px !important;\n}\n.name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
                                         },
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "toggle"
+                                                "action": "call-service",
+                                                "service": "script.home_thermostat_down",
+                                                "service_data": {},
+                                                "target": {}
                                             },
                                             "entity": "script.home_thermostat_down",
                                             "name": "Cooler"
@@ -467,7 +480,10 @@
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "toggle"
+                                                "action": "call-service",
+                                                "service": "script.home_thermostat_up",
+                                                "service_data": {},
+                                                "target": {}
                                             },
                                             "entity": "script.home_thermostat_up",
                                             "name": "Warmer"
