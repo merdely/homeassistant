@@ -1190,9 +1190,16 @@ scene_good_night:
       - switch.garage
       - light.front_porch_light
       - switch.mantle_lights
-  - service: media_player.turn_off
-    target:
-      entity_id: media_player.ytube_music_player
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: media_player.ytube_music_player
+        state: 'On'
+      sequence:
+      - service: media_player.turn_off
+        target:
+          entity_id: media_player.ytube_music_player
+    default: []
   - service: cover.close_cover
     data: {}
     entity_id: cover.garage_door
@@ -1221,16 +1228,23 @@ scene_leaving_home:
       - switch.upstairs
       - switch.back_yard
       - switch.garage
-      - light.dining_room
       - light.kitchen_overhead_light
       - switch.far_black_lamp
       - light.near_black_lamp
       - switch.white_lamp
       - switch.living_room_tv
       - switch.mantle_lights
-  - service: media_player.turn_off
-    data: {}
-    entity_id: media_player.ytube_music_player
+      - light.dining_room_overhead_light
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: media_player.ytube_music_player
+        state: 'On'
+      sequence:
+      - service: media_player.turn_off
+        target:
+          entity_id: media_player.ytube_music_player
+    default: []
   mode: single
   icon: mdi:exit-run
 scene_movie_time:
@@ -1250,9 +1264,16 @@ scene_movie_time:
       - light.den_overhead_light
       - light.laundry_room_light
       - switch.three_headed_lamp
-  - service: media_player.turn_off
-    data: {}
-    entity_id: media_player.ytube_music_player
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: media_player.ytube_music_player
+        state: 'On'
+      sequence:
+      - service: media_player.turn_off
+        target:
+          entity_id: media_player.ytube_music_player
+    default: []
   mode: single
   icon: mdi:movie
 scene_night_night:
@@ -1278,9 +1299,16 @@ scene_night_night:
       - switch.garage
       - light.front_porch_light
       - switch.mantle_lights
-  - service: media_player.turn_off
-    target:
-      entity_id: media_player.ytube_music_player
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: media_player.ytube_music_player
+        state: 'On'
+      sequence:
+      - service: media_player.turn_off
+        target:
+          entity_id: media_player.ytube_music_player
+    default: []
   - service: cover.close_cover
     data: {}
     entity_id: cover.garage_door

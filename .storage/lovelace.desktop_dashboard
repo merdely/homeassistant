@@ -1642,22 +1642,22 @@
                                             "type": "gauge",
                                             "entity": "sensor.speedtest_download",
                                             "min": 0,
-                                            "max": 100,
+                                            "max": 1000,
                                             "severity": {
-                                                "green": 60,
-                                                "yellow": 50,
-                                                "red": 0
+                                                "green": 400,
+                                                "yellow": 300,
+                                                "red": 100
                                             }
                                         },
                                         {
                                             "type": "gauge",
                                             "entity": "sensor.speedtest_upload",
                                             "min": 0,
-                                            "max": 100,
+                                            "max": 1000,
                                             "severity": {
-                                                "green": 60,
-                                                "yellow": 50,
-                                                "red": 0
+                                                "green": 400,
+                                                "yellow": 300,
+                                                "red": 100
                                             }
                                         }
                                     ]
@@ -2604,6 +2604,30 @@
                                 }
                             ],
                             "title": "Thermostat Programming"
+                        },
+                        {
+                            "type": "custom:spotify-card",
+                            "limit": 10,
+                            "playlist_type": "default",
+                            "account": "default",
+                            "spotify_entity": "media_player.office_speakers",
+                            "always_play_random_song": true
+                        },
+                        {
+                            "type": "grid",
+                            "cards": [
+                                {
+                                    "type": "picture",
+                                    "image": "/local/images/backblaze.png",
+                                    "tap_action": {
+                                        "action": "url",
+                                        "url_path": "https://secure.backblaze.com/user_overview.htm"
+                                    },
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
