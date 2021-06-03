@@ -111,6 +111,18 @@
         {% endfor -%}
         {{ ns.sensor }}
 
+- name: New SSL Cert Available
+  platform: command_line
+  command: '/config/bin/check_ssl_renewed'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: New NPM SSL Cert Available
+  platform: command_line
+  command: '/config/bin/check_ssl_renewed_npm'
+  payload_on: 'on'
+  payload_off: 'off'
+
 - name: Christmas Lights Should Be On
   platform: command_line
   command: '/config/bin/xmas_lights'

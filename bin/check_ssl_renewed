@@ -1,0 +1,11 @@
+#!/bin/sh
+
+fileexp=$(openssl x509 -noout -in /ssl/fullchain.pem -dates|tail -n1)
+liveexp=$(echo -n | openssl s_client -connect localhost:38123 2> /dev/null | openssl x509 -noout -dates | tail -n1)
+
+if [ "$fileexp" != "$liveexp" ]; then
+  echo on
+else
+  echo off
+fi
+

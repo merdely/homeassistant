@@ -1,0 +1,11 @@
+#!/bin/sh
+
+fileexp=$(openssl x509 -noout -in /ssl/nginxproxymanager/live/npm-5/cert.pem -dates|tail -n1)
+liveexp=$(echo -n | openssl s_client -connect npm.erdely.in:443 -servername npm.erdely.in 2> /dev/null | openssl x509 -noout -dates | tail -n1)
+
+if [ "$fileexp" != "$liveexp" ]; then
+  echo on
+else
+  echo off
+fi
+

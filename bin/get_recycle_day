@@ -51,7 +51,7 @@ do
   this_week_number=$(datecmd -d "$f" "+%U")
   [ $? != 0 ] && echo "$0: Warning: Cannot get week number for '$f'" > /dev/stderr && continue
 
-  [ $current_year = $this_year ] && [ $current_week_number = $this_week_number ] && this_week_day=$(date -d "$f" "+%A")
+  [ $current_year = $this_year ] && [ $current_week_number = $this_week_number ] && this_week_day=$(datecmd -d "$f" "+%A")
 done
 
 case $this_week_day in
