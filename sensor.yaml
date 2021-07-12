@@ -1,18 +1,23 @@
 - platform: systemmonitor
   resources:
     - type: disk_use_percent
-      arg: /
+      arg: /config
     - type: throughput_network_in
-      arg: enp0s3
+      arg: enp12s0
     - type: throughput_network_out
-      arg: enp0s3
+      arg: enp12s0
     - type: network_in
-      arg: enp0s3
+      arg: enp12s0
     - type: network_out
-      arg: enp0s3
+      arg: enp12s0
     - type: memory_use_percent
     - type: processor_use
-    - type: processor_temperature
+
+- platform: command_line
+  name: CPU Temperature
+  command: "cat /sys/class/thermal/thermal_zone0/temp"
+  unit_of_measurement: "°C"
+  value_template: "{{ value | multiply(0.001) | round(2)  }}"
 
 - name: "Shed Door Battery"
   platform: mqtt
@@ -127,7 +132,7 @@
         armed
         {% endif %}
     thermostat_setpoints:
-      friendly_name: 'Thermostat Setpoints'
+      friendly_name: "Thermostat Setpoints"
       value_template: >-
         {{ state_attr('climate.thermostat', 'target_temp_high') | int }}/{{ state_attr('climate.thermostat', 'target_temp_low') | int }}
 

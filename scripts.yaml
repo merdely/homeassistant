@@ -784,7 +784,7 @@ tv_living_room_mute:
   - service: mqtt.publish
     data:
       topic: cmnd/living_room_tv_remote/backlog
-      payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0F00F","DataLSB":"0x07070FF0","Repeat":0}
+      payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x140C","DataLSB":"0x2830","Repeat":0}
   mode: single
   icon: mdi:volume-mute
 tv_living_room_roku_ok:
@@ -847,10 +847,10 @@ tv_living_room_volume_down:
   - service: mqtt.publish
     data:
       topic: cmnd/living_room_tv_remote/backlog
-      payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0}
+      payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
+        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
+        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
+        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0}
   mode: single
   icon: mdi:volume-minus
 tv_living_room_volume_up:
@@ -1064,7 +1064,7 @@ function_tv_change_input:
     remotes:
       bedroom: bedroom_tv
       god_damn: god_damn_hdmi
-      living_room: living_room_hdmi
+      living_room: living_room_tv
       office: office_tv
     tvs:
       bedroom:
@@ -1079,9 +1079,9 @@ function_tv_change_input:
         playstation: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF906F","DataLSB":"0x02FD09F6","Repeat":0}
         wii: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BFB04F","DataLSB":"0x02FD0DF2","Repeat":0}
       living_room:
-        tivo: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF609F","DataLSB":"0x02FD06F9","Repeat":0}
-        roku: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF50AF","DataLSB":"0x02FD0AF5","Repeat":0}
-        chromecast: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF708F","DataLSB":"0x02FD0EF1","Repeat":0}
+        tivo: irsend {"Protocol":"NEC","Bits":32,"Data":"0xFF609F","DataLSB":"0xFF06F9","Repeat":0}
+        roku: irsend {"Protocol":"NEC","Bits":32,"Data":"0xFF50AF","DataLSB":"0xFF0AF5","Repeat":0}
+        chromecast: irsend {"Protocol":"NEC","Bits":32,"Data":"0xFF708F","DataLSB":"0xFF0EF1","Repeat":0}
       office:
         tivo: irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33718E","DataLSB":"0x33CC8E71","Repeat":0};
           Delay 10; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33A15E","DataLSB":"0x33CC857A","Repeat":0};
@@ -1209,6 +1209,9 @@ scene_good_night:
   - condition: state
     entity_id: switch.bedroom_tv
     state: 'off'
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.bedroom_tv
   - service: input_select.select_option
     data:
       option: Nickelodeon

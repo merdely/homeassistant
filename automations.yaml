@@ -2513,162 +2513,26 @@
       entity_id: switch.mantle_lights
   mode: single
 - id: '1613520122707'
-  alias: TV - Living Room - HDMI Input Passthrough
+  alias: TV - Living Room - HDMI Input Toggle Tivo Remote
   description: ''
   trigger:
   - platform: mqtt
     topic: tele/living_room_tv_remote/RESULT
-  condition: []
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec_like"
+      }}'
+  - condition: template
+    value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
+  - condition: template
+    value_template: '{{ trigger.payload_json.IrReceived.Data == "0xA10C2C03" }}'
+  - condition: template
+    value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x853034C0" }}'
   action:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF00FF" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD00FF"
-          or trigger.payload_json.IrReceived.DataLSB == "0x2FD00FF" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_hdmi_remote/backlog
-          payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF00FF","DataLSB":"0x02FD00FF","Repeat":0}
-      - service: system_log.write
-        data:
-          message: 'hdmi passthrough: hdmi up: {{ trigger.payload_json.IrReceived
-            }}'
-          level: warning
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF20DF" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD04FB"
-          or trigger.payload_json.IrReceived.DataLSB == "0x2FD04FB" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_hdmi_remote/backlog
-          payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF20DF","DataLSB":"0x02FD04FB","Repeat":0}
-      - service: system_log.write
-        data:
-          message: 'hdmi passthrough: hdmi down: {{ trigger.payload_json.IrReceived
-            }}'
-          level: warning
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF609F" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD06F9"
-          or trigger.payload_json.IrReceived.DataLSB == "0x2FD06F9" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_hdmi_remote/backlog
-          payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF609F","DataLSB":"0x02FD06F9","Repeat":0}
-      - service: system_log.write
-        data:
-          message: 'hdmi passthrough: hdmi 1: {{ trigger.payload_json.IrReceived }}'
-          level: warning
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF50AF" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD0AF5"
-          or trigger.payload_json.IrReceived.DataLSB == "0x2FD0AF5" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_hdmi_remote/backlog
-          payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF50AF","DataLSB":"0x02FD0AF5","Repeat":0}
-      - service: system_log.write
-        data:
-          message: 'hdmi passthrough: hdmi 2: {{ trigger.payload_json.IrReceived }}'
-          level: warning
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF708F" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD0EF1"
-          or trigger.payload_json.IrReceived.DataLSB == "0x2FD0EF1" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_hdmi_remote/backlog
-          payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF708F","DataLSB":"0x02FD0EF1","Repeat":0}
-      - service: system_log.write
-        data:
-          message: 'hdmi passthrough: hdmi 3: {{ trigger.payload_json.IrReceived }}'
-          level: warning
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BF906F" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD09F6"
-          or trigger.payload_json.IrReceived.DataLSB == "0x2FD09F6" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_hdmi_remote/backlog
-          payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF906F","DataLSB":"0x02FD09F6","Repeat":0}
-      - service: system_log.write
-        data:
-          message: 'hdmi passthrough: hdmi 4: {{ trigger.payload_json.IrReceived }}'
-          level: warning
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0x40BFB04F" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x02FD0DF2"
-          or trigger.payload_json.IrReceived.DataLSB == "0x2FD0DF2" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_hdmi_remote/backlog
-          payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BFB04F","DataLSB":"0x02FD0DF2","Repeat":0}
-      - service: system_log.write
-        data:
-          message: 'hdmi passthrough: hdmi 5: {{ trigger.payload_json.IrReceived }}'
-          level: warning
-    default:
-    - service: system_log.write
-      data:
-        message: 'hdmi passthrough: no condition met: {{ trigger.payload_json.IrReceived
-          }}'
-        level: warning
+  - service: mqtt.publish
+    data:
+      payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0xFF00FF","DataLSB":"0xFF00FF","Repeat":0}
+      topic: cmnd/living_room_tv_remote/backlog
   mode: single
 - id: '1614981790208'
   alias: Notifications - Mailbox Notify

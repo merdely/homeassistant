@@ -313,6 +313,10 @@
                                                     "name": "Porch"
                                                 },
                                                 {
+                                                    "entity": "light.deck_lights",
+                                                    "name": "Deck"
+                                                },
+                                                {
                                                     "entity": "switch.shed_lamp",
                                                     "name": "Shed"
                                                 },
@@ -1721,7 +1725,7 @@
                             "cards": [
                                 {
                                     "type": "gauge",
-                                    "entity": "sensor.disk_use_percent",
+                                    "entity": "sensor.disk_use_percent_config",
                                     "min": 0,
                                     "max": 100,
                                     "severity": {
@@ -1754,7 +1758,7 @@
                                 },
                                 {
                                     "type": "gauge",
-                                    "entity": "sensor.processor_temperature",
+                                    "entity": "sensor.cpu_temperature",
                                     "min": 80,
                                     "max": 180,
                                     "severity": {
@@ -1772,28 +1776,28 @@
                             "cards": [
                                 {
                                     "type": "sensor",
-                                    "entity": "sensor.network_throughput_in_enp0s3",
+                                    "entity": "sensor.network_throughput_in_enp12s0",
                                     "graph": "line",
                                     "name": "Throughput in",
                                     "hours_to_show": 48
                                 },
                                 {
                                     "type": "sensor",
-                                    "entity": "sensor.network_throughput_out_enp0s3",
+                                    "entity": "sensor.network_throughput_out_enp12s0",
                                     "graph": "line",
                                     "name": "Throughput out",
                                     "hours_to_show": 48
                                 },
                                 {
                                     "type": "sensor",
-                                    "entity": "sensor.network_in_enp0s3",
+                                    "entity": "sensor.network_in_enp12s0",
                                     "graph": "line",
                                     "name": "Network in",
                                     "hours_to_show": 48
                                 },
                                 {
                                     "type": "sensor",
-                                    "entity": "sensor.network_out_enp0s3",
+                                    "entity": "sensor.network_out_enp12s0",
                                     "graph": "line",
                                     "name": "Network out",
                                     "hours_to_show": 48
@@ -2652,6 +2656,10 @@
                                 }
                             ],
                             "state_color": false
+                        },
+                        {
+                            "type": "entity",
+                            "entity": "light.back_porch_led_strip"
                         }
                     ]
                 },
