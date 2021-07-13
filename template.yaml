@@ -1,0 +1,676 @@
+- binary_sensor:
+    unique_id: garage_door
+    name: Garage Door
+    device_class: opening
+    state: "{{ states('cover.garage_door') }}"
+
+- binary_sensor:
+    unique_id: security_devices
+    name: Security Devices
+    device_class: opening
+    state: "{{ states('group.security_devices') }}"
+
+- binary_sensor:
+    unique_id: doors_windows
+    name: Interior Security Devices
+    device_class: opening
+    state: "{{ states('group.doors_windows') }}"
+
+- binary_sensor:
+    unique_id: exterior_security_devices
+    name: Exterior Security Devices
+    device_class: opening
+    state: "{{ states('group.exterior_security_devices') }}"
+
+- binary_sensor:
+    unique_id: oven_is_on
+    name: Oven is On
+    state: "{{ states('sensor.oven_monitor_analog_ctenergy_power') | int > 200 }}"
+    delay_off:
+        minutes: 3
+
+- binary_sensor:
+    unique_id: washer_running
+    name: Laundry Room Washer
+    state: "{{ states('input_boolean.laundry_room_washer_running') }}"
+
+- binary_sensor:
+    unique_id: dryer_running
+    name: Laundry Room Dryer
+    state: "{{ states('input_boolean.laundry_room_dryer_running') }}"
+
+- binary_sensor:
+    unique_id: show_ac_controls
+    name: "Show AC Controls"
+    state: >-
+      {% if state_attr('weather.home', 'temperature') | int > 64 %}
+        On
+      {% else %}
+        Off
+      {% endif %}
+
+- binary_sensor:
+    unique_id: software_update_available
+    name: "Software Update Available"
+    state: >-
+      {% set ns = namespace(sensor = 'Off') -%}
+      {% for software in ['home_assistant', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
+        {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+          {% set ns.sensor = 'On' -%}
+        {% endif -%}
+      {% endfor -%}
+      {% for addon in state_attr("sensor.ha_add_ons", "addons") | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
+        {% if addon['version'] != addon['version_latest'] %}
+          {% set ns.sensor = 'On' -%}
+        {% endif %}
+      {% endfor -%}
+      {{ ns.sensor }}
+
+- sensor:
+    unique_id: unavailable_entities
+    name: Unavailable Entities
+    icon: mdi:cloud-question
+    state: "{{ states | rejectattr('entity_id','in',['group.house_temperature', 'sensor.ir_receiver_status', 'sensor.kukui_battery_health', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | length }}"
+    attributes:
+      entity_list: "{{ states | rejectattr('entity_id','in',['group.house_temperature', 'sensor.ir_receiver_status', 'sensor.kukui_battery_health', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | join(', ') }}"
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_updates_available
+    name: "Software Updates Available"
+    state: >-
+      {% set ns = namespace(updates = 0) -%}
+      {% for software in ['home_assistant', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
+        {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+          {% set ns.updates = ns.updates + 1 -%}
+        {% endif -%}
+      {% endfor -%}
+      {% for addon in state_attr("sensor.ha_add_ons", "addons") | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
+        {% if addon['version'] != addon['version_latest'] %}
+          {% set ns.updates = ns.updates + 1 -%}
+        {% endif %}
+      {% endfor -%}
+      {{ ns.updates }}
+    attributes:
+      entity_list: >-
+        {% set ns = namespace(list = "") -%}
+        {% for software in ['home_assistant', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
+          {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+            {% set ns.list = ns.list + " " + software -%}
+          {% endif -%}
+        {% endfor -%}
+        {% for addon in state_attr("sensor.ha_add_ons", "addons") | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
+          {% if addon['version'] != addon['version_latest'] %}
+            {% set ns.list = ns.list + " " + addon['name'] + " Add-On" -%}
+          {% endif %}
+        {% endfor -%}
+        {{ ns.list | trim }}
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_alerts
+    name: Alerts
+    icon: mdi:pound
+    state: "{{ states.alert | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_automations
+    name: Automations
+    icon: mdi:pound
+    state: "{{ states.automation | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_binary_sensors
+    name: Binary Sensors
+    icon: mdi:pound
+    state: "{{ states.binary_sensor | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_cameras
+    name: Cameras
+    icon: mdi:pound
+    state: "{{ states.camera | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_entities
+    name: Entities
+    icon: mdi:pound
+    state: "{{ states | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_input_booleans
+    name: Input Booleans
+    icon: mdi:pound
+    state: "{{ states.input_boolean | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_input_datetimes
+    name: Input DateTimes
+    icon: mdi:pound
+    state: "{{ states.input_datetime | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_input_numbers
+    name: Input Numbers
+    icon: mdi:pound
+    state: "{{ states.input_number | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_input_selects
+    name: Input Selects
+    icon: mdi:pound
+    state: "{{ states.input_select | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_input_texts
+    name: Input Texts
+    icon: mdi:pound
+    state: "{{ states.input_text | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_lights
+    name: Lights
+    icon: mdi:pound
+    state: "{{ states.light | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_scripts
+    name: Scripts
+    icon: mdi:pound
+    state: "{{ states.script | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_sensors
+    name: Sensors
+    icon: mdi:pound
+    state: "{{ states.sensor | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: ha_count_switches
+    name: Switches
+    icon: mdi:pound
+    state: "{{ states.switch | list | count }}"
+    attributes:
+      ha_count: true
+
+- sensor:
+    unique_id: washer_dryer_state
+    name: Washer and Dryer State
+    icon: mdi:washing-machine
+    state: >-
+      {% if states('sensor.dryer_monitor_analog_ctenergy_power') | int > 750 and states('sensor.laundry_room_outlet_energy_power') | int >= 3 %}
+        both
+      {% elif states('sensor.dryer_monitor_analog_ctenergy_power') | int > 750 %}
+        dryer
+      {% elif states('sensor.laundry_room_outlet_energy_power') | int >= 3 %}
+        washer
+      {% else %}
+        off
+      {% endif %}
+
+- sensor:
+    unique_id: washer_dryer_state_pretty
+    name: Washer and Dryer State Pretty
+    icon: mdi:washing-machine
+    state: >-
+      {% if states('sensor.dryer_monitor_analog_ctenergy_power') | int > 750 and states('sensor.laundry_room_outlet_energy_power') | int >= 3 %}
+        Washer & Dryer
+      {% elif states('sensor.dryer_monitor_analog_ctenergy_power') | int > 750 %}
+        Dryer
+      {% elif states('sensor.laundry_room_outlet_energy_power') | int >= 3 %}
+        Washer
+      {% else %}
+        Laundry Idle
+      {% endif %}
+
+- sensor:
+    unique_id: fully_kiosk_screensaver
+    name: "Fully Kiosk Browser Screensaver"
+    state: >-
+      {% if state_attr('sensor.fully_kiosk_browser', 'isInScreensaver') == True %}
+        On
+      {% else %}
+        Off
+      {% endif %}
+
+- sensor:
+    unique_id: fully_kiosk_screensaver_mbr
+    name: "Fully Kiosk Browser MBR Screensaver"
+    state: >-
+      {% if state_attr('sensor.fully_kiosk_browser_mbr', 'isInScreensaver') == True %}
+        On
+      {% else %}
+        Off
+      {% endif %}
+
+- sensor:
+    unique_id: ytube_playlist_item_count
+    name: Youtube Music Playlist Item
+    state: >-
+      {% if state_attr("input_select.ytube_music_player_playlist", "options") | length == 1 %}
+        Broken
+      {% else %}
+        Ok
+      {% endif %}
+
+- sensor:
+    unique_id: alarm_state
+    name: "Alarm State"
+    state: >-
+      {% if is_state("alarm_control_panel.home_alarm", "disarmed") and is_state("binary_sensor.security_devices", "off") %}
+      disarmed_secure
+      {% elif is_state("alarm_control_panel.home_alarm", "disarmed") and is_state("binary_sensor.security_devices", "on") %}
+      disarmed_insecure
+      {% else %}
+      armed
+      {% endif %}
+
+- sensor:
+    unique_id: thermostat_setpoints
+    name: "Thermostat Setpoints"
+    state: >-
+      {{ state_attr('climate.thermostat', 'target_temp_high') | int }}/{{ state_attr('climate.thermostat', 'target_temp_low') | int }}
+
+- sensor:
+    unique_id: coolest_temperature_in_house
+    name: "Coolest Temperature in House"
+    unit_of_measurement: "°F"
+    state: >-
+      {%- set ns=namespace(temp=100.0) %}
+      {%- for temp in expand('group.house_temperature') -%}
+        {%- if temp.state|float < ns.temp|float -%}
+          {%- set ns.temp=temp.state|float -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if ns.temp|float == 100.0 -%}
+        {%- set ns.temp = states('input_number.heat_threshold')|float + 2.0 -%}
+      {%- endif -%}
+      {{ ns.temp }}
+
+- sensor:
+    unique_id: warmest_temperature_in_house
+    name: "Warmest Temperature in House"
+    unit_of_measurement: "°F"
+    state: >-
+      {%- set ns=namespace(temp=0.0) %}
+      {%- for temp in expand('group.house_temperature') -%}
+        {%- if temp.state|float > ns.temp|float -%}
+          {%- set ns.temp=temp.state|float -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if ns.temp|float == 0.0 -%}
+        {%- set ns.temp = states('input_number.ac_threshold')|float - 2.0 -%}
+      {%- endif -%}
+      {{ ns.temp }}
+
+- sensor:
+    unique_id: outside_temperature_met_no
+    name: "Outside Temperature met.no"
+    unit_of_measurement: "°F"
+    state: "{{ state_attr('weather.home', 'temperature') | round(1) }}"
+
+- sensor:
+    unique_id: outside_temperature_accuweather
+    name: "Outside Temperature Accuweather"
+    unit_of_measurement: "°F"
+    state: "{{ state_attr('weather.home_2', 'temperature') | round(1) }}"
+
+- sensor:
+    unique_id: time_formatted
+    name: "Time Formatted"
+    icon: mdi:clock
+    state:
+      "{{ as_timestamp(states('sensor.date_time_iso')) | timestamp_custom('%I:%M %p')
+      | regex_replace(find=' AM', replace='a')
+      | regex_replace(find=' PM', replace='p')
+      | regex_replace(find='^0', replace='') }}"
+
+- sensor:
+    unique_id: weekday
+    name: Weekday
+    icon: mdi:calendar-star
+    state: >-
+      {% if now().weekday() in (0,) %}
+        Monday
+      {% elif now().weekday() in (1,) %}
+        Tuesday
+      {% elif now().weekday() in (2,) %}
+        Wednesday
+      {% elif now().weekday() in (3,) %}
+        Thursday
+      {% elif now().weekday() in (4,) %}
+        Friday
+      {% elif now().weekday() in (5,) %}
+        Saturday
+      {% else %}
+        Sunday
+      {% endif %}
+
+- sensor:
+    unique_id: tomorrow
+    name: Weekday Tomorrow
+    icon: mdi:calendar-plus
+    state: >-
+      {% if now().weekday() + 1 in (7,) %}
+        Monday
+      {% elif now().weekday() + 1 in (1,) %}
+        Tuesday
+      {% elif now().weekday() + 1 in (2,) %}
+        Wednesday
+      {% elif now().weekday() + 1 in (3,) %}
+        Thursday
+      {% elif now().weekday() + 1 in (4,) %}
+        Friday
+      {% elif now().weekday() + 1 in (5,) %}
+        Saturday
+      {% else %}
+        Sunday
+      {% endif %}
+
+- sensor:
+    unique_id: recycle_weekday
+    name: Recycle Weekday Number
+    state: >-
+      {% if states('sensor.moco_recycle_day') == 'Monday' %}
+        0
+      {% elif states('sensor.moco_recycle_day') == 'Tuesday' %}
+        1
+      {% elif states('sensor.moco_recycle_day') == 'Wednesday' %}
+        2
+      {% elif states('sensor.moco_recycle_day') == 'Thursday' %}
+        3
+      {% elif states('sensor.moco_recycle_day') == 'Friday' %}
+        4
+      {% elif states('sensor.moco_recycle_day') == 'Saturday' %}
+        5
+      {% else %}
+        6
+      {% endif %}
+
+- sensor:
+    unique_id: trash_weekday_1
+    name: Trash Weekday 1 Number
+    state: >-
+      {% if states('input_select.trash_day_1') == 'Monday' %}
+        0
+      {% elif states('input_select.trash_day_1') == 'Tuesday' %}
+        1
+      {% elif states('input_select.trash_day_1') == 'Wednesday' %}
+        2
+      {% elif states('input_select.trash_day_1') == 'Thursday' %}
+        3
+      {% elif states('input_select.trash_day_1') == 'Friday' %}
+        4
+      {% elif states('input_select.trash_day_1') == 'Saturday' %}
+        5
+      {% else %}
+        6
+      {% endif %}
+
+- sensor:
+    unique_id: trash_weekday_2
+    name: Trash Weekday 2 Number
+    state: >-
+      {% if states('input_select.trash_day_2') == 'Monday' %}
+        0
+      {% elif states('input_select.trash_day_2') == 'Tuesday' %}
+        1
+      {% elif states('input_select.trash_day_2') == 'Wednesday' %}
+        2
+      {% elif states('input_select.trash_day_2') == 'Thursday' %}
+        3
+      {% elif states('input_select.trash_day_2') == 'Friday' %}
+        4
+      {% elif states('input_select.trash_day_2') == 'Saturday' %}
+        5
+      {% else %}
+        6
+      {% endif %}
+
+- sensor:
+    unique_id: recycle
+    name: Recycle
+    icon: mdi:recycle
+    state: >-
+      {% if states('sensor.weekday') == states('sensor.moco_recycle_day') %}
+        Today
+      {% elif states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+        Tomorrow
+      {% else %}
+        {% set days = states('sensor.recycle_weekday') | int - now().weekday() %}
+        {% if days < 0 %}{% set days = 7 + days %}{% endif %}
+        {{ days }} days
+      {% endif %}
+
+- sensor:
+    unique_id: trash
+    name: Trash
+    icon: mdi:trash-can
+    state: >-
+      {% if states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') %}
+        Today
+      {% elif states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+        Tomorrow
+      {% else %}
+        {% set days = states('sensor.trash_weekday_1') | int - now().weekday() %}
+        {% set days2 = states('sensor.trash_weekday_2') | int - now().weekday() %}
+        {% if days < 0 %}{% set days = 7 + days %}{% endif %}
+        {% if days2 < 0 %}{% set days2 = 7 + days2 %}{% endif %}
+        {% if days2 < days%}{% set days = days2 %}{% endif %}
+        {{ days }} days
+      {% endif %}
+
+- sensor:
+    unique_id: trash_or_recycle
+    name: Trash or Recycle
+    icon: >-
+      {% if states('sensor.weekday') == states('sensor.moco_recycle_day') or states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+      mdi:recycle
+      {% elif states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') or states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+      mdi:trash-can
+      {% else %}
+      mdi:minus
+      {% endif %}
+    state: >-
+      {% set recycle = '' %}
+      {% set trash = '' %}
+      {% if states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') %}
+        {% set trash = 'Trash' %}
+      {% elif states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+        {% set trash = 'Trash' %}
+      {% endif %}
+      {% if states('sensor.weekday') == states('sensor.moco_recycle_day') %}
+        {% set recycle = 'Recycle' %}
+      {% elif states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+        {% set recycle = '*Recycle*' %}
+      {% endif %}
+      {{ trash }}
+      {% if trash | length > 0 and recycle | length > 0 %}/{% endif %}
+      {{ recycle }}
+
+- sensor:
+    unique_id: num_downstairs_lights_on
+    name: Downstairs Lights On
+    icon: mdi:string-lights
+    state: >-
+      {%- set count = 0 -%}
+      {%- if is_state('light.god_damn_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.three_headed_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.fireplace_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.mantle_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.christmas_tree', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.den_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.laundry_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.powder_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {{ count }}
+
+- sensor:
+    unique_id: num_middle_level_lights_on
+    name: Middle Level Lights On
+    icon: mdi:string-lights
+    state: >-
+      {%- set count = 0 -%}
+      {%- if is_state('light.kitchen_table_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.kitchen_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.dining_room_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.dining_room_christmas_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.near_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.far_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.white_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.foyer_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {{ count }}
+
+- sensor:
+    unique_id: num_upstairs_lights_on
+    name: Upstairs Lights On
+    icon: mdi:string-lights
+    state: >-
+      {%- set count = 0 -%}
+      {%- if is_state('light.hallway_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.dresser_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.bedroom_fan_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('fan.bedroom_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.master_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.master_bath_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.hall_bath_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.hall_bath_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.office_fan_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('fan.office_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.mike_desk_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.guest_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {{ count }}
+
+- sensor:
+    unique_id: num_outside_lights_on
+    name: Outside Lights On
+    icon: mdi:string-lights
+    state: >-
+      {%- set count = 0 -%}
+      {%- if is_state('light.front_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.outside_garage_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.outside_xmas', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.shed_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('switch.flood_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.back_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {{ count }}
+
+- sensor:
+    unique_id: num_garage_lights_on
+    name: Garage Lights On
+    icon: mdi:string-lights
+    state: >-
+      {%- set count = 0 -%}
+      {%- if is_state('light.bench_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.middle_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.far_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {{ count }}
+
+- sensor:
+    unique_id: ytube_playlist
+    name: Youtube Music Playlist
+    icon: mdi:playlist-music
+    state: "{{ states('input_select.ytube_music_player_playlist') }}"
+
+- sensor:
+    unique_id: ytube_source
+    name: Youtube Music Source
+    icon: mdi:music-box-multiple
+    state: "{{ states('input_select.ytube_music_player_source') }}"
+
+- sensor:
+    unique_id: ytube_speakers
+    name: Youtube Music Speakers
+    icon: mdi:speaker
+    state: "{{ states('input_select.ytube_music_player_speakers') }}"
+
+- sensor:
+    unique_id: christmas_tree_available
+    name: Christmas Tree Available
+    state: >-
+      {% if states('switch.christmas_tree') == 'unknown' %}
+        Off
+      {% else %}
+        On
+      {% endif %}
+
+- sensor:
+    unique_id: low_battery
+    name: Low Battery
+    state: >-
+      {% set ns=namespace(state="Off") %}
+      {% for state in states.sensor -%}
+        {% if state.entity_id.endswith('_battery') and state.entity_id != 'sensor.low_battery' and state.state | int < 10 -%}
+          {% set ns.state = "On" %}
+        {% endif -%}
+      {% endfor -%}
+      {{ ns.state }}
+    attributes:
+      entity_list: >-
+        {% set ns=namespace(list="") %}
+        {% for state in states.sensor -%}
+          {% if state.entity_id.endswith('_battery') and state.entity_id != 'sensor.low_battery' and state.state | int < 10 -%}
+            {% set ns.list = ns.list + state.name + ' (' + state.state + '%), ' -%}
+          {% endif -%}
+        {% endfor -%}
+        {{ ns.list[:-2] }}
+
+- sensor:
+    unique_id: home_assistant_version_latest
+    name: Home Assistant Version Latest
+    state: "{{ state_attr('binary_sensor.updater', 'newest_version') }}"
+
+- sensor:
+    unique_id: supervisor_version
+    name: Supervisor Version
+    state: "{{ state_attr('sensor.ha_supervisor_version', 'version') }}"
+
+- sensor:
+    unique_id: supervisor_version_latest
+    name: Supervisor Version Latest
+    state: "{{ state_attr('sensor.ha_supervisor_version', 'version_latest') }}"
+
+- sensor:
+    unique_id: hacs_version
+    name: HACS Update Count Version
+    state: "0"
+
+- sensor:
+    unique_id: hacs_version_latest
+    name: HACS Update Count Latest Version
+    state: "{{ states('sensor.hacs') }}"
+
+- sensor:
+    unique_id: fully_kiosk_browser_version
+    name: Fully Kiosk Browser Version
+    state: "{{ state_attr('sensor.fully_kiosk_browser', 'version') }}"
+
+- sensor:
+    unique_id: openbsd_mars_version
+    name: OpenBSD Mars Version
+    state: '{{ states("input_text.openbsd_mars_version") }}'
