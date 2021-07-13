@@ -19,40 +19,6 @@
   unit_of_measurement: "°C"
   value_template: "{{ value | multiply(0.001) | round(2)  }}"
 
-- name: "Shed Door Battery"
-  platform: mqtt
-  state_topic: stat/shed_door/BATTERY
-  value_template: "{{ value }}"
-  icon: "mdi:battery"
-  unique_id: "shed_door_battery"
-  device:
-    identifiers:
-      - "shed_door"
-    name: shed_door
-    manufacturer: Tasmota
-- name: "Shed Gate Battery"
-  platform: mqtt
-  state_topic: stat/shed_gate/BATTERY
-  value_template: "{{ value }}"
-  icon: "mdi:battery"
-  unique_id: "shed_gate_battery"
-  device:
-    identifiers:
-      - "shed_gate"
-    name: shed_gate
-    manufacturer: Tasmota
-- name: "Chimney Gate Battery"
-  platform: mqtt
-  state_topic: stat/chimney_gate/BATTERY
-  value_template: "{{ value }}"
-  icon: "mdi:battery"
-  unique_id: "chimney_gate_battery"
-  device:
-    identifiers:
-      - "chimney_gate"
-    name: chimney_gate
-    manufacturer: Tasmota
-
 - platform: mqtt
   name: Fully Kiosk Browser
   json_attributes_topic: fully/deviceInfo/32e18972-a62f66fd
