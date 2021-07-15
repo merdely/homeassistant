@@ -395,7 +395,7 @@
 
 - sensor:
     unique_id: recycle_weekday
-    name: Recycle Weekday Number
+    name: Recycle Weekday
     state: >-
       {% if states('sensor.moco_recycle_day') == 'Monday' %}
         0
@@ -460,10 +460,10 @@
     state: >-
       {% if states('sensor.weekday') == states('sensor.moco_recycle_day') %}
         Today
-      {% elif states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+      {% elif states('sensor.weekday_tomorrow') == states('sensor.moco_recycle_day') %}
         Tomorrow
       {% else %}
-        {% set days = states('sensor.recycle_weekday') | int - now().weekday() %}
+        {% set days = states('sensor.recycle_weekday_number') | int - now().weekday() %}
         {% if days < 0 %}{% set days = 7 + days %}{% endif %}
         {{ days }} days
       {% endif %}
@@ -475,11 +475,11 @@
     state: >-
       {% if states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') %}
         Today
-      {% elif states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+      {% elif states('sensor.weekday_tomorrow') == states('input_select.trash_day_1') or states('sensor.weekday_tomorrow') == states('input_select.trash_day_2') %}
         Tomorrow
       {% else %}
-        {% set days = states('sensor.trash_weekday_1') | int - now().weekday() %}
-        {% set days2 = states('sensor.trash_weekday_2') | int - now().weekday() %}
+        {% set days = states('sensor.trash_weekday_1_number') | int - now().weekday() %}
+        {% set days2 = states('sensor.trash_weekday_2_number') | int - now().weekday() %}
         {% if days < 0 %}{% set days = 7 + days %}{% endif %}
         {% if days2 < 0 %}{% set days2 = 7 + days2 %}{% endif %}
         {% if days2 < days%}{% set days = days2 %}{% endif %}
@@ -490,9 +490,9 @@
     unique_id: trash_or_recycle
     name: Trash or Recycle
     icon: >-
-      {% if states('sensor.weekday') == states('sensor.moco_recycle_day') or states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+      {% if states('sensor.weekday') == states('sensor.moco_recycle_day') or states('sensor.weekday_tomorrow') == states('sensor.moco_recycle_day') %}
       mdi:recycle
-      {% elif states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') or states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+      {% elif states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') or states('sensor.weekday_tomorrow') == states('input_select.trash_day_1') or states('sensor.weekday_tomorrow') == states('input_select.trash_day_2') %}
       mdi:trash-can
       {% else %}
       mdi:minus
@@ -502,12 +502,12 @@
       {% set trash = '' %}
       {% if states('sensor.weekday') == states('input_select.trash_day_1') or states('sensor.weekday') == states('input_select.trash_day_2') %}
         {% set trash = 'Trash' %}
-      {% elif states('sensor.tomorrow') == states('input_select.trash_day_1') or states('sensor.tomorrow') == states('input_select.trash_day_2') %}
+      {% elif states('sensor.weekday_tomorrow') == states('input_select.trash_day_1') or states('sensor.weekday_tomorrow') == states('input_select.trash_day_2') %}
         {% set trash = 'Trash' %}
       {% endif %}
       {% if states('sensor.weekday') == states('sensor.moco_recycle_day') %}
         {% set recycle = 'Recycle' %}
-      {% elif states('sensor.tomorrow') == states('sensor.moco_recycle_day') %}
+      {% elif states('sensor.weekday_tomorrow') == states('sensor.moco_recycle_day') %}
         {% set recycle = '*Recycle*' %}
       {% endif %}
       {{ trash }}
