@@ -2230,8 +2230,8 @@
   - choose:
     - conditions:
       - condition: template
-        value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1'')
-          | int + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2'')
+        value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1_number'')
+          | int + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
           | int + 1) % 7 }}'
       sequence:
       - service: input_boolean.turn_off
