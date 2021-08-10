@@ -54,7 +54,7 @@
     name: "Software Update Available"
     state: >-
       {% set ns = namespace(sensor = 'Off') -%}
-      {% for software in ['home_assistant', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
+      {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
         {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
           {% set ns.sensor = 'On' -%}
         {% endif -%}
@@ -80,7 +80,7 @@
     name: "Software Updates Available"
     state: >-
       {% set ns = namespace(updates = 0) -%}
-      {% for software in ['home_assistant', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
+      {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
         {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
           {% set ns.updates = ns.updates + 1 -%}
         {% endif -%}
@@ -644,6 +644,16 @@
     unique_id: home_assistant_version_latest
     name: Home Assistant Version Latest
     state: "{{ state_attr('binary_sensor.updater', 'newest_version') }}"
+
+- sensor:
+    unique_id: operating_system_version
+    name: Operating System Version
+    state: "{{ state_attr('sensor.ha_operating_system_version', 'version') }}"
+
+- sensor:
+    unique_id: operating_system_version_latest
+    name: Operating System Version Latest
+    state: "{{ state_attr('sensor.ha_operating_system_version', 'version_latest') }}"
 
 - sensor:
     unique_id: supervisor_version

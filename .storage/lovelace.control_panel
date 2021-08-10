@@ -828,16 +828,16 @@
                                                                 "type": "button",
                                                                 "style": "ha-card.type-button {\n  height: 60px;\n}\n",
                                                                 "tap_action": {
-                                                                    "action": "none"
+                                                                    "action": "call-service",
+                                                                    "service": "script.scene_good_night"
                                                                 },
                                                                 "hold_action": {
-                                                                    "action": "none"
+                                                                    "action": "call-service",
+                                                                    "service": "script.scene_night_night"
                                                                 },
-                                                                "entity": "switch.outside",
-                                                                "show_icon": false,
-                                                                "show_name": false,
-                                                                "icon": "mdi:image",
-                                                                "name": "Outside"
+                                                                "entity": "script.scene_good_night",
+                                                                "show_icon": true,
+                                                                "show_name": false
                                                             }
                                                         ]
                                                     }

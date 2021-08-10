@@ -36,6 +36,19 @@
   value_template: "{{ value_json.batteryLevel }}"
 
 - platform: rest
+  name: HA Operating System Version
+  resource: "https://ha.erdely.in:38123/api/hassio/os/info"
+  headers:
+    Authorization: !secret mike_long_lived_check_command
+    Content-Type: application/json
+  value_template: "{{ value_json.data.update_available }}"
+  json_attributes_path: "$.data"
+  json_attributes:
+    - version
+    - version_latest
+    - update_available
+
+- platform: rest
   name: HA Supervisor Version
   resource: "https://ha.erdely.in:38123/api/hassio/supervisor/info"
   headers:
