@@ -278,7 +278,7 @@
                                             "cards": [
                                                 {
                                                     "type": "custom:mod-card",
-                                                    "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'black') | int <= 20 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int <= 20 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int <= 20 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int <= 20 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int <= 20 %}yellow{% endif %};\n}\n",
+                                                    "style": "ha-card {\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int <= 20 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int <= 20 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int <= 20 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int <= 20 %}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'black') | int <= 20 %}yellow{% endif %};\n}\n",
                                                     "card": {
                                                         "type": "grid",
                                                         "columns": 1,
@@ -467,10 +467,10 @@
                                                                         "show_state": false,
                                                                         "entities": [
                                                                             {
-                                                                                "attribute": "black",
-                                                                                "name": "Black",
+                                                                                "attribute": "photoblack",
+                                                                                "name": "PB",
                                                                                 "styles": {
-                                                                                    "color": "var(--black-color)",
+                                                                                    "color": "var(--photoblack-color)",
                                                                                     "padding-top": "5px",
                                                                                     "padding-bottom": "5px",
                                                                                     "margin-top": "0px",
@@ -499,10 +499,10 @@
                                                                                 }
                                                                             },
                                                                             {
-                                                                                "attribute": "photoblack",
+                                                                                "attribute": "black",
                                                                                 "name": "K",
                                                                                 "styles": {
-                                                                                    "color": "var(--photoblack-color)"
+                                                                                    "color": "var(--black-color)"
                                                                                 }
                                                                             }
                                                                         ]

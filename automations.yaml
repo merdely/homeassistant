@@ -337,6 +337,11 @@
     data:
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
+  - service: tts.cloud_say
+    data:
+      entity_id: media_player.security_speakers
+      message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if     trigger.to_state.state
+        == ''off'' %} closed{%- else %} open{% endif %}.'
   mode: single
 - id: '1604420272678'
   alias: Security - 20 Disarmed - Security System Disarmed
@@ -2748,4 +2753,22 @@
     data:
       message: Finishing Bedtime Tasks
       level: warning
+  mode: single
+- id: '1629490638700'
+  alias: TV - Family Room - Change Input (family_room_input)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_select.family_room_input
+    from: Select Input
+  condition: []
+  action:
+  - service: input_select.select_option
+    data:
+      option: '{{ states(''input_select.family_room_input'') }}'
+    entity_id: input_select.god_damn_input
+  - service: input_select.select_option
+    data:
+      option: Select Input
+    entity_id: input_select.family_room_input
   mode: single
