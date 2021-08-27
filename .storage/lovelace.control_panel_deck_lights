@@ -1,0 +1,133 @@
+{
+    "version": 1,
+    "key": "lovelace.control_panel_deck_lights",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": " ",
+                    "type": "panel",
+                    "path": "home",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "cards": [
+                                {
+                                    "type": "light",
+                                    "entity": "light.deck_lights",
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
+                                },
+                                {
+                                    "type": "grid",
+                                    "cards": [
+                                        {
+                                            "type": "picture",
+                                            "image": "/local/images/homeassistant-banner-back.png",
+                                            "tap_action": {
+                                                "action": "navigate",
+                                                "navigation_path": "/control-panel-outside/home"
+                                            },
+                                            "hold_action": {
+                                                "action": "none"
+                                            }
+                                        },
+                                        {
+                                            "type": "entities",
+                                            "show_header_toggle": false,
+                                            "entities": [
+                                                {
+                                                    "type": "custom:rgb-light-card",
+                                                    "entity": "light.deck_lights",
+                                                    "colors": [
+                                                        {
+                                                            "rgb_color": [
+                                                                76,
+                                                                255,
+                                                                255
+                                                            ],
+                                                            "brightness": 54,
+                                                            "transition": 1
+                                                        },
+                                                        {
+                                                            "rgb_color": [
+                                                                255,
+                                                                255,
+                                                                255
+                                                            ],
+                                                            "brightness": 54,
+                                                            "transition": 1
+                                                        },
+                                                        {
+                                                            "rgb_color": [
+                                                                255,
+                                                                255,
+                                                                109
+                                                            ],
+                                                            "brightness": 54,
+                                                            "transition": 1
+                                                        },
+                                                        {
+                                                            "rgb_color": [
+                                                                255,
+                                                                255,
+                                                                0
+                                                            ],
+                                                            "brightness": 54,
+                                                            "transition": 1
+                                                        },
+                                                        {
+                                                            "rgb_color": [
+                                                                255,
+                                                                73,
+                                                                73
+                                                            ],
+                                                            "brightness": 54,
+                                                            "transition": 1
+                                                        },
+                                                        {
+                                                            "rgb_color": [
+                                                                146,
+                                                                255,
+                                                                107
+                                                            ],
+                                                            "brightness": 54,
+                                                            "transition": 1
+                                                        },
+                                                        {
+                                                            "rgb_color": [
+                                                                73,
+                                                                164,
+                                                                255
+                                                            ],
+                                                            "brightness": 54,
+                                                            "transition": 1
+                                                        },
+                                                        {
+                                                            "rgb_color": [
+                                                                255,
+                                                                73,
+                                                                255
+                                                            ],
+                                                            "brightness": 54,
+                                                            "transition": 1
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "columns": 1,
+                                    "square": false
+                                }
+                            ],
+                            "columns": 2
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
