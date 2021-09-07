@@ -1036,6 +1036,14 @@
                                     "show_state": false,
                                     "show_name": false,
                                     "camera_view": "live"
+                                },
+                                {
+                                    "type": "picture-entity",
+                                    "entity": "camera.front_door_cam_2",
+                                    "camera_image": "camera.front_door_cam_2",
+                                    "show_state": false,
+                                    "show_name": false,
+                                    "camera_view": "live"
                                 }
                             ]
                         }
@@ -1577,48 +1585,96 @@
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "toggle",
+                                                "action": "call-service",
+                                                "service": "script.function_camera_reset",
+                                                "service_data": {
+                                                    "camera": "backyard"
+                                                },
                                                 "confirmation": {
-                                                    "text": "Are you sure you want to reset the Front Door Camera?"
+                                                    "text": "Are you sure you want to reset the Backyard Camera?"
                                                 }
                                             },
-                                            "entity": "script.camera_front_door_cam_reset",
-                                            "name": "Front Door",
+                                            "entity": "script.function_camera_reset",
+                                            "name": "BY",
                                             "icon_height": "50px"
                                         },
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "toggle",
+                                                "action": "call-service",
+                                                "service": "script.function_camera_reset",
+                                                "service_data": {
+                                                    "camera": "frontdoor"
+                                                },
+                                                "confirmation": {
+                                                    "text": "Are you sure you want to reset the Front Door Camera?"
+                                                }
+                                            },
+                                            "entity": "script.function_camera_reset",
+                                            "name": "FD",
+                                            "icon_height": "50px"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "call-service",
+                                                "service": "script.function_camera_reset",
+                                                "service_data": {
+                                                    "camera": "frontdoor2"
+                                                },
+                                                "confirmation": {
+                                                    "text": "Are you sure you want to reset the Front Door Camera 2?"
+                                                }
+                                            },
+                                            "entity": "script.function_camera_reset",
+                                            "name": "FD2",
+                                            "icon_height": "50px"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "call-service",
+                                                "service": "script.function_camera_reset",
+                                                "service_data": {
+                                                    "camera": "garage"
+                                                },
                                                 "confirmation": {
                                                     "text": "Are you sure you want to reset the Garage Camera?"
                                                 }
                                             },
-                                            "entity": "script.camera_garage_cam_reset",
+                                            "entity": "script.function_camera_reset",
                                             "name": "Garage",
                                             "icon_height": "50px"
                                         },
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "toggle",
+                                                "action": "call-service",
+                                                "service": "script.function_camera_reset",
+                                                "service_data": {
+                                                    "camera": "chimney"
+                                                },
                                                 "confirmation": {
                                                     "text": "Are you sure you want to reset the Chimney Camera?"
                                                 }
                                             },
-                                            "entity": "script.camera_chimney_cam_reset",
+                                            "entity": "script.function_camera_reset",
                                             "name": "Chimney",
                                             "icon_height": "50px"
                                         },
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "toggle",
+                                                "action": "call-service",
+                                                "service": "script.function_camera_reset",
+                                                "service_data": {
+                                                    "camera": "shed"
+                                                },
                                                 "confirmation": {
                                                     "text": "Are you sure you want to reset the Shed Camera?"
                                                 }
                                             },
-                                            "entity": "script.camera_shed_cam_reset",
+                                            "entity": "script.function_camera_reset",
                                             "name": "Shed",
                                             "icon_height": "50px"
                                         }
@@ -2762,7 +2818,7 @@
                                         "options": {
                                             "secondary_info": "last-changed"
                                         },
-                                        "entity_id": "*water_leak*"
+                                        "entity_id": "*water_leak_sensor"
                                     }
                                 ]
                             },
@@ -2784,6 +2840,13 @@
                                             "secondary_info": "last-changed"
                                         },
                                         "entity_id": "*water_leak*"
+                                    },
+                                    {
+                                        "domain": "binary_sensor",
+                                        "options": {
+                                            "secondary_info": "last-changed"
+                                        },
+                                        "entity_id": "*water_leak_sensor_battery*"
                                     }
                                 ]
                             },

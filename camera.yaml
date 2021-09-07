@@ -13,6 +13,13 @@
   password: !secret frontdoorcam_password
 
 - platform: generic
+  name: Front Door Cam 2
+  still_image_url: http://frontdoorcam2.erdely.in/tmpfs/auto.jpg
+  stream_source: !secret frontdoorcam2_stream
+  username: frontdoorcam2
+  password: !secret frontdoorcam2_password
+
+- platform: generic
   name: Garage Cam
   still_image_url: http://garagecam.erdely.in/tmpfs/auto.jpg
   stream_source: !secret garagecam_stream

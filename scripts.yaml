@@ -76,62 +76,6 @@ announcement_nightly_security:
           speaker: all_speakers
     default: []
   mode: single
-camera_front_door_cam_reset:
-  alias: Camera - Front Door Cam - Reset
-  sequence:
-  - type: turn_off
-    device_id: dfdc2ffc0ebf9df847929badca56b0da
-    entity_id: switch.front_door_cam_plug
-    domain: switch
-  - delay: '5'
-  - type: turn_on
-    device_id: dfdc2ffc0ebf9df847929badca56b0da
-    entity_id: switch.front_door_cam_plug
-    domain: switch
-  mode: single
-  icon: mdi:restart
-camera_garage_cam_reset:
-  alias: Camera - Garage Cam - Reset
-  sequence:
-  - type: turn_off
-    device_id: dfdc2ffc0ebf9df847929badca56b0da
-    entity_id: switch.garage_cam_plug
-    domain: switch
-  - delay: '5'
-  - type: turn_on
-    device_id: dfdc2ffc0ebf9df847929badca56b0da
-    entity_id: switch.garage_cam_plug
-    domain: switch
-  mode: single
-  icon: mdi:restart
-camera_chimney_cam_reset:
-  alias: Camera - Chimney Cam - Reset
-  sequence:
-  - type: turn_off
-    device_id: f1e3c77bd4a9fcd8ae9fe1d067bb53f0
-    entity_id: switch.chimney_cam_plug
-    domain: switch
-  - delay: '5'
-  - type: turn_on
-    device_id: f1e3c77bd4a9fcd8ae9fe1d067bb53f0
-    entity_id: switch.chimney_cam_plug
-    domain: switch
-  mode: single
-  icon: mdi:restart
-camera_shed_cam_reset:
-  alias: Camera - Shed Cam - Reset
-  sequence:
-  - type: turn_off
-    device_id: def0b7bf027411eb8632fb3771c6566f
-    entity_id: switch.shed_cam_plug
-    domain: switch
-  - delay: '5'
-  - type: turn_on
-    device_id: def0b7bf027411eb8632fb3771c6566f
-    entity_id: switch.shed_cam_plug
-    domain: switch
-  mode: single
-  icon: mdi:restart
 computer_mercury_unlock:
   alias: Computer - Mercury - Unlock
   sequence:
@@ -1352,3 +1296,27 @@ home_thermostat_up:
       entity_id: climate.thermostat
   mode: single
   icon: mdi:thermometer-plus
+function_camera_reset:
+  alias: Function - Camera Reset
+  sequence:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: '{{ cameras[camera] }}'
+  - delay: '5'
+  - service: homeassistant.turn_on
+    target:
+      entity_id: '{{ cameras[camera] }}'
+  mode: single
+  icon: mdi:restart
+  fields:
+    camera:
+      description: The Camera Power Plug to Reset
+      example: '"backyard", "chimney", "frontdoor", "frontdoor2", "garage", or "shed"'
+  variables:
+    cameras:
+      backyard: switch.backyard_cam_plug
+      chimney: switch.chimney_cam_plug
+      frontdoor: switch.front_door_cam_plug
+      frontdoor2: switch.front_door_cam_2_plug
+      garage: switch.garage_cam_plug
+      shed: switch.shed_cam_plug
