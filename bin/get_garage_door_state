@@ -18,8 +18,8 @@ for file in /config/gcam/doorclosed_*_cropped.jpg; do
   ret=$(compare -metric PSNR $file $outd/compare.jpg /dev/null 2>&1)
   [ $ret = inf ] && ret=100
   [ $(echo "$ret > $threshold" | bc) = 1 ] && match=1 && thismatch=1
-  [ $verbose = 1 ] && [ $thismatch = 1 ] && echo "$file: $ret [match]"
-  [ $verbose = 1 ] && [ $thismatch != 1 ] && echo "$file: $ret"
+  [ $verbose = 1 ] && [ $thismatch = 1 ] && echo "$file: $ret [match]" > /dev/stderr
+  [ $verbose = 1 ] && [ $thismatch != 1 ] && echo "$file: $ret" > /dev/stderr
 done 
 [ $match = 0 ] && echo on || echo off
 rm -Rf $outd
