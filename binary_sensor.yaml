@@ -57,6 +57,13 @@
       On
     {% endif %}
 
+- name: Garage Door Cam Status
+  platform: command_line
+  device_class: garage_door
+  command: '/config/bin/get_garage_door_state'
+  payload_on: 'on'
+  payload_off: 'off'
+
 - name: New SSL Cert Available
   platform: command_line
   command: '/config/bin/check_ssl_renewed'

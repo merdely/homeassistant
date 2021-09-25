@@ -3,6 +3,7 @@ tivo_record: "/config/bin/tivo_record {{ tv_device }}.erdely.in"
 tivo_button: "/config/bin/tivo_button {{ tv_device }}.erdely.in {{ tivo_button }}"
 manage_screensaver: "/usr/bin/ssh -i /config/.ssh/homeassistant"
 update_tv_shows: "/config/bin/create_tv_list.sh"
+install_imagemagick: "[ ! -x /usr/bin/convert ] && /sbin/apk add -U -u imagemagick"
 rm_newshows_flag: "rm -f /config/.newtvshowfile"
 clean_alarm_state: /config/bin/clean_alarm_state
 save_homeassistant_log: /config/bin/save_homeassistant_log

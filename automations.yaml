@@ -256,6 +256,7 @@
   action:
   - service: shell_command.rm_newshows_flag
     data: {}
+  - service: shell_command.install_imagemagick
   mode: single
 - id: '1603391662402'
   alias: Security - 40 Armed - Disarm Security System in the morning if someone is
@@ -2772,3 +2773,239 @@
       option: Select Input
     entity_id: input_select.family_room_input
   mode: single
+- id: '1631118685373'
+  alias: Notifications - Frigate - Front Door Cam 2
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+  condition:
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
+        }}'
+  - condition: template
+    value_template: '{{ trigger.payload_json["after"]["camera"] == "frontdoorcam2"
+      }}'
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: notify.gmail_to_security
+    data:
+      message: '{{ trigger.payload_json["after"]["label"] | title }} detected by {{
+        trigger.payload_json["after"]["camera"] }}'
+      title: '{{ trigger.payload_json[''after''][''camera''] }}'
+      data:
+        images:
+        - /media/frigate/clips/{{ trigger.payload_json['after']['camera'] }}-{{ trigger.payload_json['after']['id']
+          }}.jpg
+  mode: single
+  max: 10
+- id: '1631904966054'
+  alias: Notifications - Frigate - Front Door Cam
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json["after"]["camera"] == "frontdoorcam"
+      }}'
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
+        }}'
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: notify.gmail_to_security
+    data:
+      message: '{{ trigger.payload_json["after"]["label"] | title }} detected by {{
+        trigger.payload_json["after"]["camera"] }}'
+      title: '{{ trigger.payload_json[''after''][''camera''] }}'
+      data:
+        images:
+        - /media/frigate/clips/{{ trigger.payload_json['after']['camera'] }}-{{ trigger.payload_json['after']['id']
+          }}.jpg
+  mode: single
+  max: 5
+- id: '1631905000334'
+  alias: Notifications - Frigate - Backyard Cam
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json["after"]["camera"] == "backyardcam" }}'
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
+        }}'
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: notify.gmail_to_security
+    data:
+      message: '{{ trigger.payload_json["after"]["label"] | title }} detected by {{
+        trigger.payload_json["after"]["camera"] }}'
+      title: '{{ trigger.payload_json[''after''][''camera''] }}'
+      data:
+        images:
+        - /media/frigate/clips/{{ trigger.payload_json['after']['camera'] }}-{{ trigger.payload_json['after']['id']
+          }}.jpg
+  mode: single
+  max: 5
+- id: '1631905024497'
+  alias: Notifications - Frigate - Chimney Cam
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json["after"]["camera"] == "chimneycam" }}'
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
+        }}'
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: notify.gmail_to_security
+    data:
+      message: '{{ trigger.payload_json["after"]["label"] | title }} detected by {{
+        trigger.payload_json["after"]["camera"] }}'
+      title: '{{ trigger.payload_json[''after''][''camera''] }}'
+      data:
+        images:
+        - /media/frigate/clips/{{ trigger.payload_json['after']['camera'] }}-{{ trigger.payload_json['after']['id']
+          }}.jpg
+  mode: single
+  max: 5
+- id: '1631905054901'
+  alias: Notifications - Frigate - Shed Cam
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json["after"]["camera"] == "shedcam" }}'
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
+        }}'
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: notify.gmail_to_security
+    data:
+      message: '{{ trigger.payload_json["after"]["label"] | title }} detected by {{
+        trigger.payload_json["after"]["camera"] }}'
+      title: '{{ trigger.payload_json[''after''][''camera''] }}'
+      data:
+        images:
+        - /media/frigate/clips/{{ trigger.payload_json['after']['camera'] }}-{{ trigger.payload_json['after']['id']
+          }}.jpg
+  mode: single
+  max: 5
+- id: '1632588168154'
+  alias: Notifications - Frigate - Garage Cam
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json["after"]["camera"] == "garagecam" }}'
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
+        }}'
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: notify.gmail_to_security
+    data:
+      message: '{{ trigger.payload_json["after"]["label"] | title }} detected by {{
+        trigger.payload_json["after"]["camera"] }}'
+      title: '{{ trigger.payload_json[''after''][''camera''] }}'
+      data:
+        images:
+        - /media/frigate/clips/{{ trigger.payload_json['after']['camera'] }}-{{ trigger.payload_json['after']['id']
+          }}.jpg
+  mode: single
+  max: 5

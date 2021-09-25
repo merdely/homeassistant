@@ -783,6 +783,12 @@
                                             "entity": "binary_sensor.garage_door_sensor"
                                         },
                                         {
+                                            "entity": "binary_sensor.garage_door_cam_status"
+                                        },
+                                        {
+                                            "entity": "cover.garage_door"
+                                        },
+                                        {
                                             "entity": "group.motion_sensors"
                                         },
                                         {
@@ -1044,6 +1050,16 @@
                                     "show_state": false,
                                     "show_name": false,
                                     "camera_view": "live"
+                                },
+                                {
+                                    "type": "picture",
+                                    "image": "http://garagedoorcam.erdely.in:8000/snapshot.jpg",
+                                    "tap_action": {
+                                        "action": "none"
+                                    },
+                                    "hold_action": {
+                                        "action": "none"
+                                    }
                                 }
                             ]
                         }
@@ -2354,7 +2370,7 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "A-J Plugs"
+                                "title": "A-K Plugs"
                             },
                             "filter": {
                                 "include": [
@@ -2364,7 +2380,7 @@
                                         "options": {
                                             "secondary_info": "last-changed"
                                         },
-                                        "name": "/^[A-Ja-j].*/"
+                                        "name": "/^[A-Ka-k].*/"
                                     },
                                     {
                                         "entity_id": "*holly*desk*",
@@ -2388,7 +2404,7 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "K-Z Plugs"
+                                "title": "L-Z Plugs"
                             },
                             "filter": {
                                 "include": [
@@ -2398,7 +2414,7 @@
                                         "options": {
                                             "secondary_info": "last-changed"
                                         },
-                                        "name": "/^[K-Zk-z].*/"
+                                        "name": "/^[L-Zl-z].*/"
                                     }
                                 ]
                             },
@@ -2484,42 +2500,6 @@
                     "badges": [],
                     "cards": [
                         {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Security Devices",
-                                "show_header_toggle": false,
-                                "state_color": true
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "entity_id": "alarm_control_panel.home_alarm"
-                                    },
-                                    {
-                                        "domain": "binary_sensor",
-                                        "entity_id": ".*_(gate|door|slider|window|door_sensor)",
-                                        "sort": {
-                                            "method": "friendly_name"
-                                        }
-                                    },
-                                    {
-                                        "entity_id": "group.motion_sensors"
-                                    },
-                                    {
-                                        "entity_id": "group.water_leak"
-                                    },
-                                    {
-                                        "entity_id": "cover.garage_door"
-                                    }
-                                ],
-                                "exclude": []
-                            },
-                            "sort": {
-                                "method": "none"
-                            }
-                        },
-                        {
                             "type": "history-graph",
                             "entities": [
                                 {
@@ -2560,120 +2540,6 @@
                             "title": "Outside Temperature"
                         },
                         {
-                            "type": "entities",
-                            "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -9px 0px;\n}\n",
-                            "entities": [
-                                {
-                                    "entity": "input_datetime.thermostat_wake",
-                                    "name": "Wake Program Start Time"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_cool_home",
-                                    "name": "Home Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_heat_home",
-                                    "name": "Home Heat"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_cool_not_home",
-                                    "name": "Away Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_heat_not_home",
-                                    "name": "Away Heat"
-                                },
-                                {
-                                    "type": "divider",
-                                    "style": {
-                                        "height": "2px",
-                                        "background-color": "gray",
-                                        "margin-top": "5px",
-                                        "margin-bottom": "3px"
-                                    }
-                                },
-                                {
-                                    "entity": "input_datetime.thermostat_wake_weekend",
-                                    "name": "Wake Weekend Program Start Time"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_weekend_cool_home",
-                                    "name": "Home Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_weekend_heat_home",
-                                    "name": "Home Heat"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_weekend_cool_not_home",
-                                    "name": "Away Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_wake_weekend_heat_not_home",
-                                    "name": "Away Heat"
-                                },
-                                {
-                                    "type": "divider",
-                                    "style": {
-                                        "height": "2px",
-                                        "background-color": "gray",
-                                        "margin-top": "5px",
-                                        "margin-bottom": "3px"
-                                    }
-                                },
-                                {
-                                    "entity": "input_datetime.thermostat_evening",
-                                    "name": "Evening Program Start Time"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_evening_cool_home",
-                                    "name": "Home Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_evening_heat_home",
-                                    "name": "Home Heat"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_evening_cool_not_home",
-                                    "name": "Away Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_evening_heat_not_home",
-                                    "name": "Away Heat"
-                                },
-                                {
-                                    "type": "divider",
-                                    "style": {
-                                        "height": "2px",
-                                        "background-color": "gray",
-                                        "margin-top": "5px",
-                                        "margin-bottom": "3px"
-                                    }
-                                },
-                                {
-                                    "entity": "input_datetime.thermostat_sleep",
-                                    "name": "Sleep Program Start Time"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_sleep_cool_home",
-                                    "name": "Home Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_sleep_heat_home",
-                                    "name": "Home Heat"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_sleep_cool_not_home",
-                                    "name": "Away Cool"
-                                },
-                                {
-                                    "entity": "input_number.thermostat_sleep_heat_not_home",
-                                    "name": "Away Heat"
-                                }
-                            ],
-                            "title": "Thermostat Programming"
-                        },
-                        {
                             "type": "custom:spotify-card",
                             "limit": 10,
                             "playlist_type": "default",
@@ -2682,45 +2548,9 @@
                             "always_play_random_song": true
                         },
                         {
-                            "type": "grid",
-                            "cards": [
-                                {
-                                    "type": "picture",
-                                    "image": "/local/images/backblaze.png",
-                                    "tap_action": {
-                                        "action": "url",
-                                        "url_path": "https://secure.backblaze.com/user_overview.htm"
-                                    },
-                                    "hold_action": {
-                                        "action": "none"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "type": "glance",
-                            "entities": [
-                                {
-                                    "entity": "sensor.washer_dryer_state"
-                                },
-                                {
-                                    "entity": "sensor.fully_kiosk_screensaver"
-                                },
-                                {
-                                    "entity": "sensor.fully_kiosk_screensaver_mbr"
-                                },
-                                {
-                                    "entity": "light.office_fan_light"
-                                },
-                                {
-                                    "entity": "light.bedroom_fan_light"
-                                }
-                            ],
-                            "state_color": false
-                        },
-                        {
-                            "type": "entity",
-                            "entity": "light.back_porch_led_strip"
+                            "type": "custom:frigate-card",
+                            "camera_entity": "camera.front_door_cam_2",
+                            "frigate_url": "http://ccab4aaf-frigate:5000"
                         }
                     ]
                 },
