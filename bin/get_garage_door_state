@@ -1,7 +1,12 @@
 #!/bin/bash
 
+threshold=20.0
+
 # on = open
 # off = closed
+
+verbose=0
+[ "$1" = "-v" ] && verbose=1
 
 outd=$(mktemp -d)
 curl -sLo $outd/snapshot.jpg http://garagedoorcam.erdely.in:8000/snapshot.jpg
@@ -9,9 +14,12 @@ curl -sLo $outd/snapshot.jpg http://garagedoorcam.erdely.in:8000/snapshot.jpg
 match=0
 convert $outd/snapshot.jpg -crop 1785x966+807+978 $outd/compare.jpg
 for file in /config/gcam/doorclosed_*_cropped.jpg; do
+  thismatch=0
   ret=$(compare -metric PSNR $file $outd/compare.jpg /dev/null 2>&1)
   [ $ret = inf ] && ret=100
-  [ $(echo "$ret < 11.0" | bc) != 1 ] && match=1
+  [ $(echo "$ret > $threshold" | bc) = 1 ] && match=1 && thismatch=1
+  [ $verbose = 1 ] && [ $thismatch = 1 ] && echo "$file: $ret [match]"
+  [ $verbose = 1 ] && [ $thismatch != 1 ] && echo "$file: $ret"
 done 
 [ $match = 0 ] && echo on || echo off
 rm -Rf $outd
