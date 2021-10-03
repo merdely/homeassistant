@@ -26,16 +26,42 @@
                                             "square": false,
                                             "cards": [
                                                 {
-                                                    "type": "entity",
-                                                    "entity": "sensor.time_formatted"
+                                                    "type": "grid",
+                                                    "columns": 2,
+                                                    "square": false,
+                                                    "cards": [
+                                                        {
+                                                            "type": "button",
+                                                            "entity": "sensor.time_formatted",
+                                                            "show_state": true,
+                                                            "show_name": false,
+                                                            "show_icon": false,
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "browser_mod.window_reload",
+                                                                "service_data": {
+                                                                    "deviceID": "control-panel"
+                                                                },
+                                                                "target": {}
+                                                            },
+                                                            "style": ".state {\n  font-size: 30px !important\n}"
+                                                        },
+                                                        {
+                                                            "type": "entity",
+                                                            "entity": "sensor.fully_kiosk_browser",
+                                                            "name": "Control Panel"
+                                                        }
+                                                    ]
                                                 },
                                                 {
-                                                    "type": "entity",
-                                                    "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "hold_action": {
+                                                    "type": "picture",
+                                                    "image": "/local/images/homeassistant-banner-back-sm.png",
+                                                    "tap_action": {
                                                         "action": "navigate",
-                                                        "navigation_path": "/control-panel-utilities/home"
+                                                        "navigation_path": "/control-panel/home"
+                                                    },
+                                                    "hold_action": {
+                                                        "action": "none"
                                                     }
                                                 }
                                             ]
@@ -307,17 +333,6 @@
                                     "square": false,
                                     "cards": [
                                         {
-                                            "type": "picture",
-                                            "image": "/local/images/homeassistant-banner-back.png",
-                                            "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/control-panel/home"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
                                             "type": "grid",
                                             "columns": 1,
                                             "square": false,
@@ -334,6 +349,35 @@
                                                                 "type": "entities",
                                                                 "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -16px 0px;\n}\n",
                                                                 "entities": [
+                                                                    {
+                                                                        "entity": "person.holly_erdely",
+                                                                        "name": "Who's Home",
+                                                                        "icon": "mdi:compass-outline",
+                                                                        "type": "custom:multiple-entity-row",
+                                                                        "entities": [
+                                                                            {
+                                                                                "entity": "person.holly_erdely",
+                                                                                "name": "Holly",
+                                                                                "styles": {
+                                                                                    "padding-top": "5px",
+                                                                                    "padding-bottom": "10px",
+                                                                                    "margin-top": "0px",
+                                                                                    "margin-bottom": "0px"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "entity": "person.michael_erdely",
+                                                                                "name": "Mike",
+                                                                                "styles": {
+                                                                                    "padding-top": "5px",
+                                                                                    "padding-bottom": "10px",
+                                                                                    "margin-top": "0px",
+                                                                                    "margin-bottom": "0px"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "show_state": false
+                                                                    },
                                                                     {
                                                                         "entity": "alarm_control_panel.home_alarm",
                                                                         "name": "Security System",
@@ -373,6 +417,16 @@
                                                                                 "unit": []
                                                                             },
                                                                             {
+                                                                                "entity": "sensor.master_bath_temperature",
+                                                                                "name": "MB",
+                                                                                "unit": []
+                                                                            },
+                                                                            {
+                                                                                "entity": "sensor.master_bath_humidity",
+                                                                                "name": "MB(h)",
+                                                                                "unit": []
+                                                                            },
+                                                                            {
                                                                                 "entity": "sensor.office_temperature",
                                                                                 "name": "Ofc",
                                                                                 "unit": []
@@ -380,11 +434,6 @@
                                                                             {
                                                                                 "entity": "sensor.living_room_temperature",
                                                                                 "name": "LR",
-                                                                                "unit": []
-                                                                            },
-                                                                            {
-                                                                                "entity": "sensor.family_room_temperature",
-                                                                                "name": "Down",
                                                                                 "unit": [],
                                                                                 "styles": {
                                                                                     "padding-top": "10px",
@@ -402,13 +451,24 @@
                                                                         "show_state": false,
                                                                         "entities": [
                                                                             {
+                                                                                "entity": "climate.thermostat",
+                                                                                "name": "Tstat",
+                                                                                "attribute": "current_temperature",
+                                                                                "unit": []
+                                                                            },
+                                                                            {
+                                                                                "entity": "sensor.family_room_temperature",
+                                                                                "name": "Down",
+                                                                                "unit": []
+                                                                            },
+                                                                            {
                                                                                 "entity": "sensor.attic_temperature",
                                                                                 "name": "Attic",
                                                                                 "unit": []
                                                                             },
                                                                             {
-                                                                                "entity": "sensor.thermostat_temperature",
-                                                                                "name": "Tstat",
+                                                                                "entity": "sensor.garage_temperature",
+                                                                                "name": "Garage",
                                                                                 "unit": []
                                                                             },
                                                                             {
@@ -565,6 +625,11 @@
                                                                             "action": "navigate",
                                                                             "navigation_path": "/control-panel-software/home"
                                                                         }
+                                                                    },
+                                                                    {
+                                                                        "entity": "binary_sensor.new_tv_show_list_ready",
+                                                                        "style": ":host {\n  {% if is_state('binary_sensor.new_tv_show_list_ready', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                        "state_color": true
                                                                     }
                                                                 ]
                                                             }

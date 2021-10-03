@@ -105,6 +105,16 @@
                                                                 "unit": []
                                                             },
                                                             {
+                                                                "entity": "sensor.master_bath_temperature",
+                                                                "name": "MB",
+                                                                "unit": []
+                                                            },
+                                                            {
+                                                                "entity": "sensor.master_bath_humidity",
+                                                                "name": "MB(h)",
+                                                                "unit": []
+                                                            },
+                                                            {
                                                                 "entity": "sensor.office_temperature",
                                                                 "name": "Ofc",
                                                                 "unit": []
@@ -112,11 +122,6 @@
                                                             {
                                                                 "entity": "sensor.living_room_temperature",
                                                                 "name": "LR",
-                                                                "unit": []
-                                                            },
-                                                            {
-                                                                "entity": "sensor.family_room_temperature",
-                                                                "name": "Down",
                                                                 "unit": [],
                                                                 "styles": {
                                                                     "padding-top": "10px",
@@ -134,8 +139,14 @@
                                                         "show_state": false,
                                                         "entities": [
                                                             {
-                                                                "entity": "sensor.thermostat_temperature",
+                                                                "entity": "climate.thermostat",
                                                                 "name": "Tstat",
+                                                                "attribute": "current_temperature",
+                                                                "unit": []
+                                                            },
+                                                            {
+                                                                "entity": "sensor.family_room_temperature",
+                                                                "name": "Down",
                                                                 "unit": []
                                                             },
                                                             {

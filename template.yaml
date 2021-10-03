@@ -1,8 +1,13 @@
 - binary_sensor:
     unique_id: garage_door
     name: Garage Door
-    device_class: opening
-    state: "{{ states('cover.garage_door') }}"
+    device_class: garage_door
+    state: >-
+      {% if states('cover.garage_door') != "closed" %}
+        On
+      {% else %}
+        Off
+      {% endif %}
 
 - binary_sensor:
     unique_id: security_devices
@@ -80,7 +85,7 @@
     name: "Software Updates Available"
     state: >-
       {% set ns = namespace(updates = 0) -%}
-      {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
+      {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] + states("input_text.software_list").replace(' ', '').split(',') -%}
         {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
           {% set ns.updates = ns.updates + 1 -%}
         {% endif -%}
@@ -94,7 +99,7 @@
     attributes:
       entity_list: >-
         {% set ns = namespace(list = "") -%}
-        {% for software in ['home_assistant', 'supervisor', 'hacs'] + states("input_text.software_list").replace(' ', '').split(',') -%}
+        {% for software in ['home_assistant', 'supervisor', 'hacs_update_count'] + states("input_text.software_list").replace(' ', '').split(',') -%}
           {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
             {% set ns.list = ns.list + " " + software -%}
           {% endif -%}
@@ -684,3 +689,8 @@
     unique_id: openbsd_mars_version
     name: OpenBSD Mars Version
     state: '{{ states("input_text.openbsd_mars_version") }}'
+
+- sensor:
+    unique_id: spotify_artist_title
+    name: Spotify Artist Title
+    state: '{{ state_attr("media_player.spotify_merdely", "media_artist") }} - {{ state_attr("media_player.spotify_merdely", "media_title") }}'

@@ -39,7 +39,10 @@
   - platform: sun
     event: sunset
     offset: -00:15:00
-  condition: []
+  condition:
+  - condition: template
+    value_template: '{{ as_timestamp(states("sensor.date_time_iso")) | timestamp_custom("%m-%d")
+      }} != "10-31"'
   action:
   - choose:
     - conditions:
@@ -406,11 +409,11 @@
         - condition: state
           entity_id: sensor.fully_kiosk_browser
           attribute: currentPageUrl
-          state: https://ha.erdely.in:38123/alarm-panel/home
+          state: https://ha.erdely.in:38123/control-panel-security-status/home
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/alarm-panel/home
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
     default: []
   - service: script.function_speakers_prep
     data:
@@ -448,7 +451,7 @@
       title: Security System
       message: The Security System has been Triggered!
       data:
-        clickAction: /alarm-panel/home
+        clickAction: /control-panel-security-status/home
   mode: single
 - id: '1604856519122'
   alias: Notifications - Laundry Room Dryer Started
@@ -570,7 +573,7 @@
       command_string: cmd=setAudioVolume&level=100
   - service: rest_command.control_panel_command
     data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/alarm-panel/home
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
   - delay: '5'
   - service: rest_command.control_panel_command
     entity_id: media_player.all_speakers
@@ -621,7 +624,7 @@
   action:
   - service: rest_command.control_panel_command
     data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/alarm-panel/home
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
   mode: single
 - id: '1606776305027'
   alias: Security - 60 Tripped - Trigger Alarm Away
@@ -674,7 +677,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/lights
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/home
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -690,7 +693,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/alarm-panel
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -706,7 +709,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/security-status
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -741,7 +744,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/front-door
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-front-door-camera/home
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -760,7 +763,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/garage-cam
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-garage-camera/home
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -779,7 +782,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/chimney-cam
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-chimney-camera/home
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -798,7 +801,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/shed-camera
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-shed-camera/home
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -3009,3 +3012,88 @@
           }}.jpg
   mode: single
   max: 5
+- id: '1632758469302'
+  alias: Lighting - Bedroom - Motion Den Light On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.bedroom_motion_sensor_occupancy
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: light.dresser_lamp
+    state: 'off'
+    for: 00:01:00
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state: disarmed
+  - condition: state
+    entity_id: switch.bedroom_tv
+    state: 'off'
+  - condition: time
+    before: '23:00:00'
+    after: '11:00:00'
+  - condition: numeric_state
+    entity_id: sensor.bedroom_motion_sensor_illuminance
+    below: '16'
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id: light.dresser_lamp
+  mode: single
+- id: '1632841431902'
+  alias: Fan - Master Bath Humidity - Fan On
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.master_bath_humidity
+    above: '65'
+  condition:
+  - condition: state
+    entity_id: light.master_bath_light
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.master_bath_fan
+  mode: single
+- id: '1632841500873'
+  alias: Fan - Master Bath Humidity - Fan Off
+  description: ''
+  trigger:
+  - platform: numeric_state
+    below: '64'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+    entity_id: sensor.master_bath_humidity
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: switch.master_bath_fan
+  mode: single
+- id: '1632864235900'
+  alias: Lighting - Hall Bath - Motion Hall Bath Light On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.hall_bath_motion_sensor
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: light.hall_bath_light
+    state: 'off'
+    for: 00:01:00
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id: light.hall_bath_light
+  mode: single

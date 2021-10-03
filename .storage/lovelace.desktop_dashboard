@@ -73,10 +73,6 @@
                                                     "name": "ME"
                                                 },
                                                 {
-                                                    "entity": "switch.mike_bench_lamp",
-                                                    "name": "ME"
-                                                },
-                                                {
                                                     "entity": "switch.office_tv",
                                                     "name": "Ofc"
                                                 }
@@ -429,6 +425,16 @@
                                                     "unit": []
                                                 },
                                                 {
+                                                    "entity": "sensor.master_bath_temperature",
+                                                    "name": "MB",
+                                                    "unit": []
+                                                },
+                                                {
+                                                    "entity": "sensor.master_bath_humidity",
+                                                    "name": "MB(h)",
+                                                    "unit": []
+                                                },
+                                                {
                                                     "entity": "sensor.office_temperature",
                                                     "name": "Ofc",
                                                     "unit": []
@@ -436,11 +442,6 @@
                                                 {
                                                     "entity": "sensor.living_room_temperature",
                                                     "name": "LR",
-                                                    "unit": []
-                                                },
-                                                {
-                                                    "entity": "sensor.family_room_temperature",
-                                                    "name": "Down",
                                                     "unit": [],
                                                     "styles": {
                                                         "padding-top": "10px",
@@ -458,8 +459,14 @@
                                             "show_state": false,
                                             "entities": [
                                                 {
-                                                    "entity": "sensor.thermostat_temperature",
+                                                    "entity": "climate.thermostat",
                                                     "name": "Tstat",
+                                                    "attribute": "current_temperature",
+                                                    "unit": []
+                                                },
+                                                {
+                                                    "entity": "sensor.family_room_temperature",
+                                                    "name": "Down",
                                                     "unit": []
                                                 },
                                                 {
@@ -1005,6 +1012,13 @@
                                     {
                                         "domain": "binary_sensor",
                                         "entity_id": ".*motion_sensor"
+                                    },
+                                    {
+                                        "entity_id": "binary_sensor.bedroom_motion_sensor_occupancy"
+                                    },
+                                    {
+                                        "domain": "sensor",
+                                        "entity_id": ".*motion_sensor_illuminance"
                                     }
                                 ],
                                 "exclude": []
@@ -1457,44 +1471,6 @@
                                     "cards": [
                                         {
                                             "type": "button",
-                                            "name": "Restart Home Assistant",
-                                            "icon": "mdi:restart",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "homeassistant.restart",
-                                                "confirmation": {
-                                                    "text": "Are you sure you want to restart Home Assistant?"
-                                                },
-                                                "entity": "script.homeassistant_restart"
-                                            }
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/developer-tools"
-                                            },
-                                            "name": "Developer Tools",
-                                            "icon": "mdi:hammer",
-                                            "hold_action": {
-                                                "action": "none"
-                                            },
-                                            "show_state": false
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/config/automation/dashboard"
-                                            },
-                                            "name": "Automations",
-                                            "icon": "mdi:home-automation",
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "button",
                                             "tap_action": {
                                                 "action": "navigate",
                                                 "navigation_path": "/config/integrations"
@@ -1505,47 +1481,14 @@
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/config"
+                                                "action": "call-service",
+                                                "service": "speedtestdotnet.speedtest",
+                                                "service_data": {},
+                                                "target": {}
                                             },
-                                            "name": "Configuration",
-                                            "icon": "mdi:cog",
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/config/server_control"
-                                            },
-                                            "name": "Server Control",
-                                            "icon": "mdi:cog-transfer",
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/hassio/ingress/a0d7b954_vscode"
-                                            },
-                                            "name": "VS Code",
-                                            "icon": "mdi:microsoft-visual-studio-code",
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/hacs"
-                                            },
-                                            "name": "HACS",
-                                            "icon": "hacs:hacs",
+                                            "entity": "sensor.speedtest_download",
+                                            "show_state": true,
+                                            "name": "SpeedTest",
                                             "hold_action": {
                                                 "action": "none"
                                             }
@@ -2551,6 +2494,39 @@
                             "type": "custom:frigate-card",
                             "camera_entity": "camera.front_door_cam_2",
                             "frigate_url": "http://ccab4aaf-frigate:5000"
+                        },
+                        {
+                            "type": "media-control",
+                            "entity": "media_player.spotify_merdely"
+                        },
+                        {
+                            "type": "button",
+                            "entity": "sensor.time_formatted",
+                            "show_state": true,
+                            "show_name": false,
+                            "show_icon": false,
+                            "icon_height": "80px",
+                            "tap_action": {
+                                "action": "call-service",
+                                "service": "browser_mod.window_reload",
+                                "service_data": {},
+                                "target": {}
+                            },
+                            "style": ".state {\n  font-size: 80px !important\n}"
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "*thermostat*"
+                                    }
+                                ],
+                                "exclude": []
+                            }
                         }
                     ]
                 },

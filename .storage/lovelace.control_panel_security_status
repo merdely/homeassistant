@@ -26,13 +26,43 @@
                                             "square": false,
                                             "cards": [
                                                 {
-                                                    "type": "entity",
-                                                    "entity": "sensor.time_formatted"
+                                                    "type": "grid",
+                                                    "columns": 2,
+                                                    "square": false,
+                                                    "cards": [
+                                                        {
+                                                            "type": "button",
+                                                            "entity": "sensor.time_formatted",
+                                                            "show_state": true,
+                                                            "show_name": false,
+                                                            "show_icon": false,
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "browser_mod.window_reload",
+                                                                "service_data": {
+                                                                    "deviceID": "control-panel"
+                                                                },
+                                                                "target": {}
+                                                            },
+                                                            "style": ".state {\n  font-size: 30px !important\n}"
+                                                        },
+                                                        {
+                                                            "type": "entity",
+                                                            "entity": "sensor.fully_kiosk_browser",
+                                                            "name": "Control Panel"
+                                                        }
+                                                    ]
                                                 },
                                                 {
-                                                    "type": "entity",
-                                                    "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel"
+                                                    "type": "picture",
+                                                    "image": "/local/images/homeassistant-banner-back-sm.png",
+                                                    "tap_action": {
+                                                        "action": "navigate",
+                                                        "navigation_path": "/control-panel/home"
+                                                    },
+                                                    "hold_action": {
+                                                        "action": "none"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -52,17 +82,6 @@
                                     "columns": 1,
                                     "square": false,
                                     "cards": [
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/homeassistant-banner-back.png",
-                                            "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/control-panel/home"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
                                         {
                                             "type": "grid",
                                             "columns": 1,
@@ -109,16 +128,22 @@
                                                             "entity": "binary_sensor.chimney_gate"
                                                         },
                                                         {
+                                                            "entity": "binary_sensor.garage_door"
+                                                        },
+                                                        {
                                                             "entity": "binary_sensor.garage_door_sensor"
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.garage_door_cam_status"
+                                                        },
+                                                        {
+                                                            "entity": "cover.garage_door"
                                                         },
                                                         {
                                                             "entity": "group.motion_sensors"
                                                         },
                                                         {
                                                             "entity": "group.water_leak"
-                                                        },
-                                                        {
-                                                            "entity": "cover.garage_door"
                                                         }
                                                     ]
                                                 }

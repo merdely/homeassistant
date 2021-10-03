@@ -1095,9 +1095,8 @@ home_thermostat_down:
     target:
       entity_id:
       - light.office_fan_light
-      - switch.mike_desk_lamp
-      - switch.mike_bench_lamp
       - fan.office_fan
+      - switch.mike_desk_lamp
   mode: single
   icon: mdi:tools
 scene_good_night:
@@ -1320,3 +1319,27 @@ function_camera_reset:
       frontdoor2: switch.front_door_cam_2_plug
       garage: switch.garage_cam_plug
       shed: switch.shed_cam_plug
+111_play_spotify:
+  sequence:
+  - service: media_player.clear_playlist
+    target:
+      entity_id: media_player.spotify_merdely
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.spotify_merdely
+    data:
+      media_content_id: spotify:user:merdely:playlist:6eJoX2IjzI0L0ch4jMJnq8
+      media_content_type: playlist
+  - service: media_player.shuffle_set
+    target:
+      entity_id: media_player.spotify_merdely
+    data:
+      shuffle: true
+  - service: media_player.select_source
+    target:
+      entity_id: media_player.spotify_merdely
+    data:
+      source: '"Office Speakers"'
+  mode: single
+  alias: 111 - Play Spotify
+  icon: mdi:spotify

@@ -23,34 +23,44 @@
                                     "cards": [
                                         {
                                             "type": "grid",
-                                            "columns": 2,
+                                            "columns": 4,
                                             "square": false,
                                             "cards": [
                                                 {
-                                                    "type": "entity",
+                                                    "type": "button",
                                                     "entity": "sensor.time_formatted",
-                                                    "name": "Time"
+                                                    "show_state": true,
+                                                    "show_name": false,
+                                                    "show_icon": false,
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "browser_mod.window_reload",
+                                                        "service_data": {
+                                                            "deviceID": "control-panel"
+                                                        },
+                                                        "target": {}
+                                                    },
+                                                    "style": ".state {\n  font-size: 30px !important\n}"
                                                 },
                                                 {
-                                                    "type": "grid",
-                                                    "columns": 2,
-                                                    "square": false,
-                                                    "cards": [
-                                                        {
-                                                            "type": "button",
-                                                            "style": ".state {\n  font-size: 24px !important;\n  color: var(--primary-text-color) !important;\n}\n",
-                                                            "entity": "sensor.washer_and_dryer_state_pretty",
-                                                            "show_icon": false,
-                                                            "show_name": false,
-                                                            "show_state": true
-                                                        },
-                                                        {
-                                                            "type": "sensor",
-                                                            "entity": "sensor.fully_kiosk_browser",
-                                                            "name": "Batt",
-                                                            "detail": 1
-                                                        }
-                                                    ]
+                                                    "type": "sensor",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Batt",
+                                                    "detail": 1
+                                                },
+                                                {
+                                                    "type": "button",
+                                                    "style": ".state {\n  font-size: 24px !important;\n  color: var(--primary-text-color) !important;\n}\n",
+                                                    "entity": "sensor.washer_and_dryer_state_pretty",
+                                                    "show_icon": false,
+                                                    "show_name": false,
+                                                    "show_state": true
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "climate.thermostat",
+                                                    "attribute": "current_temperature",
+                                                    "name": "Tstat"
                                                 }
                                             ]
                                         },
@@ -86,9 +96,8 @@
                                                 {
                                                     "type": "entity",
                                                     "style": ".header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 19px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n",
-                                                    "entity": "climate.thermostat",
-                                                    "attribute": "current_temperature",
-                                                    "name": "Tstat"
+                                                    "entity": "sensor.outside_temperature",
+                                                    "name": "Out"
                                                 },
                                                 {
                                                     "type": "entity",
@@ -100,7 +109,7 @@
                                                     "type": "entity",
                                                     "style": ".header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 19px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n",
                                                     "entity": "sensor.garage_temperature",
-                                                    "name": "Garage"
+                                                    "name": "Gar"
                                                 },
                                                 {
                                                     "type": "entity",
@@ -132,7 +141,7 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.ytube_music_player",
+                                                            "entity": "media_player.spotify_merdely",
                                                             "state_not": "playing"
                                                         }
                                                     ],
@@ -201,16 +210,16 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.ytube_music_player",
+                                                            "entity": "media_player.spotify_merdely",
                                                             "state": "playing"
                                                         }
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n",
-                                                        "entity": "media_player.ytube_music_player",
-                                                        "attribute": "media_title",
-                                                        "name": "Youtube Music Player"
+                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "entity": "sensor.spotify_artist_title",
+                                                        "name": "Spotify Music Player",
+                                                        "icon": "mdi:music"
                                                     }
                                                 },
                                                 {
@@ -539,12 +548,15 @@
                                                                 "style": "ha-card.type-button {\n  height: 60px;\n}\n",
                                                                 "tap_action": {
                                                                     "action": "navigate",
-                                                                    "navigation_path": "/alarm-panel/home"
+                                                                    "navigation_path": "/control-panel-front-door-camera-2/home"
                                                                 },
                                                                 "show_icon": true,
                                                                 "show_name": false,
-                                                                "icon": "mdi:calculator",
-                                                                "name": "Security Status"
+                                                                "icon": "mdi:home",
+                                                                "name": "Front Door Cam 2",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
                                                             }
                                                         ]
                                                     }
@@ -641,12 +653,12 @@
                                                                 "style": "ha-card.type-button {\n  height: 60px;\n}\n",
                                                                 "tap_action": {
                                                                     "action": "navigate",
-                                                                    "navigation_path": "/control-panel-software/home"
+                                                                    "navigation_path": "/control-panel-garage-door-camera/home"
                                                                 },
                                                                 "show_icon": true,
                                                                 "show_name": false,
-                                                                "icon": "mdi:home-assistant",
-                                                                "name": "HA",
+                                                                "icon": "mdi:garage",
+                                                                "name": "Garage Door Cam",
                                                                 "hold_action": {
                                                                     "action": "none"
                                                                 }
@@ -746,7 +758,7 @@
                                                                 "style": "ha-card.type-button {\n  height: 60px;\n}\n",
                                                                 "tap_action": {
                                                                     "action": "navigate",
-                                                                    "navigation_path": "/control-panel-media-player/home"
+                                                                    "navigation_path": "/control-panel-spotify-player/home"
                                                                 },
                                                                 "hold_action": {
                                                                     "action": "call-service",

@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "key": "lovelace.control_panel_software",
+    "key": "lovelace.control_panel_spotify_player",
     "data": {
         "config": {
             "views": [
@@ -40,7 +40,7 @@
                                                                 "action": "call-service",
                                                                 "service": "browser_mod.window_reload",
                                                                 "service_data": {
-                                                                    "deviceID": "da17edcb-49909e65"
+                                                                    "deviceID": "control-panel"
                                                                 },
                                                                 "target": {}
                                                             },
@@ -67,11 +67,55 @@
                                             ]
                                         },
                                         {
-                                            "type": "markdown",
-                                            "content": "<table width=\"100%\"> <tr>\n {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%}\n<tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr>\n{% for software in states(\"input_text.software_list\").replace(' ', '').split(',')  -%}\n            <tr> <td><font color=\"{{'#44739e' if\n            states('sensor.'+software+'_version') ==\n            states('sensor.'+software+'_version_latest') else\n            'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if\n            states('sensor.'+software+'_version') ==\n            states('sensor.'+software+'_version_latest') else 'download'}}'\n            /></font> </td> <td><font color=\"{{'lightgray' if\n            states('sensor.'+software+'_version') ==\n            states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{\n            software | replace('_', ' ') | title }}</td> <td align=\"right\"><font\n            color=\"{{'lightgray' if states('sensor.'+software+'_version') ==\n            states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{\n            states('sensor.'+software+'_version') }}</font></td> <td\n            align=\"right\"><font color=\"{{'lightgray' if\n            states('sensor.'+software+'_version') ==\n            states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{\n            states('sensor.'+software+'_version_latest') }}</font></td> </tr> {%\n            endfor -%}\n</table>",
-                                            "card_mod": {
-                                                "style": "* {\n  font-size: 14px;\n  --mdc-icon-size: 16px;\n}\n"
-                                            }
+                                            "type": "media-control",
+                                            "entity": "media_player.spotify_merdely"
+                                        },
+                                        {
+                                            "type": "grid",
+                                            "columns": 1,
+                                            "cards": [
+                                                {
+                                                    "type": "button",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "media_player.media_stop",
+                                                        "service_data": {},
+                                                        "target": {
+                                                            "device_id": "fa14bbd400eef1712ddcabb2a3eaa268"
+                                                        }
+                                                    },
+                                                    "entity": "media_player.spotify_merdely",
+                                                    "show_name": true,
+                                                    "icon": "mdi:play-pause",
+                                                    "show_state": true,
+                                                    "name": "Spotify Music Player",
+                                                    "hold_action": {
+                                                        "action": "none"
+                                                    },
+                                                    "icon_height": "40px"
+                                                }
+                                            ],
+                                            "square": false
+                                        },
+                                        {
+                                            "type": "entities",
+                                            "entities": [
+                                                {
+                                                    "entity": "media_player.spotify_merdely",
+                                                    "attribute": "media_playlist",
+                                                    "type": "attribute",
+                                                    "name": "Spotify Playlist",
+                                                    "icon": "mdi:playlist-music"
+                                                },
+                                                {
+                                                    "entity": "media_player.spotify_merdely",
+                                                    "attribute": "source_list",
+                                                    "type": "attribute",
+                                                    "name": "Speakers",
+                                                    "icon": "mdi:speaker-multiple"
+                                                }
+                                            ],
+                                            "state_color": false
                                         }
                                     ]
                                 },
@@ -81,11 +125,16 @@
                                     "square": false,
                                     "cards": [
                                         {
-                                            "type": "markdown",
-                                            "content": "            <table width=\"100%\"> \n{% for addon in (state_attr(\"sensor.ha_add_ons\", \"addons\")\n            | rejectattr('installed', 'eq', False) | sort(attribute='name')) -%} <tr>\n            <td><font color=\"{{'#44739e' if\n              addon['version'] ==\n              addon['version_latest'] else 'yellow'}}\"><ha-icon\n              icon='mdi:briefcase-{{ 'check' if addon['version'] ==\n              addon['version_latest'] else 'download'}}' /></font>\n              </td> <td><font color=\"{{'lightgray' if addon['version']\n              == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant', '') }}*</td> <td align=\"right\"><font\n              color=\"{{'lightgray' if addon['version'] ==\n              addon['version_latest'] else 'yellow'}}\">{{\n              addon['version'] }}</font></td> <td align=\"right\"><font\n              color=\"{{'lightgray' if addon['version'] ==\n              addon['version_latest'] else 'yellow'}}\">{{\n              addon['version_latest'] }}</font></td> </tr>\n            {% endfor -%}\n</table>",
-                                            "card_mod": {
-                                                "style": "* {\n  font-size: 14px;\n  --mdc-icon-size: 16px;\n}\n"
-                                            }
+                                            "type": "custom:spotify-card",
+                                            "limit": 20,
+                                            "spotify_entity": "media_player.spotify_merdely",
+                                            "playlist_type": "default",
+                                            "account": "default",
+                                            "always_play_random_song": true,
+                                            "display_style": "list",
+                                            "hide_playback_controls": true,
+                                            "height": 460,
+                                            "hide_top_header": true
                                         }
                                     ]
                                 }
