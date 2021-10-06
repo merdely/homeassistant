@@ -1134,22 +1134,12 @@ scene_good_night:
       - light.front_porch_light
       - switch.mantle_lights
       - light.deck_lights
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: media_player.ytube_music_player
-        state: 'On'
-      sequence:
-      - service: media_player.turn_off
-        target:
-          entity_id: media_player.ytube_music_player
-    default: []
   - service: cover.close_cover
     data: {}
     entity_id: cover.garage_door
   - condition: time
-    after: '21:00'
-    before: '23:59'
+    after: '21:00:00'
+    before: '23:59:00'
   - condition: state
     entity_id: switch.bedroom_tv
     state: 'off'
@@ -1183,16 +1173,6 @@ scene_leaving_home:
       - switch.mantle_lights
       - light.dining_room_overhead_light
       - light.deck_lights
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: media_player.ytube_music_player
-        state: 'On'
-      sequence:
-      - service: media_player.turn_off
-        target:
-          entity_id: media_player.ytube_music_player
-    default: []
   mode: single
   icon: mdi:exit-run
 scene_movie_time:
@@ -1212,16 +1192,6 @@ scene_movie_time:
       - light.den_overhead_light
       - light.laundry_room_light
       - switch.three_headed_lamp
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: media_player.ytube_music_player
-        state: 'On'
-      sequence:
-      - service: media_player.turn_off
-        target:
-          entity_id: media_player.ytube_music_player
-    default: []
   mode: single
   icon: mdi:movie
 scene_night_night:
@@ -1248,16 +1218,6 @@ scene_night_night:
       - light.front_porch_light
       - switch.mantle_lights
       area_id: ab042805f82011ea8f6093da0125181c
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: media_player.ytube_music_player
-        state: 'On'
-      sequence:
-      - service: media_player.turn_off
-        target:
-          entity_id: media_player.ytube_music_player
-    default: []
   - service: cover.close_cover
     data: {}
     entity_id: cover.garage_door

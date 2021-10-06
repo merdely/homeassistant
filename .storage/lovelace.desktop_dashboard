@@ -1014,11 +1014,12 @@
                                         "entity_id": ".*motion_sensor"
                                     },
                                     {
-                                        "entity_id": "binary_sensor.bedroom_motion_sensor_occupancy"
+                                        "domain": "binary_sensor",
+                                        "entity_id": "*motion_sensor_occupancy"
                                     },
                                     {
                                         "domain": "sensor",
-                                        "entity_id": ".*motion_sensor_illuminance"
+                                        "entity_id": ".*motion_sensor_illuminance*"
                                     }
                                 ],
                                 "exclude": []
@@ -1282,108 +1283,41 @@
                     "cards": [
                         {
                             "type": "grid",
-                            "columns": 1,
-                            "square": false,
                             "cards": [
                                 {
-                                    "type": "conditional",
-                                    "conditions": [
-                                        {
-                                            "entity": "sensor.youtube_music_playlist_item",
-                                            "state": "Ok"
-                                        }
-                                    ],
-                                    "card": {
-                                        "type": "grid",
-                                        "columns": 1,
-                                        "square": false,
-                                        "cards": [
-                                            {
-                                                "type": "custom:mini-media-player",
-                                                "entity": "media_player.ytube_music_player",
-                                                "name": "Youtube Music"
-                                            },
-                                            {
-                                                "type": "entities",
-                                                "entities": [
-                                                    {
-                                                        "entity": "sensor.youtube_music_playlist"
-                                                    },
-                                                    {
-                                                        "entity": "sensor.youtube_music_speakers"
-                                                    },
-                                                    {
-                                                        "entity": "sensor.youtube_music_source"
-                                                    },
-                                                    {
-                                                        "entity": "input_select.ytube_music_player_playmode"
-                                                    },
-                                                    {
-                                                        "entity": "input_select.youtube_music_custom_playlist"
-                                                    },
-                                                    {
-                                                        "entity": "input_select.youtube_music_custom_speakers"
-                                                    },
-                                                    {
-                                                        "entity": "input_select.youtube_music_custom_source"
-                                                    }
-                                                ],
-                                                "show_header_toggle": false
-                                            }
-                                        ]
-                                    }
+                                    "type": "media-control",
+                                    "entity": "media_player.spotify_merdely"
                                 },
                                 {
-                                    "type": "conditional",
-                                    "conditions": [
+                                    "type": "entities",
+                                    "entities": [
                                         {
-                                            "entity": "sensor.youtube_music_playlist_item",
-                                            "state_not": "Ok"
+                                            "entity": "media_player.spotify_merdely",
+                                            "attribute": "media_playlist",
+                                            "type": "attribute",
+                                            "name": "Spotify Playlist",
+                                            "icon": "mdi:playlist-music"
+                                        },
+                                        {
+                                            "entity": "media_player.spotify_merdely",
+                                            "attribute": "source_list",
+                                            "type": "attribute",
+                                            "name": "Speakers",
+                                            "icon": "mdi:speaker-multiple"
                                         }
                                     ],
-                                    "card": {
-                                        "type": "grid",
-                                        "columns": 1,
-                                        "square": false,
-                                        "cards": [
-                                            {
-                                                "type": "markdown",
-                                                "content": "<center>\n\n## The Youtube Music Playlist picker is broken\n\n### Home Assistant needs to be restarted\n\n</center>"
-                                            },
-                                            {
-                                                "type": "conditional",
-                                                "conditions": [
-                                                    {
-                                                        "entity": "binary_sensor.home_assistant_configuration_check",
-                                                        "state": "off"
-                                                    }
-                                                ],
-                                                "card": {
-                                                    "type": "button",
-                                                    "tap_action": {
-                                                        "action": "toggle"
-                                                    },
-                                                    "entity": "script.homeassistant_restart",
-                                                    "icon_height": "60px"
-                                                }
-                                            },
-                                            {
-                                                "type": "conditional",
-                                                "conditions": [
-                                                    {
-                                                        "entity": "binary_sensor.home_assistant_configuration_check",
-                                                        "state": "on"
-                                                    }
-                                                ],
-                                                "card": {
-                                                    "type": "markdown",
-                                                    "content": "<center>\n\n## The Home Assistant Configuration is in a bad state\n\n### Cannot restart Home Assistant at this time\n\n### Look at the configuration and fix errors before restarting Home Assistant\n\n</center>"
-                                                }
-                                            }
-                                        ]
-                                    }
+                                    "state_color": false
+                                },
+                                {
+                                    "type": "custom:spotify-card",
+                                    "limit": 10,
+                                    "spotify_entity": "media_player.spotify_merdely",
+                                    "playlist_type": "default",
+                                    "account": "default"
                                 }
-                            ]
+                            ],
+                            "columns": 1,
+                            "square": false
                         },
                         {
                             "type": "custom:auto-entities",
@@ -1825,6 +1759,66 @@
                             ],
                             "columns": 2,
                             "square": false
+                        }
+                    ]
+                },
+                {
+                    "icon": "mdi:help-rhombus",
+                    "title": "Unavailable Entities",
+                    "path": "unavailable-entities",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "state": "unavailable",
+                                        "domain": "/(binary_)?sensor/"
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "domain": "media_player"
+                                    },
+                                    {
+                                        "entity_id": "/^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health|group.outside_xmas)$/"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "state": "unavailable"
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "domain": "media_player"
+                                    },
+                                    {
+                                        "domain": "/(binary_)?sensor/"
+                                    },
+                                    {
+                                        "entity_id": "/^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health|group.outside_xmas)$/"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
                         }
                     ]
                 },
@@ -2523,6 +2517,23 @@
                                 "include": [
                                     {
                                         "entity_id": "*thermostat*"
+                                    }
+                                ],
+                                "exclude": []
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "state": "unavailable"
+                                    },
+                                    {
+                                        "state": "unknown"
                                     }
                                 ],
                                 "exclude": []

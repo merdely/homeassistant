@@ -75,9 +75,9 @@
     unique_id: unavailable_entities
     name: Unavailable Entities
     icon: mdi:cloud-question
-    state: "{{ states | rejectattr('entity_id','in',['group.house_temperature', 'sensor.ir_receiver_status', 'sensor.kukui_battery_health', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | length }}"
+    state: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
     attributes:
-      entity_list: "{{ states | rejectattr('entity_id','in',['group.house_temperature', 'sensor.ir_receiver_status', 'sensor.kukui_battery_health', 'group.outside_xmas']) | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | reject('in', (states | map(attribute='entity_id') | select('>', 'sensor.lumi_lumi_') | select('<', 'sensor.lumi_lumi_x') | list)) | list | join(', ') }}"
+      entity_list: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
 - sensor:
@@ -272,16 +272,6 @@
         On
       {% else %}
         Off
-      {% endif %}
-
-- sensor:
-    unique_id: ytube_playlist_item_count
-    name: Youtube Music Playlist Item
-    state: >-
-      {% if state_attr("input_select.ytube_music_player_playlist", "options") | length == 1 %}
-        Broken
-      {% else %}
-        Ok
       {% endif %}
 
 - sensor:
@@ -595,24 +585,6 @@
       {%- if is_state('light.middle_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {%- if is_state('light.far_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {{ count }}
-
-- sensor:
-    unique_id: ytube_playlist
-    name: Youtube Music Playlist
-    icon: mdi:playlist-music
-    state: "{{ states('input_select.ytube_music_player_playlist') }}"
-
-- sensor:
-    unique_id: ytube_source
-    name: Youtube Music Source
-    icon: mdi:music-box-multiple
-    state: "{{ states('input_select.ytube_music_player_source') }}"
-
-- sensor:
-    unique_id: ytube_speakers
-    name: Youtube Music Speakers
-    icon: mdi:speaker
-    state: "{{ states('input_select.ytube_music_player_speakers') }}"
 
 - sensor:
     unique_id: christmas_tree_available

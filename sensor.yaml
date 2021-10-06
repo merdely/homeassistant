@@ -173,6 +173,20 @@
 #    {{ value_json.tag_name }}
 #  scan_interval: 3660
 
+- platform: mqtt
+  name: Joplin Desktop Version
+  state_topic: "software_versions/joplin_desktop"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: Joplin Desktop Version Latest
+  resource: "https://api.github.com/repos/laurent22/joplin/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name }}
+  scan_interval: 3660
+
 #- platform: rest
 #  name: Kapacitor Version Latest
 #  resource: "https://api.github.com/repos/influxdata/kapacitor/releases/latest"

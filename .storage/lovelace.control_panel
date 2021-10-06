@@ -597,7 +597,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\nha-icon {\n  {% if is_state('binary_sensor.oven_is_on', 'on') %}\n  color: red !important;\n  {% endif %}\n}\n",
                                                                 "tap_action": {
                                                                     "action": "navigate",
                                                                     "navigation_path": "/control-panel-middle-level/home"
@@ -633,6 +633,7 @@
                                                                 "show_name": false,
                                                                 "icon": "mdi:tools",
                                                                 "name": "Utilities",
+                                                                "entity": "binary_sensor.software_update_available",
                                                                 "hold_action": {
                                                                     "action": "none"
                                                                 }
@@ -759,13 +760,6 @@
                                                                 "tap_action": {
                                                                     "action": "navigate",
                                                                     "navigation_path": "/control-panel-spotify-player/home"
-                                                                },
-                                                                "hold_action": {
-                                                                    "action": "call-service",
-                                                                    "service": "media_player.toggle",
-                                                                    "service_data": {
-                                                                        "entity_id": "media_player.ytube_music_player"
-                                                                    }
                                                                 },
                                                                 "show_icon": true,
                                                                 "show_name": false,
