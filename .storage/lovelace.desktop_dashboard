@@ -627,7 +627,14 @@
                                             "style": ":host {\n  {% if states('sensor.plex_plex') | int > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
                                         },
                                         {
+                                            "entity": "sensor.unavailable_entities",
+                                            "style": ":host {\n  {% if states('sensor.unavailable_entities') | int > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                            "name": "Unavailable Home Assistant Entities"
+                                        },
+                                        {
                                             "entity": "binary_sensor.software_update_available",
+                                            "type": "attribute",
+                                            "attribute": "number",
                                             "style": ":host {\n  {% if is_state('binary_sensor.software_update_available', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
                                             "tap_action": {
                                                 "action": "navigate",

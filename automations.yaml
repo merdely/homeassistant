@@ -230,6 +230,9 @@
     entity_id: light.office_fan_light
     state: 'off'
     for: 00:01:00
+  - condition: time
+    after: 06:00:00
+    before: 01:00:00
   action:
   - service: homeassistant.turn_on
     target:
