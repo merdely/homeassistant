@@ -1033,7 +1033,7 @@
           message: office tv waiting 4s after power on
       - delay: '4'
     default: []
-  - service: shell_command.change_channel
+  - service: shell_command.tivo_setch
     data:
       tv_device: tivo-office
       channel: '{{ states(''input_select.office_channel'') }}'
@@ -1158,7 +1158,7 @@
   - service: homeassistant.turn_on
     target:
       entity_id: switch.bedroom_tv
-  - service: shell_command.change_channel
+  - service: shell_command.tivo_setch
     data:
       tv_device: tivo-bedroom
       channel: '{{ states(''input_select.bedroom_channel'') }}'
@@ -1386,7 +1386,7 @@
   - service: homeassistant.turn_on
     target:
       entity_id: switch.god_damn_tv
-  - service: shell_command.change_channel
+  - service: shell_command.tivo_setch
     data:
       tv_device: tivo-familyroom
       channel: '{{ states(''input_select.god_damn_channel'') }}'
@@ -1503,7 +1503,7 @@
     data:
       tv: living_room
       input: tivo
-  - service: shell_command.change_channel
+  - service: shell_command.tivo_setch
     data:
       tv_device: tivo-livingroom
       channel: '{{ states(''input_select.living_room_channel'') }}'
@@ -1575,7 +1575,7 @@
       sequence:
       - service: media_player.select_source
         data:
-          source: Plex - Stream for Free
+          source: 13535
         entity_id: media_player.office_roku
     default: []
   - repeat:
@@ -1659,8 +1659,9 @@
       sequence:
       - service: media_player.select_source
         data:
-          source: Plex - Stream for Free
-        entity_id: media_player.bedroom_roku
+          source: '13535'
+        target:
+          entity_id: media_player.bedroom_roku
     default: []
   - repeat:
       until:
@@ -1947,8 +1948,9 @@
       sequence:
       - service: media_player.select_source
         data:
-          source: Plex - Stream for Free
-        entity_id: media_player.living_room_roku
+          source: '13535'
+        target:
+          entity_id: media_player.living_room_roku
     default: []
   - repeat:
       until:
@@ -2404,8 +2406,9 @@
       sequence:
       - service: media_player.select_source
         data:
-          source: Plex - Stream for Free
-        entity_id: media_player.god_damn_roku
+          source: '13535'
+        target:
+          entity_id: media_player.god_damn_roku
     default: []
   - repeat:
       until:

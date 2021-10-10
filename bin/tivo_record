@@ -4,6 +4,8 @@
 
 tivo=$1
 
+echo $tivo | grep -q "\." || tivo=$tivo.erdely.in
+
 printf "IRCODE RECORD\r" | nc "$tivo" 31339
 sleep 2
 printf "IRCODE SELECT\r" | nc "$tivo" 31339

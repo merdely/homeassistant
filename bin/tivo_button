@@ -1,10 +1,32 @@
 #!/bin/sh
 
-[ "$1" = "-h" ] && printf "usage: $0 TIVO BUTTONCODE\nExample codes:\n\tENTER\n\tLIVETV\n\tPAUSE\n\tSELECT\n\tSKIP\n\tTIVO\n" && exit
+if [ "$1" = "-h" ]; then
+  printf "usage: $0 TIVO BUTTONCODE\n"
+  printf "Example codes:\n"
+  printf "\tUP\tDOWN\n"
+  printf "\tLEFT\tRIGHT\n"
+  printf "\tSELECT\tRECORD\n"
+  printf "\tTIVO\tLIVETV\n"
+  printf "\tTHUMBSUP\tTHUMBSDOWN\n"
+  printf "\tCHANNELUP\tCHANNELDOWN\n"
+  printf "\tDISPLAY\tDIRECTV\n"
+  printf "\tNUM1\tNUM2\tNUM3\n"
+  printf "\tNUM4\tNUM5\tNUM6\n"
+  printf "\tNUM7\tNUM8\tNUM9\n"
+  printf "\tNUM0\tENTER\tCLEAR\n"
+  printf "\tPLAY\tPAUSE\tSLOW\n"
+  printf "\tFORWARD\tREVERSE\n"
+  printf "\tSTANDBY\tNOWSHOWING\n"
+  printf "\tREPLAY\tADVANCE\n"
+  printf "\tDELIMITER\tGUIDE\n"
+  exit
+fi
 [ -z "$2" ] && exit 1
 
 tivo=$1
 button=$2
+
+echo $tivo | grep -q "\." || tivo=$tivo.erdely.in
 
 printf "IRCODE $button\r" | nc -w1 "$tivo" 31339
 sleep 2

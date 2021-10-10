@@ -730,18 +730,18 @@
                                                         "cards": [
                                                             {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\nha-icon {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n",
                                                                 "tap_action": {
                                                                     "action": "navigate",
                                                                     "navigation_path": "/control-panel-speaker-volume/home"
                                                                 },
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                },
                                                                 "show_icon": true,
                                                                 "show_name": false,
                                                                 "icon": "mdi:volume-high",
-                                                                "name": "Speaker Volume",
-                                                                "hold_action": {
-                                                                    "action": "none"
-                                                                }
+                                                                "name": "Speaker Volume"
                                                             }
                                                         ]
                                                     }

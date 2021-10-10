@@ -5,6 +5,8 @@
 tivo=$1
 channel=$(echo $2 | tr [A-Z] [a-z])
 
+echo $tivo | grep -q "\." || tivo=$tivo.erdely.in
+
 case $channel in
   "cw"|"the cw")
     channel=503
@@ -373,8 +375,8 @@ channel=$(echo $channel | sed 's/Channel //')
 OUT=$(nc -w 1 "$tivo" 31339)
 
 if [ -z "$OUT" ]; then
-  printf "IRCODE TIVO\r" | nc -w1 "$tivo" 31339
-  sleep 2
+  #printf "IRCODE TIVO\r" | nc -w1 "$tivo" 31339
+  #sleep 2
   printf "IRCODE LIVETV" | nc -w1 "$tivo" 31339
   sleep 2
 fi
