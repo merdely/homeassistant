@@ -45,3 +45,8 @@
   stream_source: !secret shedcam_stream
   username: shedcam
   password: !secret shedcam_password
+
+- platform: mjpeg
+  name: OctoPrint
+  still_image_url: http://carpo.erdely.in:8999/snapshot
+  mjpeg_url: http://carpo.erdely.in:8999/stream

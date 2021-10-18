@@ -623,10 +623,6 @@
                                             ]
                                         },
                                         {
-                                            "entity": "sensor.plex_plex",
-                                            "style": ":host {\n  {% if states('sensor.plex_plex') | int > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
-                                        },
-                                        {
                                             "entity": "sensor.unavailable_entities",
                                             "style": ":host {\n  {% if states('sensor.unavailable_entities') | int > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
                                             "name": "Unavailable Home Assistant Entities"
@@ -645,14 +641,40 @@
                                             "entity": "binary_sensor.new_tv_show_list_ready",
                                             "style": ":host {\n  {% if is_state('binary_sensor.new_tv_show_list_ready', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
                                             "state_color": true
+                                        },
+                                        {
+                                            "entity": "sensor.plex_plex",
+                                            "style": ":host {\n  {% if states('sensor.plex_plex') | int > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                        },
+                                        {
+                                            "type": "custom:entity-attributes-card",
+                                            "heading_name": [],
+                                            "heading_state": [],
+                                            "filter": {
+                                                "include": [
+                                                    {
+                                                        "key": "sensor.plex_plex.*"
+                                                    }
+                                                ],
+                                                "exclude": [
+                                                    {
+                                                        "key": "sensor.plex_plex.icon"
+                                                    },
+                                                    {
+                                                        "key": "sensor.plex_plex.friendly_name"
+                                                    },
+                                                    {
+                                                        "key": "sensor.plex_plex.unit_of_measurement"
+                                                    }
+                                                ]
+                                            }
                                         }
                                     ],
                                     "title": "Status"
                                 },
                                 {
                                     "type": "grid",
-                                    "columns": 4,
-                                    "square": false,
+                                    "columns": 5,
                                     "cards": [
                                         {
                                             "type": "entity",
@@ -691,35 +713,6 @@
                                             },
                                             "entity": "script.home_thermostat_up",
                                             "name": "Warmer"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "grid",
-                                    "columns": 4,
-                                    "cards": [
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "homeassistant.update_entity",
-                                                "service_data": {
-                                                    "entity_id": "binary_sensor.home_assistant_configuration_check"
-                                                }
-                                            },
-                                            "entity": "binary_sensor.home_assistant_configuration_check",
-                                            "name": "HA Config Check"
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "toggle",
-                                                "confirmation": {
-                                                    "text": "Are you sure you want to restart Home Assistant?"
-                                                }
-                                            },
-                                            "entity": "script.homeassistant_restart",
-                                            "name": "Restart Home Assistant"
                                         },
                                         {
                                             "type": "button",
@@ -730,20 +723,15 @@
                                             "entity": "script.scene_good_night",
                                             "icon": "mdi:weather-night",
                                             "name": "Good Night"
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.scene_night_night"
-                                            },
-                                            "entity": "script.scene_night_night",
-                                            "name": "Night Night",
-                                            "icon": "mdi:moon-waning-crescent"
                                         }
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "type": "weather-forecast",
+                            "entity": "weather.home",
+                            "secondary_info_attribute": "wind_speed"
                         },
                         {
                             "type": "grid",
@@ -779,9 +767,6 @@
                                             "entity": "binary_sensor.powder_room_window"
                                         },
                                         {
-                                            "entity": "binary_sensor.garage_entry_door"
-                                        },
-                                        {
                                             "entity": "binary_sensor.shed_door"
                                         },
                                         {
@@ -791,10 +776,13 @@
                                             "entity": "binary_sensor.chimney_gate"
                                         },
                                         {
-                                            "entity": "binary_sensor.garage_door"
+                                            "entity": "binary_sensor.garage_entry_door"
                                         },
                                         {
                                             "entity": "binary_sensor.garage_door_sensor"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.garage_door"
                                         },
                                         {
                                             "entity": "binary_sensor.garage_door_cam_status"
@@ -813,11 +801,6 @@
                                     "show_header_toggle": false
                                 }
                             ]
-                        },
-                        {
-                            "type": "weather-forecast",
-                            "entity": "weather.home",
-                            "secondary_info_attribute": "wind_speed"
                         }
                     ]
                 },
@@ -1149,10 +1132,10 @@
                                     "entity": "switch.god_damn_soundbar"
                                 },
                                 {
-                                    "entity": "switch.soundbar_plug"
+                                    "entity": "switch.god_damn_soundbar_plug"
                                 },
                                 {
-                                    "entity": "sensor.soundbar_plug"
+                                    "entity": "sensor.god_damn_soundbar_plug"
                                 },
                                 {
                                     "entity": "input_select.god_damn_input"
@@ -2444,6 +2427,36 @@
                     "badges": [],
                     "cards": [
                         {
+                            "type": "entities",
+                            "title": "Plex Status",
+                            "entities": [
+                                "sensor.plex_plex",
+                                {
+                                    "type": "custom:entity-attributes-card",
+                                    "heading_name": "User",
+                                    "heading_state": "Show/Movie",
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "key": "sensor.plex_plex.*"
+                                            }
+                                        ],
+                                        "exclude": [
+                                            {
+                                                "key": "sensor.plex_plex.icon"
+                                            },
+                                            {
+                                                "key": "sensor.plex_plex.friendly_name"
+                                            },
+                                            {
+                                                "key": "sensor.plex_plex.unit_of_measurement"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             "type": "history-graph",
                             "entities": [
                                 {
@@ -2482,69 +2495,6 @@
                             "hours_to_show": 24,
                             "refresh_interval": 0,
                             "title": "Outside Temperature"
-                        },
-                        {
-                            "type": "custom:spotify-card",
-                            "limit": 10,
-                            "playlist_type": "default",
-                            "account": "default",
-                            "spotify_entity": "media_player.office_speakers",
-                            "always_play_random_song": true
-                        },
-                        {
-                            "type": "custom:frigate-card",
-                            "camera_entity": "camera.front_door_cam_2",
-                            "frigate_url": "http://ccab4aaf-frigate:5000"
-                        },
-                        {
-                            "type": "media-control",
-                            "entity": "media_player.spotify_merdely"
-                        },
-                        {
-                            "type": "button",
-                            "entity": "sensor.time_formatted",
-                            "show_state": true,
-                            "show_name": false,
-                            "show_icon": false,
-                            "icon_height": "80px",
-                            "tap_action": {
-                                "action": "call-service",
-                                "service": "browser_mod.window_reload",
-                                "service_data": {},
-                                "target": {}
-                            },
-                            "style": ".state {\n  font-size: 80px !important\n}"
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "entity_id": "*thermostat*"
-                                    }
-                                ],
-                                "exclude": []
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "state": "unavailable"
-                                    },
-                                    {
-                                        "state": "unknown"
-                                    }
-                                ],
-                                "exclude": []
-                            }
                         }
                     ]
                 },
@@ -2677,6 +2627,68 @@
                             "sort": {
                                 "method": "name"
                             }
+                        }
+                    ]
+                },
+                {
+                    "title": "3D Printing",
+                    "path": "3d-printing",
+                    "icon": "mdi:printer-3d",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "cards": [
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "switch.ender3_plug"
+                                        },
+                                        {
+                                            "entity": "switch.octoprint_light_plug"
+                                        },
+                                        {
+                                            "entity": "switch.octoprint_camera"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.octoprint_printing"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.octoprint_printing_error"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_current_state"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_actual_bed_temp"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_job_percentage"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_time_remaining"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_time_elapsed"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "square": false
+                        },
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "cards": [
+                                {
+                                    "type": "picture-entity",
+                                    "entity": "camera.octoprint",
+                                    "camera_view": "live"
+                                }
+                            ],
+                            "square": false
                         }
                     ]
                 }

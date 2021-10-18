@@ -57,6 +57,12 @@
       On
     {% endif %}
 
+- name: OctoPrint Camera Status
+  platform: command_line
+  command: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+  payload_on: 'Camera is streaming'
+  payload_off: 'Camera is off'
+
 - name: Garage Door Cam Status
   platform: command_line
   device_class: garage_door

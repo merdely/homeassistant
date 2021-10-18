@@ -14,6 +14,11 @@
 
 - platform: command_line
   switches:
+    octoprint_camera:
+      friendly_name: OctoPrint Camera
+      command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in start_camera'
+      command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in stop_camera'
+      command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
     mercury_screensaver:
       friendly_name: Mercury Screensaver
       #command_on: '/bin/true'
@@ -116,16 +121,16 @@
     god_damn_soundbar:
       friendly_name: "God Damn Soundbar"
       value_template: >-
-        {% if states('sensor.soundbar_plug') | float < 6 %}
+        {% if states('sensor.god_damn_soundbar_plug') | float < 6 %}
           off
         {% else %}
           on
         {% endif %}
       turn_on:
         - condition: template
-          value_template: '{{ states("sensor.soundbar_plug") | float < 2 }}'
+          value_template: '{{ states("sensor.god_damn_soundbar_plug") | float < 2 }}'
         - service: homeassistant.turn_on
-          entity_id: switch.soundbar_plug
+          entity_id: switch.god_damn_soundbar_plug
         - delay: '1'
         - service: mqtt.publish
           data:
@@ -133,7 +138,7 @@
             payload: 'irsend {"Protocol":"NEC","Bits":32,"Data":"0x212EFF00","DataLSB":"0x8474FF00","Repeat":0}'
       turn_off:
         - condition: template
-          value_template: '{{ states("sensor.soundbar_plug") | float >= 2 }}'
+          value_template: '{{ states("sensor.god_damn_soundbar_plug") | float >= 2 }}'
         - service: mqtt.publish
           data:
             topic: cmnd/god_damn_tv_remote/backlog
