@@ -3191,3 +3191,34 @@
     target:
       entity_id: light.mike_bench_lamp
   mode: single
+- id: '1635180091668'
+  alias: Controls - Power On Ender3 Screen with Ender 3
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.ender3_plug
+    to: 'on'
+  condition: []
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.guest_room_usb_hub
+  mode: single
+- id: '1635180126214'
+  alias: Controls - Power Off Ender3 Screen with Ender 3
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.ender3_plug
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: switch.guest_room_usb_hub
+  mode: single

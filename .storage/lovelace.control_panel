@@ -41,15 +41,14 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 60px;\n}"
+                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "button",
-                                                    "style": ".state {\n  font-size: 30px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 60px;\n  padding: 0;\n}\n",
-                                                    "entity": "input_text.washer_and_dryer_state_pretty",
-                                                    "show_icon": false,
-                                                    "show_name": false,
-                                                    "show_state": true
+                                                    "type": "sensor",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -59,11 +58,12 @@
                                             "square": false,
                                             "cards": [
                                                 {
-                                                    "type": "sensor",
-                                                    "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Panel Battery",
-                                                    "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "type": "button",
+                                                    "style": ".state {\n  font-size: 30px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n",
+                                                    "entity": "input_text.washer_and_dryer_state_pretty",
+                                                    "show_icon": false,
+                                                    "show_name": false,
+                                                    "show_state": true
                                                 },
                                                 {
                                                     "type": "grid",
@@ -139,7 +139,7 @@
                                                                         ],
                                                                         "card": {
                                                                             "type": "button",
-                                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\n",
+                                                                            "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 1px !important;\n}\nha-card.type-button span {\n  margin-top: -4px !important;\n}\n",
                                                                             "tap_action": {
                                                                                 "action": "call-service",
                                                                                 "service": "alarm_control_panel.alarm_arm_home",
@@ -165,7 +165,7 @@
                                                                         ],
                                                                         "card": {
                                                                             "type": "button",
-                                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\n",
+                                                                            "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
                                                                             "tap_action": {
                                                                                 "action": "call-service",
                                                                                 "service": "alarm_control_panel.alarm_arm_away",
@@ -191,7 +191,7 @@
                                                                         ],
                                                                         "card": {
                                                                             "type": "button",
-                                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\n",
+                                                                            "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
                                                                             "tap_action": {
                                                                                 "action": "call-service",
                                                                                 "service": "alarm_control_panel.alarm_arm_home",
@@ -217,7 +217,7 @@
                                                                         ],
                                                                         "card": {
                                                                             "type": "button",
-                                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\n",
+                                                                            "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
                                                                             "tap_action": {
                                                                                 "action": "call-service",
                                                                                 "service": "alarm_control_panel.alarm_arm_away",
@@ -246,7 +246,7 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 80px;\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -272,7 +272,7 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 80px;\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -298,7 +298,7 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 80px;\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -324,7 +324,7 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 80px;\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -350,7 +350,7 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 80px;\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -509,63 +509,6 @@
                                             "cards": [
                                                 {
                                                     "type": "button",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n",
-                                                    "tap_action": {
-                                                        "action": "call-service",
-                                                        "service": "script.scene_good_night"
-                                                    },
-                                                    "hold_action": {
-                                                        "action": "call-service",
-                                                        "service": "script.scene_night_night"
-                                                    },
-                                                    "entity": "script.scene_good_night",
-                                                    "show_icon": true,
-                                                    "show_name": true,
-                                                    "icon_height": "20px",
-                                                    "name": "Good Night"
-                                                },
-                                                {
-                                                    "type": "button",
-                                                    "entity": "sensor.software_update_available",
-                                                    "show_name": true,
-                                                    "show_icon": false,
-                                                    "show_state": true,
-                                                    "state_color": true,
-                                                    "name": "Software",
-                                                    "tap_action": {
-                                                        "action": "navigate",
-                                                        "navigation_path": "/control-panel/software"
-                                                    },
-                                                    "style": "ha-card.type-button {\n  {% if states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "entity": "sensor.plex_plex",
-                                                    "show_name": true,
-                                                    "show_icon": true,
-                                                    "state_color": true,
-                                                    "name": "Plex",
-                                                    "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-icon {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 20px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "entity": "binary_sensor.oven_is_on",
-                                                    "show_name": true,
-                                                    "show_icon": true,
-                                                    "state_color": true,
-                                                    "name": "Oven",
-                                                    "icon": "mdi:stove",
-                                                    "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-icon {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 32px !important;\n  text-align: center !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "type": "grid",
-                                            "columns": 4,
-                                            "square": false,
-                                            "cards": [
-                                                {
-                                                    "type": "button",
                                                     "entity": "sensor.upstairs_lights_on",
                                                     "show_name": true,
                                                     "show_icon": true,
@@ -653,6 +596,63 @@
                                                     "style": "ha-icon, ha-card.type-button {\n  {% if states('sensor.outside_plus_garage_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.outside_plus_garage_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 }
                                             ]
+                                        },
+                                        {
+                                            "type": "grid",
+                                            "columns": 4,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "button",
+                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.scene_good_night"
+                                                    },
+                                                    "hold_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.scene_night_night"
+                                                    },
+                                                    "entity": "script.scene_good_night",
+                                                    "show_icon": true,
+                                                    "show_name": true,
+                                                    "icon_height": "20px",
+                                                    "name": "Good Night"
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "sensor.plex_plex",
+                                                    "show_name": true,
+                                                    "show_icon": true,
+                                                    "state_color": true,
+                                                    "name": "Plex",
+                                                    "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-icon {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 20px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "binary_sensor.oven_is_on",
+                                                    "show_name": true,
+                                                    "show_icon": true,
+                                                    "state_color": true,
+                                                    "name": "Oven",
+                                                    "icon": "mdi:stove",
+                                                    "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-icon {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 32px !important;\n  text-align: center !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                },
+                                                {
+                                                    "type": "button",
+                                                    "entity": "sensor.software_update_available",
+                                                    "show_name": true,
+                                                    "show_icon": false,
+                                                    "show_state": true,
+                                                    "state_color": true,
+                                                    "name": "Software",
+                                                    "tap_action": {
+                                                        "action": "navigate",
+                                                        "navigation_path": "/control-panel/software"
+                                                    },
+                                                    "style": "ha-card.type-button {\n  {% if states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                }
+                                            ]
                                         }
                                     ]
                                 }
@@ -699,10 +699,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -885,10 +886,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -1407,10 +1409,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -1803,10 +1806,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -2280,10 +2284,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -2605,10 +2610,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -2727,10 +2733,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -2887,10 +2894,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -3070,10 +3078,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
@@ -3531,15 +3540,18 @@
                                                                         "entities": [
                                                                             {
                                                                                 "entity": "sensor.upstairs_lights_on",
-                                                                                "name": "Up"
+                                                                                "name": "Up",
+                                                                                "unit": false
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.middle_level_lights_on",
-                                                                                "name": "Middle"
+                                                                                "name": "Middle",
+                                                                                "unit": false
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.downstairs_lights_on",
                                                                                 "name": "Down",
+                                                                                "unit": false,
                                                                                 "styles": {
                                                                                     "padding-top": "5px",
                                                                                     "padding-bottom": "5px",
@@ -3549,11 +3561,13 @@
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.garage_lights_on",
-                                                                                "name": "Garage"
+                                                                                "name": "Garage",
+                                                                                "unit": false
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.outside_lights_on",
-                                                                                "name": "Out"
+                                                                                "name": "Out",
+                                                                                "unit": false
                                                                             }
                                                                         ]
                                                                     },
@@ -3715,10 +3729,11 @@
                                                     "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
                                                 },
                                                 {
-                                                    "type": "entity",
+                                                    "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Control Panel",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n.info, .header {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n}\n.value {\n padding-top: 0px !important;\n font-size: 40px !important\n}\n"
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
                                                 }
                                             ]
                                         },
