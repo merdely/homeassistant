@@ -19,6 +19,7 @@
       command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in start_camera'
       command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in stop_camera'
       command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+      value_template: '{{ value == "Camera is streaming" }}'
     mercury_screensaver:
       friendly_name: Mercury Screensaver
       #command_on: '/bin/true'
@@ -27,12 +28,14 @@
       command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_lock'
       command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_unlock'
       command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_status'
+      value_template: '{{ value == "Screensaver is running" }}'
       # command_off: '/bin/false'
     venus_screensaver:
       friendly_name: Venus Screensaver
       command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock'
       command_off: '/bin/false'
       command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_status'
+      value_template: '{{ value == "true" }}'
 
 - platform: template
   switches:
@@ -55,14 +58,14 @@
       friendly_name: "Bedroom TV"
       icon_template: mdi:television
       value_template: >-
-        {% if states('sensor.bedroom_tv_plug') | float < 5 %}
+        {% if states('sensor.bedroom_tv_plug') | float(default=0) < 5 %}
           off
         {% else %}
           on
         {% endif %}
       turn_on:
         - condition: template
-          value_template: '{{ states("sensor.bedroom_tv_plug") | float < 5 }}'
+          value_template: '{{ states("sensor.bedroom_tv_plug") | float(default=0) < 5 }}'
         - service: homeassistant.turn_on
           entity_id: switch.bedroom_tv_plug
         - delay: '1'
@@ -72,7 +75,7 @@
             payload: 'irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E040BF","DataLSB":"0x070702FD","Repeat":0}'
       turn_off:
         - condition: template
-          value_template: '{{ states("sensor.bedroom_tv_plug") | float >= 5 }}'
+          value_template: '{{ states("sensor.bedroom_tv_plug") | float(default=0) >= 5 }}'
         - service: media_player.select_source
           entity_id: media_player.bedroom_roku
           data:
@@ -86,7 +89,7 @@
       friendly_name: "God Damn TV"
       icon_template: mdi:television
       value_template: >-
-        {% if states('sensor.god_damn_tv_plug') | float < 17 %}
+        {% if states('sensor.god_damn_tv_plug') | float(default=0) < 17 %}
           off
         {% else %}
           on
@@ -95,7 +98,7 @@
         - choose:
           - conditions:
             - condition: template
-              value_template: '{{ states("sensor.god_damn_tv_plug") | float < 17 }}'
+              value_template: '{{ states("sensor.god_damn_tv_plug") | float(default=0) < 17 }}'
             sequence:
             - service: homeassistant.turn_on
               entity_id: switch.god_damn_tv_plug
@@ -108,7 +111,7 @@
           entity_id: switch.god_damn_soundbar
       turn_off:
         - condition: template
-          value_template: '{{ states("sensor.god_damn_tv_plug") | float >= 17 }}'
+          value_template: '{{ states("sensor.god_damn_tv_plug") | float(default=0) >= 17 }}'
         - service: media_player.select_source
           entity_id: media_player.god_damn_roku
           data:
@@ -121,14 +124,14 @@
     god_damn_soundbar:
       friendly_name: "God Damn Soundbar"
       value_template: >-
-        {% if states('sensor.god_damn_soundbar_plug') | float < 6 %}
+        {% if states('sensor.god_damn_soundbar_plug') | float(default=0) < 6 %}
           off
         {% else %}
           on
         {% endif %}
       turn_on:
         - condition: template
-          value_template: '{{ states("sensor.god_damn_soundbar_plug") | float < 2 }}'
+          value_template: '{{ states("sensor.god_damn_soundbar_plug") | float(default=0) < 2 }}'
         - service: homeassistant.turn_on
           entity_id: switch.god_damn_soundbar_plug
         - delay: '1'
@@ -138,7 +141,7 @@
             payload: 'irsend {"Protocol":"NEC","Bits":32,"Data":"0x212EFF00","DataLSB":"0x8474FF00","Repeat":0}'
       turn_off:
         - condition: template
-          value_template: '{{ states("sensor.god_damn_soundbar_plug") | float >= 2 }}'
+          value_template: '{{ states("sensor.god_damn_soundbar_plug") | float(default=0) >= 2 }}'
         - service: mqtt.publish
           data:
             topic: cmnd/god_damn_tv_remote/backlog
@@ -148,14 +151,14 @@
       friendly_name: "Living Room TV"
       icon_template: mdi:television
       value_template: >-
-        {% if states('sensor.living_room_tv_plug') | float < 17 %}
+        {% if states('sensor.living_room_tv_plug') | float(default=0) < 17 %}
           off
         {% else %}
           on
         {% endif %}
       turn_on:
         - condition: template
-          value_template: '{{ states("sensor.living_room_tv_plug") | float < 17 }}'
+          value_template: '{{ states("sensor.living_room_tv_plug") | float(default=0) < 17 }}'
         - service: homeassistant.turn_on
           entity_id: switch.living_room_tv_plug
         - delay: '2'
@@ -165,7 +168,7 @@
             payload: 'irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E06798","DataLSB":"0x0707E619","Repeat":0}'
       turn_off:
         - condition: template
-          value_template: '{{ states("sensor.living_room_tv_plug") | float >= 17 }}'
+          value_template: '{{ states("sensor.living_room_tv_plug") | float(default=0) >= 17 }}'
         - service: media_player.select_source
           entity_id: media_player.living_room_roku
           data:
@@ -180,14 +183,14 @@
       friendly_name: "Office TV"
       icon_template: mdi:television
       value_template: >-
-        {% if states('sensor.office_tv_plug') | float < 5 %}
+        {% if states('sensor.office_tv_plug') | float(default=0) < 5 %}
           off
         {% else %}
           on
         {% endif %}
       turn_on:
         - condition: template
-          value_template: '{{ states("sensor.office_tv_plug") | float < 5 }}'
+          value_template: '{{ states("sensor.office_tv_plug") | float(default=0) < 5 }}'
         - service: homeassistant.turn_on
           entity_id: switch.office_tv_plug
         - delay: '2'
@@ -197,7 +200,7 @@
             payload: 'irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33C13E","DataLSB":"0x33CC837C","Repeat":0}'
       turn_off:
         - condition: template
-          value_template: '{{ states("sensor.office_tv_plug") | float >= 5 }}'
+          value_template: '{{ states("sensor.office_tv_plug") | float(default=0) >= 5 }}'
         - service: media_player.select_source
           entity_id: media_player.office_roku
           data:
@@ -320,6 +323,7 @@
         {% if is_state('switch.office_tv', 'on') or
               is_state('light.office_fan_light', 'on') or
               is_state('fan.office_fan', 'on') or
+              is_state('light.mike_bench_lamp', 'on') or
               is_state('switch.mike_desk_lamp', 'on') %}
           on
         {% else %}
@@ -330,7 +334,7 @@
           entity_id: light.office_fan_light
       turn_off:
         - service: homeassistant.turn_off
-          entity_id: switch.office_tv, light.office_fan_light, switch.mike_desk_lamp, switch.mercury_screensaver, switch.venus_screensaver
+          entity_id: switch.office_tv, light.office_fan_light, light.mike_bench_lamp, switch.mike_desk_lamp, switch.mercury_screensaver, switch.venus_screensaver
         - service: homeassistant.turn_on
           entity_id: switch.mercury_screensaver, switch.venus_screensaver
 

@@ -471,3 +471,53 @@
       query: 'SELECT table_schema "database", Round(Sum(data_length + index_length) / 1024 / 1024, 1) "value" FROM information_schema.tables WHERE table_schema="homeassistant_recorder" GROUP BY table_schema;'
       column: "value"
       unit_of_measurement: MB
+
+- platform: template
+  sensors:
+    attic_temperature_pretty:
+      unique_id: attic_temperature_pretty
+      friendly_name: Attic
+      unit_of_measurement: "°F"
+      value_template: '{{ states("sensor.attic_temperature") | round(1) }}'
+    family_room_temperature_pretty:
+      unique_id: family_room_temperature_pretty
+      friendly_name: Family Rm
+      unit_of_measurement: "°F"
+      value_template: '{{ states("sensor.family_room_temperature") | round(1) }}'
+    garage_temperature_pretty:
+      unique_id: garage_temperature_pretty
+      friendly_name: Garage
+      unit_of_measurement: "°F"
+      value_template: '{{ states("sensor.garage_temperature") | round(1) }}'
+    living_room_temperature_pretty:
+      unique_id: living_room_temperature_pretty
+      friendly_name: Living Rm
+      unit_of_measurement: "°F"
+      value_template: '{{ states("sensor.living_room_temperature") | round(1) }}'
+    master_bath_humidity_pretty:
+      unique_id: master_bath_humidity_pretty
+      friendly_name: Mastr Bath
+      value_template: '{{ states("sensor.master_bath_humidity") | round(1) }}'
+      unit_of_measurement: "%"
+      device_class: 'humidity'
+    mbr_temperature_pretty:
+      unique_id: mbr_temperature_pretty
+      friendly_name: Mastr BR
+      unit_of_measurement: "°F"
+      value_template: '{{ states("sensor.bedroom_temperature") | round(1) }}'
+    office_temperature_pretty:
+      unique_id: office_temperature_pretty
+      friendly_name: Office
+      unit_of_measurement: "°F"
+      value_template: '{{ states("sensor.office_temperature") | round(1) }}'
+    outside_temperature_pretty:
+      unique_id: outside_temperature_pretty
+      friendly_name: Outside
+      unit_of_measurement: "°F"
+      value_template: '{{ states("sensor.outside_temperature") | round(1) }}'
+    tstat_temperature_pretty:
+      unique_id: tstat_temperature_pretty
+      friendly_name: Thermstat
+      unit_of_measurement: "°F"
+      value_template: '{{ state_attr("climate.thermostat", "current_temperature") }}'
+

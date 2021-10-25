@@ -27,7 +27,7 @@
                                 },
                                 {
                                     "type": "custom:mod-card",
-                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int <= 20 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int <= 20 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int <= 20 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int <= 20 %}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'black') | int <= 20 %}yellow{% endif %};\n}\n",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int <= 20 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int <= 20 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int <= 20 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int <= 20 %}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'black') | int <= 20 %}yellow{% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}white{% endif %};\n\n}\n",
                                     "card": {
                                         "type": "grid",
                                         "columns": 1,
@@ -141,6 +141,9 @@
                                                             {
                                                                 "entity": "climate.thermostat",
                                                                 "name": "Tstat",
+                                                                "styles": {
+                                                                    "color": "var(--thermostat-color)"
+                                                                },
                                                                 "attribute": "current_temperature",
                                                                 "unit": []
                                                             },

@@ -1,0 +1,681 @@
+{
+    "version": 1,
+    "key": "lovelace.lovelace_lighting",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": "Home",
+                    "path": "home",
+                    "icon": "mdi:home",
+                    "type": "panel",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 4,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "button",
+                                                    "entity": "sensor.time_formatted",
+                                                    "show_state": true,
+                                                    "show_name": false,
+                                                    "show_icon": false,
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "browser_mod.window_reload",
+                                                        "service_data": {
+                                                            "deviceID": "control-panel"
+                                                        },
+                                                        "target": {}
+                                                    },
+                                                    "style": ".state {\n  font-size: 30px !important\n}"
+                                                },
+                                                {
+                                                    "type": "sensor",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Batt",
+                                                    "detail": 1
+                                                },
+                                                {
+                                                    "type": "button",
+                                                    "style": ".state {\n  font-size: 24px !important;\n  color: var(--primary-text-color) !important;\n}\n",
+                                                    "entity": "sensor.washer_and_dryer_state_pretty",
+                                                    "show_icon": false,
+                                                    "show_name": false,
+                                                    "show_state": true
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "climate.thermostat",
+                                                    "attribute": "current_temperature",
+                                                    "name": "Tstat"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:auto-entities",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 4,
+                                                "square": false
+                                            },
+                                            "card_param": "cards",
+                                            "filter": {
+                                                "include": [
+                                                    {
+                                                        "entity_id": "/^sensor\\..*_(humidity|temperature)_pretty$/",
+                                                        "options": {
+                                                            "type": "entity",
+                                                            "style": ".header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 19px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                                                        }
+                                                    }
+                                                ],
+                                                "exclude": []
+                                            },
+                                            "sort": {
+                                                "method": "friendly_name",
+                                                "numeric": false
+                                            }
+                                        },
+                                        {
+                                            "type": "weather-forecast",
+                                            "entity": "weather.home"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 2,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "entities",
+                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
+                                                    "entities": [
+                                                        {
+                                                            "entity": "person.holly_erdely",
+                                                            "name": "Holly"
+                                                        },
+                                                        {
+                                                            "entity": "person.michael_erdely",
+                                                            "name": "Mike"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "grid",
+                                                    "columns": 2,
+                                                    "square": false,
+                                                    "cards": [
+                                                        {
+                                                            "type": "button",
+                                                            "style": "ha-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 15px;\n  padding-bottom: 15px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "input_boolean.toggle",
+                                                                "service_data": {
+                                                                    "entity_id": "input_boolean.recycle_is_out"
+                                                                }
+                                                            },
+                                                            "entity": "sensor.recycle",
+                                                            "show_state": true,
+                                                            "show_icon": true,
+                                                            "icon_height": "30px",
+                                                            "show_name": false
+                                                        },
+                                                        {
+                                                            "type": "button",
+                                                            "style": "ha-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 15px;\n  padding-bottom: 15px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "input_boolean.toggle",
+                                                                "service_data": {
+                                                                    "entity_id": "input_boolean.trash_is_out"
+                                                                }
+                                                            },
+                                                            "entity": "sensor.trash",
+                                                            "show_state": true,
+                                                            "show_icon": true,
+                                                            "icon_height": "30px",
+                                                            "show_name": false
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "grid",
+                                            "columns": 1,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "alarm_control_panel.home_alarm",
+                                                            "state": "disarmed"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 2,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "conditional",
+                                                                "conditions": [
+                                                                    {
+                                                                        "entity": "sensor.alarm_state",
+                                                                        "state": "disarmed_secure"
+                                                                    }
+                                                                ],
+                                                                "card": {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "alarm_control_panel.alarm_arm_home",
+                                                                        "service_data": {
+                                                                            "entity_id": "alarm_control_panel.home_alarm"
+                                                                        }
+                                                                    },
+                                                                    "entity": "alarm_control_panel.home_alarm",
+                                                                    "name": "Arm Home",
+                                                                    "show_icon": true,
+                                                                    "icon": "mdi:home-lock",
+                                                                    "icon_height": "40px",
+                                                                    "theme": "green-button"
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "conditional",
+                                                                "conditions": [
+                                                                    {
+                                                                        "entity": "sensor.alarm_state",
+                                                                        "state": "disarmed_secure"
+                                                                    }
+                                                                ],
+                                                                "card": {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "alarm_control_panel.alarm_arm_away",
+                                                                        "service_data": {
+                                                                            "entity_id": "alarm_control_panel.home_alarm"
+                                                                        }
+                                                                    },
+                                                                    "entity": "alarm_control_panel.home_alarm",
+                                                                    "name": "Arm Away",
+                                                                    "show_icon": true,
+                                                                    "icon": "mdi:shield-lock",
+                                                                    "icon_height": "35px",
+                                                                    "theme": "green-button"
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "conditional",
+                                                                "conditions": [
+                                                                    {
+                                                                        "entity": "sensor.alarm_state",
+                                                                        "state": "disarmed_insecure"
+                                                                    }
+                                                                ],
+                                                                "card": {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "alarm_control_panel.alarm_arm_home",
+                                                                        "service_data": {
+                                                                            "entity_id": "alarm_control_panel.home_alarm"
+                                                                        }
+                                                                    },
+                                                                    "entity": "sun.sun",
+                                                                    "name": "Arm Home",
+                                                                    "show_icon": true,
+                                                                    "icon": "mdi:home-lock",
+                                                                    "icon_height": "40px",
+                                                                    "theme": "yellow-button"
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "conditional",
+                                                                "conditions": [
+                                                                    {
+                                                                        "entity": "sensor.alarm_state",
+                                                                        "state": "disarmed_insecure"
+                                                                    }
+                                                                ],
+                                                                "card": {
+                                                                    "type": "button",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "alarm_control_panel.alarm_arm_away",
+                                                                        "service_data": {
+                                                                            "entity_id": "alarm_control_panel.home_alarm"
+                                                                        }
+                                                                    },
+                                                                    "entity": "sun.sun",
+                                                                    "name": "Arm Away",
+                                                                    "show_icon": true,
+                                                                    "icon": "mdi:shield-lock",
+                                                                    "icon_height": "35px",
+                                                                    "theme": "yellow-button"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "alarm_control_panel.home_alarm",
+                                                            "state": "armed_home"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "button",
+                                                        "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                        "entity": "alarm_control_panel.home_alarm",
+                                                        "tap_action": {
+                                                            "action": "navigate",
+                                                            "navigation_path": "/alarm-panel/home"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": true,
+                                                        "show_name": true,
+                                                        "name": "Armed Home",
+                                                        "icon": "mdi:shield-lock",
+                                                        "icon_height": "35px"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "alarm_control_panel.home_alarm",
+                                                            "state": "armed_away"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "button",
+                                                        "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                        "entity": "alarm_control_panel.home_alarm",
+                                                        "tap_action": {
+                                                            "action": "navigate",
+                                                            "navigation_path": "/alarm-panel/home"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": true,
+                                                        "show_name": true,
+                                                        "name": "Armed Away",
+                                                        "icon": "mdi:shield-lock",
+                                                        "icon_height": "35px"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "alarm_control_panel.home_alarm",
+                                                            "state": "arming"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "button",
+                                                        "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                        "entity": "alarm_control_panel.home_alarm",
+                                                        "tap_action": {
+                                                            "action": "navigate",
+                                                            "navigation_path": "/alarm-panel/home"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": true,
+                                                        "show_name": true,
+                                                        "name": "Arming",
+                                                        "icon": "mdi:shield-lock-outline",
+                                                        "icon_height": "35px"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "alarm_control_panel.home_alarm",
+                                                            "state": "pending"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "button",
+                                                        "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                        "entity": "alarm_control_panel.home_alarm",
+                                                        "tap_action": {
+                                                            "action": "navigate",
+                                                            "navigation_path": "/alarm-panel/home"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": true,
+                                                        "show_name": true,
+                                                        "name": "Pending",
+                                                        "icon": "mdi:shield-sync",
+                                                        "icon_height": "35px"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "alarm_control_panel.home_alarm",
+                                                            "state": "triggered"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "button",
+                                                        "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                        "entity": "alarm_control_panel.home_alarm",
+                                                        "tap_action": {
+                                                            "action": "navigate",
+                                                            "navigation_path": "/alarm-panel/home"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": true,
+                                                        "show_name": true,
+                                                        "name": "Triggered",
+                                                        "icon": "mdi:shield-alert",
+                                                        "icon_height": "35px"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Upstairs",
+                    "icon": "mdi:stairs-up",
+                    "type": "panel",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "cards": [
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "type": "section",
+                                            "label": "Bedroom"
+                                        },
+                                        {
+                                            "entity": "light.bedroom_fan_light"
+                                        },
+                                        {
+                                            "entity": "fan.bedroom_fan"
+                                        },
+                                        {
+                                            "entity": "light.dresser_lamp"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Master Bath"
+                                        },
+                                        {
+                                            "entity": "light.master_bath_light"
+                                        },
+                                        {
+                                            "entity": "switch.master_bath_fan"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Hallway"
+                                        },
+                                        {
+                                            "entity": "light.hallway_light"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "type": "section",
+                                            "label": "Office"
+                                        },
+                                        {
+                                            "entity": "light.office_fan_light"
+                                        },
+                                        {
+                                            "entity": "fan.office_fan"
+                                        },
+                                        {
+                                            "entity": "switch.mike_desk_lamp"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Guest Room"
+                                        },
+                                        {
+                                            "entity": "light.guest_room_light"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Hall Bath"
+                                        },
+                                        {
+                                            "entity": "light.hall_bath_light"
+                                        },
+                                        {
+                                            "entity": "switch.hall_bath_fan"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "columns": 2,
+                            "square": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Middle Level",
+                    "path": "middle-level",
+                    "icon": "mdi:format-align-middle",
+                    "type": "panel",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "cards": [
+                                {
+                                    "type": "entities",
+                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -5px 0px;\n}\n",
+                                    "entities": [
+                                        {
+                                            "type": "section",
+                                            "label": "Kitchen"
+                                        },
+                                        {
+                                            "entity": "light.kitchen_overhead_light"
+                                        },
+                                        {
+                                            "entity": "light.kitchen_table_light"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Dining Room"
+                                        },
+                                        {
+                                            "entity": "light.dining_room_overhead_light"
+                                        },
+                                        {
+                                            "entity": "switch.dining_room_christmas_lights"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Backyard"
+                                        },
+                                        {
+                                            "entity": "light.back_porch_light"
+                                        },
+                                        {
+                                            "entity": "light.deck_lights"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Shed"
+                                        },
+                                        {
+                                            "entity": "switch.shed_lamp"
+                                        },
+                                        {
+                                            "entity": "switch.flood_light"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "entities",
+                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -5px 0px;\n}\n",
+                                    "entities": [
+                                        {
+                                            "type": "section",
+                                            "label": "Living Room"
+                                        },
+                                        {
+                                            "entity": "light.near_black_lamp"
+                                        },
+                                        {
+                                            "entity": "switch.far_black_lamp"
+                                        },
+                                        {
+                                            "entity": "switch.white_lamp"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Foyer"
+                                        },
+                                        {
+                                            "entity": "light.foyer_light"
+                                        },
+                                        {
+                                            "entity": "light.front_porch_light"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Garage"
+                                        },
+                                        {
+                                            "entity": "light.outside_garage_lights"
+                                        },
+                                        {
+                                            "entity": "light.bench_light"
+                                        },
+                                        {
+                                            "entity": "light.middle_garage_light"
+                                        },
+                                        {
+                                            "entity": "light.far_garage_light"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "columns": 2,
+                            "square": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Downstairs",
+                    "path": "downstairs",
+                    "icon": "mdi:stairs-down",
+                    "type": "panel",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "cards": [
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "type": "section",
+                                            "label": "Family Room"
+                                        },
+                                        {
+                                            "entity": "light.god_damn_light"
+                                        },
+                                        {
+                                            "entity": "switch.fireplace_light"
+                                        },
+                                        {
+                                            "entity": "switch.three_headed_lamp"
+                                        },
+                                        {
+                                            "entity": "switch.mantle_lights"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "type": "section",
+                                            "label": "Den"
+                                        },
+                                        {
+                                            "entity": "light.den_overhead_light"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Laundry Room"
+                                        },
+                                        {
+                                            "entity": "light.laundry_room_light"
+                                        },
+                                        {
+                                            "type": "section",
+                                            "label": "Powder Room"
+                                        },
+                                        {
+                                            "entity": "light.powder_room_light"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "columns": 2,
+                            "square": false
+                        }
+                    ]
+                }
+            ],
+            "title": ""
+        }
+    }
+}

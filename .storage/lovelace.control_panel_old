@@ -1,0 +1,884 @@
+{
+    "version": 1,
+    "key": "lovelace.control_panel_old",
+    "data": {
+        "config": {
+            "title": "",
+            "views": [
+                {
+                    "title": " ",
+                    "path": "home",
+                    "panel": true,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 4,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "button",
+                                                    "entity": "sensor.time_formatted",
+                                                    "show_state": true,
+                                                    "show_name": false,
+                                                    "show_icon": false,
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "browser_mod.window_reload",
+                                                        "service_data": {
+                                                            "deviceID": "control-panel"
+                                                        },
+                                                        "target": {}
+                                                    },
+                                                    "style": ".state {\n  font-size: 30px !important\n}"
+                                                },
+                                                {
+                                                    "type": "sensor",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Batt",
+                                                    "detail": 1
+                                                },
+                                                {
+                                                    "type": "button",
+                                                    "style": ".state {\n  font-size: 24px !important;\n  color: var(--primary-text-color) !important;\n}\n",
+                                                    "entity": "sensor.washer_and_dryer_state_pretty",
+                                                    "show_icon": false,
+                                                    "show_name": false,
+                                                    "show_state": true
+                                                },
+                                                {
+                                                    "type": "entity",
+                                                    "entity": "climate.thermostat",
+                                                    "attribute": "current_temperature",
+                                                    "name": "Tstat"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:auto-entities",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 4,
+                                                "square": false
+                                            },
+                                            "card_param": "cards",
+                                            "filter": {
+                                                "include": [
+                                                    {
+                                                        "entity_id": "/^sensor\\..*_(humidity|temperature)_pretty$/",
+                                                        "options": {
+                                                            "type": "entity",
+                                                            "style": ".header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 19px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                                                        }
+                                                    }
+                                                ],
+                                                "exclude": []
+                                            },
+                                            "sort": {
+                                                "method": "friendly_name",
+                                                "numeric": false
+                                            }
+                                        },
+                                        {
+                                            "type": "weather-forecast",
+                                            "entity": "weather.home",
+                                            "show_forecast": true,
+                                            "secondary_info_attribute": "wind_speed"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 1,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "media_player.spotify_merdely",
+                                                            "state_not": "playing"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 2,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "entities",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "person.holly_erdely",
+                                                                        "name": "Holly"
+                                                                    },
+                                                                    {
+                                                                        "entity": "person.michael_erdely",
+                                                                        "name": "Mike"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "type": "grid",
+                                                                "columns": 2,
+                                                                "square": false,
+                                                                "cards": [
+                                                                    {
+                                                                        "type": "button",
+                                                                        "style": "ha-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 15px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
+                                                                        "tap_action": {
+                                                                            "action": "call-service",
+                                                                            "service": "input_boolean.toggle",
+                                                                            "service_data": {
+                                                                                "entity_id": "input_boolean.recycle_is_out"
+                                                                            }
+                                                                        },
+                                                                        "entity": "sensor.recycle",
+                                                                        "show_state": true,
+                                                                        "show_icon": true,
+                                                                        "icon_height": "30px",
+                                                                        "show_name": false
+                                                                    },
+                                                                    {
+                                                                        "type": "button",
+                                                                        "style": "ha-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 15px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
+                                                                        "tap_action": {
+                                                                            "action": "call-service",
+                                                                            "service": "input_boolean.toggle",
+                                                                            "service_data": {
+                                                                                "entity_id": "input_boolean.trash_is_out"
+                                                                            }
+                                                                        },
+                                                                        "entity": "sensor.trash",
+                                                                        "show_state": true,
+                                                                        "show_icon": true,
+                                                                        "icon_height": "30px",
+                                                                        "show_name": false
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "media_player.spotify_merdely",
+                                                            "state": "playing"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "entity",
+                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "entity": "sensor.spotify_artist_title",
+                                                        "name": "Spotify Music Player",
+                                                        "icon": "mdi:music"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "grid",
+                                                    "columns": 1,
+                                                    "square": false,
+                                                    "cards": [
+                                                        {
+                                                            "type": "conditional",
+                                                            "conditions": [
+                                                                {
+                                                                    "entity": "alarm_control_panel.home_alarm",
+                                                                    "state": "disarmed"
+                                                                }
+                                                            ],
+                                                            "card": {
+                                                                "type": "grid",
+                                                                "columns": 2,
+                                                                "square": false,
+                                                                "cards": [
+                                                                    {
+                                                                        "type": "conditional",
+                                                                        "conditions": [
+                                                                            {
+                                                                                "entity": "sensor.alarm_state",
+                                                                                "state": "disarmed_secure"
+                                                                            }
+                                                                        ],
+                                                                        "card": {
+                                                                            "type": "button",
+                                                                            "tap_action": {
+                                                                                "action": "call-service",
+                                                                                "service": "alarm_control_panel.alarm_arm_home",
+                                                                                "service_data": {
+                                                                                    "entity_id": "alarm_control_panel.home_alarm"
+                                                                                }
+                                                                            },
+                                                                            "entity": "alarm_control_panel.home_alarm",
+                                                                            "name": "Arm Home",
+                                                                            "show_icon": true,
+                                                                            "icon": "mdi:home-lock",
+                                                                            "icon_height": "40px",
+                                                                            "theme": "green-button"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "type": "conditional",
+                                                                        "conditions": [
+                                                                            {
+                                                                                "entity": "sensor.alarm_state",
+                                                                                "state": "disarmed_secure"
+                                                                            }
+                                                                        ],
+                                                                        "card": {
+                                                                            "type": "button",
+                                                                            "tap_action": {
+                                                                                "action": "call-service",
+                                                                                "service": "alarm_control_panel.alarm_arm_away",
+                                                                                "service_data": {
+                                                                                    "entity_id": "alarm_control_panel.home_alarm"
+                                                                                }
+                                                                            },
+                                                                            "entity": "alarm_control_panel.home_alarm",
+                                                                            "name": "Arm Away",
+                                                                            "show_icon": true,
+                                                                            "icon": "mdi:shield-lock",
+                                                                            "icon_height": "35px",
+                                                                            "theme": "green-button"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "type": "conditional",
+                                                                        "conditions": [
+                                                                            {
+                                                                                "entity": "sensor.alarm_state",
+                                                                                "state": "disarmed_insecure"
+                                                                            }
+                                                                        ],
+                                                                        "card": {
+                                                                            "type": "button",
+                                                                            "tap_action": {
+                                                                                "action": "call-service",
+                                                                                "service": "alarm_control_panel.alarm_arm_home",
+                                                                                "service_data": {
+                                                                                    "entity_id": "alarm_control_panel.home_alarm"
+                                                                                }
+                                                                            },
+                                                                            "entity": "sun.sun",
+                                                                            "name": "Arm Home",
+                                                                            "show_icon": true,
+                                                                            "icon": "mdi:home-lock",
+                                                                            "icon_height": "40px",
+                                                                            "theme": "yellow-button"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "type": "conditional",
+                                                                        "conditions": [
+                                                                            {
+                                                                                "entity": "sensor.alarm_state",
+                                                                                "state": "disarmed_insecure"
+                                                                            }
+                                                                        ],
+                                                                        "card": {
+                                                                            "type": "button",
+                                                                            "tap_action": {
+                                                                                "action": "call-service",
+                                                                                "service": "alarm_control_panel.alarm_arm_away",
+                                                                                "service_data": {
+                                                                                    "entity_id": "alarm_control_panel.home_alarm"
+                                                                                }
+                                                                            },
+                                                                            "entity": "sun.sun",
+                                                                            "name": "Arm Away",
+                                                                            "show_icon": true,
+                                                                            "icon": "mdi:shield-lock",
+                                                                            "icon_height": "35px",
+                                                                            "theme": "yellow-button"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        {
+                                                            "type": "conditional",
+                                                            "conditions": [
+                                                                {
+                                                                    "entity": "alarm_control_panel.home_alarm",
+                                                                    "state": "armed_home"
+                                                                }
+                                                            ],
+                                                            "card": {
+                                                                "type": "button",
+                                                                "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "entity": "alarm_control_panel.home_alarm",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/alarm-panel/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": true,
+                                                                "name": "Armed Home",
+                                                                "icon": "mdi:shield-lock",
+                                                                "icon_height": "35px"
+                                                            }
+                                                        },
+                                                        {
+                                                            "type": "conditional",
+                                                            "conditions": [
+                                                                {
+                                                                    "entity": "alarm_control_panel.home_alarm",
+                                                                    "state": "armed_away"
+                                                                }
+                                                            ],
+                                                            "card": {
+                                                                "type": "button",
+                                                                "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "entity": "alarm_control_panel.home_alarm",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/alarm-panel/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": true,
+                                                                "name": "Armed Away",
+                                                                "icon": "mdi:shield-lock",
+                                                                "icon_height": "35px"
+                                                            }
+                                                        },
+                                                        {
+                                                            "type": "conditional",
+                                                            "conditions": [
+                                                                {
+                                                                    "entity": "alarm_control_panel.home_alarm",
+                                                                    "state": "arming"
+                                                                }
+                                                            ],
+                                                            "card": {
+                                                                "type": "button",
+                                                                "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "entity": "alarm_control_panel.home_alarm",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/alarm-panel/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": true,
+                                                                "name": "Arming",
+                                                                "icon": "mdi:shield-lock-outline",
+                                                                "icon_height": "35px"
+                                                            }
+                                                        },
+                                                        {
+                                                            "type": "conditional",
+                                                            "conditions": [
+                                                                {
+                                                                    "entity": "alarm_control_panel.home_alarm",
+                                                                    "state": "pending"
+                                                                }
+                                                            ],
+                                                            "card": {
+                                                                "type": "button",
+                                                                "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "entity": "alarm_control_panel.home_alarm",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/alarm-panel/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": true,
+                                                                "name": "Pending",
+                                                                "icon": "mdi:shield-sync",
+                                                                "icon_height": "35px"
+                                                            }
+                                                        },
+                                                        {
+                                                            "type": "conditional",
+                                                            "conditions": [
+                                                                {
+                                                                    "entity": "alarm_control_panel.home_alarm",
+                                                                    "state": "triggered"
+                                                                }
+                                                            ],
+                                                            "card": {
+                                                                "type": "button",
+                                                                "style": "ha-card {\n  padding-top: 2.4% !important;\n  padding-bottom: 2.4% !important;\n}\n",
+                                                                "entity": "alarm_control_panel.home_alarm",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/alarm-panel/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": true,
+                                                                "name": "Triggered",
+                                                                "icon": "mdi:shield-alert",
+                                                                "icon_height": "35px"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "grid",
+                                            "columns": 4,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-upstairs/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.upstairs",
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:stairs-up",
+                                                                "name": "Upstairs"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-security-status/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:security",
+                                                                "name": "Security Status"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-front-door-camera-2/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:home",
+                                                                "name": "Front Door Cam 2",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-front-door-camera/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:home",
+                                                                "name": "Front Door Cam",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\nha-icon {\n  {% if is_state('binary_sensor.oven_is_on', 'on') %}\n  color: red !important;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-middle-level/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.middle_level",
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:format-align-middle",
+                                                                "name": "Middle Level"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-utilities/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:tools",
+                                                                "name": "Utilities",
+                                                                "entity": "binary_sensor.software_update_available",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-garage-door-camera/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:garage",
+                                                                "name": "Garage Door Cam",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-garage-camera/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:garage-open-variant",
+                                                                "name": "Garage Cam",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-downstairs/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.downstairs",
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:stairs-down",
+                                                                "name": "Downstairs"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\nha-icon {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-speaker-volume/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:volume-high",
+                                                                "name": "Speaker Volume"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-spotify-player/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:music",
+                                                                "name": "Music"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-chimney-camera/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:fireplace",
+                                                                "name": "Chimney Cam",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-outside/home"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.outside",
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:image",
+                                                                "name": "Outside"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "script.scene_good_night"
+                                                                },
+                                                                "hold_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "script.scene_night_night"
+                                                                },
+                                                                "entity": "script.scene_good_night",
+                                                                "show_icon": true,
+                                                                "show_name": false
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-backyard-camera/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:tree",
+                                                                "name": "Backyard Cam",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:mod-card",
+                                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "style": "ha-card.type-button {\n  height: 60px;\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "navigate",
+                                                                    "navigation_path": "/control-panel-shed-camera/home"
+                                                                },
+                                                                "show_icon": true,
+                                                                "show_name": false,
+                                                                "icon": "mdi:gate",
+                                                                "name": "Shed Cam",
+                                                                "hold_action": {
+                                                                    "action": "none"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

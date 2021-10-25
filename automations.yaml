@@ -103,6 +103,14 @@
     entity_id: light.laundry_room_light
     state: 'off'
     for: 00:01:00
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_holly_e
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_michael_e
+      state: 'off'
   action:
   - service: homeassistant.turn_on
     target:
@@ -163,12 +171,11 @@
   alias: Lighting - Shed - Flood Light Toggle
   description: ''
   trigger:
-  - platform: device
-    domain: mqtt
-    device_id: 8b32a51920b7a78f8166618d7a13e87d
-    type: action
-    subtype: double
-    discovery_id: 0x00158d000283c5c8 action_double
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_ieee: 00:15:8d:00:02:83:c5:c8
+      command: double
   condition: []
   action:
   - service: homeassistant.toggle
@@ -179,12 +186,11 @@
   alias: Lighting - Shed - Shed/Flood Light Toggle
   description: ''
   trigger:
-  - platform: device
-    domain: mqtt
-    device_id: 8b32a51920b7a78f8166618d7a13e87d
-    type: action
-    subtype: hold
-    discovery_id: 0x00158d000283c5c8 action_hold
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_ieee: 00:15:8d:00:02:83:c5:c8
+      command: hold
   condition: []
   action:
   - service: switch.toggle
@@ -241,9 +247,14 @@
     entity_id: light.office_fan_light
     state: 'off'
     for: 00:01:00
-  - condition: time
-    after: 06:00:00
-    before: 01:00:00
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_holly_e
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_michael_e
+      state: 'off'
   action:
   - service: homeassistant.turn_on
     target:
@@ -454,11 +465,11 @@
         - condition: state
           entity_id: sensor.fully_kiosk_browser
           attribute: currentPageUrl
-          state: https://ha.erdely.in:38123/control-panel-security-status/home
+          state: https://ha.erdely.in:38123/control-panel/security
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
     default: []
   - service: script.function_speakers_prep
     data:
@@ -496,7 +507,7 @@
       title: Security System
       message: The Security System has been Triggered!
       data:
-        clickAction: /control-panel-security-status/home
+        clickAction: /control-panel/security
   mode: single
 - id: '1604856519122'
   alias: Notifications - Laundry Room Dryer Started
@@ -595,7 +606,7 @@
       command_string: cmd=setAudioVolume&level=100
   - service: rest_command.control_panel_command
     data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
   - service: rest_command.control_panel_command
     data:
       command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/cannot_arm.mp3
@@ -618,7 +629,7 @@
       command_string: cmd=setAudioVolume&level=100
   - service: rest_command.control_panel_command
     data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
   - delay: '5'
   - service: rest_command.control_panel_command
     entity_id: media_player.all_speakers
@@ -669,7 +680,7 @@
   action:
   - service: rest_command.control_panel_command
     data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
   mode: single
 - id: '1606776305027'
   alias: Security - 60 Tripped - Trigger Alarm Away
@@ -738,7 +749,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -754,7 +765,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-security-status/home
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -770,7 +781,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/wall-panel/tvs
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/downstairs
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -789,7 +800,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-front-door-camera/home
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -808,7 +819,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-garage-camera/home
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -827,7 +838,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-chimney-camera/home
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -846,7 +857,7 @@
       sequence:
       - service: rest_command.control_panel_command
         data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel-shed-camera/home
+          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
       - service: rest_command.control_panel_command
         data:
           command_string: cmd=stopScreensaver
@@ -884,14 +895,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: switch.mike_bench_lamp
+    entity_id: light.mike_bench_lamp
     to: 'off'
     for: 00:00:05
   condition: []
   action:
   - service: homeassistant.turn_on
     target:
-      entity_id: switch.mike_bench_lamp
+      entity_id: light.mike_bench_lamp
   mode: single
 - id: '1607035454754'
   alias: Lighting - Office - Mike Desk Lamp Toggle
@@ -923,7 +934,7 @@
   action:
   - service: homeassistant.turn_off
     target:
-      entity_id: switch.mike_bench_lamp
+      entity_id: light.mike_bench_lamp
   mode: single
 - id: '1607035951583'
   alias: Lighting - Living Room Lights Off
@@ -2591,8 +2602,8 @@
   trigger:
   - platform: template
     value_template: '{{ (state_attr(''climate.thermostat'', ''current_temperature'')
-      | float) >= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
-      + ''_cool_'' + states.group.holly_mike.state) | float) }}'
+      | float(default=0)) >= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+      + ''_cool_'' + states.group.holly_mike.state) | float(default=0)) }}'
   condition:
   - condition: not
     conditions:
@@ -2624,8 +2635,8 @@
   trigger:
   - platform: template
     value_template: '{{ (state_attr(''climate.thermostat'', ''current_temperature'')
-      | float) <= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
-      + ''_heat_'' + states.group.holly_mike.state) | float) }}'
+      | float(default=0)) <= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+      + ''_heat_'' + states.group.holly_mike.state) | float(default=0)) }}'
   condition:
   - condition: not
     conditions:
@@ -2673,6 +2684,14 @@
     entity_id: light.den_overhead_light
     state: 'off'
     for: 00:01:00
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_holly_e
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_michael_e
+      state: 'off'
   action:
   - service: homeassistant.turn_on
     target:
@@ -3021,17 +3040,17 @@
     state: 'off'
     for: 00:01:00
   - condition: state
-    entity_id: alarm_control_panel.home_alarm
-    state: disarmed
-  - condition: state
     entity_id: switch.bedroom_tv
     state: 'off'
-  - condition: time
-    before: '23:00:00'
-    after: '11:00:00'
   - condition: numeric_state
     entity_id: sensor.bedroom_motion_sensor_illuminance
     below: '16'
+  - condition: state
+    entity_id: binary_sensor.withings_in_bed_holly_e
+    state: 'off'
+  - condition: state
+    entity_id: binary_sensor.withings_in_bed_michael_e
+    state: 'off'
   action:
   - service: homeassistant.turn_on
     target:
@@ -3053,6 +3072,12 @@
       minutes: 0
       seconds: 0
       milliseconds: 0
+  - condition: state
+    entity_id: binary_sensor.withings_in_bed_holly_e
+    state: 'off'
+  - condition: state
+    entity_id: binary_sensor.withings_in_bed_michael_e
+    state: 'off'
   action:
   - service: homeassistant.turn_on
     target:
@@ -3091,6 +3116,14 @@
   - condition: numeric_state
     entity_id: sensor.powder_room_motion_sensor_illuminance_lux
     below: '65'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_holly_e
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_michael_e
+      state: 'off'
   action:
   - service: homeassistant.turn_on
     target:
@@ -3140,4 +3173,21 @@
   - service: homeassistant.turn_off
     target:
       entity_id: switch.octoprint_light_plug
+  mode: single
+- id: '1634856825935'
+  alias: Lighting - Office - Mike Bench Lamp Toggle
+  description: ''
+  trigger:
+  - platform: device
+    domain: tasmota
+    device_id: 5e4b4538179e98100fb71b5c84da9ec2
+    type: button_long_press
+    subtype: switch_1
+    discovery_id: 483FDA596B28_switch_1_HOLD
+  condition: []
+  action:
+  - service: homeassistant.toggle
+    data: {}
+    target:
+      entity_id: light.mike_bench_lamp
   mode: single

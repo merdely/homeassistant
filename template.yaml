@@ -10,6 +10,41 @@
       {% endif %}
 
 - binary_sensor:
+    unique_id: holly_in_bed
+    name: Holly In Bed
+    device_class: occupancy
+    icon: mdi:bed
+    state: >-
+      {% if states('binary_sensor.withings_in_bed_holly_e') == "on" %}
+        On
+      {% else %}
+        Off
+      {% endif %}
+
+- binary_sensor:
+    unique_id: mike_in_bed
+    name: Mike In Bed
+    device_class: occupancy
+    icon: mdi:bed
+    state: >-
+      {% if states('binary_sensor.withings_in_bed_michael_e') == "on" %}
+        On
+      {% else %}
+        Off
+      {% endif %}
+
+- binary_sensor:
+    unique_id: spotify_broadcasting
+    name: Spotify Broadcasting
+    icon: mdi:spotify
+    state: >-
+      {% if ("speaker" in (state_attr('media_player.spotify_merdely', 'source') | lower)) == True %}
+        On
+      {% else %}
+        Off
+      {% endif %}
+
+- binary_sensor:
     unique_id: security_devices
     name: Security Devices
     device_class: opening
@@ -103,9 +138,9 @@
     unique_id: unavailable_entities
     name: Unavailable Entities
     icon: mdi:cloud-question
-    state: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(binary_sensor|sensor).withings_.*|(binary_sensor|sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    state: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|sensor.octoprint_time_(elapsed|remaining)|(binary_sensor|sensor).withings_.*|(binary_sensor|sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|device_tracker.kukui(_[0-9]+)?|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
     attributes:
-      entity_list: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(binary_sensor|sensor).withings_.*|(binary_sensor|sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
+      entity_list: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|sensor.octoprint_time_(elapsed|remaining)|(binary_sensor|sensor).withings_.*|(binary_sensor|sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|device_tracker.kukui(_[0-9]+)?|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
 - sensor:
@@ -288,37 +323,37 @@
     state: >-
       {{ state_attr('climate.thermostat', 'target_temp_high') | int }}/{{ state_attr('climate.thermostat', 'target_temp_low') | int }}
 
-- sensor:
-    unique_id: coolest_temperature_in_house
-    name: "Coolest Temperature in House"
-    unit_of_measurement: "°F"
-    state: >-
-      {%- set ns=namespace(temp=100.0) %}
-      {%- for temp in expand('group.house_temperature') -%}
-        {%- if temp.state|float < ns.temp|float -%}
-          {%- set ns.temp=temp.state|float -%}
-        {%- endif -%}
-      {%- endfor -%}
-      {%- if ns.temp|float == 100.0 -%}
-        {%- set ns.temp = states('input_number.heat_threshold')|float + 2.0 -%}
-      {%- endif -%}
-      {{ ns.temp }}
-
-- sensor:
-    unique_id: warmest_temperature_in_house
-    name: "Warmest Temperature in House"
-    unit_of_measurement: "°F"
-    state: >-
-      {%- set ns=namespace(temp=0.0) %}
-      {%- for temp in expand('group.house_temperature') -%}
-        {%- if temp.state|float > ns.temp|float -%}
-          {%- set ns.temp=temp.state|float -%}
-        {%- endif -%}
-      {%- endfor -%}
-      {%- if ns.temp|float == 0.0 -%}
-        {%- set ns.temp = states('input_number.ac_threshold')|float - 2.0 -%}
-      {%- endif -%}
-      {{ ns.temp }}
+#- sensor:
+#    unique_id: coolest_temperature_in_house
+#    name: "Coolest Temperature in House"
+#    unit_of_measurement: "°F"
+#    state: >-
+#      {%- set ns=namespace(temp=100.0) %}
+#      {%- for temp in expand('group.house_temperature') -%}
+#        {%- if temp.state|float < ns.temp|float -%}
+#          {%- set ns.temp=temp.state|float -%}
+#        {%- endif -%}
+#      {%- endfor -%}
+#      {%- if ns.temp|float == 100.0 -%}
+#        {%- set ns.temp = states('input_number.heat_threshold')|float + 2.0 -%}
+#      {%- endif -%}
+#      {{ ns.temp }}
+#
+#- sensor:
+#    unique_id: warmest_temperature_in_house
+#    name: "Warmest Temperature in House"
+#    unit_of_measurement: "°F"
+#    state: >-
+#      {%- set ns=namespace(temp=0.0) %}
+#      {%- for temp in expand('group.house_temperature') -%}
+#        {%- if temp.state|float > ns.temp|float -%}
+#          {%- set ns.temp=temp.state|float -%}
+#        {%- endif -%}
+#      {%- endfor -%}
+#      {%- if ns.temp|float == 0.0 -%}
+#        {%- set ns.temp = states('input_number.ac_threshold')|float - 2.0 -%}
+#      {%- endif -%}
+#      {{ ns.temp }}
 
 - sensor:
     unique_id: outside_temperature_met_no
@@ -509,6 +544,7 @@
     unique_id: num_downstairs_lights_on
     name: Downstairs Lights On
     icon: mdi:string-lights
+    unit_of_measurement: Lights
     state: >-
       {%- set count = 0 -%}
       {%- if is_state('light.god_damn_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
@@ -525,6 +561,7 @@
     unique_id: num_middle_level_lights_on
     name: Middle Level Lights On
     icon: mdi:string-lights
+    unit_of_measurement: Lights
     state: >-
       {%- set count = 0 -%}
       {%- if is_state('light.kitchen_table_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
@@ -541,6 +578,7 @@
     unique_id: num_upstairs_lights_on
     name: Upstairs Lights On
     icon: mdi:string-lights
+    unit_of_measurement: Lights
     state: >-
       {%- set count = 0 -%}
       {%- if is_state('light.hallway_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
@@ -561,6 +599,7 @@
     unique_id: num_outside_lights_on
     name: Outside Lights On
     icon: mdi:string-lights
+    unit_of_measurement: Lights
     state: >-
       {%- set count = 0 -%}
       {%- if is_state('light.front_porch_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
@@ -575,12 +614,21 @@
     unique_id: num_garage_lights_on
     name: Garage Lights On
     icon: mdi:string-lights
+    unit_of_measurement: Lights
     state: >-
       {%- set count = 0 -%}
       {%- if is_state('light.bench_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {%- if is_state('light.middle_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {%- if is_state('light.far_garage_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {{ count }}
+
+- sensor:
+    unique_id: num_outside_garage_lights_on
+    name: Outside Plus Garage Lights On
+    icon: mdi:string-lights
+    unit_of_measurement: Lights
+    state: >-
+      {{ states('sensor.outside_lights_on')|int + states('sensor.garage_lights_on')|int }}
 
 - sensor:
     unique_id: christmas_tree_available
@@ -662,3 +710,39 @@
     unique_id: spotify_artist_title
     name: Spotify Artist Title
     state: '{{ state_attr("media_player.spotify_merdely", "media_artist") }} - {{ state_attr("media_player.spotify_merdely", "media_title") }}'
+
+- sensor:
+    unique_id: withings_weight_lbs_michael_e
+    name: Withings Weight Lbs Michael E
+    state: '{{ (states("sensor.withings_weight_kg_michael_e") | float(default=0) * 2.2046226218) | round(2) }}'
+    unit_of_measurement: "lbs"
+    icon: mdi:weight-pound
+
+- sensor:
+    unique_id: holly_in_bed
+    name: Holly In Bed
+    icon: mdi:bed
+    state: |
+      {% if states('binary_sensor.withings_in_bed_holly_e') == "on" %}
+        Yes
+      {% else %}
+        No
+      {% endif %}
+
+- sensor:
+    unique_id: mike_in_bed
+    name: Mike In Bed
+    icon: mdi:bed
+    state: |
+      {% if states('binary_sensor.withings_in_bed_michael_e') == "on" %}
+        Yes
+      {% else %}
+        No
+      {% endif %}
+
+- sensor:
+    unique_id: software_update_available
+    name: "Software Update Available"
+    state: "{{ state_attr('binary_sensor.software_update_available', 'number') }}"
+    unit_of_measurement: "Updates"
+

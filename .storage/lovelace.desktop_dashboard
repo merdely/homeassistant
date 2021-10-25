@@ -73,6 +73,10 @@
                                                     "name": "ME"
                                                 },
                                                 {
+                                                    "entity": "light.mike_bench_lamp",
+                                                    "name": "ME"
+                                                },
+                                                {
                                                     "entity": "switch.office_tv",
                                                     "name": "Ofc"
                                                 }
@@ -355,7 +359,7 @@
                             "cards": [
                                 {
                                     "type": "entities",
-                                    "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int < 30 %}yellow{% endif %};\n}\n.card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n",
+                                    "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int < 30 %}yellow{% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}white{% endif %};\n}\ncard-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n",
                                     "entities": [
                                         {
                                             "entity": "person.holly_erdely",
@@ -375,6 +379,35 @@
                                                 },
                                                 {
                                                     "entity": "person.michael_erdely",
+                                                    "name": "Mike",
+                                                    "styles": {
+                                                        "padding-top": "5px",
+                                                        "padding-bottom": "10px",
+                                                        "margin-top": "0px",
+                                                        "margin-bottom": "0px"
+                                                    }
+                                                }
+                                            ],
+                                            "show_state": false
+                                        },
+                                        {
+                                            "entity": "person.holly_erdely",
+                                            "name": "Who's Sleeping",
+                                            "icon": "mdi:bed",
+                                            "type": "custom:multiple-entity-row",
+                                            "entities": [
+                                                {
+                                                    "entity": "sensor.holly_in_bed",
+                                                    "name": "Holly",
+                                                    "styles": {
+                                                        "padding-top": "5px",
+                                                        "padding-bottom": "10px",
+                                                        "margin-top": "0px",
+                                                        "margin-bottom": "0px"
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "sensor.mike_in_bed",
                                                     "name": "Mike",
                                                     "styles": {
                                                         "padding-top": "5px",
@@ -460,6 +493,9 @@
                                             "entities": [
                                                 {
                                                     "entity": "climate.thermostat",
+                                                    "styles": {
+                                                        "color": "var(--thermostat-color)"
+                                                    },
                                                     "name": "Tstat",
                                                     "attribute": "current_temperature",
                                                     "unit": []
@@ -674,17 +710,8 @@
                                 },
                                 {
                                     "type": "grid",
-                                    "columns": 5,
+                                    "columns": 4,
                                     "cards": [
-                                        {
-                                            "type": "entity",
-                                            "entity": "climate.thermostat",
-                                            "unit": "\u00b0F",
-                                            "name": "Temp",
-                                            "icon": "mdi:thermostat",
-                                            "attribute": "current_temperature",
-                                            "style": ".name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
-                                        },
                                         {
                                             "type": "entity",
                                             "entity": "sensor.thermostat_setpoints",
@@ -727,11 +754,6 @@
                                     ]
                                 }
                             ]
-                        },
-                        {
-                            "type": "weather-forecast",
-                            "entity": "weather.home",
-                            "secondary_info_attribute": "wind_speed"
                         },
                         {
                             "type": "grid",
@@ -799,17 +821,90 @@
                                     ],
                                     "title": "Security",
                                     "show_header_toggle": false
+                                },
+                                {
+                                    "type": "weather-forecast",
+                                    "entity": "weather.home",
+                                    "secondary_info_attribute": "wind_speed"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "title": "Thermostat",
+                    "title": "Thermostat/Security",
                     "path": "thermostat",
-                    "icon": "mdi:thermostat",
+                    "icon": "mdi:shield-home",
                     "badges": [],
                     "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "alarm-panel",
+                                    "states": [
+                                        "arm_home",
+                                        "arm_away"
+                                    ],
+                                    "entity": "alarm_control_panel.home_alarm"
+                                },
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "switch.siren"
+                                        },
+                                        {
+                                            "entity": "input_boolean.gate_notifications"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "## Last Security Message\n{{ states('input_text.security_message') }}"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Temperature Sensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "domain": "climate",
+                                        "options": {
+                                            "secondary_info": "last-changed"
+                                        }
+                                    },
+                                    {
+                                        "entity_id": "/sensor\\..*temperature/",
+                                        "name": "/[Mm]ultisensor/",
+                                        "options": {
+                                            "secondary_info": "last-changed"
+                                        }
+                                    },
+                                    {
+                                        "entity_id": "sensor.master_bath_humidity",
+                                        "options": {
+                                            "secondary_info": "last-changed"
+                                        }
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "entity_id": "*battery*"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "name"
+                            }
+                        },
                         {
                             "type": "thermostat",
                             "entity": "climate.thermostat"
@@ -827,7 +922,26 @@
                             "entities": [
                                 {
                                     "type": "section",
-                                    "label": "Trash Collection"
+                                    "label": "Other Configuration"
+                                },
+                                {
+                                    "entity": "input_text.software_list"
+                                },
+                                {
+                                    "entity": "input_boolean.christmas_tree_is_up"
+                                },
+                                {
+                                    "entity": "input_boolean.mailbox_sensor_wait"
+                                },
+                                {
+                                    "entity": "input_boolean.recycle_is_out"
+                                },
+                                {
+                                    "entity": "input_boolean.trash_is_out"
+                                },
+                                {
+                                    "type": "section",
+                                    "label": "Weekly Schedule - Trash Collection"
                                 },
                                 {
                                     "entity": "input_select.trash_day_1"
@@ -836,7 +950,7 @@
                                     "entity": "input_select.trash_day_2"
                                 }
                             ],
-                            "title": "Weekly Schedules",
+                            "title": "Configuration Settings",
                             "show_header_toggle": false
                         },
                         {
@@ -895,218 +1009,68 @@
                     ]
                 },
                 {
-                    "title": "Security",
-                    "path": "security",
-                    "icon": "mdi:security",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "grid",
-                            "columns": 1,
-                            "square": false,
-                            "cards": [
-                                {
-                                    "type": "entity",
-                                    "entity": "sensor.time_formatted"
-                                },
-                                {
-                                    "type": "alarm-panel",
-                                    "states": [
-                                        "arm_home",
-                                        "arm_away"
-                                    ],
-                                    "entity": "alarm_control_panel.home_alarm"
-                                },
-                                {
-                                    "type": "markdown",
-                                    "content": "## Last Security Message\n{{ states('input_text.security_message') }}"
-                                },
-                                {
-                                    "type": "grid",
-                                    "cards": [
-                                        {
-                                            "type": "entities",
-                                            "entities": [
-                                                {
-                                                    "entity": "switch.siren",
-                                                    "secondary_info": "last-changed"
-                                                },
-                                                {
-                                                    "entity": "cover.garage_door",
-                                                    "secondary_info": "last-changed"
-                                                },
-                                                {
-                                                    "entity": "input_boolean.gate_notifications",
-                                                    "secondary_info": "last-changed"
-                                                }
-                                            ],
-                                            "title": "Additional Devices",
-                                            "show_header_toggle": false
-                                        }
-                                    ],
-                                    "columns": 1
-                                }
-                            ]
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Security Devices"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "binary_sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "entity_id": "/.*(slider|gate|door|window).*/"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "entity_id": "binary_sensor.doors_windows"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Water Leak Sensors",
-                                "state_color": true
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "binary_sensor",
-                                        "entity_id": ".*water_leak_sensor"
-                                    }
-                                ],
-                                "exclude": []
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Motion Sensors"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "binary_sensor",
-                                        "entity_id": ".*motion_sensor"
-                                    },
-                                    {
-                                        "domain": "binary_sensor",
-                                        "entity_id": "*motion_sensor_occupancy"
-                                    },
-                                    {
-                                        "domain": "sensor",
-                                        "entity_id": ".*motion_sensor_illuminance*"
-                                    }
-                                ],
-                                "exclude": []
-                            },
-                            "sort": {
-                                "method": "friendly_name"
-                            }
-                        }
-                    ]
-                },
-                {
                     "title": "Cameras",
                     "path": "cameras",
                     "icon": "mdi:cctv",
-                    "panel": true,
                     "badges": [],
                     "cards": [
                         {
-                            "type": "grid",
-                            "columns": 2,
-                            "square": false,
-                            "cards": [
-                                {
-                                    "type": "picture-entity",
-                                    "entity": "camera.front_door_cam",
-                                    "camera_image": "camera.front_door_cam",
-                                    "show_state": false,
-                                    "show_name": false,
-                                    "camera_view": "live"
-                                },
-                                {
-                                    "type": "picture-entity",
-                                    "entity": "camera.garage_cam",
-                                    "camera_image": "camera.garage_cam",
-                                    "show_state": false,
-                                    "show_name": false,
-                                    "camera_view": "live"
-                                },
-                                {
-                                    "type": "picture-entity",
-                                    "entity": "camera.front_door_cam_2",
-                                    "camera_image": "camera.front_door_cam_2",
-                                    "show_state": false,
-                                    "show_name": false,
-                                    "camera_view": "live"
-                                },
-                                {
-                                    "type": "picture",
-                                    "image": "http://garagedoorcam.erdely.in:8000/snapshot.jpg",
-                                    "tap_action": {
-                                        "action": "none"
-                                    },
-                                    "hold_action": {
-                                        "action": "none"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "title": "Cameras 2",
-                    "path": "cameras-2",
-                    "icon": "mdi:cctv",
-                    "panel": true,
-                    "badges": [],
-                    "cards": [
+                            "type": "picture-entity",
+                            "entity": "camera.front_door_cam",
+                            "camera_image": "camera.front_door_cam",
+                            "show_state": false,
+                            "show_name": false,
+                            "camera_view": "live"
+                        },
                         {
-                            "type": "grid",
-                            "columns": 2,
-                            "square": false,
-                            "cards": [
-                                {
-                                    "type": "picture-entity",
-                                    "entity": "camera.backyard_cam",
-                                    "camera_image": "camera.backyard_cam",
-                                    "show_state": false,
-                                    "show_name": false,
-                                    "camera_view": "live"
-                                },
-                                {
-                                    "type": "picture-entity",
-                                    "entity": "camera.chimney_cam",
-                                    "show_state": false,
-                                    "show_name": false,
-                                    "camera_view": "live",
-                                    "camera_image": "camera.chimney_cam"
-                                },
-                                {
-                                    "type": "picture-entity",
-                                    "entity": "camera.shed_cam",
-                                    "camera_image": "camera.shed_cam",
-                                    "camera_view": "live",
-                                    "show_name": false,
-                                    "show_state": false
-                                }
-                            ]
+                            "type": "picture-entity",
+                            "entity": "camera.garage_cam",
+                            "camera_image": "camera.garage_cam",
+                            "show_state": false,
+                            "show_name": false,
+                            "camera_view": "live"
+                        },
+                        {
+                            "type": "picture-entity",
+                            "entity": "camera.front_door_cam_2",
+                            "camera_image": "camera.front_door_cam_2",
+                            "show_state": false,
+                            "show_name": false,
+                            "camera_view": "live"
+                        },
+                        {
+                            "type": "picture-entity",
+                            "entity": "camera.backyard_cam",
+                            "camera_image": "camera.backyard_cam",
+                            "show_state": false,
+                            "show_name": false,
+                            "camera_view": "live"
+                        },
+                        {
+                            "type": "picture-entity",
+                            "entity": "camera.chimney_cam",
+                            "show_state": false,
+                            "show_name": false,
+                            "camera_view": "live",
+                            "camera_image": "camera.chimney_cam"
+                        },
+                        {
+                            "type": "picture",
+                            "image": "http://garagedoorcam.erdely.in:8000/snapshot.jpg",
+                            "tap_action": {
+                                "action": "none"
+                            },
+                            "hold_action": {
+                                "action": "none"
+                            }
+                        },
+                        {
+                            "type": "picture-entity",
+                            "entity": "camera.shed_cam",
+                            "camera_image": "camera.shed_cam",
+                            "camera_view": "live",
+                            "show_name": false,
+                            "show_state": false
                         }
                     ]
                 },
@@ -1330,54 +1294,6 @@
                     ]
                 },
                 {
-                    "title": "People",
-                    "path": "people",
-                    "icon": "mdi:human-male-female",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Holly's Phone"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "entity_id": "person.holly_erdely"
-                                    },
-                                    {
-                                        "entity_id": "*pixel_3*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Mike's Phone"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "entity_id": "person.michael_erdely"
-                                    },
-                                    {
-                                        "entity_id": "*pixel_4a*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        }
-                    ]
-                },
-                {
                     "title": "Home Assistant",
                     "path": "home-assistant",
                     "icon": "mdi:home-assistant",
@@ -1391,7 +1307,7 @@
                             "cards": [
                                 {
                                     "type": "grid",
-                                    "columns": 4,
+                                    "columns": 3,
                                     "cards": [
                                         {
                                             "type": "button",
@@ -1464,109 +1380,54 @@
                                             "hold_action": {
                                                 "action": "none"
                                             }
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.function_camera_reset",
-                                                "service_data": {
-                                                    "camera": "backyard"
-                                                },
-                                                "confirmation": {
-                                                    "text": "Are you sure you want to reset the Backyard Camera?"
-                                                }
-                                            },
-                                            "entity": "script.function_camera_reset",
-                                            "name": "BY",
-                                            "icon_height": "50px"
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.function_camera_reset",
-                                                "service_data": {
-                                                    "camera": "frontdoor"
-                                                },
-                                                "confirmation": {
-                                                    "text": "Are you sure you want to reset the Front Door Camera?"
-                                                }
-                                            },
-                                            "entity": "script.function_camera_reset",
-                                            "name": "FD",
-                                            "icon_height": "50px"
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.function_camera_reset",
-                                                "service_data": {
-                                                    "camera": "frontdoor2"
-                                                },
-                                                "confirmation": {
-                                                    "text": "Are you sure you want to reset the Front Door Camera 2?"
-                                                }
-                                            },
-                                            "entity": "script.function_camera_reset",
-                                            "name": "FD2",
-                                            "icon_height": "50px"
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.function_camera_reset",
-                                                "service_data": {
-                                                    "camera": "garage"
-                                                },
-                                                "confirmation": {
-                                                    "text": "Are you sure you want to reset the Garage Camera?"
-                                                }
-                                            },
-                                            "entity": "script.function_camera_reset",
-                                            "name": "Garage",
-                                            "icon_height": "50px"
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.function_camera_reset",
-                                                "service_data": {
-                                                    "camera": "chimney"
-                                                },
-                                                "confirmation": {
-                                                    "text": "Are you sure you want to reset the Chimney Camera?"
-                                                }
-                                            },
-                                            "entity": "script.function_camera_reset",
-                                            "name": "Chimney",
-                                            "icon_height": "50px"
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.function_camera_reset",
-                                                "service_data": {
-                                                    "camera": "shed"
-                                                },
-                                                "confirmation": {
-                                                    "text": "Are you sure you want to reset the Shed Camera?"
-                                                }
-                                            },
-                                            "entity": "script.function_camera_reset",
-                                            "name": "Shed",
-                                            "icon_height": "50px"
                                         }
-                                    ]
+                                    ],
+                                    "square": false
                                 },
                                 {
                                     "type": "markdown",
                                     "styles": "table {\n    width: 100%;\n    border: 1px;\n}\n",
                                     "content": "## Software\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in states(\"input_text.software_list\").replace(' ', '').split(',')  -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} </table>"
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 2,
+                                    "cards": [
+                                        {
+                                            "type": "sensor",
+                                            "entity": "sensor.network_throughput_in_enp2s0",
+                                            "graph": "line",
+                                            "name": "Throughput In",
+                                            "hours_to_show": 48,
+                                            "icon": "mdi:cloud-download-outline",
+                                            "detail": 1
+                                        },
+                                        {
+                                            "type": "sensor",
+                                            "entity": "sensor.network_throughput_out_enp2s0",
+                                            "graph": "line",
+                                            "name": "Throughput Out",
+                                            "hours_to_show": 48,
+                                            "icon": "mdi:cloud-upload-outline"
+                                        },
+                                        {
+                                            "type": "sensor",
+                                            "entity": "sensor.network_in_enp2s0",
+                                            "graph": "line",
+                                            "name": "Network In",
+                                            "hours_to_show": 48,
+                                            "icon": "mdi:download-network-outline"
+                                        },
+                                        {
+                                            "type": "sensor",
+                                            "entity": "sensor.network_out_enp2s0",
+                                            "graph": "line",
+                                            "name": "Network Out",
+                                            "hours_to_show": 48,
+                                            "icon": "mdi:upload-network-outline"
+                                        }
+                                    ],
+                                    "square": false
                                 }
                             ]
                         },
@@ -1579,6 +1440,65 @@
                                     "type": "markdown",
                                     "styles": "table {\n    width: 100%;\n    border: 1px;\n}\n",
                                     "content": "## Home Assistant\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} {% for addon in state_attr(\"sensor.ha_add_ons\", \"addons\") | rejectattr('installed', 'eq', False) | sort(attribute='name') -%} \n  <tr> <td><font color=\"{{'#44739e' if\n  addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\"><ha-icon\n  icon='mdi:briefcase-{{ 'check' if addon['version'] ==\n  addon['version_latest'] else 'download'}}' /></font>\n  </td> <td><font style=\"color: {{'var(--primary-text-color)' if addon['version']\n  == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant', '') }}*</td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version'] }}</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version_latest'] }}</font></td> </tr>\n{% endfor -%} </table>"
+                                },
+                                {
+                                    "type": "grid",
+                                    "square": false,
+                                    "columns": 4,
+                                    "cards": [
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.disk_use_percent_config",
+                                            "min": 0,
+                                            "max": 100,
+                                            "severity": {
+                                                "green": 0,
+                                                "yellow": 85,
+                                                "red": 95
+                                            },
+                                            "needle": true,
+                                            "name": "/config"
+                                        },
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.memory_use_percent",
+                                            "min": 0,
+                                            "max": 100,
+                                            "severity": {
+                                                "green": 0,
+                                                "yellow": 80,
+                                                "red": 90
+                                            },
+                                            "needle": true,
+                                            "name": "Memory"
+                                        },
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.processor_use_percent",
+                                            "min": 0,
+                                            "max": 100,
+                                            "severity": {
+                                                "green": 0,
+                                                "yellow": 80,
+                                                "red": 90
+                                            },
+                                            "needle": true,
+                                            "name": "CPU %"
+                                        },
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.cpu_temperature",
+                                            "min": 70,
+                                            "max": 120,
+                                            "severity": {
+                                                "green": 0,
+                                                "yellow": 85,
+                                                "red": 95
+                                            },
+                                            "needle": true,
+                                            "name": "CPU"
+                                        }
+                                    ]
                                 },
                                 {
                                     "type": "grid",
@@ -1655,159 +1575,111 @@
                     ]
                 },
                 {
-                    "title": "HA System Monitor",
-                    "path": "ha-system-monitor",
-                    "icon": "mdi:home-analytics",
+                    "title": "3D Printing",
+                    "path": "3d-printing",
+                    "icon": "mdi:printer-3d",
                     "badges": [],
                     "cards": [
                         {
                             "type": "grid",
+                            "columns": 1,
                             "cards": [
                                 {
-                                    "type": "gauge",
-                                    "entity": "sensor.disk_use_percent_config",
-                                    "min": 0,
-                                    "max": 100,
-                                    "severity": {
-                                        "green": 0,
-                                        "yellow": 85,
-                                        "red": 95
-                                    },
-                                    "needle": true
-                                },
-                                {
-                                    "type": "gauge",
-                                    "entity": "sensor.memory_use_percent",
-                                    "min": 0,
-                                    "max": 100,
-                                    "severity": {
-                                        "green": 0,
-                                        "yellow": 80,
-                                        "red": 90
-                                    },
-                                    "needle": true
-                                },
-                                {
-                                    "type": "gauge",
-                                    "entity": "sensor.processor_use_percent",
-                                    "min": 0,
-                                    "max": 100,
-                                    "severity": {
-                                        "green": 0,
-                                        "yellow": 80,
-                                        "red": 90
-                                    },
-                                    "needle": true
-                                },
-                                {
-                                    "type": "gauge",
-                                    "entity": "sensor.cpu_temperature",
-                                    "min": 70,
-                                    "max": 120,
-                                    "severity": {
-                                        "green": 0,
-                                        "yellow": 85,
-                                        "red": 95
-                                    },
-                                    "needle": true
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "switch.ender3_plug"
+                                        },
+                                        {
+                                            "entity": "switch.octoprint_light_plug"
+                                        },
+                                        {
+                                            "entity": "switch.octoprint_camera"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.octoprint_printing"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.octoprint_printing_error"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_current_state"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_actual_bed_temp"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_job_percentage"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_time_remaining"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_time_elapsed"
+                                        }
+                                    ]
                                 }
                             ],
-                            "square": false,
-                            "columns": 2
+                            "square": false
                         },
                         {
                             "type": "grid",
+                            "columns": 1,
                             "cards": [
                                 {
-                                    "type": "sensor",
-                                    "entity": "sensor.network_throughput_in_enp2s0",
-                                    "graph": "line",
-                                    "name": "Throughput in",
-                                    "hours_to_show": 48
-                                },
-                                {
-                                    "type": "sensor",
-                                    "entity": "sensor.network_throughput_out_enp2s0",
-                                    "graph": "line",
-                                    "name": "Throughput out",
-                                    "hours_to_show": 48
-                                },
-                                {
-                                    "type": "sensor",
-                                    "entity": "sensor.network_in_enp2s0",
-                                    "graph": "line",
-                                    "name": "Network in",
-                                    "hours_to_show": 48
-                                },
-                                {
-                                    "type": "sensor",
-                                    "entity": "sensor.network_out_enp2s0",
-                                    "graph": "line",
-                                    "name": "Network out",
-                                    "hours_to_show": 48
+                                    "type": "picture-entity",
+                                    "entity": "camera.octoprint",
+                                    "camera_view": "live"
                                 }
                             ],
-                            "columns": 2,
                             "square": false
                         }
                     ]
                 },
                 {
-                    "icon": "mdi:help-rhombus",
-                    "title": "Unavailable Entities",
-                    "path": "unavailable-entities",
+                    "title": "People",
+                    "path": "people",
+                    "icon": "mdi:human-male-female",
                     "badges": [],
                     "cards": [
                         {
                             "type": "custom:auto-entities",
                             "card": {
-                                "type": "entities"
+                                "type": "entities",
+                                "title": "Holly's Phone"
                             },
                             "filter": {
                                 "include": [
                                     {
-                                        "state": "unavailable",
-                                        "domain": "/(binary_)?sensor/"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "domain": "media_player"
+                                        "entity_id": "person.holly_erdely"
                                     },
                                     {
-                                        "entity_id": "/^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health|group.outside_xmas)$/"
+                                        "entity_id": "*pixel_3*"
                                     }
                                 ]
                             },
                             "sort": {
-                                "method": "friendly_name"
+                                "method": "name"
                             }
                         },
                         {
                             "type": "custom:auto-entities",
                             "card": {
-                                "type": "entities"
+                                "type": "entities",
+                                "title": "Mike's Phone"
                             },
                             "filter": {
                                 "include": [
                                     {
-                                        "state": "unavailable"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "domain": "media_player"
+                                        "entity_id": "person.michael_erdely"
                                     },
                                     {
-                                        "domain": "/(binary_)?sensor/"
-                                    },
-                                    {
-                                        "entity_id": "/^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health|group.outside_xmas)$/"
+                                        "entity_id": "*pixel_4a*"
                                     }
                                 ]
                             },
                             "sort": {
-                                "method": "friendly_name"
+                                "method": "name"
                             }
                         }
                     ]
@@ -1887,240 +1759,6 @@
                                         "options": {
                                             "secondary_info": "last-changed"
                                         }
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "title": "Temp/Other",
-                    "path": "temp-other",
-                    "icon": "mdi:thermometer",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Temperature Sensors A-G"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "entity_id": "*temperature*",
-                                        "name": "/^[A-Ga-g].*/"
-                                    },
-                                    {
-                                        "domain": "climate",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[A-Ga-g].*/"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "entity_id": "*battery*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Temperature Sensors H-Z"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "entity_id": "*temperature*",
-                                        "name": "/^[H-Zh-z].*/"
-                                    },
-                                    {
-                                        "domain": "climate",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[H-Zh-z].*/"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "entity_id": "*battery*"
-                                    },
-                                    {
-                                        "entity_id": "sensor.home_realfeel_temperature*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "title": "Other Sensors",
-                    "path": "other-sensors",
-                    "icon": "mdi:gauge",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Other Sensors A-F"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[A-Fa-f].*/"
-                                    },
-                                    {
-                                        "domain": "binary_sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[A-Fa-f].*/"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "entity_id": "*temperature*"
-                                    },
-                                    {
-                                        "entity_id": "*battery*"
-                                    },
-                                    {
-                                        "entity_id": "sensor.pixel*"
-                                    },
-                                    {
-                                        "entity_id": "sensor.fully_kiosk_browser*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*slider*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*door*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*window*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Other Sensors G-O"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[G-Og-o].*/"
-                                    },
-                                    {
-                                        "domain": "binary_sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[G-Og-o].*/"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "entity_id": "*temperature*"
-                                    },
-                                    {
-                                        "entity_id": "*battery*"
-                                    },
-                                    {
-                                        "entity_id": "sensor.pixel*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*slider*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*door*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*window*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Other Sensors P-Z"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[P-Zp-z].*/"
-                                    },
-                                    {
-                                        "domain": "binary_sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[P-Zp-z].*/"
-                                    }
-                                ],
-                                "exclude": [
-                                    {
-                                        "entity_id": "*temperature*"
-                                    },
-                                    {
-                                        "entity_id": "*battery*"
-                                    },
-                                    {
-                                        "entity_id": "sensor.pixel*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*slider*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*door*"
-                                    },
-                                    {
-                                        "entity_id": "binary_sensor.*window*"
                                     }
                                 ]
                             },
@@ -2352,70 +1990,63 @@
                     ]
                 },
                 {
-                    "title": "Helpers",
-                    "path": "helpers",
-                    "icon": "mdi:toolbox",
+                    "icon": "mdi:help-rhombus",
+                    "title": "Unavailable Entities",
+                    "path": "unavailable-entities",
                     "badges": [],
                     "cards": [
                         {
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "Input Selects A-M"
+                                "title": "Unavailable/Unknown Sensors"
                             },
                             "filter": {
                                 "include": [
                                     {
-                                        "domain": "input_select",
-                                        "name": "/^[A-Ma-m].*/"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Input Selects N-Z"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "input_select",
-                                        "name": "/^[N-Zn-z].*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Other Helpers"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "input_*"
+                                        "state": "/(unavailable|unknown)/",
+                                        "domain": "/(binary_)?sensor/"
                                     }
                                 ],
                                 "exclude": [
                                     {
-                                        "domain": "input_select"
+                                        "domain": "media_player"
                                     },
                                     {
-                                        "entity_id": "input_*.thermostat_*"
+                                        "entity_id": "/^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|device_tracker.kukui(_[0-9]+)?|(binary_sensor|sensor).withings_.*|group.outside_xmas)$/"
                                     }
                                 ]
                             },
                             "sort": {
-                                "method": "name"
+                                "method": "friendly_name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Unavailable/Unknown Entities"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "state": "/(unavailable|unknown)/"
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "domain": "media_player"
+                                    },
+                                    {
+                                        "domain": "/(binary_)?sensor/"
+                                    },
+                                    {
+                                        "entity_id": "/^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|device_tracker.kukui(_[0-9]+)?|group.outside_xmas)$/"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "friendly_name"
                             }
                         }
                     ]
@@ -2428,267 +2059,78 @@
                     "cards": [
                         {
                             "type": "entities",
-                            "title": "Plex Status",
                             "entities": [
-                                "sensor.plex_plex",
                                 {
-                                    "type": "custom:entity-attributes-card",
-                                    "heading_name": "User",
-                                    "heading_state": "Show/Movie",
-                                    "filter": {
-                                        "include": [
-                                            {
-                                                "key": "sensor.plex_plex.*"
-                                            }
-                                        ],
-                                        "exclude": [
-                                            {
-                                                "key": "sensor.plex_plex.icon"
-                                            },
-                                            {
-                                                "key": "sensor.plex_plex.friendly_name"
-                                            },
-                                            {
-                                                "key": "sensor.plex_plex.unit_of_measurement"
-                                            }
-                                        ]
-                                    }
+                                    "entity": "sensor.withings_weight_kg_michael_e",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.withings_weight_lbs_michael_e",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "type": "divider"
+                                },
+                                {
+                                    "entity": "binary_sensor.withings_in_bed_michael_e",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "binary_sensor.mike_in_bed",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.mike_in_bed",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "type": "divider"
+                                },
+                                {
+                                    "entity": "binary_sensor.withings_in_bed_holly_e",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "binary_sensor.holly_in_bed",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.holly_in_bed",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "type": "divider"
+                                },
+                                {
+                                    "entity": "input_text.washer_and_dryer_state_pretty",
+                                    "name": "Washer/Dryer Test"
                                 }
                             ]
-                        },
-                        {
-                            "type": "history-graph",
-                            "entities": [
-                                {
-                                    "entity": "sensor.family_room_temperature"
-                                },
-                                {
-                                    "entity": "sensor.living_room_temperature"
-                                },
-                                {
-                                    "entity": "sensor.bedroom_temperature"
-                                },
-                                {
-                                    "entity": "sensor.office_temperature"
-                                },
-                                {
-                                    "entity": "sensor.thermostat_temperature"
-                                }
-                            ],
-                            "hours_to_show": 24,
-                            "refresh_interval": 30,
-                            "title": "Inside Temperature"
-                        },
-                        {
-                            "type": "history-graph",
-                            "entities": [
-                                {
-                                    "entity": "sensor.outside_temperature"
-                                },
-                                {
-                                    "entity": "sensor.garage_temperature"
-                                },
-                                {
-                                    "entity": "sensor.attic_temperature"
-                                }
-                            ],
-                            "hours_to_show": 24,
-                            "refresh_interval": 0,
-                            "title": "Outside Temperature"
                         }
                     ]
                 },
                 {
-                    "title": "Plex",
-                    "path": "plex",
-                    "icon": "mdi:plex",
+                    "title": "test",
+                    "path": "test",
                     "badges": [],
                     "cards": [
                         {
-                            "type": "grid",
-                            "columns": 1,
-                            "square": false,
-                            "cards": [
-                                {
-                                    "type": "media-control",
-                                    "entity": "media_player.plex_plex_for_roku_bedroom_roku"
-                                },
-                                {
-                                    "type": "media-control",
-                                    "entity": "media_player.plex_plex_for_roku_god_damn_roku"
-                                },
-                                {
-                                    "type": "media-control",
-                                    "entity": "media_player.plex_plex_for_roku_living_room_roku"
-                                },
-                                {
-                                    "type": "media-control",
-                                    "entity": "media_player.plex_plex_for_roku_office_roku"
-                                }
-                            ]
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Plex"
+                            "type": "picture",
+                            "image": "https://demo.home-assistant.io/stub_config/t-shirt-promo.png",
+                            "tap_action": {
+                                "action": "none"
                             },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "media_player",
-                                        "entity_id": "/.*plex.*/"
-                                    }
-                                ],
-                                "exclude": []
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "title": "Weather",
-                    "path": "weather",
-                    "icon": "mdi:umbrella",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "weather-forecast",
-                            "entity": "weather.kgai_daynight",
-                            "secondary_info_attribute": "wind_speed"
-                        },
-                        {
-                            "type": "weather-forecast",
-                            "entity": "weather.home",
-                            "name": "met.no",
-                            "secondary_info_attribute": "wind_speed"
-                        },
-                        {
-                            "type": "weather-forecast",
-                            "entity": "weather.home_2",
-                            "name": "Accuweather",
-                            "secondary_info_attribute": "wind_speed"
-                        }
-                    ]
-                },
-                {
-                    "title": "Water Leak",
-                    "path": "water-leak",
-                    "icon": "mdi:water",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Water Leak Sensors"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "binary_sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "entity_id": "*water_leak_sensor"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
+                            "hold_action": {
+                                "action": "none"
                             }
                         },
                         {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Water Leak Sensor Batteries"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "entity_id": "*water_leak*"
-                                    },
-                                    {
-                                        "domain": "binary_sensor",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        },
-                                        "entity_id": "*water_leak_sensor_battery*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
+                            "type": "entity",
+                            "entity": "sensor.time",
+                            "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "/control-panel/home"
                             }
-                        }
-                    ]
-                },
-                {
-                    "title": "3D Printing",
-                    "path": "3d-printing",
-                    "icon": "mdi:printer-3d",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "grid",
-                            "columns": 1,
-                            "cards": [
-                                {
-                                    "type": "entities",
-                                    "entities": [
-                                        {
-                                            "entity": "switch.ender3_plug"
-                                        },
-                                        {
-                                            "entity": "switch.octoprint_light_plug"
-                                        },
-                                        {
-                                            "entity": "switch.octoprint_camera"
-                                        },
-                                        {
-                                            "entity": "binary_sensor.octoprint_printing"
-                                        },
-                                        {
-                                            "entity": "binary_sensor.octoprint_printing_error"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_current_state"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_actual_bed_temp"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_job_percentage"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_time_remaining"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_time_elapsed"
-                                        }
-                                    ]
-                                }
-                            ],
-                            "square": false
-                        },
-                        {
-                            "type": "grid",
-                            "columns": 1,
-                            "cards": [
-                                {
-                                    "type": "picture-entity",
-                                    "entity": "camera.octoprint",
-                                    "camera_view": "live"
-                                }
-                            ],
-                            "square": false
                         }
                     ]
                 }

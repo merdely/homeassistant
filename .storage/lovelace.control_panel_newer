@@ -1,9 +1,9 @@
 {
     "version": 1,
-    "key": "lovelace.control_panel",
+    "key": "lovelace.control_panel_newer",
     "data": {
         "config": {
-            "title": "Control Panel",
+            "title": "",
             "views": [
                 {
                     "title": " Home",
@@ -50,59 +50,6 @@
                                                     "show_icon": false,
                                                     "show_name": false,
                                                     "show_state": true
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "type": "grid",
-                                            "columns": 2,
-                                            "square": false,
-                                            "cards": [
-                                                {
-                                                    "type": "sensor",
-                                                    "entity": "sensor.fully_kiosk_browser",
-                                                    "name": "Panel Battery",
-                                                    "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "grid",
-                                                    "columns": 2,
-                                                    "square": false,
-                                                    "cards": [
-                                                        {
-                                                            "type": "button",
-                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\nha-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
-                                                            "tap_action": {
-                                                                "action": "call-service",
-                                                                "service": "input_boolean.toggle",
-                                                                "service_data": {
-                                                                    "entity_id": "input_boolean.recycle_is_out"
-                                                                }
-                                                            },
-                                                            "entity": "sensor.recycle",
-                                                            "show_state": true,
-                                                            "show_icon": true,
-                                                            "icon_height": "30px",
-                                                            "show_name": false
-                                                        },
-                                                        {
-                                                            "type": "button",
-                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\nha-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
-                                                            "tap_action": {
-                                                                "action": "call-service",
-                                                                "service": "input_boolean.toggle",
-                                                                "service_data": {
-                                                                    "entity_id": "input_boolean.trash_is_out"
-                                                                }
-                                                            },
-                                                            "entity": "sensor.trash",
-                                                            "show_state": true,
-                                                            "show_icon": true,
-                                                            "icon_height": "30px",
-                                                            "show_name": false
-                                                        }
-                                                    ]
                                                 }
                                             ]
                                         },
@@ -371,6 +318,59 @@
                                             ]
                                         },
                                         {
+                                            "type": "grid",
+                                            "columns": 2,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "sensor",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n"
+                                                },
+                                                {
+                                                    "type": "grid",
+                                                    "columns": 2,
+                                                    "square": false,
+                                                    "cards": [
+                                                        {
+                                                            "type": "button",
+                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\nha-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "input_boolean.toggle",
+                                                                "service_data": {
+                                                                    "entity_id": "input_boolean.recycle_is_out"
+                                                                }
+                                                            },
+                                                            "entity": "sensor.recycle",
+                                                            "show_state": true,
+                                                            "show_icon": true,
+                                                            "icon_height": "30px",
+                                                            "show_name": false
+                                                        },
+                                                        {
+                                                            "type": "button",
+                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\nha-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "input_boolean.toggle",
+                                                                "service_data": {
+                                                                    "entity_id": "input_boolean.trash_is_out"
+                                                                }
+                                                            },
+                                                            "entity": "sensor.trash",
+                                                            "show_state": true,
+                                                            "show_icon": true,
+                                                            "icon_height": "30px",
+                                                            "show_name": false
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
                                             "type": "weather-forecast",
                                             "entity": "weather.home",
                                             "show_forecast": true,
@@ -403,7 +403,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -441,102 +441,45 @@
                                             ]
                                         },
                                         {
+                                            "type": "custom:auto-entities",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 3,
+                                                "square": false
+                                            },
+                                            "card_param": "cards",
+                                            "filter": {
+                                                "include": [
+                                                    {
+                                                        "entity_id": "/^sensor\\..*_(humidity|temperature)_pretty$/",
+                                                        "options": {
+                                                            "type": "entity",
+                                                            "style": ".header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 19px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                                                        }
+                                                    }
+                                                ],
+                                                "exclude": []
+                                            },
+                                            "sort": {
+                                                "method": "friendly_name",
+                                                "numeric": false
+                                            }
+                                        },
+                                        {
                                             "type": "grid",
                                             "columns": 3,
                                             "square": false,
                                             "cards": [
                                                 {
                                                     "type": "entity",
-                                                    "entity": "sensor.attic_temperature",
-                                                    "name": "Attic",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "entity": "sensor.bedroom_temperature",
-                                                    "name": "Mastr BR",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "entity": "sensor.master_bath_humidity",
-                                                    "name": "Mastr Bath",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "entity": "sensor.office_temperature",
-                                                    "name": "Office",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "entity": "climate.thermostat",
-                                                    "name": "Thermostat",
-                                                    "attribute": "current_temperature",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.name {\n  font-size: 14px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "name": "Living Rm",
-                                                    "entity": "sensor.living_room_temperature",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "name": "Family Rm",
-                                                    "entity": "sensor.family_room_temperature",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "name": "Garage",
-                                                    "entity": "sensor.garage_temperature",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                },
-                                                {
-                                                    "type": "entity",
-                                                    "entity": "sensor.outside_temperature",
-                                                    "name": "Outside",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "type": "grid",
-                                            "columns": 4,
-                                            "square": false,
-                                            "cards": [
-                                                {
-                                                    "type": "button",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n",
-                                                    "tap_action": {
-                                                        "action": "call-service",
-                                                        "service": "script.scene_good_night"
-                                                    },
-                                                    "hold_action": {
-                                                        "action": "call-service",
-                                                        "service": "script.scene_night_night"
-                                                    },
-                                                    "entity": "script.scene_good_night",
+                                                    "entity": "binary_sensor.software_update_available",
+                                                    "attribute": "number",
+                                                    "show_name": true,
                                                     "show_icon": true,
-                                                    "show_name": true,
-                                                    "icon_height": "20px",
-                                                    "name": "Good Night"
-                                                },
-                                                {
-                                                    "type": "button",
-                                                    "entity": "sensor.software_update_available",
-                                                    "show_name": true,
-                                                    "show_icon": false,
-                                                    "show_state": true,
                                                     "state_color": true,
-                                                    "name": "Software",
-                                                    "tap_action": {
-                                                        "action": "navigate",
-                                                        "navigation_path": "/control-panel/software"
-                                                    },
-                                                    "style": "ha-card.type-button {\n  {% if states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "icon": "mdi:home-assistant",
+                                                    "name": "Updates",
+                                                    "style": "ha-icon {\n  {% if states('binary_sensor.software_update_available') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.name {\n  {% if states('binary_sensor.software_update_available') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 19px !important;\n  {% if states('binary_sensor.software_update_available') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('binary_sensor.software_update_available') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 },
                                                 {
                                                     "type": "entity",
@@ -545,7 +488,7 @@
                                                     "show_icon": true,
                                                     "state_color": true,
                                                     "name": "Plex",
-                                                    "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-icon {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 20px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "style": "ha-icon {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.name {\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 19px !important;\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('sensor.plex_plex')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 },
                                                 {
                                                     "type": "entity",
@@ -555,7 +498,7 @@
                                                     "state_color": true,
                                                     "name": "Oven",
                                                     "icon": "mdi:stove",
-                                                    "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-icon {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 32px !important;\n  text-align: center !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "style": "ha-icon {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.name {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 19px !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 }
                                             ]
                                         },
@@ -565,92 +508,40 @@
                                             "square": false,
                                             "cards": [
                                                 {
-                                                    "type": "button",
+                                                    "type": "entity",
                                                     "entity": "sensor.upstairs_lights_on",
                                                     "show_name": true,
                                                     "show_icon": true,
-                                                    "show_state": true,
                                                     "state_color": true,
-                                                    "icon_height": "20px",
-                                                    "name": "Upstairs",
-                                                    "tap_action": {
-                                                        "action": "navigate",
-                                                        "navigation_path": "/control-panel/upstairs"
-                                                    },
-                                                    "hold_action": {
-                                                        "action": "call-service",
-                                                        "service": "homeassistant.toggle",
-                                                        "target": {
-                                                            "entity_id": "switch.upstairs"
-                                                        }
-                                                    },
-                                                    "style": "ha-icon, ha-card.type-button {\n  {% if states('sensor.upstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.upstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "name": "Up",
+                                                    "style": "ha-icon {\n  {% if states('sensor.upstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.name {\n  {% if states('sensor.upstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 19px !important;\n  {% if states('sensor.upstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('sensor.upstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 },
                                                 {
-                                                    "type": "button",
+                                                    "type": "entity",
                                                     "entity": "sensor.middle_level_lights_on",
                                                     "show_name": true,
                                                     "show_icon": true,
-                                                    "show_state": true,
                                                     "state_color": true,
-                                                    "icon_height": "20px",
-                                                    "name": "Middle",
-                                                    "tap_action": {
-                                                        "action": "navigate",
-                                                        "navigation_path": "/control-panel/middle-level"
-                                                    },
-                                                    "hold_action": {
-                                                        "action": "call-service",
-                                                        "service": "homeassistant.toggle",
-                                                        "target": {
-                                                            "entity_id": "switch.middle_level"
-                                                        }
-                                                    },
-                                                    "style": "ha-icon, ha-card.type-button {\n  {% if states('sensor.middle_level_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.middle_level_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "name": "Mid",
+                                                    "style": "ha-icon {\n  {% if states('sensor.middle_level_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.name {\n  {% if states('sensor.middle_level_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 19px !important;\n  {% if states('sensor.middle_level_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('sensor.middle_level_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 },
                                                 {
-                                                    "type": "button",
+                                                    "type": "entity",
                                                     "entity": "sensor.downstairs_lights_on",
                                                     "show_name": true,
                                                     "show_icon": true,
-                                                    "show_state": true,
                                                     "state_color": true,
-                                                    "icon_height": "20px",
-                                                    "name": "Downstrs",
-                                                    "tap_action": {
-                                                        "action": "navigate",
-                                                        "navigation_path": "/control-panel/downstairs"
-                                                    },
-                                                    "hold_action": {
-                                                        "action": "call-service",
-                                                        "service": "homeassistant.toggle",
-                                                        "target": {
-                                                            "entity_id": "switch.downstairs"
-                                                        }
-                                                    },
-                                                    "style": "ha-icon, ha-card.type-button {\n  {% if states('sensor.downstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.downstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "name": "Down",
+                                                    "style": "ha-icon {\n  {% if states('sensor.downstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.name {\n  {% if states('sensor.downstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 19px !important;\n  {% if states('sensor.downstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('sensor.downstairs_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 },
                                                 {
-                                                    "type": "button",
+                                                    "type": "entity",
                                                     "entity": "sensor.outside_plus_garage_lights_on",
                                                     "show_name": true,
                                                     "show_icon": true,
-                                                    "show_state": true,
                                                     "state_color": true,
-                                                    "icon_height": "20px",
-                                                    "name": "Outside",
-                                                    "tap_action": {
-                                                        "action": "navigate",
-                                                        "navigation_path": "/control-panel/outside"
-                                                    },
-                                                    "hold_action": {
-                                                        "action": "call-service",
-                                                        "service": "homeassistant.toggle",
-                                                        "target": {
-                                                            "entity_id": "switch.outside"
-                                                        }
-                                                    },
-                                                    "style": "ha-icon, ha-card.type-button {\n  {% if states('sensor.outside_plus_garage_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.outside_plus_garage_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "name": "Out",
+                                                    "style": "ha-icon {\n  {% if states('sensor.outside_plus_garage_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.name {\n  {% if states('sensor.outside_plus_garage_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 19px !important;\n  {% if states('sensor.outside_plus_garage_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('sensor.outside_plus_garage_lights_on')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 }
                                             ]
                                         }
@@ -742,7 +633,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -1115,7 +1006,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -1618,7 +1509,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -1950,7 +1841,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -2397,7 +2288,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -2784,7 +2675,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -2949,7 +2840,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -3363,7 +3254,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -3756,7 +3647,7 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 16px;\n}\n",
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",

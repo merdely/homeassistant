@@ -1,0 +1,245 @@
+{
+    "version": 1,
+    "key": "lovelace.lovelace_zigbee",
+    "data": {
+        "config": {
+            "views": [
+                {
+                    "title": "Security",
+                    "icon": "mdi:security",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Door Sensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "/^binary_sensor\\..*_(door|gate|slider|window)$/",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    },
+                                    {
+                                        "entity_id": "binary_sensor.garage_door_sensor",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "entity_id": "binary_sensor.garage_door"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Motion Sensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "/^binary_sensor\\..*motion.*_occupancy$/",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    }
+                                ],
+                                "exclude": []
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Water Leak"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "/binary_sensor\\..*water_leak_sensor/",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "entity_id": "/battery/"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "title": "Temperature",
+                    "path": "temperature",
+                    "icon": "mdi:thermometer",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Multisensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "/sensor\\..*temperature/",
+                                        "name": "/.*[Mm]ultisensor.*/",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    }
+                                ],
+                                "exclude": []
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Door Sensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "/^sensor\\..*_(door|gate|slider|window)_temperature$/",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    },
+                                    {
+                                        "entity_id": "sensor.garage_door_sensor_temperature",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "entity_id": "binary_sensor.garage_door"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Motion Sensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "/^sensor\\..*motion.*_temperature",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    }
+                                ],
+                                "exclude": []
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "title": "Temperature Graphs",
+                    "path": "temperature-graphs",
+                    "icon": "mdi:chart-line",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.family_room_temperature",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.garage_temperature",
+                                    "name": "Garage"
+                                },
+                                {
+                                    "entity": "sensor.living_room_temperature",
+                                    "name": "Living Room"
+                                },
+                                {
+                                    "entity": "sensor.outside_temperature",
+                                    "name": "Outside"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Multisensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.attic_temperature",
+                                    "name": "Attic"
+                                },
+                                {
+                                    "entity": "sensor.bedroom_temperature",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.master_bath_temperature",
+                                    "name": "Master Bath"
+                                },
+                                {
+                                    "entity": "sensor.office_temperature",
+                                    "name": "Office"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Multisensors"
+                        }
+                    ]
+                },
+                {
+                    "title": "Summary",
+                    "path": "summary",
+                    "icon": "mdi:format-list-bulleted",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "markdown",
+                            "content": "{% set fulllist = states | selectattr('entity_id','match','^(binary_sensor\\..*_(door|gate|slider|window|motion.*_occupancy|water_leak_sensor)|sensor\\..*_(lamp|lights|multisensor|plug|router|switch)_linkquality)$') | map(attribute='entity_id') | list -%}\n{% set lq = states | selectattr('entity_id','match','^sensor\\..*_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set doorcount = states | selectattr('entity_id','match','^binary_sensor\\..*_(door|gate|slider|window)$') | map(attribute='entity_id') | list | length -%}\n{% set motioncount = states | selectattr('entity_id','match','^binary_sensor\\..*_motion.*_occupancy$') | map(attribute='entity_id') | list | length -%}\n{% set watercount = states | selectattr('entity_id','match','^binary_sensor\\..*_water_leak_sensor$') | map(attribute='entity_id') | list | length -%}\n{% set multicount = states | selectattr('entity_id','match','^sensor\\..*multisensor_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set plugcount = states | selectattr('entity_id','match','^sensor\\..*plug_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set routercount = states | selectattr('entity_id','match','^sensor\\..*router_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set lightcount = states | selectattr('entity_id','match','^sensor\\..*(lamp|lights)_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set switchcount = states | selectattr('entity_id','match','^sensor\\..*switch_linkquality$') | map(attribute='entity_id') | list | length -%}\n\n## Totals:\n* Total Zigbee Devices by LQ: {{ lq }}\n* Total Zigbee Devices by query: {{ fulllist | length }}\n\n## Counts:\n* Total Door/Window sensors: {{ doorcount }}\n* Total Motion sensors: {{ motioncount }}\n* Total Water Leak sensors: {{ watercount }}\n* Total Multisensors: {{ multicount }}\n* Total Plugs: {{ plugcount }}\n* Total Routers: {{ routercount }}\n* Total Lamps/Lights: {{ lightcount }}\n* Total Switches: {{ switchcount }}\n* Count of Totals = {{ doorcount + motioncount + watercount + multicount + plugcount + routercount + lightcount + switchcount }}",
+                            "title": "Summary"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
