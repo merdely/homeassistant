@@ -48,7 +48,7 @@
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n  {% if states('sensor.fully_kiosk_browser') | int >= 25 and states('sensor.fully_kiosk_browser') | int < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n  {% if states('sensor.fully_kiosk_browser') | int >= 25 and states('sensor.fully_kiosk_browser') | int < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.measurement {\n  {% if states('sensor.fully_kiosk_browser') | int >= 25 and states('sensor.fully_kiosk_browser') | int < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int < 25 %}\n  color: red !important;\n  {% endif %}\n}\n"
                                                 }
                                             ]
                                         },
@@ -59,8 +59,8 @@
                                             "cards": [
                                                 {
                                                     "type": "button",
-                                                    "style": ".state {\n  font-size: 30px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n",
-                                                    "entity": "input_text.washer_and_dryer_state_pretty",
+                                                    "style": ".state {\n  font-size: 30px !important;\n  {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}\n  color: yellow !important\n  {% else %}\n  color: var(--primary-text-color) !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n",
+                                                    "entity": "sensor.washer_and_dryer_state_pretty",
                                                     "show_icon": false,
                                                     "show_name": false,
                                                     "show_state": true
@@ -397,25 +397,11 @@
                                                         }
                                                     ],
                                                     "card": {
-                                                        "type": "grid",
-                                                        "columns": 1,
-                                                        "square": false,
-                                                        "cards": [
-                                                            {
-                                                                "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
-                                                                "entities": [
-                                                                    {
-                                                                        "entity": "person.holly_erdely",
-                                                                        "name": "Holly"
-                                                                    },
-                                                                    {
-                                                                        "entity": "person.michael_erdely",
-                                                                        "name": "Mike"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
+                                                        "type": "markdown",
+                                                        "card_mod": {
+                                                            "style": "ha-markdown.no-header {\n  padding-top: 2px !important;\n  padding-bottom: 0px !important;\n}\nha-markdown {\n  padding: 0px 16px !important;\n}\n"
+                                                        },
+                                                        "content": "<table width=\"100%\" border=0>\n<tr><td width=30 align=left><img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /></td><td align=left><font size=5>Holly</font></td><td align=right><font size=5>{{ states('person.holly_erdely') | replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n<tr><td width=30 align=left><img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /></td><td align=left><font size=5>Mike</font></td><td align=right><font size=5>{{ states('person.michael_erdely') | replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n</table>\n"
                                                     }
                                                 },
                                                 {
@@ -485,7 +471,7 @@
                                                 {
                                                     "type": "entity",
                                                     "name": "Family Rm",
-                                                    "entity": "sensor.family_room_temperature",
+                                                    "entity": "sensor.god_damn_temperature",
                                                     "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
                                                 },
                                                 {
@@ -650,7 +636,7 @@
                                                         "action": "navigate",
                                                         "navigation_path": "/control-panel/software"
                                                     },
-                                                    "style": "ha-card.type-button {\n  {% if states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "style": "ha-card.type-button {\n  {% if is_state('binary_sensor.oven_is_on', 'on') %}\n  color: red !important;\n  {% elif states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if is_state('binary_sensor.oven_is_on', 'on') %}\n  color: red !important;\n  {% elif states('sensor.software_update_available')|int > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
                                                 }
                                             ]
                                         }
@@ -805,7 +791,7 @@
                                                             "entity": "binary_sensor.back_door"
                                                         },
                                                         {
-                                                            "entity": "binary_sensor.family_room_slider"
+                                                            "entity": "binary_sensor.god_damn_slider"
                                                         },
                                                         {
                                                             "entity": "binary_sensor.den_window"

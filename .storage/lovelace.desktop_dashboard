@@ -392,12 +392,12 @@
                                         },
                                         {
                                             "entity": "person.holly_erdely",
-                                            "name": "Who's Sleeping",
+                                            "name": "Bed Presence Sensor",
                                             "icon": "mdi:bed",
                                             "type": "custom:multiple-entity-row",
                                             "entities": [
                                                 {
-                                                    "entity": "sensor.holly_in_bed",
+                                                    "entity": "binary_sensor.withings_in_bed_holly_e",
                                                     "name": "Holly",
                                                     "styles": {
                                                         "padding-top": "5px",
@@ -407,7 +407,7 @@
                                                     }
                                                 },
                                                 {
-                                                    "entity": "sensor.mike_in_bed",
+                                                    "entity": "binary_sensor.withings_in_bed_michael_e",
                                                     "name": "Mike",
                                                     "styles": {
                                                         "padding-top": "5px",
@@ -448,7 +448,7 @@
                                         },
                                         {
                                             "type": "custom:multiple-entity-row",
-                                            "entity": "sensor.family_room_temperature",
+                                            "entity": "sensor.bedroom_temperature",
                                             "name": "Temp",
                                             "show_state": false,
                                             "entities": [
@@ -487,7 +487,7 @@
                                         },
                                         {
                                             "type": "custom:multiple-entity-row",
-                                            "entity": "sensor.family_room_temperature",
+                                            "entity": "sensor.god_damn_temperature",
                                             "name": "Temp",
                                             "show_state": false,
                                             "entities": [
@@ -501,7 +501,7 @@
                                                     "unit": []
                                                 },
                                                 {
-                                                    "entity": "sensor.family_room_temperature",
+                                                    "entity": "sensor.god_damn_temperature",
                                                     "name": "Down",
                                                     "unit": []
                                                 },
@@ -569,6 +569,7 @@
                                         },
                                         {
                                             "entity": "sensor.washer_and_dryer_state_pretty",
+                                            "style": ":host, ha-svg-icon, ha-icon, state-badge, svg {\n  {% if states('sensor.washer_and_dryer_state_pretty') != \"Laundry Idle\" %}\n  color: yellow !important;\n  fill: yellow !important;\n  {% endif %}\n}\n",
                                             "name": "Washer and Dryer State"
                                         },
                                         {
@@ -785,7 +786,7 @@
                                             "entity": "binary_sensor.back_door"
                                         },
                                         {
-                                            "entity": "binary_sensor.family_room_slider"
+                                            "entity": "binary_sensor.god_damn_slider"
                                         },
                                         {
                                             "entity": "binary_sensor.den_window"
@@ -809,9 +810,6 @@
                                             "entity": "binary_sensor.garage_door_sensor"
                                         },
                                         {
-                                            "entity": "binary_sensor.garage_door"
-                                        },
-                                        {
                                             "entity": "binary_sensor.garage_door_cam_status"
                                         },
                                         {
@@ -825,7 +823,8 @@
                                         }
                                     ],
                                     "title": "Security",
-                                    "show_header_toggle": false
+                                    "show_header_toggle": false,
+                                    "state_color": true
                                 },
                                 {
                                     "type": "weather-forecast",
@@ -1107,6 +1106,9 @@
                                     "entity": "sensor.god_damn_soundbar_plug"
                                 },
                                 {
+                                    "entity": "switch.god_damn_roku_plug"
+                                },
+                                {
                                     "entity": "input_select.god_damn_input"
                                 },
                                 {
@@ -1341,14 +1343,9 @@
                                         {
                                             "type": "button",
                                             "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/lovelace-everything"
+                                                "action": "toggle"
                                             },
-                                            "name": "Everything Dashboard",
-                                            "icon": "mdi:infinity",
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
+                                            "entity": "script.fix_in_bed_sensors"
                                         },
                                         {
                                             "type": "button",
@@ -1712,6 +1709,9 @@
                                 },
                                 {
                                     "entity": "script.scene_night_night"
+                                },
+                                {
+                                    "entity": "script.fix_in_bed_sensors"
                                 }
                             ],
                             "title": "Scripts",
@@ -2021,7 +2021,7 @@
                                         "domain": "media_player"
                                     },
                                     {
-                                        "entity_id": "/^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|device_tracker.kukui(_[0-9]+)?|(binary_sensor|sensor).withings_.*|group.outside_xmas)$/"
+                                        "entity_id": "/^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|(binary_sensor|sensor).withings_(?!in_bed).*|device_tracker.kukui(_[0-9]+)?|group.outside_xmas)$/"
                                     }
                                 ]
                             },
@@ -2112,6 +2112,12 @@
                                 {
                                     "entity": "input_text.washer_and_dryer_state_pretty",
                                     "name": "Washer/Dryer Test"
+                                },
+                                {
+                                    "entity": "input_boolean.laundry_room_washer_running"
+                                },
+                                {
+                                    "entity": "input_boolean.laundry_room_dryer_running"
                                 }
                             ]
                         }
@@ -2123,22 +2129,29 @@
                     "badges": [],
                     "cards": [
                         {
-                            "type": "picture",
-                            "image": "https://demo.home-assistant.io/stub_config/t-shirt-promo.png",
-                            "tap_action": {
-                                "action": "none"
-                            },
-                            "hold_action": {
-                                "action": "none"
-                            }
-                        },
-                        {
                             "type": "entity",
                             "entity": "sensor.time",
                             "tap_action": {
                                 "action": "navigate",
                                 "navigation_path": "/control-panel/home"
                             }
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "binary_sensor.withings_in_bed_holly_e"
+                                },
+                                {
+                                    "entity": "input_boolean.holly_is_in_bed"
+                                },
+                                {
+                                    "entity": "binary_sensor.withings_in_bed_michael_e"
+                                },
+                                {
+                                    "entity": "input_boolean.mike_is_in_bed"
+                                }
+                            ]
                         }
                     ]
                 }

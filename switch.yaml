@@ -33,7 +33,7 @@
     venus_screensaver:
       friendly_name: Venus Screensaver
       command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock'
-      command_off: '/bin/false'
+      command_off: '/bin/true'
       command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_status'
       value_template: '{{ value == "true" }}'
 

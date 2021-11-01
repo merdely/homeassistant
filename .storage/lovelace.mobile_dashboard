@@ -67,12 +67,42 @@
                                                         "show_state": false
                                                     },
                                                     {
+                                                        "entity": "person.holly_erdely",
+                                                        "name": "Bed Presence Sensor",
+                                                        "icon": "mdi:bed",
+                                                        "type": "custom:multiple-entity-row",
+                                                        "entities": [
+                                                            {
+                                                                "entity": "binary_sensor.withings_in_bed_holly_e",
+                                                                "name": false,
+                                                                "styles": {
+                                                                    "padding-top": "10px",
+                                                                    "padding-bottom": "10px",
+                                                                    "margin-top": "0px",
+                                                                    "margin-bottom": "0px"
+                                                                }
+                                                            },
+                                                            {
+                                                                "entity": "binary_sensor.withings_in_bed_michael_e",
+                                                                "name": false,
+                                                                "styles": {
+                                                                    "padding-top": "10px",
+                                                                    "padding-bottom": "10px",
+                                                                    "margin-top": "0px",
+                                                                    "margin-bottom": "0px"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "show_state": false
+                                                    },
+                                                    {
                                                         "entity": "alarm_control_panel.home_alarm",
                                                         "name": "Security System",
                                                         "type": "custom:multiple-entity-row",
                                                         "entities": [
                                                             {
                                                                 "entity": "binary_sensor.security_devices",
+                                                                "name": false,
                                                                 "styles": {
                                                                     "padding-top": "5px",
                                                                     "padding-bottom": "5px",
@@ -82,7 +112,7 @@
                                                             },
                                                             {
                                                                 "entity": "alarm_control_panel.home_alarm",
-                                                                "name": "Alarm",
+                                                                "name": false,
                                                                 "styles": {
                                                                     "padding-top": "5px",
                                                                     "padding-bottom": "5px",
@@ -95,7 +125,7 @@
                                                     },
                                                     {
                                                         "type": "custom:multiple-entity-row",
-                                                        "entity": "sensor.family_room_temperature",
+                                                        "entity": "sensor.bedroom_temperature",
                                                         "name": "Temp",
                                                         "show_state": false,
                                                         "entities": [
@@ -134,7 +164,7 @@
                                                     },
                                                     {
                                                         "type": "custom:multiple-entity-row",
-                                                        "entity": "sensor.family_room_temperature",
+                                                        "entity": "sensor.god_damn_temperature",
                                                         "name": "Temp",
                                                         "show_state": false,
                                                         "entities": [
@@ -239,6 +269,7 @@
                                                         "entities": [
                                                             {
                                                                 "entity": "sensor.moco_recycle_day",
+                                                                "name": false,
                                                                 "styles": {
                                                                     "padding-top": "5px",
                                                                     "padding-bottom": "5px",
@@ -248,7 +279,7 @@
                                                             },
                                                             {
                                                                 "entity": "sensor.recycle",
-                                                                "name": "Next Pickup"
+                                                                "name": false
                                                             }
                                                         ],
                                                         "show_state": false

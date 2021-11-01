@@ -1308,3 +1308,16 @@ function_camera_reset:
   mode: single
   alias: 111 - Play Spotify
   icon: mdi:spotify
+fix_in_bed_sensors:
+  alias: Fix In-Bed Sensors
+  sequence:
+  - service: python_script.fix_in_bed
+    data:
+      entity_id: binary_sensor.withings_in_bed_holly_e
+      state: '{{ states(''input_boolean.holly_is_in_bed'') }}'
+  - service: python_script.fix_in_bed
+    data:
+      entity_id: binary_sensor.withings_in_bed_michael_e
+      state: '{{ states(''input_boolean.mike_is_in_bed'') }}'
+  mode: single
+  icon: mdi:bed

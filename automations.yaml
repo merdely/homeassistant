@@ -176,6 +176,12 @@
     event_data:
       device_ieee: 00:15:8d:00:02:83:c5:c8
       command: double
+  - platform: device
+    domain: mqtt
+    device_id: 8b32a51920b7a78f8166618d7a13e87d
+    type: action
+    subtype: double
+    discovery_id: 0x00158d000283c5c8 action_double
   condition: []
   action:
   - service: homeassistant.toggle
@@ -191,6 +197,12 @@
     event_data:
       device_ieee: 00:15:8d:00:02:83:c5:c8
       command: hold
+  - platform: device
+    domain: mqtt
+    device_id: 8b32a51920b7a78f8166618d7a13e87d
+    type: action
+    subtype: hold
+    discovery_id: 0x00158d000283c5c8 action_hold
   condition: []
   action:
   - service: switch.toggle
@@ -198,11 +210,11 @@
     entity_id: switch.flood_light, switch.shed_lamp
   mode: single
 - id: '1602952724393'
-  alias: Notifications - 0 - Water Leak Detected - Laundry Room
+  alias: Notifications - 0 - Water Leak Detected - Water Heater
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.laundry_room_water_leak_sensor
+    entity_id: binary_sensor.water_heater_water_leak_sensor
     to: 'on'
     for: 00:01:00
   condition: []
@@ -316,6 +328,7 @@
     data_template:
       command: convert
       package: imagemagick
+  - service: script.fix_in_bed_sensors
   mode: single
 - id: '1603391662402'
   alias: Security - 40 Armed - Disarm Security System in the morning if someone is
@@ -3114,7 +3127,7 @@
     state: 'off'
     for: 00:01:00
   - condition: numeric_state
-    entity_id: sensor.powder_room_motion_sensor_illuminance_lux
+    entity_id: sensor.powder_room_motion_sensor_illuminance
     below: '65'
   - condition: or
     conditions:
@@ -3221,4 +3234,58 @@
   - service: homeassistant.turn_off
     target:
       entity_id: switch.guest_room_usb_hub
+  mode: single
+- id: '1635775206466'
+  alias: Controls - Save Holly In Bed State
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.withings_in_bed_holly_e
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.withings_in_bed_holly_e
+        state: 'on'
+      sequence:
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.holly_is_in_bed
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.withings_in_bed_holly_e
+        state: 'off'
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.holly_is_in_bed
+    default: []
+  mode: single
+- id: '1635775250461'
+  alias: Controls - Save Mike In Bed State
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.withings_in_bed_michael_e
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.withings_in_bed_michael_e
+        state: 'on'
+      sequence:
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.mike_is_in_bed
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.withings_in_bed_michael_e
+        state: 'off'
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.mike_is_in_bed
+    default: []
   mode: single
