@@ -9,10 +9,10 @@ verbose=0
 [ "$1" = "-v" ] && verbose=1
 
 outd=$(mktemp -d)
-curl -sLo $outd/snapshot.jpg http://garagedoorcam.erdely.in:8000/snapshot.jpg
+curl -sLo $outd/snapshot.jpg http://garagedoorcam.erdely.in:8000/lastsnap.jpg
 
 match=0
-convert $outd/snapshot.jpg -crop 1785x966+807+978 $outd/compare.jpg
+convert $outd/snapshot.jpg -crop 1124x135+156+0 $outd/compare.jpg
 for file in /config/gcam/doorclosed_*_cropped.jpg; do
   thismatch=0
   ret=$(compare -metric PSNR $file $outd/compare.jpg /dev/null 2>&1)

@@ -515,12 +515,7 @@
         target:
           entity_id: switch.siren
       - delay: '60'
-  - service: notify.mobile_app_pixel_4a
-    data:
-      title: Security System
-      message: The Security System has been Triggered!
-      data:
-        clickAction: /control-panel/security
+  - service: notify.mobile_app_pixel_6_pro
   mode: single
 - id: '1604856519122'
   alias: Notifications - Laundry Room Dryer Started
@@ -908,14 +903,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: light.mike_bench_lamp
+    entity_id: switch.mike_bench_lamp
     to: 'off'
     for: 00:00:05
   condition: []
   action:
   - service: homeassistant.turn_on
     target:
-      entity_id: light.mike_bench_lamp
+      entity_id: switch.mike_bench_lamp
   mode: single
 - id: '1607035454754'
   alias: Lighting - Office - Mike Desk Lamp Toggle
@@ -947,7 +942,7 @@
   action:
   - service: homeassistant.turn_off
     target:
-      entity_id: light.mike_bench_lamp
+      entity_id: switch.mike_bench_lamp
   mode: single
 - id: '1607035951583'
   alias: Lighting - Living Room Lights Off
@@ -992,20 +987,15 @@
       - service: homeassistant.update_entity
         data: {}
         entity_id: sensor.holly_previous_location
-      - service: media_player.play_media
+      - service: tts.cloud_say
         data:
-          media_content_id: https://ha.erdely.in:38123/local/sounds/Holly has left
-            {{ states("sensor.holly_previous_location") | replace("_", " ") | title
-            }}.mp3
-          media_content_type: music
-        entity_id: media_player.security_speakers
+          entity_id: media_player.security_speakers
+          message: Holly has left {{ states("sensor.holly_previous_location") }}
     default:
-    - service: media_player.play_media
-      entity_id: media_player.security_speakers
+    - service: tts.cloud_say
       data:
-        media_content_id: https://ha.erdely.in:38123/local/sounds/Holly is at {{ states('person.holly_erdely')
-          | replace('_', ' ') | title }}.mp3
-        media_content_type: music
+        entity_id: media_player.security_speakers
+        message: Holly is at {{ states('person.holly_erdely') }}
   - service: media_player.media_stop
     data: {}
     target:
@@ -1044,20 +1034,15 @@
       - service: homeassistant.update_entity
         data: {}
         entity_id: sensor.mike_previous_location
-      - service: media_player.play_media
+      - service: tts.cloud_say
         data:
-          media_content_id: https://ha.erdely.in:38123/local/sounds/Mike has left
-            {{ states("sensor.mike_previous_location") | replace("_", " ") | title
-            }}.mp3
-          media_content_type: music
-        entity_id: media_player.security_speakers
+          entity_id: media_player.security_speakers
+          message: Mike has left {{ states("sensor.mike_previous_location") }}
     default:
-    - service: media_player.play_media
-      entity_id: media_player.security_speakers
+    - service: tts.cloud_say
       data:
-        media_content_id: https://ha.erdely.in:38123/local/sounds/Mike is at {{ states('person.michael_erdely')
-          | replace("_", " ") | title}}.mp3
-        media_content_type: music
+        entity_id: media_player.security_speakers
+        message: Mike is at {{ states("person.michael_erdely") }}
   - service: media_player.media_stop
     data: {}
     target:
@@ -1568,7 +1553,7 @@
       input: tivo
   - service: shell_command.tivo_setch
     data:
-      tv_device: tivo-livingroom
+      tv_device: tivo-living-room
       channel: '{{ states(''input_select.living_room_channel'') }}'
   - service: input_select.select_option
     data:
@@ -2256,7 +2241,7 @@
     - conditions:
       - condition: template
         value_template: '{{ now().weekday() == (states(''sensor.recycle_weekday'')
-          | int + 1) % 7 }}'
+          | int(default=0) + 1) % 7 }}'
       sequence:
       - service: input_boolean.turn_off
         data: {}
@@ -2266,8 +2251,8 @@
     - conditions:
       - condition: template
         value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1_number'')
-          | int + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
-          | int + 1) % 7 }}'
+          | int(default=0) + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
+          | int(default=0) + 1) % 7 }}'
       sequence:
       - service: input_boolean.turn_off
         data: {}
@@ -2368,7 +2353,8 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(default=0)
+          == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0E01F" }}'
       - condition: template
@@ -2388,7 +2374,8 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(default=0)
+          == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0D02F" }}'
       - condition: template
@@ -2408,7 +2395,8 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(default=0)
+          == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0F00F" }}'
       - condition: template
@@ -2560,7 +2548,8 @@
     value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec_like"
       }}'
   - condition: template
-    value_template: '{{ trigger.payload_json.IrReceived.Bits | int == 32 }}'
+    value_template: '{{ trigger.payload_json.IrReceived.Bits | int(default=0) == 32
+      }}'
   - condition: template
     value_template: '{{ trigger.payload_json.IrReceived.Data == "0xA10C2C03" }}'
   - condition: template
@@ -2575,23 +2564,12 @@
   alias: Notifications - Mailbox Notify
   description: ''
   trigger:
-  - platform: numeric_state
-    entity_id: sensor.mailbox_sensor_angle_z
-    below: '0'
-  condition:
-  - condition: time
-    after: 09:00:00
-    before: '18:00:00'
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-    - sat
-    - sun
+  - platform: state
+    entity_id: binary_sensor.wyze_sense_778e4029
+    to: 'on'
+  condition: []
   action:
-  - service: notify.hangouts_mike
+  - service: notify.hangouts_security_alert
     data:
       message: The mail's here, the mail's here!  Woo-hoo!
   mode: single
@@ -3202,7 +3180,7 @@
   - service: homeassistant.toggle
     data: {}
     target:
-      entity_id: light.mike_bench_lamp
+      entity_id: switch.mike_bench_lamp
   mode: single
 - id: '1635180091668'
   alias: Controls - Power On Ender3 Screen with Ender 3

@@ -1,10 +1,10 @@
 announcement_ha_app_test_announcement:
   alias: Announcement - HA App - Test Announcement
   sequence:
-  - service: notify.mobile_app_pixel_4a
+  - service: notify.mobile_app_pixel_6_pro
     data:
-      title: Laundry
       message: The dryer is still running
+      title: Laundry
   - service: notify.mobile_app_pixel_3
     data:
       title: Laundry
@@ -1321,3 +1321,10 @@ fix_in_bed_sensors:
       state: '{{ states(''input_boolean.mike_is_in_bed'') }}'
   mode: single
   icon: mdi:bed
+testing_hangouts_security:
+  alias: Testing - Hangouts Security
+  sequence:
+  - service: notify.hangouts_security_alert
+    data:
+      message: test message
+  mode: single

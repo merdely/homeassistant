@@ -27,7 +27,7 @@ if len(sys.argv) < 3:
     quit()
 else:
     entity_id = sys.argv[1]
-    current_state = sys.argv[2]
+    current_state = " ".join(sys.argv[2:]).replace("'", "\\'")
 
 try:
    conn = _mysql.connect(host=sqlhostname,

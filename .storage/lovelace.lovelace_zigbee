@@ -98,13 +98,34 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
+                                "title": "Motion Sensors"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "/^sensor\\..*motion.*_temperature",
+                                        "options": {
+                                            "secondary_info": "last-updated"
+                                        }
+                                    }
+                                ],
+                                "exclude": []
+                            },
+                            "sort": {
+                                "method": "friendly_name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
                                 "title": "Multisensors"
                             },
                             "filter": {
                                 "include": [
                                     {
                                         "entity_id": "/sensor\\..*temperature/",
-                                        "name": "/.*[Mm]ultisensor.*/",
+                                        "name": "/^(Bedroom|Master Bath|Attic|Office|Living Room|God Damn|Garage|Outside) Temperature$/",
                                         "options": {
                                             "secondary_info": "last-updated"
                                         }
@@ -151,21 +172,18 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "Motion Sensors"
+                                "title": "Water Leak Sensor"
                             },
                             "filter": {
                                 "include": [
                                     {
-                                        "entity_id": "/^sensor\\..*motion.*_temperature",
+                                        "entity_id": "sensor\\..*_water_leak_sensor_temperature",
                                         "options": {
                                             "secondary_info": "last-updated"
                                         }
                                     }
                                 ],
                                 "exclude": []
-                            },
-                            "sort": {
-                                "method": "friendly_name"
                             }
                         }
                     ]
@@ -180,7 +198,7 @@
                             "type": "history-graph",
                             "entities": [
                                 {
-                                    "entity": "sensor.family_room_temperature",
+                                    "entity": "sensor.god_damn_temperature",
                                     "name": "Family Room"
                                 },
                                 {
@@ -223,6 +241,158 @@
                             "hours_to_show": 12,
                             "refresh_interval": 0,
                             "title": "Multisensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.bedroom_motion_sensor_temperature",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_motion_sensor_temperature",
+                                    "name": "FR"
+                                },
+                                {
+                                    "entity": "sensor.living_room_motion_sensor_temperature",
+                                    "name": "LR"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_motion_sensor_temperature",
+                                    "name": "Powder"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Motion Sensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.master_bath_water_leak_sensor_temperature",
+                                    "name": "M. Bath"
+                                },
+                                {
+                                    "entity": "sensor.guest_bath_water_leak_sensor_temperature",
+                                    "name": "G. Bath"
+                                },
+                                {
+                                    "entity": "sensor.kitchen_water_leak_sensor_temperature",
+                                    "name": "Kitchen"
+                                },
+                                {
+                                    "entity": "sensor.living_room_water_leak_sensor_temperature",
+                                    "name": "LR"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Water Leak"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.den_water_leak_sensor_temperature",
+                                    "name": "Den"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_water_leak_sensor_temperature",
+                                    "name": "FR"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_water_leak_sensor_temperature",
+                                    "name": "Powder"
+                                },
+                                {
+                                    "entity": "sensor.washer_water_leak_sensor_temperature",
+                                    "name": "Washer"
+                                },
+                                {
+                                    "entity": "sensor.water_heater_water_leak_sensor_temperature",
+                                    "name": "Water Heater"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Water Leak"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.bedroom_slider_temperature",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.front_door_temperature",
+                                    "name": "Front Door"
+                                },
+                                {
+                                    "entity": "sensor.living_room_slider_temperature",
+                                    "name": "LR"
+                                },
+                                {
+                                    "entity": "sensor.dining_room_slider_temperature",
+                                    "name": "DR"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Door/Window"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.back_door_temperature",
+                                    "name": "Back Door"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_slider_temperature",
+                                    "name": "FR"
+                                },
+                                {
+                                    "entity": "sensor.den_window_temperature",
+                                    "name": "Den"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_window_temperature",
+                                    "name": "Powder"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Door/Window"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.garage_entry_door_temperature",
+                                    "name": "Garage Entry"
+                                },
+                                {
+                                    "entity": "sensor.garage_door_sensor_temperature",
+                                    "name": "Garage Door"
+                                },
+                                {
+                                    "entity": "sensor.shed_gate_temperature",
+                                    "name": "Shed Gate"
+                                },
+                                {
+                                    "entity": "sensor.shed_door_temperature",
+                                    "name": "Shed Door"
+                                },
+                                {
+                                    "entity": "sensor.chimney_gate_temperature",
+                                    "name": "Chimney"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Outside Door/Window"
                         }
                     ]
                 },
@@ -236,6 +406,806 @@
                             "type": "markdown",
                             "content": "{% set fulllist = states | selectattr('entity_id','match','^(binary_sensor\\..*_(door|gate|slider|window|motion.*_occupancy|water_leak_sensor)|sensor\\..*_(lamp|lights|multisensor|plug|router|switch)_linkquality)$') | map(attribute='entity_id') | list -%}\n{% set lq = states | selectattr('entity_id','match','^sensor\\..*_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set doorcount = states | selectattr('entity_id','match','^binary_sensor\\..*_(door|gate|slider|window)$') | map(attribute='entity_id') | list | length -%}\n{% set motioncount = states | selectattr('entity_id','match','^binary_sensor\\..*_motion.*_occupancy$') | map(attribute='entity_id') | list | length -%}\n{% set watercount = states | selectattr('entity_id','match','^binary_sensor\\..*_water_leak_sensor$') | map(attribute='entity_id') | list | length -%}\n{% set multicount = states | selectattr('entity_id','match','^sensor\\..*multisensor_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set plugcount = states | selectattr('entity_id','match','^sensor\\..*plug_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set routercount = states | selectattr('entity_id','match','^sensor\\..*router_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set lightcount = states | selectattr('entity_id','match','^sensor\\..*(lamp|lights)_linkquality$') | map(attribute='entity_id') | list | length -%}\n{% set switchcount = states | selectattr('entity_id','match','^sensor\\..*switch_linkquality$') | map(attribute='entity_id') | list | length -%}\n\n## Totals:\n* Total Zigbee Devices by LQ: {{ lq }}\n* Total Zigbee Devices by query: {{ fulllist | length }}\n\n## Counts:\n* Total Door/Window sensors: {{ doorcount }}\n* Total Motion sensors: {{ motioncount }}\n* Total Water Leak sensors: {{ watercount }}\n* Total Multisensors: {{ multicount }}\n* Total Plugs: {{ plugcount }}\n* Total Routers: {{ routercount }}\n* Total Lamps/Lights: {{ lightcount }}\n* Total Switches: {{ switchcount }}\n* Count of Totals = {{ doorcount + motioncount + watercount + multicount + plugcount + routercount + lightcount + switchcount }}",
                             "title": "Summary"
+                        }
+                    ]
+                },
+                {
+                    "title": "LQI",
+                    "path": "lqi",
+                    "icon": "mdi:signal-cellular-1",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.bedroom_motion_sensor_linkquality",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.office_door_motion_sensor_linkquality",
+                                    "name": "Office Door"
+                                },
+                                {
+                                    "entity": "sensor.office_shelf_motion_sensor_linkquality",
+                                    "name": "Office Shelf"
+                                },
+                                {
+                                    "entity": "sensor.living_room_motion_sensor_linkquality",
+                                    "name": "Living Room"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Motion Sensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.den_motion_sensor_linkquality",
+                                    "name": "Den"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_motion_sensor_linkquality",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.laundry_room_motion_sensor_linkquality",
+                                    "name": "Laundry"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_motion_sensor_linkquality",
+                                    "name": "Powder"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Motion Sensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.attic_multisensor_linkquality",
+                                    "name": "Attic"
+                                },
+                                {
+                                    "entity": "sensor.bedroom_multisensor_linkquality",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.master_bath_multisensor_linkquality",
+                                    "name": "M. Bath"
+                                },
+                                {
+                                    "entity": "sensor.office_multisensor_linkquality",
+                                    "name": "Office"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Multisensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.garage_multisensor_linkquality",
+                                    "name": "Garage"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_multisensor_linkquality",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.living_room_multisensor_linkquality",
+                                    "name": "Living Room"
+                                },
+                                {
+                                    "entity": "sensor.outside_multisensor_linkquality",
+                                    "name": "Outside"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Multisensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.bedroom_slider_linkquality",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.front_door_linkquality",
+                                    "name": "Front Door"
+                                },
+                                {
+                                    "entity": "sensor.dining_room_slider_linkquality",
+                                    "name": "Dining Room"
+                                },
+                                {
+                                    "entity": "sensor.living_room_slider_linkquality",
+                                    "name": "Living Room"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Doors/Windows"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.den_window_linkquality",
+                                    "name": "Den"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_slider_linkquality",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_window_linkquality",
+                                    "name": "Powder"
+                                },
+                                {
+                                    "entity": "sensor.back_door_linkquality",
+                                    "name": "Back Door"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Doors/Windows"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.garage_entry_door_linkquality",
+                                    "name": "Garage Entry"
+                                },
+                                {
+                                    "entity": "sensor.garage_door_sensor_linkquality",
+                                    "name": "Garage Door"
+                                },
+                                {
+                                    "entity": "sensor.shed_door_linkquality",
+                                    "name": "Shed Door"
+                                },
+                                {
+                                    "entity": "sensor.shed_gate_linkquality",
+                                    "name": "Shed Gate"
+                                },
+                                {
+                                    "entity": "sensor.chimney_gate_linkquality",
+                                    "name": "Chimney Gate"
+                                }
+                            ],
+                            "refresh_interval": 0,
+                            "title": "Outside Doors",
+                            "hours_to_show": 12
+                        }
+                    ]
+                },
+                {
+                    "title": "LQI 2",
+                    "path": "lqi-2",
+                    "icon": "mdi:signal-cellular-2",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.den_water_leak_sensor_linkquality",
+                                    "name": "Den"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_water_leak_sensor_linkquality",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_water_leak_sensor_linkquality",
+                                    "name": "Powder"
+                                },
+                                {
+                                    "entity": "sensor.washer_water_leak_sensor_linkquality",
+                                    "name": "Washer"
+                                },
+                                {
+                                    "entity": "sensor.water_heater_water_leak_sensor_linkquality",
+                                    "name": "Water Heater"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Water Leak"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.guest_bath_water_leak_sensor_linkquality",
+                                    "name": "Guest Bath"
+                                },
+                                {
+                                    "entity": "sensor.master_bath_water_leak_sensor_linkquality",
+                                    "name": "Master Bath"
+                                },
+                                {
+                                    "entity": "sensor.kitchen_water_leak_sensor_linkquality",
+                                    "name": "Kitchen"
+                                },
+                                {
+                                    "entity": "sensor.living_room_water_leak_sensor_linkquality",
+                                    "name": "Living Room"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Water Leak"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.bedroom_tv_plug_linkquality",
+                                    "name": "Bedroom TV"
+                                },
+                                {
+                                    "entity": "sensor.office_tv_plug_linkquality",
+                                    "name": "Office TV"
+                                },
+                                {
+                                    "entity": "sensor.garage_outside_plug_linkquality",
+                                    "name": "Outside"
+                                },
+                                {
+                                    "entity": "sensor.far_black_lamp_linkquality",
+                                    "name": "Far Lamp"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs/Outside Plugs"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.god_damn_roku_plug_linkquality",
+                                    "name": "GD Roku"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_soundbar_plug_linkquality",
+                                    "name": "GD Sbar"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_tv_plug_linkquality",
+                                    "name": "GD TV"
+                                },
+                                {
+                                    "entity": "sensor.living_room_tv_plug_linkquality",
+                                    "name": "LR TV"
+                                }
+                            ],
+                            "refresh_interval": 0,
+                            "title": "Downstairs Plugs",
+                            "hours_to_show": 12
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.shed_button_linkquality",
+                                    "name": "Shed Button"
+                                },
+                                {
+                                    "entity": "sensor.dining_room_christmas_lights_linkquality",
+                                    "name": "DR Xmas"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Other"
+                        }
+                    ]
+                },
+                {
+                    "title": "Battery",
+                    "path": "battery",
+                    "icon": "mdi:battery",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.bedroom_motion_sensor_battery",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.office_door_motion_sensor_battery",
+                                    "name": "Office Door"
+                                },
+                                {
+                                    "entity": "sensor.office_shelf_motion_sensor_battery",
+                                    "name": "Office Shelf"
+                                },
+                                {
+                                    "entity": "sensor.living_room_motion_sensor_battery",
+                                    "name": "Living Room"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Motion Sensors Battery"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.den_motion_sensor_battery",
+                                    "name": "Den"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_motion_sensor_battery",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.laundry_room_motion_sensor_battery",
+                                    "name": "Laundry"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_motion_sensor_battery",
+                                    "name": "Powder"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Motion Sensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.attic_multisensor_battery",
+                                    "name": "Attic"
+                                },
+                                {
+                                    "entity": "sensor.bedroom_multisensor_battery",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.master_bath_multisensor_battery",
+                                    "name": "M. Bath"
+                                },
+                                {
+                                    "entity": "sensor.office_multisensor_battery",
+                                    "name": "Office"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Multisensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.garage_multisensor_battery",
+                                    "name": "Garage"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_multisensor_battery",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.living_room_multisensor_battery",
+                                    "name": "Living Room"
+                                },
+                                {
+                                    "entity": "sensor.outside_multisensor_battery",
+                                    "name": "Outside"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Multisensors"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.bedroom_slider_battery",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.front_door_battery",
+                                    "name": "Front Door"
+                                },
+                                {
+                                    "entity": "sensor.dining_room_slider_battery",
+                                    "name": "Dining Room"
+                                },
+                                {
+                                    "entity": "sensor.living_room_slider_battery",
+                                    "name": "Living Room"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Doors/Windows"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.den_window_battery",
+                                    "name": "Den"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_slider_battery",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_window_battery",
+                                    "name": "Powder"
+                                },
+                                {
+                                    "entity": "sensor.back_door_battery",
+                                    "name": "Back Door"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Doors/Windows"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.garage_entry_door_battery",
+                                    "name": "Garage Entry"
+                                },
+                                {
+                                    "entity": "sensor.garage_door_sensor_battery",
+                                    "name": "Garage Door"
+                                },
+                                {
+                                    "entity": "sensor.shed_door_battery",
+                                    "name": "Shed Door"
+                                },
+                                {
+                                    "entity": "sensor.shed_gate_battery",
+                                    "name": "Shed Gate"
+                                },
+                                {
+                                    "entity": "sensor.chimney_gate_battery",
+                                    "name": "Chimney Gate"
+                                }
+                            ],
+                            "refresh_interval": 0,
+                            "title": "Outside Doors",
+                            "hours_to_show": 12
+                        }
+                    ]
+                },
+                {
+                    "title": "Battery 2",
+                    "path": "battery-2",
+                    "icon": "mdi:battery-10",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.den_water_leak_sensor_battery",
+                                    "name": "Den"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_water_leak_sensor_battery",
+                                    "name": "Family Room"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_water_leak_sensor_battery",
+                                    "name": "Powder"
+                                },
+                                {
+                                    "entity": "sensor.washer_water_leak_sensor_battery",
+                                    "name": "Washer"
+                                },
+                                {
+                                    "entity": "sensor.water_heater_water_leak_sensor_battery",
+                                    "name": "Water Heater"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Downstairs Water Leak"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.guest_bath_water_leak_sensor_battery",
+                                    "name": "Guest Bath"
+                                },
+                                {
+                                    "entity": "sensor.master_bath_water_leak_sensor_battery",
+                                    "name": "Master Bath"
+                                },
+                                {
+                                    "entity": "sensor.kitchen_water_leak_sensor_battery",
+                                    "name": "Kitchen"
+                                },
+                                {
+                                    "entity": "sensor.living_room_water_leak_sensor_battery",
+                                    "name": "Living Room"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Upstairs Water Leak"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.shed_button_battery",
+                                    "name": "Shed Button"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Other"
+                        }
+                    ]
+                },
+                {
+                    "title": "Temp Comparison",
+                    "path": "temp-comparison",
+                    "icon": "mdi:thermometer",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.attic_temperature",
+                                    "name": "Attic"
+                                },
+                                {
+                                    "entity": "sensor.office_temperature",
+                                    "name": "Multisensor"
+                                },
+                                {
+                                    "entity": "sensor.office_tv_plug_temperature",
+                                    "name": "TV Plug"
+                                },
+                                {
+                                    "entity": "sensor.guest_bath_water_leak_sensor_temperature",
+                                    "name": "G. Bath Leak"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Office"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.bedroom_temperature",
+                                    "name": "Multisensor"
+                                },
+                                {
+                                    "entity": "sensor.bedroom_tv_plug_temperature",
+                                    "name": "TV Plug"
+                                },
+                                {
+                                    "entity": "sensor.bedroom_slider_temperature",
+                                    "name": "Slider"
+                                },
+                                {
+                                    "entity": "sensor.master_bath_temperature",
+                                    "name": "Bath Multisensor"
+                                },
+                                {
+                                    "entity": "sensor.master_bath_water_leak_sensor_temperature",
+                                    "name": "Bath Leak"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Bedroom"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.living_room_temperature",
+                                    "name": "Multisensor"
+                                },
+                                {
+                                    "entity": "sensor.living_room_tv_plug_temperature",
+                                    "name": "TV Plug"
+                                },
+                                {
+                                    "entity": "sensor.living_room_slider_temperature",
+                                    "name": "Slider"
+                                },
+                                {
+                                    "entity": "sensor.living_room_motion_sensor_temperature",
+                                    "name": "Motion"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Living Room"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.dining_room_water_leak_sensor_temperature",
+                                    "name": "Leak"
+                                },
+                                {
+                                    "entity": "sensor.dining_room_christmas_lights_temperature",
+                                    "name": "Xmas Lights"
+                                },
+                                {
+                                    "entity": "sensor.dining_room_slider_temperature",
+                                    "name": "Slider"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Dining Room"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.front_door_temperature",
+                                    "name": "Front Door"
+                                },
+                                {
+                                    "entity": "sensor.back_door_temperature",
+                                    "name": "Back Door"
+                                },
+                                {
+                                    "entity": "sensor.kitchen_water_leak_sensor_temperature",
+                                    "name": "Leak"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Kitchen"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.god_damn_temperature",
+                                    "name": "Multisensor"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_motion_sensor_temperature",
+                                    "name": "Motion"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_water_leak_sensor_temperature",
+                                    "name": "Leak"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_slider_temperature",
+                                    "name": "Slider"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_tv_plug_temperature",
+                                    "name": "TV Plug"
+                                },
+                                {
+                                    "entity": "sensor.god_damn_soundbar_plug_temperature",
+                                    "name": "Soundbar Plug"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Family Room"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.den_window_temperature",
+                                    "name": "Window"
+                                },
+                                {
+                                    "entity": "sensor.den_water_leak_sensor_temperature",
+                                    "name": "Leak"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Den"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.washer_water_leak_sensor_temperature",
+                                    "name": "Washer Leak"
+                                },
+                                {
+                                    "entity": "sensor.water_heater_water_leak_sensor_temperature",
+                                    "name": "Water Heater Leak"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_water_leak_sensor_temperature",
+                                    "name": "Powder Leak"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_motion_sensor_temperature",
+                                    "name": "Powder Motion"
+                                },
+                                {
+                                    "entity": "sensor.powder_room_window_temperature",
+                                    "name": "Powder Window"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Laundry Room"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.outside_temperature",
+                                    "name": "Outside"
+                                },
+                                {
+                                    "entity": "sensor.shed_gate_temperature",
+                                    "name": "Shed Gate"
+                                },
+                                {
+                                    "entity": "sensor.shed_door_temperature",
+                                    "name": "Shed Door"
+                                },
+                                {
+                                    "entity": "sensor.chimney_gate_temperature",
+                                    "name": "Chimney"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Outside"
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "sensor.garage_temperature",
+                                    "name": "Multisensor"
+                                },
+                                {
+                                    "entity": "sensor.garage_entry_door_temperature",
+                                    "name": "Entry"
+                                },
+                                {
+                                    "entity": "sensor.garage_door_sensor_temperature",
+                                    "name": "Door"
+                                }
+                            ],
+                            "hours_to_show": 12,
+                            "refresh_interval": 0,
+                            "title": "Garage"
                         }
                     ]
                 }

@@ -6,9 +6,9 @@
   command_topic: "cmnd/bedroom_fan/POWER1"
   availability_topic: "tele/bedroom_fan/LWT"
   percentage_state_topic: "stat/bedroom_fan/speed"
-  percentage_value_template: '{{ ((value | replace("3,","")) | int + 1) * 25 }}'
+  percentage_value_template: '{{ ((value | replace("3,","")) | int(default=0) + 1) * 25 }}'
   percentage_command_topic: "cmnd/bedroom_fan/tuyasend4"
-  percentage_command_template: "3,{{ ((value | int - 1) / 25) | int }}"
+  percentage_command_template: "3,{{ ((value | int(default=0) - 1) / 25) | int(default=0) }}"
   preset_mode_value_template: '{{ value | replace("3,0", "low") | replace("3,1", "medium") | replace("3,2", "high") | replace("3,3", "cyclone") }}'
   preset_mode_command_topic: "cmnd/bedroom_fan/tuyasend4"
   preset_mode_command_template: '{{ value | replace("low", "3,0") | replace("medium", "3,1") | replace("high", "3,2") | replace("cyclone", "3,3") }}'
@@ -31,9 +31,9 @@
   command_topic: "cmnd/office_fan/POWER1"
   availability_topic: "tele/office_fan/LWT"
   percentage_state_topic: "stat/office_fan/speed"
-  percentage_value_template: '{{ ((value | replace("3,","")) | int + 1) * 25 }}'
+  percentage_value_template: '{{ ((value | replace("3,","")) | int(default=0) + 1) * 25 }}'
   percentage_command_topic: "cmnd/office_fan/tuyasend4"
-  percentage_command_template: "3,{{ ((value | int - 1) / 25) | int }}"
+  percentage_command_template: "3,{{ ((value | int(default=0) - 1) / 25) | int(default=0) }}"
   preset_mode_state_topic: "stat/office_fan/speed"
   preset_mode_value_template: '{{ value | replace("3,0", "low") | replace("3,1", "medium") | replace("3,2", "high") | replace("3,3", "cyclone") }}'
   preset_mode_command_topic: "cmnd/office_fan/tuyasend4"

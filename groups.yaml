@@ -50,7 +50,7 @@ security_devices:
     - binary_sensor.back_door
     - binary_sensor.bedroom_slider
     - binary_sensor.dining_room_slider
-    - binary_sensor.family_room_slider
+    - binary_sensor.god_damn_slider
     - binary_sensor.living_room_slider
     - binary_sensor.den_window
     - binary_sensor.powder_room_window
@@ -63,6 +63,30 @@ exterior_security_devices:
     - binary_sensor.chimney_gate
     - binary_sensor.garage_entry_door
     - cover.garage_door
+
+sliders:
+  name: Sliders
+  entities:
+    - binary_sensor.bedroom_slider
+    - binary_sensor.dining_room_slider
+    - binary_sensor.god_damn_slider
+    - binary_sensor.living_room_slider
+
+int_doors_windows:
+  name: Doors/Windows
+  entities:
+    - binary_sensor.back_door
+    - binary_sensor.front_door
+    - binary_sensor.den_window
+    - binary_sensor.powder_room_window
+
+ext_doors_gates:
+  name: Doors/Gates
+  entities:
+    - binary_sensor.shed_door
+    - binary_sensor.shed_gate
+    - binary_sensor.chimney_gate
+    - binary_sensor.garage_entry_door
 
 doors_windows:
   name: Doors and Windows
@@ -89,16 +113,35 @@ motion_sensors:
     - binary_sensor.office_shelf_motion_sensor_occupancy
     - binary_sensor.powder_room_motion_sensor_occupancy
 
+up_water_leak:
+  name: Upstairs Water Leak
+  entities:
+    - binary_sensor.master_bath_water_leak_sensor
+    - binary_sensor.hall_bath_water_leak_sensor
+    - binary_sensor.dining_room_water_leak_sensor
+    - binary_sensor.kitchen_water_leak_sensor
+    - binary_sensor.living_room_water_leak_sensor
+
+down_water_leak:
+  name: Downstairs Water Leak
+  entities:
+    - binary_sensor.god_damn_water_leak_sensor
+    - binary_sensor.den_water_leak_sensor
+    - binary_sensor.powder_room_water_leak_sensor
+    - binary_sensor.washer_water_leak_sensor
+    - binary_sensor.water_heater_water_leak_sensor
+
 water_leak:
   name: Water Leak Sensors
   entities:
-    - binary_sensor.den_water_leak_sensor
-    - binary_sensor.dining_room_water_leak_sensor
-    - binary_sensor.washer_water_leak_sensor
-    - binary_sensor.god_damn_water_leak_sensor
-    - binary_sensor.hall_bath_water_leak_sensor
-    - binary_sensor.kitchen_water_leak_sensor
-    - binary_sensor.laundry_room_water_leak_sensor
-    - binary_sensor.living_room_water_leak_sensor
     - binary_sensor.master_bath_water_leak_sensor
+    - binary_sensor.hall_bath_water_leak_sensor
+    - binary_sensor.dining_room_water_leak_sensor
+    - binary_sensor.kitchen_water_leak_sensor
+    - binary_sensor.living_room_water_leak_sensor
+    - binary_sensor.god_damn_water_leak_sensor
+    - binary_sensor.den_water_leak_sensor
     - binary_sensor.powder_room_water_leak_sensor
+    - binary_sensor.washer_water_leak_sensor
+    - binary_sensor.water_heater_water_leak_sensor
+

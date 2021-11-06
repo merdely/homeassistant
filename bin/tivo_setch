@@ -374,15 +374,19 @@ channel=$(echo $channel | sed 's/Channel //')
 
 OUT=$(nc -w 1 "$tivo" 31339)
 
-if [ -z "$OUT" ]; then
-  #printf "IRCODE TIVO\r" | nc -w1 "$tivo" 31339
-  #sleep 2
-  printf "IRCODE LIVETV" | nc -w1 "$tivo" 31339
-  sleep 2
-fi
+#if [ -z "$OUT" ]; then
+#  #printf "IRCODE TIVO\r" | nc -w1 "$tivo" 31339
+#  #sleep 2
+#  printf "IRCODE LIVETV" | nc -w1 "$tivo" 31339
+#  sleep 2
+#fi
 
-{ printf "IRCODE CLEAR\r"; for f in $(echo $channel | sed -e 's/\(.\)/\1\n/g'); do
-  printf "IRCODE NUM$f\r"
+{ printf "IRCODE TIVO\r"; sleep .2; printf "IRCODE LIVETV\r"; sleep .2; printf "IRCODE EXIT\r"; } \
+  | nc -w1 "$tivo" 31339
+sleep 1.5
+{ printf "IRCODE CLEAR\r"; sleep .4; \
+  for f in $(echo $channel | sed -e 's/\(.\)/\1\n/g'); do
+  printf "IRCODE NUM$f\r"; sleep .4
 done; printf "IRCODE ENTER\r"; } | nc -w1 "$tivo" 31339
 sleep 2
 

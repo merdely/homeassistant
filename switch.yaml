@@ -323,7 +323,7 @@
         {% if is_state('switch.office_tv', 'on') or
               is_state('light.office_fan_light', 'on') or
               is_state('fan.office_fan', 'on') or
-              is_state('light.mike_bench_lamp', 'on') or
+              is_state('switch.mike_bench_lamp', 'on') or
               is_state('switch.mike_desk_lamp', 'on') %}
           on
         {% else %}
@@ -334,7 +334,7 @@
           entity_id: light.office_fan_light
       turn_off:
         - service: homeassistant.turn_off
-          entity_id: switch.office_tv, light.office_fan_light, light.mike_bench_lamp, switch.mike_desk_lamp, switch.mercury_screensaver, switch.venus_screensaver
+          entity_id: switch.office_tv, light.office_fan_light, switch.mike_bench_lamp, switch.mike_desk_lamp, switch.mercury_screensaver, switch.venus_screensaver
         - service: homeassistant.turn_on
           entity_id: switch.mercury_screensaver, switch.venus_screensaver
 

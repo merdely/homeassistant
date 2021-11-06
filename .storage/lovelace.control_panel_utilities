@@ -290,38 +290,6 @@
                                                             "name": "Shed Cam"
                                                         }
                                                     ]
-                                                },
-                                                {
-                                                    "type": "grid",
-                                                    "columns": 2,
-                                                    "square": false,
-                                                    "cards": [
-                                                        {
-                                                            "type": "button",
-                                                            "tap_action": {
-                                                                "action": "call-service",
-                                                                "service": "homeassistant.update_entity",
-                                                                "service_data": {
-                                                                    "entity_id": "binary_sensor.home_assistant_configuration_check"
-                                                                }
-                                                            },
-                                                            "entity": "binary_sensor.home_assistant_configuration_check",
-                                                            "name": "HA Config Check",
-                                                            "icon_height": "40px"
-                                                        },
-                                                        {
-                                                            "type": "button",
-                                                            "tap_action": {
-                                                                "action": "toggle",
-                                                                "confirmation": {
-                                                                    "text": "Are you sure you want to restart Home Assistant?"
-                                                                }
-                                                            },
-                                                            "entity": "script.homeassistant_restart",
-                                                            "name": "Restart Home Assistant",
-                                                            "icon_height": "40px"
-                                                        }
-                                                    ]
                                                 }
                                             ]
                                         }
@@ -339,7 +307,7 @@
                                             "cards": [
                                                 {
                                                     "type": "custom:mod-card",
-                                                    "style": "ha-card {\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int <= 20 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int <= 20 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int <= 20 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int <= 20 %}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int <= 10 %}red{% elif state_attr('sensor.printer_ink', 'black') | int <= 20 %}yellow{% endif %};\n}\n",
+                                                    "style": "ha-card {\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) <= 10 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) <= 20 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) <= 10 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) <= 20 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) <= 10 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) <= 20 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) <= 10 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) <= 20 %}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) <= 10 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) <= 20 %}yellow{% endif %};\n}\n",
                                                     "card": {
                                                         "type": "grid",
                                                         "columns": 1,
@@ -407,7 +375,7 @@
                                                                     },
                                                                     {
                                                                         "type": "custom:multiple-entity-row",
-                                                                        "entity": "sensor.family_room_temperature",
+                                                                        "entity": "sensor.bedroom_temperature",
                                                                         "name": "Temp",
                                                                         "show_state": false,
                                                                         "entities": [
@@ -446,7 +414,7 @@
                                                                     },
                                                                     {
                                                                         "type": "custom:multiple-entity-row",
-                                                                        "entity": "sensor.family_room_temperature",
+                                                                        "entity": "sensor.god_damn_temperature",
                                                                         "name": "Temp",
                                                                         "show_state": false,
                                                                         "entities": [
@@ -457,7 +425,7 @@
                                                                                 "unit": []
                                                                             },
                                                                             {
-                                                                                "entity": "sensor.family_room_temperature",
+                                                                                "entity": "sensor.god_damn_temperature",
                                                                                 "name": "Down",
                                                                                 "unit": []
                                                                             },
@@ -615,12 +583,12 @@
                                                                     },
                                                                     {
                                                                         "entity": "sensor.plex_plex",
-                                                                        "style": ":host {\n  {% if states('sensor.plex_plex') | int > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                        "style": ":host {\n  {% if states('sensor.plex_plex') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
                                                                         "name": "Plex Status"
                                                                     },
                                                                     {
                                                                         "entity": "sensor.unavailable_entities",
-                                                                        "style": ":host {\n  {% if states('sensor.unavailable_entities') | int > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                        "style": ":host {\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
                                                                         "name": "Unavailable Home Assistant Entities"
                                                                     },
                                                                     {

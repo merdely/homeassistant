@@ -31,31 +31,16 @@
   count: 4
 
 - platform: ping
-  name: Mike's Pixel 4a
-  host: 192.168.25.174
+  name: Mike's Pixel 6 Pro
+  host: 192.168.25.131
   scan_interval: 15
   count: 4
 
 - platform: ping
-  name: Holly's Pixel 3
-  host: 192.168.25.205
+  name: Holly's Pixel 5
+  host: 192.168.25.133
   scan_interval: 15
   count: 4
-
-- platform: rest
-  name: Home Assistant Configuration Check
-  resource: "https://ha.erdely.in:38123/api/config/core/check_config"
-  method: POST
-  headers:
-    Authorization: !secret mike_long_lived_check_command
-    Content-Type: application/json
-  device_class: problem
-  value_template: >-
-    {% if value_json.result == 'valid' %}
-      Off
-    {% else %}
-      On
-    {% endif %}
 
 - name: OctoPrint Camera Status
   platform: command_line
@@ -69,6 +54,7 @@
   command: '/config/bin/get_garage_door_state'
   payload_on: 'on'
   payload_off: 'off'
+  scan_interval: 15
 
 - name: New SSL Cert Available
   platform: command_line
