@@ -35,7 +35,7 @@ try:
    cursor.execute(query)
    rows = cursor.fetchall() 
    if len(rows) > 0:
-       print(rows[0][0])
+       prev_location = rows[0][0]
 
 except (Exception, psycopg2.Error) as error :
     print ("Error while fetching data from PostgreSQL", error)
@@ -45,4 +45,9 @@ finally:
     if(conn):
         cursor.close()
         conn.close()
+
+try:
+    print(prev_location)
+except:
+    print(current_state)
 

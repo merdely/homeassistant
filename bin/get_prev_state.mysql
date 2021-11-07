@@ -40,9 +40,15 @@ try:
 
    rows = result.fetch_row(maxrows=0) 
    if len(rows) > 0:
-       print(rows[0][0].decode('utf-8'))
+       prev_location = rows[0][0].decode('utf-8')
 
    conn.close()
 
 except Exception as error :
     print ("Error while fetching data from MySQL", error)
+
+try:
+    print(prev_location)
+except:
+    print(current_state)
+
