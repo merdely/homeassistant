@@ -9,7 +9,7 @@ verbose=0
 [ "$1" = "-v" ] && verbose=1
 
 outd=$(mktemp -d)
-curl -sLo $outd/snapshot.jpg http://garagedoorcam.erdely.in:8000/lastsnap.jpg
+curl -sLo $outd/snapshot.jpg http://garagedoorcam.erdely.in:8000/snapshot.jpg
 
 match=0
 convert $outd/snapshot.jpg -crop 1124x135+156+0 $outd/compare.jpg

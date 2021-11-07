@@ -1201,14 +1201,13 @@
                             "camera_image": "camera.chimney_cam"
                         },
                         {
-                            "type": "picture",
-                            "image": "http://garagedoorcam.erdely.in:8000/snapshot.jpg",
-                            "tap_action": {
-                                "action": "none"
-                            },
-                            "hold_action": {
-                                "action": "none"
-                            }
+                            "type": "picture-entity",
+                            "entity": "camera.garage_door_cam",
+                            "camera_view": "live",
+                            "show_name": false,
+                            "show_state": false,
+                            "camera_image": "camera.garage_door_cam",
+                            "image": "http://garagedoorcam.erdely.in:8000/snapshot.jpg"
                         },
                         {
                             "type": "picture-entity",
@@ -1798,6 +1797,9 @@
                                         "entity_id": "person.holly_erdely"
                                     },
                                     {
+                                        "entity_id": "sensor.holly_previous_location"
+                                    },
+                                    {
                                         "entity_id": "/pixel_(3|5)/"
                                     }
                                 ]
@@ -1816,6 +1818,9 @@
                                 "include": [
                                     {
                                         "entity_id": "person.michael_erdely"
+                                    },
+                                    {
+                                        "entity_id": "sensor.mike_previous_location"
                                     },
                                     {
                                         "entity_id": "*pixel_6_pro*"
