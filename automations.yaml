@@ -2574,18 +2574,23 @@
       message: The mail's here, the mail's here!  Woo-hoo!
   mode: single
 - id: '1615411227750'
-  alias: Notifications - Mailbox Wait Reset
+  alias: Mailbox State Reset
   description: ''
   trigger:
   - platform: state
-    entity_id: input_boolean.mailbox_sensor_wait
+    entity_id: binary_sensor.wyze_sense_778e4029
     to: 'on'
-    for: 00:30:00
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
   condition: []
   action:
-  - service: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.mailbox_sensor_wait
+  - service: python_script.set_state
+    data:
+      entity_id: binary_sensor.wyze_sense_778e4029
+      state: 'off'
   mode: single
 - id: '1615594192596'
   alias: Thermostat - Turn on AC
@@ -2723,7 +2728,6 @@
       message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id\
         \ -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')\
         \ }}\n{% endif -%}{% endfor -%}"
-      title: Water Leak Detected
   mode: single
 - id: '1618083518993'
   alias: Lighting - Living Room - Far Black Lamp
