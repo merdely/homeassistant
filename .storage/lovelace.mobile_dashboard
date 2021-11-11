@@ -35,7 +35,9 @@
                                         "cards": [
                                             {
                                                 "type": "entities",
-                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -18px 0px;\n}\namultiple-entity-row {\n  color: red;\n  margin: 10px 0px;\n  padding-top: 10;\n  padding-bottom: 10;\n}\n",
+                                                "card_mod": {
+                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -18px 0px;\n}\namultiple-entity-row {\n  color: red;\n  margin: 10px 0px;\n  padding-top: 10;\n  padding-bottom: 10;\n}\n"
+                                                },
                                                 "entities": [
                                                     {
                                                         "entity": "person.holly_erdely",
@@ -132,27 +134,27 @@
                                                             {
                                                                 "entity": "sensor.bedroom_temperature",
                                                                 "name": "BR",
-                                                                "unit": []
+                                                                "unit": " "
                                                             },
                                                             {
                                                                 "entity": "sensor.master_bath_temperature",
                                                                 "name": "MB",
-                                                                "unit": []
+                                                                "unit": " "
                                                             },
                                                             {
                                                                 "entity": "sensor.master_bath_humidity",
                                                                 "name": "MB(h)",
-                                                                "unit": []
+                                                                "unit": " "
                                                             },
                                                             {
                                                                 "entity": "sensor.office_temperature",
                                                                 "name": "Ofc",
-                                                                "unit": []
+                                                                "unit": " "
                                                             },
                                                             {
                                                                 "entity": "sensor.living_room_temperature",
                                                                 "name": "LR",
-                                                                "unit": [],
+                                                                "unit": " ",
                                                                 "styles": {
                                                                     "padding-top": "10px",
                                                                     "padding-bottom": "10px",
@@ -175,27 +177,27 @@
                                                                     "color": "var(--thermostat-color)"
                                                                 },
                                                                 "attribute": "current_temperature",
-                                                                "unit": []
+                                                                "unit": " "
                                                             },
                                                             {
                                                                 "entity": "sensor.god_damn_temperature",
                                                                 "name": "Down",
-                                                                "unit": []
+                                                                "unit": " "
                                                             },
                                                             {
                                                                 "entity": "sensor.attic_temperature",
                                                                 "name": "Attic",
-                                                                "unit": []
+                                                                "unit": " "
                                                             },
                                                             {
                                                                 "entity": "sensor.garage_temperature",
                                                                 "name": "Garage",
-                                                                "unit": []
+                                                                "unit": " "
                                                             },
                                                             {
                                                                 "entity": "sensor.outside_temperature",
                                                                 "name": "Out",
-                                                                "unit": [],
+                                                                "unit": " ",
                                                                 "styles": {
                                                                     "padding-top": "10px",
                                                                     "padding-bottom": "10px",
@@ -250,14 +252,18 @@
                                                     },
                                                     {
                                                         "entity": "binary_sensor.oven_is_on",
-                                                        "style": ":host {\n  {% if is_state('binary_sensor.oven_is_on', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                        "card_mod": {
+                                                            "style": ":host {\n  {% if is_state('binary_sensor.oven_is_on', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                        },
                                                         "name": "Oven",
                                                         "icon": "mdi:stove",
                                                         "state_color": true
                                                     },
                                                     {
                                                         "entity": "sensor.recycle",
-                                                        "style": ":host {\n  {% if is_state('sensor.recycle', 'Tomorrow') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Today') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n",
+                                                        "card_mod": {
+                                                            "style": ":host {\n  {% if is_state('sensor.recycle', 'Tomorrow') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Today') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n"
+                                                        },
                                                         "tap_action": {
                                                             "action": "call-service",
                                                             "service": "input_boolean.toggle",
@@ -286,7 +292,9 @@
                                                     },
                                                     {
                                                         "entity": "sensor.trash",
-                                                        "style": ":host {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n",
+                                                        "card_mod": {
+                                                            "style": ":host {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n"
+                                                        },
                                                         "tap_action": {
                                                             "action": "call-service",
                                                             "service": "input_boolean.toggle",
@@ -343,23 +351,31 @@
                                                     },
                                                     {
                                                         "entity": "sensor.plex_plex",
-                                                        "style": ":host {\n  {% if states('sensor.plex_plex') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                        "card_mod": {
+                                                            "style": ":host {\n  {% if states('sensor.plex_plex') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                        },
                                                         "name": "Plex Status"
                                                     },
                                                     {
                                                         "entity": "sensor.unavailable_entities",
-                                                        "style": ":host {\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                        "card_mod": {
+                                                            "style": ":host {\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                        },
                                                         "name": "Unavailable Home Assistant Entities"
                                                     },
                                                     {
-                                                        "entity": "sensor.out_of_date_zigbee_sensors",
-                                                        "style": ":host {\n  {% if states('sensor.out_of_date_zigbee_sensors') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                        "entity": "sensor.out_of_date_zigbee_entities",
+                                                        "card_mod": {
+                                                            "style": ":host {\n  {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                        }
                                                     },
                                                     {
                                                         "entity": "binary_sensor.software_update_available",
                                                         "type": "attribute",
                                                         "attribute": "number",
-                                                        "style": ":host {\n  {% if is_state('binary_sensor.software_update_available', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                        "card_mod": {
+                                                            "style": ":host {\n  {% if is_state('binary_sensor.software_update_available', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                        },
                                                         "tap_action": {
                                                             "action": "navigate",
                                                             "navigation_path": "/mobile-software/home"

@@ -1,10 +1,11 @@
-tivo_setch: '/config/bin/tivo_setch {{ tv_device }}.erdely.in "{{ channel }}"'
-tivo_record: "/config/bin/tivo_record {{ tv_device }}.erdely.in"
-tivo_button: "/config/bin/tivo_button {{ tv_device }}.erdely.in {{ tivo_button }}"
-ssh_command: "/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant {{ server }} {{ command }}"
-update_tv_shows: "/config/bin/create_tv_list.sh"
-install_apk: '/config/bin/install_apk {{ command }} {{ package }}'
-rm_newshows_flag: "rm -f /config/.newtvshowfile"
 clean_alarm_state: /config/bin/clean_alarm_state
-save_homeassistant_log: /config/bin/save_homeassistant_log
+fix_mailbox: /config/bin/fix_mailbox.py
+install_apk: /config/bin/install_apk {{ command }} {{ package }}
+rm_newshows_flag: rm -f /config/.newtvshowfile
 rotate_ha_logs: /config/bin/rotate_ha_logs
+save_homeassistant_log: /config/bin/save_homeassistant_log
+ssh_command: /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant {{ server }} {{ command }}
+tivo_button: /config/bin/tivo_button {{ tv_device }}.erdely.in {{ tivo_button }}
+tivo_record: /config/bin/tivo_record {{ tv_device }}.erdely.in
+tivo_setch: /config/bin/tivo_setch {{ tv_device }}.erdely.in "{{ channel }}"
+update_tv_shows: /config/bin/create_tv_list.sh

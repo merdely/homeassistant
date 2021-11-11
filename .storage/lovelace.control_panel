@@ -41,14 +41,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n  {% if states('sensor.fully_kiosk_browser') | int(default=0) >= 25 and states('sensor.fully_kiosk_browser') | int(default=0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(default=0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n  {% if states('sensor.fully_kiosk_browser') | int(default=0) >= 25 and states('sensor.fully_kiosk_browser') | int(default=0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(default=0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.measurement {\n  {% if states('sensor.fully_kiosk_browser') | int(default=0) >= 25 and states('sensor.fully_kiosk_browser') | int(default=0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(default=0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n  {% if states('sensor.fully_kiosk_browser') | int(default=0) >= 25 and states('sensor.fully_kiosk_browser') | int(default=0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(default=0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n  {% if states('sensor.fully_kiosk_browser') | int(default=0) >= 25 and states('sensor.fully_kiosk_browser') | int(default=0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(default=0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.measurement {\n  {% if states('sensor.fully_kiosk_browser') | int(default=0) >= 25 and states('sensor.fully_kiosk_browser') | int(default=0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(default=0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -59,7 +63,9 @@
                                             "cards": [
                                                 {
                                                     "type": "button",
-                                                    "style": ".state {\n  font-size: 30px !important;\n  {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}\n  color: yellow !important\n  {% else %}\n  color: var(--primary-text-color) !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n",
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 30px !important;\n  {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}\n  color: yellow !important\n  {% else %}\n  color: var(--primary-text-color) !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                                                    },
                                                     "entity": "sensor.washer_and_dryer_state_pretty",
                                                     "show_icon": false,
                                                     "show_name": false,
@@ -72,7 +78,9 @@
                                                     "cards": [
                                                         {
                                                             "type": "button",
-                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
+                                                            "card_mod": {
+                                                                "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
+                                                            },
                                                             "tap_action": {
                                                                 "action": "call-service",
                                                                 "service": "input_boolean.toggle",
@@ -88,7 +96,9 @@
                                                         },
                                                         {
                                                             "type": "button",
-                                                            "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n",
+                                                            "card_mod": {
+                                                                "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
+                                                            },
                                                             "tap_action": {
                                                                 "action": "call-service",
                                                                 "service": "input_boolean.toggle",
@@ -139,7 +149,9 @@
                                                                         ],
                                                                         "card": {
                                                                             "type": "button",
-                                                                            "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 1px !important;\n}\nha-card.type-button span {\n  margin-top: -4px !important;\n}\n",
+                                                                            "card_mod": {
+                                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 1px !important;\n}\nha-card.type-button span {\n  margin-top: -4px !important;\n}\n"
+                                                                            },
                                                                             "tap_action": {
                                                                                 "action": "call-service",
                                                                                 "service": "alarm_control_panel.alarm_arm_home",
@@ -165,7 +177,9 @@
                                                                         ],
                                                                         "card": {
                                                                             "type": "button",
-                                                                            "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
+                                                                            "card_mod": {
+                                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                                                            },
                                                                             "tap_action": {
                                                                                 "action": "call-service",
                                                                                 "service": "alarm_control_panel.alarm_arm_away",
@@ -191,7 +205,9 @@
                                                                         ],
                                                                         "card": {
                                                                             "type": "button",
-                                                                            "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
+                                                                            "card_mod": {
+                                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                                                            },
                                                                             "tap_action": {
                                                                                 "action": "call-service",
                                                                                 "service": "alarm_control_panel.alarm_arm_home",
@@ -217,7 +233,9 @@
                                                                         ],
                                                                         "card": {
                                                                             "type": "button",
-                                                                            "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
+                                                                            "card_mod": {
+                                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                                                            },
                                                                             "tap_action": {
                                                                                 "action": "call-service",
                                                                                 "service": "alarm_control_panel.alarm_arm_away",
@@ -246,7 +264,9 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                                                },
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -272,7 +292,9 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                                                },
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -298,7 +320,9 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                                                },
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -324,7 +348,9 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                                                },
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -350,7 +376,9 @@
                                                             ],
                                                             "card": {
                                                                 "type": "button",
-                                                                "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                                                },
                                                                 "entity": "alarm_control_panel.home_alarm",
                                                                 "tap_action": {
                                                                     "action": "navigate",
@@ -414,7 +442,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -431,56 +461,74 @@
                                                     "type": "entity",
                                                     "entity": "sensor.attic_temperature",
                                                     "name": "Attic",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n  {% if states('sensor.out_of_date_zigbee_sensors')|int(default=0) > 0 %}\n    color: red !important;\n  {% endif %}\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n  {% if states('sensor.out_of_date_zigbee_sensors')|int(default=0) > 0 %}\n    color: red !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 24px !important;\n  {% if states('sensor.out_of_date_zigbee_sensors')|int(default=0) > 0 %}\n    color: red !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\nha-state-icon {\n  {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% endif %}\n}\n.name, .icon, ha-state-icon {\n  line-height: 32px !important;\n  {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% endif %}\n}\n.info {\n  padding-bottom: 0px !important;\n  {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% endif %}\n}\n.value {\n  font-size: 28px !important;\n  {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 24px !important;\n  {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
                                                     "entity": "sensor.bedroom_temperature",
                                                     "name": "Mastr BR",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
                                                     "entity": "sensor.master_bath_humidity",
                                                     "name": "Mastr Bath",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
                                                     "entity": "sensor.office_temperature",
                                                     "name": "Office",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
                                                     "entity": "climate.thermostat",
                                                     "name": "Thermostat",
                                                     "attribute": "current_temperature",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.name {\n  font-size: 14px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.name {\n  font-size: 14px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
                                                     "name": "Living Rm",
                                                     "entity": "sensor.living_room_temperature",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
                                                     "name": "Family Rm",
                                                     "entity": "sensor.god_damn_temperature",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
                                                     "name": "Garage",
                                                     "entity": "sensor.garage_temperature",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
                                                     "entity": "sensor.outside_temperature",
                                                     "name": "Outside",
-                                                    "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 28px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -509,7 +557,9 @@
                                                             "entity_id": "switch.upstairs"
                                                         }
                                                     },
-                                                    "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.upstairs_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.upstairs_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.upstairs_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.upstairs_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "button",
@@ -531,7 +581,9 @@
                                                             "entity_id": "switch.middle_level"
                                                         }
                                                     },
-                                                    "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.middle_level_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.middle_level_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.middle_level_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.middle_level_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "button",
@@ -553,7 +605,9 @@
                                                             "entity_id": "switch.downstairs"
                                                         }
                                                     },
-                                                    "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.downstairs_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.downstairs_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.downstairs_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.downstairs_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "button",
@@ -575,7 +629,9 @@
                                                             "entity_id": "switch.outside"
                                                         }
                                                     },
-                                                    "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.outside_plus_garage_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.outside_plus_garage_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.outside_plus_garage_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.outside_plus_garage_lights_on')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -586,7 +642,9 @@
                                             "cards": [
                                                 {
                                                     "type": "button",
-                                                    "style": "ha-card.type-button {\n  height: 80px;\n}\n",
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-button {\n  height: 80px;\n}\n"
+                                                    },
                                                     "tap_action": {
                                                         "action": "call-service",
                                                         "service": "script.scene_good_night"
@@ -608,7 +666,9 @@
                                                     "show_icon": true,
                                                     "state_color": true,
                                                     "name": "Plex",
-                                                    "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-state-icon {\n  {% if states('sensor.plex_plex')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('sensor.plex_plex')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 20px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-state-icon {\n  {% if states('sensor.plex_plex')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('sensor.plex_plex')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 20px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  text-overflow: hidden !important;\n  {% if states('sensor.plex_plex')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "entity",
@@ -618,7 +678,9 @@
                                                     "state_color": true,
                                                     "name": "Oven",
                                                     "icon": "mdi:stove",
-                                                    "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-state-icon {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 32px !important;\n  text-align: center !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('binary_sensor.oven_is_on') == True %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-state-icon {\n  {% if states('binary_sensor.oven_is_on') == \"on\" %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('binary_sensor.oven_is_on') == \"on\" %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 32px !important;\n  text-align: center !important;\n  {% if states('binary_sensor.oven_is_on') == \"on\" %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('binary_sensor.oven_is_on') == \"on\" %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "button",
@@ -632,7 +694,9 @@
                                                         "action": "navigate",
                                                         "navigation_path": "/control-panel/software"
                                                     },
-                                                    "style": "ha-card.type-button {\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% elif states('sensor.software_update_available')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% elif states('sensor.software_update_available')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-button {\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% elif states('sensor.software_update_available')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: red !important;\n  {% elif states('sensor.software_update_available')|int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                    }
                                                 }
                                             ]
                                         }
@@ -685,7 +749,9 @@
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -725,7 +791,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -754,7 +822,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -769,7 +839,9 @@
                                             "cards": [
                                                 {
                                                     "type": "entities",
-                                                    "style": "ha-card {\n}\n.card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -17px 0px;\n}\n",
+                                                    "card_mod": {
+                                                        "style": "ha-card {\n}\n.card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -19px 0px;\n}\n"
+                                                    },
                                                     "entities": [
                                                         {
                                                             "entity": "binary_sensor.bedroom_slider"
@@ -875,7 +947,9 @@
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -1102,7 +1176,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -1131,7 +1207,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -1164,7 +1242,7 @@
                                                     },
                                                     {
                                                         "type": "grid",
-                                                        "columns": 4,
+                                                        "columns": 3,
                                                         "square": false,
                                                         "cards": [
                                                             {
@@ -1173,6 +1251,7 @@
                                                                     "action": "toggle"
                                                                 },
                                                                 "entity": "light.office_fan_light",
+                                                                "icon_height": "26px",
                                                                 "name": "Fan Light"
                                                             },
                                                             {
@@ -1181,6 +1260,7 @@
                                                                     "action": "toggle"
                                                                 },
                                                                 "entity": "fan.office_fan",
+                                                                "icon_height": "26px",
                                                                 "name": "Fan"
                                                             },
                                                             {
@@ -1189,15 +1269,8 @@
                                                                     "action": "toggle"
                                                                 },
                                                                 "entity": "switch.mike_desk_lamp",
+                                                                "icon_height": "26px",
                                                                 "name": "Mike Desk"
-                                                            },
-                                                            {
-                                                                "type": "button",
-                                                                "tap_action": {
-                                                                    "action": "toggle"
-                                                                },
-                                                                "entity": "switch.mike_bench_lamp",
-                                                                "name": "Mike Bench"
                                                             }
                                                         ]
                                                     },
@@ -1391,14 +1464,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -1462,6 +1539,7 @@
                                                                     "action": "toggle"
                                                                 },
                                                                 "entity": "light.near_black_lamp",
+                                                                "icon_height": "40px",
                                                                 "name": "Near Black"
                                                             },
                                                             {
@@ -1470,6 +1548,7 @@
                                                                     "action": "toggle"
                                                                 },
                                                                 "entity": "switch.far_black_lamp",
+                                                                "icon_height": "40px",
                                                                 "name": "Far Black"
                                                             },
                                                             {
@@ -1478,6 +1557,7 @@
                                                                     "action": "toggle"
                                                                 },
                                                                 "entity": "switch.white_lamp",
+                                                                "icon_height": "40px",
                                                                 "name": "White"
                                                             }
                                                         ]
@@ -1606,7 +1686,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -1635,7 +1717,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -1788,14 +1872,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -1939,7 +2027,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -1968,7 +2058,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -2266,14 +2358,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -2387,7 +2483,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -2416,7 +2514,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -2592,14 +2692,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -2715,14 +2819,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -2776,7 +2884,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -2805,7 +2915,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -2815,7 +2927,6 @@
                                         },
                                         {
                                             "type": "entities",
-                                            "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: 0px 0px;\n}\n",
                                             "entities": [
                                                 {
                                                     "entity": "media_player.downstairs_speakers"
@@ -2876,14 +2987,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -2894,21 +3009,27 @@
                                             "cards": [
                                                 {
                                                     "type": "picture-entity",
-                                                    "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n",
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n"
+                                                    },
                                                     "entity": "camera.garage_cam",
                                                     "show_name": false,
                                                     "show_state": false
                                                 },
                                                 {
                                                     "type": "picture-entity",
-                                                    "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n",
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n"
+                                                    },
                                                     "entity": "camera.front_door_cam",
                                                     "show_name": false,
                                                     "show_state": false
                                                 },
                                                 {
                                                     "type": "picture-entity",
-                                                    "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n",
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n"
+                                                    },
                                                     "entity": "camera.front_door_cam_2",
                                                     "show_name": false,
                                                     "show_state": false
@@ -2942,7 +3063,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -2971,7 +3094,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -2986,29 +3111,37 @@
                                             "cards": [
                                                 {
                                                     "type": "picture-entity",
-                                                    "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n",
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n"
+                                                    },
                                                     "entity": "camera.shed_cam",
                                                     "show_name": false,
                                                     "show_state": false
                                                 },
                                                 {
                                                     "type": "picture-entity",
-                                                    "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n",
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n"
+                                                    },
                                                     "entity": "camera.backyard_cam",
                                                     "show_name": false,
                                                     "show_state": false
                                                 },
                                                 {
                                                     "type": "picture-entity",
-                                                    "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n",
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n"
+                                                    },
                                                     "entity": "camera.chimney_cam",
                                                     "show_name": false,
                                                     "show_state": false
                                                 },
                                                 {
                                                     "type": "picture",
-                                                    "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n",
-                                                    "image": "http://garagedoorcam.erdely.in:8081/",
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-picture-entity {\n  height: 155px;\n}\n"
+                                                    },
+                                                    "image": "http://garagedoorcam.erdely.in:8000/stream.mjpg",
                                                     "camera_view": "live",
                                                     "tap_action": {
                                                         "action": "none"
@@ -3061,14 +3194,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -3326,7 +3463,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -3355,7 +3494,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"
@@ -3378,7 +3519,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -16px 0px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -16px 0px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "alarm_control_panel.home_alarm",
@@ -3416,27 +3559,27 @@
                                                                             {
                                                                                 "entity": "sensor.bedroom_temperature",
                                                                                 "name": "BR",
-                                                                                "unit": []
+                                                                                "unit": " "
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.master_bath_temperature",
                                                                                 "name": "MB",
-                                                                                "unit": []
+                                                                                "unit": " "
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.master_bath_humidity",
                                                                                 "name": "MB(h)",
-                                                                                "unit": []
+                                                                                "unit": " "
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.office_temperature",
                                                                                 "name": "Ofc",
-                                                                                "unit": []
+                                                                                "unit": " "
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.living_room_temperature",
                                                                                 "name": "LR",
-                                                                                "unit": [],
+                                                                                "unit": " ",
                                                                                 "styles": {
                                                                                     "padding-top": "10px",
                                                                                     "padding-bottom": "10px",
@@ -3456,27 +3599,27 @@
                                                                                 "entity": "climate.thermostat",
                                                                                 "name": "Tstat",
                                                                                 "attribute": "current_temperature",
-                                                                                "unit": []
+                                                                                "unit": " "
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.god_damn_temperature",
                                                                                 "name": "Down",
-                                                                                "unit": []
+                                                                                "unit": " "
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.attic_temperature",
                                                                                 "name": "Attic",
-                                                                                "unit": []
+                                                                                "unit": " "
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.garage_temperature",
                                                                                 "name": "Garage",
-                                                                                "unit": []
+                                                                                "unit": " "
                                                                             },
                                                                             {
                                                                                 "entity": "sensor.outside_temperature",
                                                                                 "name": "Out",
-                                                                                "unit": [],
+                                                                                "unit": " ",
                                                                                 "styles": {
                                                                                     "padding-top": "10px",
                                                                                     "padding-bottom": "10px",
@@ -3527,7 +3670,9 @@
                                                                     },
                                                                     {
                                                                         "entity": "sensor.recycle",
-                                                                        "style": ":host {\n  {% if is_state('sensor.recycle', 'Tomorrow') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Today') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n",
+                                                                        "card_mod": {
+                                                                            "style": ":host {\n  {% if is_state('sensor.recycle', 'Tomorrow') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Today') and\n     is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n"
+                                                                        },
                                                                         "tap_action": {
                                                                             "action": "call-service",
                                                                             "service": "input_boolean.toggle",
@@ -3555,7 +3700,9 @@
                                                                     },
                                                                     {
                                                                         "entity": "sensor.trash",
-                                                                        "style": ":host {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n",
+                                                                        "card_mod": {
+                                                                            "style": ":host {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: yellow;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n  color: red;\n  {% endif %}\n}\n"
+                                                                        },
                                                                         "tap_action": {
                                                                             "action": "call-service",
                                                                             "service": "input_boolean.toggle",
@@ -3612,27 +3759,37 @@
                                                                     },
                                                                     {
                                                                         "entity": "sensor.plex_plex",
-                                                                        "style": ":host {\n  {% if states('sensor.plex_plex') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                        "card_mod": {
+                                                                            "style": ":host {\n  {% if states('sensor.plex_plex') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                                        },
                                                                         "name": "Plex Status"
                                                                     },
                                                                     {
                                                                         "entity": "sensor.unavailable_entities",
-                                                                        "style": ":host {\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                        "card_mod": {
+                                                                            "style": ":host {\n  {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                                        },
                                                                         "name": "Unavailable Home Assistant Entities"
                                                                     },
                                                                     {
-                                                                        "entity": "sensor.out_of_date_zigbee_sensors",
-                                                                        "style": ":host {\n  {% if states('sensor.out_of_date_zigbee_sensors') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                                        "entity": "sensor.out_of_date_zigbee_entities",
+                                                                        "card_mod": {
+                                                                            "style": ":host {\n  {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                                        }
                                                                     },
                                                                     {
                                                                         "entity": "binary_sensor.software_update_available",
                                                                         "type": "attribute",
                                                                         "attribute": "number",
-                                                                        "style": ":host {\n  {% if is_state('binary_sensor.software_update_available', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                                        "card_mod": {
+                                                                            "style": ":host {\n  {% if is_state('binary_sensor.software_update_available', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                                        }
                                                                     },
                                                                     {
                                                                         "entity": "binary_sensor.new_tv_show_list_ready",
-                                                                        "style": ":host {\n  {% if is_state('binary_sensor.new_tv_show_list_ready', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                        "card_mod": {
+                                                                            "style": ":host {\n  {% if is_state('binary_sensor.new_tv_show_list_ready', 'on') %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                                        },
                                                                         "state_color": true
                                                                     }
                                                                 ]
@@ -3684,14 +3841,18 @@
                                                         },
                                                         "target": {}
                                                     },
-                                                    "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
                                                 },
                                                 {
                                                     "type": "sensor",
                                                     "entity": "sensor.fully_kiosk_browser",
                                                     "name": "Panel Battery",
                                                     "detail": 1,
-                                                    "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
                                                 }
                                             ]
                                         },
@@ -3729,7 +3890,9 @@
                                                         "cards": [
                                                             {
                                                                 "type": "entities",
-                                                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
                                                                 "entities": [
                                                                     {
                                                                         "entity": "person.holly_erdely",
@@ -3758,7 +3921,9 @@
                                                     ],
                                                     "card": {
                                                         "type": "entity",
-                                                        "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
                                                         "entity": "sensor.spotify_artist_title",
                                                         "name": "Spotify Music Player",
                                                         "icon": "mdi:music"

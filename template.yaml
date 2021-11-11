@@ -116,39 +116,39 @@
       entity_list: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(binary_sensor|sensor|switch).(outdoor_plug|outdoor_strip|octoprint_).*|(binary_sensor|sensor).withings_(?!in_bed).*|(binary_sensor|sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|device_tracker.kukui(_[0-9]+)?|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
-- trigger:
-    - platform: time_pattern
-      seconds: 13
-    - platform: homeassistant
-      event: start
-  sensor:
-    name: Out of Date Zigbee Sensors
-    unique_id: out_of_date_zigbee_sensors
-    icon: mdi:zigbee
-    state: |
-      {%- set ns = namespace(count = 0) %}
-      {%- for entity_id in states | selectattr('entity_id','match','.*_last_seen$') | map(attribute='entity_id') | list %}
-        {% if states(entity_id) != "unknown" %}
-          {%- set secs=as_timestamp(now()) - as_timestamp(states(entity_id))|float(default=0) %}
-          {%- if secs > 120 * 60 %}
-            {%- set ns.count = ns.count + 1 %}
-          {%- endif %}
-        {%- endif %}
-      {%- endfor %}
-      {{ ns.count }}
-    attributes:
-      sensor_list: |
-        {%- set ns = namespace(ood_entities = []) %}
-        {%- for entity_id in states | selectattr('entity_id','match','.*_last_seen$') | map(attribute='entity_id') | list %}
-          {% if states(entity_id) != "unknown" %}
-            {%- set secs=as_timestamp(now()) - as_timestamp(states(entity_id))|float(default=0) %}
-            {%- if secs > 120 * 60 %}
-              {%- set ns.ood_entities = ns.ood_entities + [(state_attr(entity_id, "friendly_name") | replace(" last seen", "")) + " (" + secs|round(0)|string + ")"] %}
-            {%- endif %}
-          {%- endif %}
-        {%- endfor %}
-        {{ ns.ood_entities | join("" + ", ") }}
-      ha_count: true
+#- trigger:
+#    - platform: time_pattern
+#      seconds: 13
+#    - platform: homeassistant
+#      event: start
+#  sensor:
+#    name: Out of Date Zigbee Sensors
+#    unique_id: out_of_date_zigbee_sensors
+#    icon: mdi:zigbee
+#    state: |
+#      {%- set ns = namespace(count = 0) %}
+#      {%- for entity_id in states | selectattr('entity_id','match','.*_last_seen$') | map(attribute='entity_id') | list %}
+#        {% if states(entity_id) != "unknown" %}
+#          {%- set secs=as_timestamp(now()) - as_timestamp(states(entity_id))|float(default=0) %}
+#          {%- if secs > 120 * 60 %}
+#            {%- set ns.count = ns.count + 1 %}
+#          {%- endif %}
+#        {%- endif %}
+#      {%- endfor %}
+#      {{ ns.count }}
+#    attributes:
+#      sensor_list: |
+#        {%- set ns = namespace(ood_entities = []) %}
+#        {%- for entity_id in states | selectattr('entity_id','match','.*_last_seen$') | map(attribute='entity_id') | list %}
+#          {% if states(entity_id) != "unknown" %}
+#            {%- set secs=as_timestamp(now()) - as_timestamp(states(entity_id))|float(default=0) %}
+#            {%- if secs > 120 * 60 %}
+#              {%- set ns.ood_entities = ns.ood_entities + [(state_attr(entity_id, "friendly_name") | replace(" last seen", "")) + " (" + secs|round(0)|string + ")"] %}
+#            {%- endif %}
+#          {%- endif %}
+#        {%- endfor %}
+#        {{ ns.ood_entities | join("" + ", ") }}
+#      ha_count: true
 
 - sensor:
     unique_id: ha_count_alerts
