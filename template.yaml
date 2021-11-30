@@ -10,6 +10,16 @@
       {% endif %}
 
 - binary_sensor:
+    unique_id: christmas_tree_available
+    name: Christmas Tree Available
+    state: >-
+      {% if states('switch.christmas_tree') == 'unknown' %}
+        Off
+      {% else %}
+        On
+      {% endif %}
+
+- binary_sensor:
     unique_id: security_devices
     name: Security Devices
     device_class: opening
@@ -108,12 +118,37 @@
       ha_count: true
 
 - sensor:
+    unique_id: quick_status
+    name: Quick Status
+    state: >-
+      {% if states('sensor.plex_plex') | int(default=-1) >= 0 and states('sensor.plex_plex') |int(default=-1) <= 9 %}{{ states('sensor.plex_plex') }}
+      {% elif states('sensor.plex_plex') | int(default=-1) == -1 %}X
+      {% else %}*{% endif %}
+      |
+      {% if states('sensor.software_update_available') | int(default=-1) >= 0 and states('sensor.software_update_available') |int(default=-1) <= 9 %}{{ states('sensor.software_update_available') }}
+      {% elif states('sensor.software_update_available') | int(default=-1) == -1 %}X
+      {% else %}*{% endif %}
+      |
+      {% if states('sensor.unavailable_entities') | int(default=-1) >= 0 and states('sensor.unavailable_entities') |int(default=-1) <= 9 %}{{ states('sensor.unavailable_entities') }}
+      {% elif states('sensor.unavailable_entities') | int(default=-1) == -1 %}X
+      {% else %}*{% endif %}
+      |
+      {% if states('sensor.out_of_date_zigbee_entities') | int(default=-1) >= 0 and states('sensor.out_of_date_zigbee_entities') |int(default=-1) <= 9 %}{{ states('sensor.out_of_date_zigbee_entities') }}
+      {% elif states('sensor.out_of_date_zigbee_entities') | int(default=-1) == -1 %}X
+      {% else %}*{% endif %}
+    attributes:
+      Plex Watchers: "{{ states('sensor.plex_plex') }}"
+      Software Updates: "{{ states('sensor.software_update_available') }}"
+      Unavailable Entities: "{{ states('sensor.unavailable_entities') }}"
+      Out of Date Zigbee: "{{ states('sensor.out_of_date_zigbee_entities') }}"
+
+- sensor:
     unique_id: unavailable_entities
     name: Unavailable Entities
     icon: mdi:cloud-question
-    state: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(binary_sensor|sensor|switch).(outdoor_plug|outdoor_strip|octoprint_).*|(binary_sensor|sensor).withings_(?!in_bed).*|(binary_sensor|sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|device_tracker.kukui(_[0-9]+)?|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    state: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|group.outside_xmas|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
     attributes:
-      entity_list: "{{ states | rejectattr('entity_id','match','^((light|sensor).[0-9a-f]{8}_[0-9a-f]{8}|(binary_sensor|sensor|switch).(outdoor_plug|outdoor_strip|octoprint_).*|(binary_sensor|sensor).withings_(?!in_bed).*|(binary_sensor|sensor|switch).lumi_lumi_plug_maus01.*|group.house_temperature|sensor.ir_receiver_status|sensor.(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|device_tracker.kukui(_[0-9]+)?|group.outside_xmas)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
+      entity_list: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|group.outside_xmas|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
 #- trigger:
@@ -604,16 +639,6 @@
     unit_of_measurement: Lights
     state: >-
       {{ states('sensor.outside_lights_on')|int(default=0) + states('sensor.garage_lights_on')|int(default=0) }}
-
-- sensor:
-    unique_id: christmas_tree_available
-    name: Christmas Tree Available
-    state: >-
-      {% if states('switch.christmas_tree') == 'unknown' %}
-        Off
-      {% else %}
-        On
-      {% endif %}
 
 - sensor:
     unique_id: low_battery

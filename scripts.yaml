@@ -21,7 +21,7 @@ announcement_nightly_security:
           entity_id: group.doors_windows
           state: 'on'
         - condition: state
-          entity_id: binary_sensor.shed_door
+          entity_id: binary_sensor.shed_door_contact
           state: 'on'
         - condition: not
           conditions:
@@ -31,10 +31,10 @@ announcement_nightly_security:
             entity_id: cover.garage_door
             type: is_closed
         - condition: state
-          entity_id: binary_sensor.chimney_gate
+          entity_id: binary_sensor.chimney_gate_contact
           state: 'on'
         - condition: state
-          entity_id: binary_sensor.shed_gate
+          entity_id: binary_sensor.shed_gate_contact
           state: 'on'
       sequence:
       - service: script.function_speakers_prep
@@ -43,32 +43,32 @@ announcement_nightly_security:
       - service: tts.cloud_say
         entity_id: media_player.all_speakers
         data:
-          message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door\
-            \ is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door', 'on')\
-            \ %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider',\
-            \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider',\
-            \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider',\
-            \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider',\
-            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door',\
-            \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window',\
-            \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window',\
-            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door',\
-            \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_gate',\
-            \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate',\
+          message: "{% if is_state('binary_sensor.front_door_contact', 'on') %}\n\
+            \  Front Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',\
+            \ 'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',\
+            \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',\
+            \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',\
+            \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',\
+            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',\
+            \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',\
+            \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',\
+            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',\
+            \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_gate_contact',\
+            \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',\
             \ 'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
             \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: notify.hangouts_security_alert
         data:
           message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door\
-            \ is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door', 'on')\
-            \ %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider',\
-            \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider',\
-            \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider',\
-            \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider',\
-            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door',\
-            \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window',\
-            \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window',\
-            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_2',\
+            \ is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',\
+            \ 'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',\
+            \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',\
+            \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',\
+            \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',\
+            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',\
+            \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',\
+            \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',\
+            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',\
             \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
             \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: script.function_speakers_restore
@@ -1115,6 +1115,12 @@ scene_good_night:
         - condition: state
           entity_id: light.office_fan_light
           state: 'off'
+        - condition: state
+          entity_id: binary_sensor.withings_in_bed_holly_e
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.withings_in_bed_michael_e
+          state: 'off'
       sequence:
       - service: homeassistant.turn_on
         target:
@@ -1328,3 +1334,12 @@ testing_hangouts_security:
     data:
       message: test message
   mode: single
+close_garage_door:
+  alias: Close Garage Door
+  sequence:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/garage_door/event
+      payload: doorclose
+  mode: single
+  icon: mdi:garage

@@ -158,27 +158,27 @@
                                                             },
                                                             {
                                                                 "type": "custom:multiple-entity-row",
-                                                                "entity": "sensor.bedroom_temperature",
+                                                                "entity": "sensor.bedroom_multisensor_temperature",
                                                                 "name": "Temp",
                                                                 "show_state": false,
                                                                 "entities": [
                                                                     {
-                                                                        "entity": "sensor.bedroom_temperature",
+                                                                        "entity": "sensor.bedroom_multisensor_temperature",
                                                                         "name": "BR",
                                                                         "unit": []
                                                                     },
                                                                     {
-                                                                        "entity": "sensor.office_temperature",
+                                                                        "entity": "sensor.office_multisensor_temperature",
                                                                         "name": "Ofc",
                                                                         "unit": []
                                                                     },
                                                                     {
-                                                                        "entity": "sensor.living_room_temperature",
+                                                                        "entity": "sensor.living_room_multisensor_temperature",
                                                                         "name": "LR",
                                                                         "unit": []
                                                                     },
                                                                     {
-                                                                        "entity": "sensor.god_damn_temperature",
+                                                                        "entity": "sensor.god_damn_multisensor_temperature",
                                                                         "name": "Down",
                                                                         "unit": [],
                                                                         "styles": {
@@ -192,7 +192,7 @@
                                                             },
                                                             {
                                                                 "type": "custom:multiple-entity-row",
-                                                                "entity": "sensor.god_damn_temperature",
+                                                                "entity": "sensor.god_damn_multisensor_temperature",
                                                                 "name": "Temp",
                                                                 "show_state": false,
                                                                 "entities": [
@@ -203,17 +203,17 @@
                                                                         "unit": []
                                                                     },
                                                                     {
-                                                                        "entity": "sensor.attic_temperature",
+                                                                        "entity": "sensor.attic_multisensor_temperature",
                                                                         "name": "Attic",
                                                                         "unit": []
                                                                     },
                                                                     {
-                                                                        "entity": "sensor.garage_temperature",
+                                                                        "entity": "sensor.garage_multisensor_temperature",
                                                                         "name": "Garage",
                                                                         "unit": []
                                                                     },
                                                                     {
-                                                                        "entity": "sensor.outside_temperature",
+                                                                        "entity": "sensor.outside_multisensor_temperature",
                                                                         "name": "Out",
                                                                         "unit": [],
                                                                         "styles": {
@@ -365,8 +365,8 @@
                                                                 "name": "Unavailable Home Assistant Entities"
                                                             },
                                                             {
-                                                                "entity": "sensor.out_of_date_zigbee_sensors",
-                                                                "style": ":host {\n  {% if states('sensor.out_of_date_zigbee_sensors') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                                "entity": "sensor.out_of_date_zigbee_entities",
+                                                                "style": ":host {\n  {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
                                                             },
                                                             {
                                                                 "entity": "binary_sensor.software_update_available",

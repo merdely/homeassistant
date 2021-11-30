@@ -268,6 +268,10 @@
       entity_id: binary_sensor.withings_in_bed_michael_e
       state: 'off'
   action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/office_fan/backlog
+      payload: SetOption73 1; Delay 30; SetOption73 0
   - service: homeassistant.turn_on
     target:
       entity_id: light.office_fan_light
@@ -344,7 +348,10 @@
   action:
   - service: script.security_disarm_system
   - condition: state
-    entity_id: binary_sensor.christmas_lights_should_be_on
+    entity_id: binary_sensor.christmas_tree_available
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.christmas_tree_is_up
     state: 'on'
   - service: homeassistant.turn_on
     target:
@@ -392,12 +399,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.chimney_gate, binary_sensor.shed_gate, binary_sensor.shed_door
+    entity_id: binary_sensor.chimney_gate_contact, binary_sensor.shed_gate_contact,
+      binary_sensor.shed_door_contact
     for: 00:00:01
     from: 'off'
     to: 'on'
   - platform: state
-    entity_id: binary_sensor.chimney_gate, binary_sensor.shed_gate, binary_sensor.shed_door
+    entity_id: binary_sensor.chimney_gate_contact, binary_sensor.shed_gate_contact,
+      binary_sensor.shed_door_contact
     for: 00:00:01
     from: 'on'
     to: 'off'
@@ -1063,13 +1072,13 @@
   - choose:
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.office_tv_plug
+        entity_id: sensor.office_tv_plug_power
         below: '45'
       sequence:
       - repeat:
           until:
           - condition: numeric_state
-            entity_id: sensor.office_tv_plug
+            entity_id: sensor.office_tv_plug_power
             above: '45'
           sequence:
           - service: system_log.write
@@ -1109,13 +1118,13 @@
   - choose:
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.office_tv_plug
+        entity_id: sensor.office_tv_plug_power
         below: '45'
       sequence:
       - repeat:
           until:
           - condition: numeric_state
-            entity_id: sensor.office_tv_plug
+            entity_id: sensor.office_tv_plug_power
             above: '45'
           sequence:
           - service: system_log.write
@@ -1582,13 +1591,13 @@
   - choose:
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.office_tv_plug
+        entity_id: sensor.office_tv_plug_power
         below: '45'
       sequence:
       - repeat:
           until:
           - condition: numeric_state
-            entity_id: sensor.office_tv_plug
+            entity_id: sensor.office_tv_plug_power
             above: '45'
           sequence:
           - service: system_log.write
@@ -1782,13 +1791,13 @@
   - choose:
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.god_damn_tv_plug
+        entity_id: sensor.god_damn_tv_plug_power
         below: '36'
       sequence:
       - repeat:
           until:
           - condition: numeric_state
-            entity_id: sensor.god_damn_tv_plug
+            entity_id: sensor.god_damn_tv_plug_power
             above: '35'
           sequence:
           - delay: '1'
@@ -1886,7 +1895,7 @@
   - condition: not
     conditions:
     - condition: state
-      entity_id: sensor.office_tv_plug
+      entity_id: sensor.office_tv_plug_power
       state: unavailable
   action:
   - service: media_player.media_stop
@@ -1905,7 +1914,7 @@
   - condition: not
     conditions:
     - condition: state
-      entity_id: sensor.bedroom_tv_plug
+      entity_id: sensor.bedroom_tv_plug_power
       state: unavailable
   action:
   - service: media_player.media_stop
@@ -1924,7 +1933,7 @@
   - condition: not
     conditions:
     - condition: state
-      entity_id: sensor.living_room_tv_plug
+      entity_id: sensor.living_room_tv_plug_power
       state: unavailable
   action:
   - service: media_player.media_stop
@@ -1944,7 +1953,7 @@
   - condition: not
     conditions:
     - condition: state
-      entity_id: sensor.god_damn_tv_plug
+      entity_id: sensor.god_damn_tv_plug_power
       state: unavailable
   action:
   - service: media_player.media_stop
@@ -1969,13 +1978,13 @@
   - choose:
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.living_room_tv_plug
+        entity_id: sensor.living_room_tv_plug_power
         below: '36'
       sequence:
       - repeat:
           until:
           - condition: numeric_state
-            entity_id: sensor.living_room_tv_plug
+            entity_id: sensor.living_room_tv_plug_power
             above: '36'
           sequence:
           - delay: '1'
@@ -2071,7 +2080,10 @@
           entity_id: switch.mantle_lights
     default: []
   - condition: state
-    entity_id: binary_sensor.christmas_lights_should_be_on
+    entity_id: binary_sensor.christmas_tree_available
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.christmas_tree_is_up
     state: 'on'
   - service: homeassistant.turn_on
     target:
@@ -2307,31 +2319,40 @@
       level: warning
   mode: single
 - id: '1610231390167'
-  alias: Notifications - Nobody Home
+  alias: Notifications - Nobody Home - Alarm Disarmed
   description: ''
   trigger:
   - platform: state
     entity_id: group.holly_mike
     from: home
     to: not_home
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    from: disarmed
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
   condition:
   - condition: state
-    entity_id: binary_sensor.oven_is_on
-    state: 'on'
+    entity_id: alarm_control_panel.home_alarm
+    state: disarmed
   action:
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
-      message: The Oven is on!
+      message: The alarm is not armed
+      title: Security Alert
+      data:
+        actions:
+        - action: ARM_AWAY
+          title: Arm Alarm (Away)
+        - action: ARM_HOME
+          title: Arm Alarm (Home)
   mode: single
 - id: '1610329722929'
   alias: TV - Family Room - Power On
   description: ''
   trigger:
   - platform: numeric_state
-    entity_id: sensor.god_damn_tv_plug
+    entity_id: sensor.god_damn_tv_plug_power
     above: '16'
   condition: []
   action:
@@ -2587,7 +2608,20 @@
       milliseconds: 0
   condition: []
   action:
-  - service: shell_command.fix_mailbox
+  - service: mqtt.publish
+    data:
+      topic: wyzesense2mqtt/778E4029
+      payload: '{"event": "{{ state_attr("binary_sensor.wyze_sense_778e4029", "event")
+        }}", "available": true, "mac": "{{ state_attr("binary_sensor.wyze_sense_778e4029",
+        "mac") }}", "device_class": "{{ state_attr("binary_sensor.wyze_sense_778e4029",
+        "device_class") }}", "last_seen": {{ state_attr("binary_sensor.wyze_sense_778e4029",
+        "last_seen") }}, "last_seen_iso": "{{ state_attr("binary_sensor.wyze_sense_778e4029",
+        "last_seen_iso") }}", "signal_strength": {{ state_attr("binary_sensor.wyze_sense_778e4029",
+        "signal_strength") }}, "battery": {{ state_attr("binary_sensor.wyze_sense_778e4029",
+        "battery") }}, "name": "{{ state_attr("binary_sensor.wyze_sense_778e4029",
+        "friendly_name") }}", "state": 0}'
+      retain: true
+      qos: 0
   mode: single
 - id: '1615594192596'
   alias: Thermostat - Turn on AC
@@ -2686,6 +2720,10 @@
       entity_id: binary_sensor.withings_in_bed_michael_e
       state: 'off'
   action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/den_overhead_light/backlog
+      payload: SetOption73 1; Delay 40; SetOption73 0
   - service: homeassistant.turn_on
     target:
       entity_id: light.den_overhead_light
@@ -2756,9 +2794,16 @@
         entity_id: alarm_control_panel.home_alarm
         state: disarmed
       sequence:
-      - service: notify.hangouts_security_alert
+      - service: notify.notify
         data:
           message: The Alarm is not armed.
+          data:
+            actions:
+            - action: ARM_HOME
+              title: Arm Alarm (Home)
+            - action: RUN_GOODNIGHT
+              title: Good Night
+          title: Security Alert
     default: []
   - service: system_log.write
     data:
@@ -3044,6 +3089,10 @@
     entity_id: binary_sensor.withings_in_bed_michael_e
     state: 'off'
   action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/dresser_lamp/backlog
+      payload: SetOption73 1; Delay 40; SetOption73 0
   - service: homeassistant.turn_on
     target:
       entity_id: light.dresser_lamp
@@ -3052,9 +3101,9 @@
   alias: Fan - Master Bath Humidity - Fan On
   description: ''
   trigger:
-  - platform: numeric_state
-    entity_id: sensor.master_bath_humidity
-    above: '67.5'
+  - platform: template
+    value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(default=0)
+      > states(''input_number.master_bath_fan_on'') | float(default=100) }}'
   condition:
   - condition: state
     entity_id: light.master_bath_light
@@ -3070,6 +3119,9 @@
   - condition: state
     entity_id: binary_sensor.withings_in_bed_michael_e
     state: 'off'
+  - condition: state
+    entity_id: switch.master_bath_fan
+    state: 'off'
   action:
   - service: homeassistant.turn_on
     target:
@@ -3079,15 +3131,13 @@
   alias: Fan - Master Bath Humidity - Fan Off
   description: ''
   trigger:
-  - platform: numeric_state
-    below: '64'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-      milliseconds: 0
-    entity_id: sensor.master_bath_humidity
-  condition: []
+  - platform: template
+    value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(default=0)
+      < states(''input_number.master_bath_fan_off'') | float(default=100) }}'
+  condition:
+  - condition: state
+    entity_id: switch.master_bath_fan
+    state: 'on'
   action:
   - service: homeassistant.turn_off
     target:
@@ -3106,7 +3156,7 @@
     state: 'off'
     for: 00:01:00
   - condition: numeric_state
-    entity_id: sensor.powder_room_motion_sensor_illuminance
+    entity_id: sensor.powder_room_motion_sensor_illuminance_lux
     below: '65'
   - condition: or
     conditions:
@@ -3117,6 +3167,10 @@
       entity_id: binary_sensor.withings_in_bed_michael_e
       state: 'off'
   action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/powder_room_light/backlog
+      payload: SetOption73 1; Delay 50; SetOption73 0
   - service: homeassistant.turn_on
     target:
       entity_id: light.powder_room_light
@@ -3281,4 +3335,81 @@
       level: warning
       message: 'binary_sensor.wyze_sense_778e4038 last seen: {{ state_attr(''binary_sensor.wyze_sense_778e4038'',
         ''last_seen_iso'') }}'
+  mode: single
+- id: '1637383119311'
+  alias: Actionable Notifications - RUN_GOODNIGHT
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: RUN_GOODNIGHT
+  condition: []
+  action:
+  - service: script.scene_good_night
+  - service: notify.notify
+    data:
+      message: Good Night script run via Actionable Notification
+  mode: single
+- id: '1637383160091'
+  alias: Actionable Notifications - ARM_HOME
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: ARM_HOME
+  condition: []
+  action:
+  - service: alarm_control_panel.alarm_arm_home
+    target:
+      entity_id: alarm_control_panel.home_alarm
+  - service: notify.notify
+    data:
+      message: Alarm Armed (Home) via Actionable Notification
+  mode: single
+- id: '1637383181288'
+  alias: Actionable Notifications - ARM_AWAY
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: ARM_AWAY
+  condition: []
+  action:
+  - service: alarm_control_panel.alarm_arm_away
+    target:
+      entity_id: alarm_control_panel.home_alarm
+  - service: notify.notify
+    data:
+      message: Alarm Armed (Away) via Actionable Notification
+  mode: single
+- id: '1637383883544'
+  alias: Notifications - Nobody Home - Oven On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.holly_mike
+    from: home
+    to: not_home
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  condition:
+  - condition: state
+    entity_id: binary_sensor.oven_is_on
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  action:
+  - service: notify.notify
+    data:
+      message: The oven is on and nobody is home
+      title: Security Alert
   mode: single
