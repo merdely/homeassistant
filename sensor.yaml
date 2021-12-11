@@ -89,7 +89,7 @@
   scan_interval: 28800
 
 - platform: version
-  name: home_assistant_version
+  name: Home Assistant Version
   source: local
 
 #- platform: mqtt
@@ -129,19 +129,19 @@
 #    {{ value_json.tag_name }}
 #  scan_interval: 3660
 
-- platform: mqtt
-  name: Docker Compose Version
-  state_topic: "software_versions/docker_compose"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: Docker Compose Version
+#  state_topic: "software_versions/docker_compose"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Docker Compose Version Latest
-  resource: "https://api.github.com/repos/docker/compose/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Docker Compose Version Latest
+#  resource: "https://api.github.com/repos/docker/compose/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
 # version is above with templates
 - platform: scrape
@@ -179,19 +179,19 @@
 #    {{ value_json.tag_name }}
 #  scan_interval: 3660
 
-- platform: mqtt
-  name: Joplin Desktop Version
-  state_topic: "software_versions/joplin_desktop"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: Joplin Desktop Version
+#  state_topic: "software_versions/joplin_desktop"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Joplin Desktop Version Latest
-  resource: "https://api.github.com/repos/laurent22/joplin/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Joplin Desktop Version Latest
+#  resource: "https://api.github.com/repos/laurent22/joplin/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
 #- platform: rest
 #  name: Kapacitor Version Latest
@@ -214,25 +214,19 @@
 #  value_template: "{{ value | replace('mosquitto-', 'v') | replace('.tar.gz', '') }}"
 #  scan_interval: 3660
 
-- platform: scrape
-  name: Nagios Version
-  resource: "https://nagios.erdely.in/main.php"
-  select: "div.version"
-  value_template: "{{ value | replace('Version ', '') }}"
-  scan_interval: 3600
+#- platform: scrape
+#  name: Nagios Version
+#  resource: "https://nagios.erdely.in/main.php"
+#  select: "div.version"
+#  value_template: "{{ value | replace('Version ', '') }}"
+#  scan_interval: 3600
 
-- platform: scrape
-  name: Nagios Version Latest
-  resource: "https://www.nagios.org/checkforupdates/?product=nagioscore"
-  select: "div.col-xs-12"
-  value_template: "{{ value.split(' ')[21] }}"
-  scan_interval: 3600
-
-# OpenBSD Mars Version is a template sensor above
-- platform: command_line
-  name: OpenBSD Mars Version Latest
-  command: bin/get_openbsd_patch
-  scan_interval: 7320
+#- platform: scrape
+#  name: Nagios Version Latest
+#  resource: "https://www.nagios.org/checkforupdates/?product=nagioscore"
+#  select: "div.col-xs-12"
+#  value_template: "{{ value.split(' ')[21] }}"
+#  scan_interval: 3600
 
 #- platform: mqtt
 #  name: PiHole Version
@@ -246,63 +240,63 @@
 #  value_template: >-
 #    {{ value_json.tag_name }}
 #  scan_interval: 3660
-#
-- platform: rest
-  name: Plex Version
-  resource: !secret plex_server_info
-  value_template: '{{ value_json["MediaContainer"]["@version"].split("-")[0] }}'
-  scan_interval: 3600
-  #json_attributes_path: "$.MediaContainer"
-  #json_attributes:
-  #  - version
 
-- platform: mqtt
-  name: Proton GE Version
-  state_topic: "software_versions/proton_ge"
-  value_template: "{{ value_json.version }}"
+#- platform: rest
+#  name: Plex Version
+#  resource: !secret plex_server_info
+#  value_template: '{{ value_json["MediaContainer"]["@version"].split("-")[0] }}'
+#  scan_interval: 3600
+#  #json_attributes_path: "$.MediaContainer"
+#  #json_attributes:
+#  #  - version
 
-- platform: rest
-  name: Proton GE Version Latest
-  resource: "https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Plex Version Latest
+#  resource: "https://plex.tv/pms/downloads/5.json?channel=plexpass"
+#  value_template: '{{ value_json["computer"]["Linux"].version.split("-")[0] }}'
+#  scan_interval: 3600
 
-- platform: rest
-  name: Plex Version Latest
-  resource: "https://plex.tv/pms/downloads/5.json?channel=plexpass"
-  value_template: '{{ value_json["computer"]["Linux"].version.split("-")[0] }}'
-  scan_interval: 3600
+#- platform: mqtt
+#  name: Proton GE Version
+#  state_topic: "software_versions/proton_ge"
+#  value_template: "{{ value_json.version }}"
 
-- platform: mqtt
-  name: Rclone Version
-  state_topic: "software_versions/rclone"
-  value_template: "{{ value_json.version }}"
+#- platform: rest
+#  name: Proton GE Version Latest
+#  resource: "https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
-- platform: rest
-  name: Rclone Version Latest
-  resource: "https://api.github.com/repos/rclone/rclone/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: mqtt
+#  name: Rclone Version
+#  state_topic: "software_versions/rclone"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Restreamer Version
-  resource: "https://restreamer.erdely.in/frontdoorcam/v1/version"
-  value_template: "v{{ value_json.version }}"
-  scan_interval: 3600
+#- platform: rest
+#  name: Rclone Version Latest
+#  resource: "https://api.github.com/repos/rclone/rclone/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
-- platform: rest
-  name: Restreamer Version Latest
-  resource: "https://api.github.com/repos/datarhei/restreamer/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: "{{ value_json.tag_name }}"
-  scan_interval: 3660
+#- platform: rest
+#  name: Restreamer Version
+#  resource: "https://restreamer.erdely.in/frontdoorcam/v1/version"
+#  value_template: "v{{ value_json.version }}"
+#  scan_interval: 3600
+
+#- platform: rest
+#  name: Restreamer Version Latest
+#  resource: "https://api.github.com/repos/datarhei/restreamer/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: "{{ value_json.tag_name }}"
+#  scan_interval: 3660
 
 #- platform: mqtt
 #  name: TasmoBackup Version
@@ -332,14 +326,19 @@
 #    {{ value_json.tag_name }}
 #  scan_interval: 3660
 
-- platform: rest
-  name: Tautulli Version Latest
-  resource: "https://api.github.com/repos/Tautulli/Tautulli/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: mqtt
+#  name: Tautulli Version
+#  state_topic: "software_versions/tautulli"
+#  value_template: "{{ value_json.version }}"
+
+#- platform: rest
+#  name: Tautulli Version Latest
+#  resource: "https://api.github.com/repos/Tautulli/Tautulli/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
 #- platform: rest
 #  name: Telegraf Version Latest
@@ -350,37 +349,42 @@
 #    {{ value_json.tag_name }}
 #  scan_interval: 3660
 
-- platform: mqtt
-  name: tmux Version
-  state_topic: "software_versions/tmux"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: Tmux Version
+#  state_topic: "software_versions/tmux"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: tmux Version Latest
-  resource: "https://api.github.com/repos/tmux/tmux/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name | replace('v', '') }}
-  scan_interval: 3660
+#- platform: rest
+#  name: tmux Version Latest
+#  resource: "https://api.github.com/repos/tmux/tmux/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name | replace('v', '') }}
+#  scan_interval: 3660
 
-- platform: rest
-  name: Unifi-Poller Version Latest
-  resource: "https://api.github.com/repos/unifi-poller/unifi-poller/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: mqtt
+#  name: Unifi-Poller Version
+#  state_topic: "software_versions/unifi_poller"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Varken Version Latest
-  resource: "https://api.github.com/repos/Boerderij/Varken/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Unifi-Poller Version Latest
+#  resource: "https://api.github.com/repos/unifi-poller/unifi-poller/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
+
+#- platform: rest
+#  name: Varken Version Latest
+#  resource: "https://api.github.com/repos/Boerderij/Varken/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name }}
+#  scan_interval: 3660
 
 #- platform: mqtt
 #  name: vscode Code Server Version
@@ -396,34 +400,34 @@
 #    {{ value_json.tag_name | replace('v', '') }}
 #  scan_interval: 3660
 
-- platform: rest
-  name: Yourls Version
-  resource: "https://erde.ly/ver.php"
-  value_template: "{{ value_json.version }}"
-  scan_interval: 3600
-
-- platform: rest
-  name: Yourls Version Latest
-  resource: "https://api.github.com/repos/YOURLS/YOURLS/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name }}
-  scan_interval: 3660
-
-#- platform: mqtt
-#  name: Zigbee2MQTT Version
-#  state_topic: "software_versions/zigbee2mqtt"
+#- platform: rest
+#  name: Yourls Version
+#  resource: "https://erde.ly/ver.php"
 #  value_template: "{{ value_json.version }}"
+#  scan_interval: 3600
 
 #- platform: rest
-#  name: Zigbee2MQTT Version Latest
-#  resource: "https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest"
+#  name: Yourls Version Latest
+#  resource: "https://api.github.com/repos/YOURLS/YOURLS/releases/latest"
 #  username: !secret github_username
 #  password: !secret github_secret
 #  value_template: >-
-#    {{ value_json.tag_name | replace('v', '') }}
+#    {{ value_json.tag_name }}
 #  scan_interval: 3660
+
+- platform: mqtt
+  name: Zigbee2MQTT TCP Version
+  state_topic: "zigbee2mqtt_tcp/bridge/config"
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: Zigbee2MQTT TCP Version Latest
+  resource: "https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest"
+  username: !secret github_username
+  password: !secret github_secret
+  value_template: >-
+    {{ value_json.tag_name | replace('v', '') }}
+  scan_interval: 3660
 
 - platform: mqtt
   name: Printer Ink

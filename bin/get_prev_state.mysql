@@ -29,6 +29,7 @@ else:
     entity_id = sys.argv[1]
     current_state = " ".join(sys.argv[2:]).replace("'", "\\'")
 
+prev_location = ''
 try:
    conn = _mysql.connect(host=sqlhostname,
                          user=sqlusername,
@@ -47,8 +48,11 @@ try:
 except Exception as error :
     print ("Error while fetching data from MySQL", error)
 
-try:
-    print(prev_location)
-except:
-    print(current_state)
+if prev_location == '' or prev_location == current_state:
+    if current_state == 'home':
+        prev_location = 'not_home'
+    else:
+        prev_location = 'home'
+
+print(prev_location)
 

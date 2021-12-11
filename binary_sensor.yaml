@@ -12,9 +12,22 @@
     name: chimney_gate
     manufacturer: Tasmota
 
+- platform: command_line
+  name: Earth Nginx/PHP Working
+  command: "curl -s https://earth.erdely.in/phptest.php | grep '^PHP is working!' || echo 'PHP is not working!'"
+  #device_class: connectivity
+  payload_on: "PHP is working!"
+  payload_off: "PHP is not working!"
+
 - platform: ping
   name: Google
   host: 8.8.8.8
+  scan_interval: 15
+  count: 4
+
+- platform: ping
+  name: Earth
+  host: 192.168.25.54
   scan_interval: 15
   count: 4
 

@@ -77,8 +77,8 @@
     name: "Software Update Available"
     state: >-
       {% set ns = namespace(sensor = 'Off') -%}
-      {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] + states("input_text.software_list").replace(' ', '').split(',') -%}
-        {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+      {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\..*_version_latest$') | map(attribute='entity_id') | list -%}
+        {% if states(software|replace('_latest','')) != states(software) -%} 
           {% set ns.sensor = 'On' -%}
         {% endif -%}
       {% endfor -%}
@@ -91,8 +91,8 @@
     attributes:
       number: >-
         {% set ns = namespace(updates = 0) -%}
-        {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] + states("input_text.software_list").replace(' ', '').split(',') -%}
-          {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+        {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\..*_version_latest$') | map(attribute='entity_id') | list -%}
+          {% if states(software|replace('_latest','')) != states(software) -%} 
             {% set ns.updates = ns.updates + 1 -%}
           {% endif -%}
         {% endfor -%}
@@ -104,8 +104,8 @@
         {{ ns.updates }}
       entity_list: >-
         {% set ns = namespace(list = "") -%}
-        {% for software in ['home_assistant', 'supervisor', 'hacs_update_count'] + states("input_text.software_list").replace(' ', '').split(',') -%}
-          {% if states('sensor.'+software+'_version') != states('sensor.'+software+'_version_latest') -%}
+        {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\..*_version_latest$') | map(attribute='entity_id') | list -%}
+          {% if states(software|replace('_latest','')) != states(software) -%} 
             {% set ns.list = ns.list + " " + software -%}
           {% endif -%}
         {% endfor -%}
@@ -702,11 +702,6 @@
     state: "{{ state_attr('sensor.fully_kiosk_browser', 'version') }}"
 
 - sensor:
-    unique_id: openbsd_mars_version
-    name: OpenBSD Mars Version
-    state: '{{ states("input_text.openbsd_mars_version") }}'
-
-- sensor:
     unique_id: spotify_artist_title
     name: Spotify Artist Title
     state: '{{ state_attr("media_player.spotify_merdely", "media_artist") }} - {{ state_attr("media_player.spotify_merdely", "media_title") }}'
@@ -723,4 +718,6 @@
     name: "Software Update Available"
     state: "{{ state_attr('binary_sensor.software_update_available', 'number') }}"
     unit_of_measurement: "Updates"
+    attributes:
+      entity_list: "{{ state_attr('binary_sensor.software_update_available', 'entity_list') }}"
 

@@ -296,8 +296,8 @@
                                             ]
                                         }
                                     ],
-                                    "title": " ",
                                     "show_header_toggle": false,
+                                    "title": " ",
                                     "card_mod": {
                                         "style": []
                                     }
@@ -312,7 +312,7 @@
                                 {
                                     "type": "entities",
                                     "card_mod": {
-                                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 30 %}yellow{% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                                     },
                                     "entities": [
                                         {
@@ -340,12 +340,17 @@
                                             "entities": [
                                                 {
                                                     "entity": "binary_sensor.withings_in_bed_holly_e",
-                                                    "name": "Holly"
+                                                    "name": "Holly",
+                                                    "styles": {
+                                                        "color": "var(--holly-bed-color)"
+                                                    }
                                                 },
                                                 {
                                                     "entity": "binary_sensor.withings_in_bed_michael_e",
                                                     "name": "Mike",
-                                                    "styles": null
+                                                    "styles": {
+                                                        "color": "var(--mike-bed-color)"
+                                                    }
                                                 }
                                             ],
                                             "show_state": false
@@ -356,7 +361,10 @@
                                             "type": "custom:multiple-entity-row",
                                             "entities": [
                                                 {
-                                                    "entity": "binary_sensor.security_devices"
+                                                    "entity": "binary_sensor.security_devices",
+                                                    "styles": {
+                                                        "color": "var(--security-color)"
+                                                    }
                                                 },
                                                 {
                                                     "entity": "alarm_control_panel.home_alarm",
@@ -500,15 +508,15 @@
                                                     "entity": "binary_sensor.oven_is_on",
                                                     "name": "Oven",
                                                     "styles": {
-                                                        "color": "var(--over-color)"
+                                                        "color": "var(--oven-color)"
                                                     }
                                                 }
                                             ]
                                         },
                                         {
+                                            "type": "custom:multiple-entity-row",
                                             "entity": "sensor.recycle",
                                             "name": "Trash/Recycle",
-                                            "type": "custom:multiple-entity-row",
                                             "entities": [
                                                 {
                                                     "entity": "sensor.trash",
@@ -526,6 +534,20 @@
                                                 {
                                                     "entity": "sensor.recycle",
                                                     "name": "Recycle",
+                                                    "styles": {
+                                                        "color": "var(--recycle-color)"
+                                                    },
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "input_boolean.toggle",
+                                                        "service_data": {
+                                                            "entity_id": "input_boolean.recycle_is_out"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "sensor.moco_recycle_day",
+                                                    "name": "Recycle Day",
                                                     "styles": {
                                                         "color": "var(--recycle-color)"
                                                     },
@@ -584,18 +606,38 @@
                                         },
                                         {
                                             "type": "custom:multiple-entity-row",
-                                            "entity": "sensor.unavailable_entities",
-                                            "name": "HA",
-                                            "icon": "mdi:home-assistant",
+                                            "entity": "switch.mercury_screensaver",
+                                            "name": "Screensavers",
                                             "show_state": false,
                                             "entities": [
                                                 {
-                                                    "entity": "sensor.unavailable_entities",
-                                                    "name": "Unavailable",
+                                                    "entity": "switch.mercury_screensaver",
+                                                    "name": "Mercury",
                                                     "styles": {
-                                                        "color": "var(--unavailable-color)"
+                                                        "color": "var(--mercury-screensaver-color)"
                                                     }
                                                 },
+                                                {
+                                                    "entity": "switch.venus_screensaver",
+                                                    "name": "Venus",
+                                                    "styles": {
+                                                        "color": "var(--venus-screensaver-color)"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:multiple-entity-row",
+                                            "entity": "binary_sensor.updater",
+                                            "name": "HA",
+                                            "icon": "mdi:home-assistant",
+                                            "show_state": false,
+                                            "state_color": true,
+                                            "tap_action": {
+                                                "action": "navigate",
+                                                "navigation_path": "/hassio"
+                                            },
+                                            "entities": [
                                                 {
                                                     "entity": "binary_sensor.software_update_available",
                                                     "type": "attribute",
@@ -603,6 +645,17 @@
                                                     "attribute": "number",
                                                     "styles": {
                                                         "color": "var(--updates-color)"
+                                                    },
+                                                    "tap_action": {
+                                                        "action": "navigate",
+                                                        "navigation_path": "/desktop-dashboard/home-assistant"
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "sensor.unavailable_entities",
+                                                    "name": "Unavailable",
+                                                    "styles": {
+                                                        "color": "var(--unavailable-color)"
                                                     }
                                                 },
                                                 {
@@ -614,7 +667,7 @@
                                                 },
                                                 {
                                                     "entity": "binary_sensor.new_tv_show_list_ready",
-                                                    "name": "TV List",
+                                                    "name": "TVList",
                                                     "styles": {
                                                         "color": "var(--tv-list-color)"
                                                     }
@@ -623,8 +676,9 @@
                                         },
                                         {
                                             "entity": "sensor.plex_plex",
+                                            "name": "Plex Status",
                                             "card_mod": {
-                                                "style": ":host {\n  {% if states('sensor.plex_plex') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                "style": ":host {\n  color: var(--plex-color);\n}\n"
                                             }
                                         },
                                         {
@@ -650,12 +704,12 @@
                                                 ]
                                             }
                                         }
-                                    ],
-                                    "title": " "
+                                    ]
                                 },
                                 {
                                     "type": "grid",
                                     "columns": 4,
+                                    "square": false,
                                     "cards": [
                                         {
                                             "type": "entity",
@@ -698,8 +752,7 @@
                                             "icon": "mdi:weather-night",
                                             "name": "Good Night"
                                         }
-                                    ],
-                                    "square": false
+                                    ]
                                 }
                             ]
                         },
@@ -717,6 +770,7 @@
                                     "entities": [
                                         {
                                             "entity": "group.up_motion_sensors",
+                                            "name": "Upstairs Motion",
                                             "type": "custom:multiple-entity-row",
                                             "show_state": false,
                                             "state_color": true,
@@ -753,6 +807,7 @@
                                         },
                                         {
                                             "entity": "group.down_motion_sensors",
+                                            "name": "Downstairs Motion",
                                             "type": "custom:multiple-entity-row",
                                             "show_state": false,
                                             "state_color": true,
@@ -1029,19 +1084,36 @@
                                     "type": "entities",
                                     "entities": [
                                         {
-                                            "entity": "switch.siren"
+                                            "entity": "binary_sensor.master_bath_water_leak_sensor_water_leak"
                                         },
                                         {
-                                            "entity": "input_boolean.gate_notifications"
+                                            "entity": "binary_sensor.hall_bath_water_leak_sensor_water_leak"
                                         },
                                         {
-                                            "entity": "group.security_devices"
+                                            "entity": "binary_sensor.living_room_water_leak_sensor_water_leak"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.dining_room_water_leak_sensor_water_leak"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.kitchen_water_leak_sensor_water_leak"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.god_damn_water_leak_sensor_water_leak"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.powder_room_water_leak_sensor_water_leak"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.den_water_leak_sensor_water_leak"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.washer_water_leak_sensor_water_leak"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.water_heater_water_leak_sensor_water_leak"
                                         }
                                     ]
-                                },
-                                {
-                                    "type": "markdown",
-                                    "content": "## Last Security Message\n{{ states('input_text.security_message') }}"
                                 }
                             ]
                         },
@@ -1050,6 +1122,10 @@
                             "columns": 1,
                             "square": false,
                             "cards": [
+                                {
+                                    "type": "thermostat",
+                                    "entity": "climate.thermostat"
+                                },
                                 {
                                     "type": "custom:auto-entities",
                                     "card": {
@@ -1086,75 +1162,86 @@
                                     "sort": {
                                         "method": "name"
                                     }
-                                },
-                                {
-                                    "type": "thermostat",
-                                    "entity": "climate.thermostat"
                                 }
                             ]
                         },
                         {
                             "type": "entities",
-                            "card_mod": {
-                                "style": "ha-card {\n}\n.card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n"
-                            },
                             "entities": [
                                 {
-                                    "entity": "alarm_control_panel.home_alarm"
+                                    "entity": "switch.siren"
                                 },
                                 {
-                                    "entity": "binary_sensor.bedroom_slider_contact"
+                                    "entity": "binary_sensor.bedroom_slider_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.front_door_contact"
+                                    "entity": "binary_sensor.front_door_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.living_room_slider_contact"
+                                    "entity": "binary_sensor.living_room_slider_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.dining_room_slider_contact"
+                                    "entity": "binary_sensor.dining_room_slider_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.back_door_contact"
+                                    "entity": "binary_sensor.back_door_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.god_damn_slider_contact"
+                                    "entity": "binary_sensor.god_damn_slider_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.den_window_contact"
+                                    "entity": "binary_sensor.den_window_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.powder_room_window_contact"
+                                    "entity": "binary_sensor.powder_room_window_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.shed_door_contact"
+                                    "entity": "binary_sensor.shed_door_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.shed_gate_contact"
+                                    "entity": "binary_sensor.shed_gate_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.chimney_gate_contact"
+                                    "entity": "binary_sensor.chimney_gate_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.wyze_sense_778e4029"
+                                    "entity": "binary_sensor.wyze_sense_778e4029",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.garage_entry_door_contact"
+                                    "entity": "binary_sensor.garage_entry_door_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.garage_door_sensor_contact"
+                                    "entity": "binary_sensor.garage_door_sensor_contact",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.garage_door_cam_status"
+                                    "entity": "binary_sensor.garage_door_cam_status",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "cover.garage_door"
+                                    "entity": "cover.garage_door",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "group.motion_sensors"
+                                    "entity": "group.motion_sensors",
+                                    "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "group.water_leak"
+                                    "entity": "group.water_leak",
+                                    "secondary_info": "last-changed"
                                 }
                             ],
                             "show_header_toggle": false,
@@ -1176,13 +1263,10 @@
                                     "label": "Other Settings"
                                 },
                                 {
-                                    "entity": "input_text.software_list"
-                                },
-                                {
                                     "entity": "input_boolean.christmas_tree_is_up"
                                 },
                                 {
-                                    "entity": "input_boolean.mailbox_sensor_wait"
+                                    "entity": "input_boolean.gate_notifications"
                                 },
                                 {
                                     "entity": "input_boolean.recycle_is_out"
@@ -1340,31 +1424,71 @@
                             "type": "entities",
                             "entities": [
                                 {
-                                    "entity": "switch.god_damn_tv"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "switch.god_damn_tv",
+                                    "show_state": false,
+                                    "state_color": true,
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.god_damn_tv_plug_power",
+                                            "name": "Power"
+                                        },
+                                        {
+                                            "entity": "switch.god_damn_tv",
+                                            "name": "TV",
+                                            "toggle": true
+                                        },
+                                        {
+                                            "entity": "switch.god_damn_tv_plug",
+                                            "name": "Plug",
+                                            "toggle": true
+                                        }
+                                    ]
                                 },
                                 {
-                                    "entity": "switch.god_damn_tv_plug"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "switch.god_damn_soundbar",
+                                    "show_state": false,
+                                    "state_color": true,
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.god_damn_soundbar_plug_power",
+                                            "name": "Power"
+                                        },
+                                        {
+                                            "entity": "switch.god_damn_soundbar",
+                                            "name": "Soundbar",
+                                            "toggle": true
+                                        },
+                                        {
+                                            "entity": "switch.god_damn_soundbar_plug",
+                                            "name": "Plug",
+                                            "toggle": true
+                                        }
+                                    ]
                                 },
                                 {
-                                    "entity": "sensor.god_damn_tv_plug_power"
-                                },
-                                {
-                                    "entity": "switch.god_damn_soundbar"
-                                },
-                                {
-                                    "entity": "switch.god_damn_soundbar_plug"
-                                },
-                                {
-                                    "entity": "sensor.god_damn_soundbar_plug_power"
-                                },
-                                {
-                                    "entity": "input_select.god_damn_input"
-                                },
-                                {
-                                    "entity": "input_select.god_damn_channel"
-                                },
-                                {
-                                    "entity": "input_select.god_damn_plex_show"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "input_select.god_damn_input",
+                                    "name": "Input/Channel/Show",
+                                    "show_state": false,
+                                    "entities": [
+                                        {
+                                            "entity": "input_select.god_damn_input",
+                                            "name": false,
+                                            "icon": "mdi:video-input-component"
+                                        },
+                                        {
+                                            "entity": "input_select.god_damn_channel",
+                                            "name": false,
+                                            "icon": "mdi:remote-tv"
+                                        },
+                                        {
+                                            "entity": "input_select.god_damn_plex_show",
+                                            "name": false,
+                                            "icon": "mdi:plex"
+                                        }
+                                    ]
                                 },
                                 {
                                     "entity": "media_player.god_damn_chromecast"
@@ -1378,31 +1502,55 @@
                                 }
                             ],
                             "show_header_toggle": false,
-                            "title": "God Damn TV",
-                            "card_mod": {
-                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n"
-                            }
+                            "title": "God Damn TV"
                         },
                         {
                             "type": "entities",
                             "entities": [
                                 {
-                                    "entity": "switch.bedroom_tv"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "switch.bedroom_tv",
+                                    "show_state": false,
+                                    "state_color": true,
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.bedroom_tv_plug_power",
+                                            "name": "Power"
+                                        },
+                                        {
+                                            "entity": "switch.bedroom_tv",
+                                            "name": "TV",
+                                            "toggle": true
+                                        },
+                                        {
+                                            "entity": "switch.bedroom_tv_plug",
+                                            "name": "Plug",
+                                            "toggle": true
+                                        }
+                                    ]
                                 },
                                 {
-                                    "entity": "switch.bedroom_tv_plug"
-                                },
-                                {
-                                    "entity": "sensor.bedroom_tv_plug_power"
-                                },
-                                {
-                                    "entity": "input_select.bedroom_input"
-                                },
-                                {
-                                    "entity": "input_select.bedroom_channel"
-                                },
-                                {
-                                    "entity": "input_select.bedroom_plex_show"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "input_select.god_damn_input",
+                                    "name": "Input/Channel/Show",
+                                    "show_state": false,
+                                    "entities": [
+                                        {
+                                            "entity": "input_select.bedroom_input",
+                                            "name": false,
+                                            "icon": "mdi:video-input-component"
+                                        },
+                                        {
+                                            "entity": "input_select.bedroom_channel",
+                                            "name": false,
+                                            "icon": "mdi:remote-tv"
+                                        },
+                                        {
+                                            "entity": "input_select.bedroom_plex_show",
+                                            "name": false,
+                                            "icon": "mdi:plex"
+                                        }
+                                    ]
                                 },
                                 {
                                     "entity": "media_player.bedroom_chromecast"
@@ -1416,31 +1564,55 @@
                                 }
                             ],
                             "show_header_toggle": false,
-                            "title": "Bedroom TV",
-                            "card_mod": {
-                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n"
-                            }
+                            "title": "Bedroom TV"
                         },
                         {
                             "type": "entities",
                             "entities": [
                                 {
-                                    "entity": "switch.office_tv"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "switch.office_tv",
+                                    "show_state": false,
+                                    "state_color": true,
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.office_tv_plug_power",
+                                            "name": "Power"
+                                        },
+                                        {
+                                            "entity": "switch.office_tv",
+                                            "name": "TV",
+                                            "toggle": true
+                                        },
+                                        {
+                                            "entity": "switch.office_tv_plug",
+                                            "name": "Plug",
+                                            "toggle": true
+                                        }
+                                    ]
                                 },
                                 {
-                                    "entity": "switch.office_tv_plug"
-                                },
-                                {
-                                    "entity": "sensor.office_tv_plug_power"
-                                },
-                                {
-                                    "entity": "input_select.office_input"
-                                },
-                                {
-                                    "entity": "input_select.office_channel"
-                                },
-                                {
-                                    "entity": "input_select.office_plex_show"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "input_select.office_input",
+                                    "name": "Input/Channel/Show",
+                                    "show_state": false,
+                                    "entities": [
+                                        {
+                                            "entity": "input_select.office_input",
+                                            "name": false,
+                                            "icon": "mdi:video-input-component"
+                                        },
+                                        {
+                                            "entity": "input_select.office_channel",
+                                            "name": false,
+                                            "icon": "mdi:remote-tv"
+                                        },
+                                        {
+                                            "entity": "input_select.office_plex_show",
+                                            "name": false,
+                                            "icon": "mdi:plex"
+                                        }
+                                    ]
                                 },
                                 {
                                     "entity": "media_player.office_roku"
@@ -1451,31 +1623,55 @@
                                 }
                             ],
                             "show_header_toggle": false,
-                            "title": "Office TV",
-                            "card_mod": {
-                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n"
-                            }
+                            "title": "Office TV"
                         },
                         {
                             "type": "entities",
                             "entities": [
                                 {
-                                    "entity": "switch.living_room_tv"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "switch.living_room_tv",
+                                    "show_state": false,
+                                    "state_color": true,
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.living_room_tv_plug_power",
+                                            "name": "Power"
+                                        },
+                                        {
+                                            "entity": "switch.living_room_tv",
+                                            "name": "TV",
+                                            "toggle": true
+                                        },
+                                        {
+                                            "entity": "switch.living_room_tv_plug",
+                                            "name": "Plug",
+                                            "toggle": true
+                                        }
+                                    ]
                                 },
                                 {
-                                    "entity": "switch.living_room_tv_plug"
-                                },
-                                {
-                                    "entity": "sensor.living_room_tv_plug_power"
-                                },
-                                {
-                                    "entity": "input_select.living_room_input"
-                                },
-                                {
-                                    "entity": "input_select.living_room_channel"
-                                },
-                                {
-                                    "entity": "input_select.living_room_plex_show"
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "input_select.god_damn_input",
+                                    "name": "Input/Channel/Show",
+                                    "show_state": false,
+                                    "entities": [
+                                        {
+                                            "entity": "input_select.living_room_input",
+                                            "name": false,
+                                            "icon": "mdi:video-input-component"
+                                        },
+                                        {
+                                            "entity": "input_select.living_room_channel",
+                                            "name": false,
+                                            "icon": "mdi:remote-tv"
+                                        },
+                                        {
+                                            "entity": "input_select.living_room_plex_show",
+                                            "name": false,
+                                            "icon": "mdi:plex"
+                                        }
+                                    ]
                                 },
                                 {
                                     "entity": "media_player.living_room_roku"
@@ -1486,10 +1682,7 @@
                                 }
                             ],
                             "show_header_toggle": false,
-                            "title": "Living Room TV",
-                            "card_mod": {
-                                "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n"
-                            }
+                            "title": "Living Room TV"
                         }
                     ]
                 },
@@ -1648,47 +1841,38 @@
                                     "card_mod": {
                                         "styles": "table {\n    width: 100%;\n    border: 1px;\n}\n"
                                     },
-                                    "content": "## Software\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in states(\"input_text.software_list\").replace(' ', '').split(',')  -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} </table>"
+                                    "content": "## Software\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th> </tr>\n{% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\.(?!(hacs|home_assistant|operating_system|supervisor)_).*_version_latest$') | map(attribute='entity_id') | list -%} <tr> <td><font color=\"{{'#44739e' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software|replace('_latest','')) }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software) }}</font></td> </tr> {% endfor -%} </table>"
                                 },
                                 {
                                     "type": "grid",
                                     "columns": 2,
+                                    "square": false,
                                     "cards": [
                                         {
-                                            "type": "sensor",
-                                            "entity": "sensor.network_throughput_in_enp2s0",
-                                            "graph": "line",
-                                            "name": "Throughput In",
-                                            "hours_to_show": 48,
-                                            "icon": "mdi:cloud-download-outline",
-                                            "detail": 1
+                                            "type": "gauge",
+                                            "entity": "sensor.speedtest_download",
+                                            "min": 0,
+                                            "max": 1000,
+                                            "severity": {
+                                                "green": 600,
+                                                "yellow": 300,
+                                                "red": 0
+                                            },
+                                            "needle": true
                                         },
                                         {
-                                            "type": "sensor",
-                                            "entity": "sensor.network_throughput_out_enp2s0",
-                                            "graph": "line",
-                                            "name": "Throughput Out",
-                                            "hours_to_show": 48,
-                                            "icon": "mdi:cloud-upload-outline"
-                                        },
-                                        {
-                                            "type": "sensor",
-                                            "entity": "sensor.network_in_enp2s0",
-                                            "graph": "line",
-                                            "name": "Network In",
-                                            "hours_to_show": 48,
-                                            "icon": "mdi:download-network-outline"
-                                        },
-                                        {
-                                            "type": "sensor",
-                                            "entity": "sensor.network_out_enp2s0",
-                                            "graph": "line",
-                                            "name": "Network Out",
-                                            "hours_to_show": 48,
-                                            "icon": "mdi:upload-network-outline"
+                                            "type": "gauge",
+                                            "entity": "sensor.speedtest_upload",
+                                            "min": 0,
+                                            "max": 1000,
+                                            "severity": {
+                                                "green": 600,
+                                                "yellow": 300,
+                                                "red": 0
+                                            },
+                                            "needle": true
                                         }
-                                    ],
-                                    "square": false
+                                    ]
                                 }
                             ]
                         },
@@ -1699,10 +1883,10 @@
                             "cards": [
                                 {
                                     "type": "markdown",
+                                    "content": "## Home Assistant\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} {% for addon in state_attr(\"sensor.ha_add_ons\", \"addons\") | rejectattr('installed', 'eq', False) | sort(attribute='name') -%} \n  <tr> <td><font color=\"{{'#44739e' if\n  addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\"><ha-icon\n  icon='mdi:briefcase-{{ 'check' if addon['version'] ==\n  addon['version_latest'] else 'download'}}' /></font>\n  </td> <td><font style=\"color: {{'var(--primary-text-color)' if addon['version']\n  == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant ', '') }}*</td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version'] }}</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version_latest'] }}</font></td> </tr>\n{% endfor -%} </table>",
                                     "card_mod": {
                                         "styles": "table {\n    width: 100%;\n    border: 1px;\n}\n"
-                                    },
-                                    "content": "## Home Assistant\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} {% for addon in state_attr(\"sensor.ha_add_ons\", \"addons\") | rejectattr('installed', 'eq', False) | sort(attribute='name') -%} \n  <tr> <td><font color=\"{{'#44739e' if\n  addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\"><ha-icon\n  icon='mdi:briefcase-{{ 'check' if addon['version'] ==\n  addon['version_latest'] else 'download'}}' /></font>\n  </td> <td><font style=\"color: {{'var(--primary-text-color)' if addon['version']\n  == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant', '') }}*</td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version'] }}</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version_latest'] }}</font></td> </tr>\n{% endfor -%} </table>"
+                                    }
                                 },
                                 {
                                     "type": "grid",
@@ -1762,37 +1946,6 @@
                                             "name": "CPU"
                                         }
                                     ]
-                                },
-                                {
-                                    "type": "grid",
-                                    "columns": 2,
-                                    "square": false,
-                                    "cards": [
-                                        {
-                                            "type": "gauge",
-                                            "entity": "sensor.speedtest_download",
-                                            "min": 0,
-                                            "max": 1000,
-                                            "severity": {
-                                                "green": 600,
-                                                "yellow": 300,
-                                                "red": 0
-                                            },
-                                            "needle": true
-                                        },
-                                        {
-                                            "type": "gauge",
-                                            "entity": "sensor.speedtest_upload",
-                                            "min": 0,
-                                            "max": 1000,
-                                            "severity": {
-                                                "green": 600,
-                                                "yellow": 300,
-                                                "red": 0
-                                            },
-                                            "needle": true
-                                        }
-                                    ]
                                 }
                             ]
                         },
@@ -1830,7 +1983,7 @@
                                 },
                                 {
                                     "type": "markdown",
-                                    "content": "  ## Other Info\n\n  <table width=\"100%\"> <tr>\n    <th></th>\n    <th align=\"left\">Name</th>\n    <th align=\"right\">Status</th>\n  </tr>  <tr> <td><font color=\"{{'#44739e' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\"><ha-icon\n  icon='mdi:cloud-question'></font></td> <td><font style=\"color: {{'var(--primary-text-color)' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\">Unavailable\n  Entities</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\">{{\n  states('sensor.unavailable_entities') }} unavailable entities</font></td>\n  </tr>  <tr> <td><font color=\"{{'#44739e' if states('sensor.plex_plex') | int(default=0)\n  == 0 else 'yellow'}}\"><ha-icon icon='mdi:plex'></font></td> <td><font\n  style=\"color: {{'var(--primary-text-color)' if states('sensor.plex_plex') | int(default=0) == 0 else\n  'yellow'}}\">Plex Status</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if states('sensor.plex_plex') | int(default=0) == 0 else\n  'yellow'}}\">{{ states('sensor.plex_plex') }} Watching</font></td> </tr> <tr>\n  <td><font color=\"{{'#44739e' if states('binary_sensor.new_tv_show_list_ready')\n  == 'off' else 'yellow'}}\"><ha-icon icon='mdi:television'></font></td>\n  <td><font style=\"color: {{'var(--primary-text-color)' if\n  states('binary_sensor.new_tv_show_list_ready') == 'off' else 'yellow'}}\">New\n  TV Show List Ready</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if\n  states('binary_sensor.new_tv_show_list_ready') == 'off' else 'yellow'}}\">{{\n  states('binary_sensor.new_tv_show_list_ready') | title }}</font></td> </tr>\n  <tr> <td><font color=\"{{'#44739e' if\n  as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600 *\n  24 * 7 * 2) else 'yellow'}}\"><ha-icon icon='mdi:shield-lock'></font></td>\n  <td><font style=\"color: {{'var(--primary-text-color)' if\n  (as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600\n  * 24 * 7 * 2)) else 'yellow'}}\">SSL Expiry Date</font></td> <td\n  align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if     \n  (as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600\n  * 24 * 7 * 2)) else 'yellow'}}\">{{ states('sensor.ssl_expiry_date')\n  }}</font></td> </tr>  </table>\n"
+                                    "content": "  ## Other Info\n\n  <table width=\"100%\"> <tr>\n    <th></th>\n    <th align=\"left\">Name</th>\n    <th align=\"right\">Status</th>\n  </tr>  <tr> <td><font color=\"{{'#44739e' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\"><ha-icon\n  icon='mdi:cloud-question'></font></td> <td><font style=\"color: {{'var(--primary-text-color)' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\">Unavailable\n  Entities</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\">{{\n  states('sensor.unavailable_entities') }} unavailable entities</font></td>\n  </tr>  <tr> <td><font color=\"{{'#44739e' if states('sensor.plex_plex') | int(default=0)\n  == 0 else 'yellow'}}\"><ha-icon icon='mdi:plex'></font></td> <td><font\n  style=\"color: {{'var(--primary-text-color)' if states('sensor.plex_plex') | int(default=0) == 0 else\n  'yellow'}}\">Plex Status</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if states('sensor.plex_plex') | int(default=0) == 0 else\n  'yellow'}}\">{{ states('sensor.plex_plex') }} Watching</font></td> </tr> <tr>\n  <td><font color=\"{{'#44739e' if states('binary_sensor.new_tv_show_list_ready')\n  == 'off' else 'yellow'}}\"><ha-icon icon='mdi:television'></font></td>\n  <td><font style=\"color: {{'var(--primary-text-color)' if\n  states('binary_sensor.new_tv_show_list_ready') == 'off' else 'yellow'}}\">New\n  TV Show List Ready</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if\n  states('binary_sensor.new_tv_show_list_ready') == 'off' else 'yellow'}}\">{{\n  states('binary_sensor.new_tv_show_list_ready') | title }}</font></td> </tr>\n  <tr> <td><font color=\"{{'#44739e' if\n  as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600 *\n  24 * 7 * 2) else 'yellow'}}\"><ha-icon icon='mdi:shield-lock'></font></td>\n  <td><font style=\"color: {{'var(--primary-text-color)' if\n  (as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600\n  * 24 * 7 * 2)) else 'yellow'}}\">SSL Expiry Date</font></td> <td\n  align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if     \n  (as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600\n  * 24 * 7 * 2)) else 'yellow'}}\">{{ states('sensor.ssl_expiry_date')\n  }}</font></td> </tr>\n<tr> <td><font color=\"{{'#44739e' if states('binary_sensor.earth') == 'on' else 'yellow'}}\"><ha-icon icon='mdi:{{ \"server-network\" if states('binary_sensor.earth') == 'on' else \"server-network-off\" }}'></font></td> <td><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth') == 'on' else\n  'yellow'}}\">Earth Host Status</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth') == 'on' else\n  'yellow'}}\">{{ \"Up\" if states('binary_sensor.earth') == 'on' else \"Down\" }}</font></td> </tr>\n<tr> <td><font color=\"{{'#44739e' if states('binary_sensor.earth_nginx_php_working') == 'on' else 'yellow'}}\"><ha-icon icon='mdi:{{ \"web-check\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"web-off\"}}'></font></td> <td><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth_nginx_php_working') == 'on' else\n  'yellow'}}\">Earth Nginx/PHP Status</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth_nginx_php_working') == 'on' else\n  'yellow'}}\">{{ \"Up\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"Down\" }}</font></td> </tr>\n</table>\n"
                                 }
                             ],
                             "square": false
@@ -1957,89 +2110,206 @@
                     ]
                 },
                 {
-                    "title": "Automations",
-                    "path": "automations",
+                    "title": "Utilities",
+                    "path": "utilities",
                     "icon": "mdi:tools",
                     "badges": [],
                     "cards": [
                         {
-                            "type": "entities",
-                            "entities": [
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
                                 {
-                                    "entity": "script.scene_good_night"
-                                },
-                                {
-                                    "entity": "script.scene_leaving_home"
-                                },
-                                {
-                                    "entity": "script.scene_movie_time"
-                                },
-                                {
-                                    "entity": "script.scene_night_night"
-                                },
-                                {
-                                    "entity": "script.fix_in_bed_sensors"
-                                }
-                            ],
-                            "title": "Scripts",
-                            "show_header_toggle": false
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Screensavers"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "switch",
-                                        "entity_id": "*screensaver*",
-                                        "options": {
-                                            "secondary_info": "last-changed"
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "script.scene_good_night"
+                                        },
+                                        {
+                                            "entity": "script.scene_leaving_home"
+                                        },
+                                        {
+                                            "entity": "script.scene_movie_time"
+                                        },
+                                        {
+                                            "entity": "script.scene_night_night"
+                                        },
+                                        {
+                                            "entity": "script.fix_in_bed_sensors"
                                         }
+                                    ],
+                                    "title": "Scripts",
+                                    "show_header_toggle": false
+                                },
+                                {
+                                    "type": "custom:auto-entities",
+                                    "card": {
+                                        "type": "entities",
+                                        "title": "Screensavers"
+                                    },
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "domain": "switch",
+                                                "entity_id": "*screensaver*",
+                                                "options": {
+                                                    "secondary_info": "last-changed"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "sort": {
+                                        "method": "name"
                                     }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "entities",
-                            "entities": [
-                                {
-                                    "entity": "input_boolean.gate_notifications"
                                 },
                                 {
-                                    "entity": "input_boolean.security_test_mode"
-                                },
-                                {
-                                    "entity": "input_boolean.christmas_tree_is_up"
-                                }
-                            ],
-                            "title": "Utilities"
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Cameras"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "switch",
-                                        "entity_id": "*cam*plug",
-                                        "options": {
-                                            "secondary_info": "last-changed"
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "input_boolean.security_test_mode"
+                                        },
+                                        {
+                                            "entity": "input_text.test_monitor_helper"
                                         }
+                                    ],
+                                    "title": "Utilities"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:auto-entities",
+                                    "card": {
+                                        "type": "entities",
+                                        "title": "Cameras",
+                                        "show_header_toggle": true
+                                    },
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "domain": "switch",
+                                                "entity_id": "*cam*plug",
+                                                "options": {
+                                                    "secondary_info": "last-changed"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "sort": {
+                                        "method": "name"
                                     }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
+                                },
+                                {
+                                    "type": "custom:auto-entities",
+                                    "card": {
+                                        "type": "entities",
+                                        "title": "Outdoor Plug/Strip",
+                                        "show_header_toggle": true
+                                    },
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "domain": "switch",
+                                                "entity_id": "*outdoor*",
+                                                "options": {
+                                                    "secondary_info": "last-changed"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "sort": {
+                                        "method": "name"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:auto-entities",
+                                    "card": {
+                                        "type": "entities",
+                                        "title": "Refresh Entities (click)"
+                                    },
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "entity_id": "sensor.hacs",
+                                                "options": {
+                                                    "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "homeassistant.update_entity",
+                                                        "service_data": {},
+                                                        "target": {
+                                                            "entity_id": "this.entity_id"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "entity_id": "sensor.unavailable_entities",
+                                                "options": {
+                                                    "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "homeassistant.update_entity",
+                                                        "service_data": {},
+                                                        "target": {
+                                                            "entity_id": "this.entity_id"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "entity_id": "sensor.out_of_date_zigbee_entities",
+                                                "options": {
+                                                    "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "homeassistant.update_entity",
+                                                        "service_data": {},
+                                                        "target": {
+                                                            "entity_id": "this.entity_id"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "entity_id": "/_version$/",
+                                                "domain": "sensor",
+                                                "options": {
+                                                    "style": "* {\n  {% if states(\"this.entity_id\") != states(\"this.entity_id_latest\") %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "homeassistant.update_entity",
+                                                        "service_data": {},
+                                                        "target": {
+                                                            "entity_id": "this.entity_id"
+                                                        }
+                                                    },
+                                                    "sort": "name"
+                                                },
+                                                "not": {
+                                                    "entity_id": "/^sensor\\.(ha_.*|hacs_.*|pixel_.*|.*_firmware)_version$/"
+                                                }
+                                            }
+                                        ],
+                                        "exclude": []
+                                    },
+                                    "sort": {
+                                        "method": "none"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
@@ -2331,15 +2601,7 @@
                     "path": "testing",
                     "icon": "mdi:test-tube",
                     "badges": [],
-                    "cards": [
-                        {
-                            "type": "picture-entity",
-                            "entity": "camera.front_door_cam",
-                            "camera_view": "live",
-                            "show_name": false,
-                            "show_state": false
-                        }
-                    ]
+                    "cards": []
                 }
             ]
         }

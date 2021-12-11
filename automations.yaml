@@ -112,6 +112,10 @@
       entity_id: binary_sensor.withings_in_bed_michael_e
       state: 'off'
   action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/laundry_room_light/backlog
+      payload: rule2 off; Delay 40; rule2 on
   - service: homeassistant.turn_on
     target:
       entity_id: light.laundry_room_light
@@ -249,8 +253,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.office_door_motion_sensor_occupancy
     to: 'on'
+    entity_id: binary_sensor.office_door_motion_sensor_occupancy
   - platform: state
     entity_id: binary_sensor.office_shelf_motion_sensor_occupancy
     to: 'on'
@@ -268,10 +272,6 @@
       entity_id: binary_sensor.withings_in_bed_michael_e
       state: 'off'
   action:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/office_fan/backlog
-      payload: SetOption73 1; Delay 30; SetOption73 0
   - service: homeassistant.turn_on
     target:
       entity_id: light.office_fan_light
@@ -335,16 +335,31 @@
   - service: script.fix_in_bed_sensors
   mode: single
 - id: '1603391662402'
-  alias: Security - 40 Armed - Disarm Security System in the morning if someone is
-    home
+  alias: Security - 40 Armed - Disarm Security System in the morning when someone
+    gets out of bed
   description: ''
   trigger:
-  - platform: time
-    at: input_datetime.automatic_security_disarm
+  - platform: state
+    entity_id: binary_sensor.withings_in_bed_holly_e
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - platform: state
+    entity_id: binary_sensor.withings_in_bed_michael_e
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
   condition:
-  - condition: state
-    entity_id: group.holly_mike
-    state: home
+  - condition: time
+    after: input_datetime.automatic_security_disarm
   action:
   - service: script.security_disarm_system
   - condition: state
@@ -3092,7 +3107,7 @@
   - service: mqtt.publish
     data:
       topic: cmnd/dresser_lamp/backlog
-      payload: SetOption73 1; Delay 40; SetOption73 0
+      payload: rule2 off; Delay 40; rule2 on
   - service: homeassistant.turn_on
     target:
       entity_id: light.dresser_lamp
@@ -3412,4 +3427,129 @@
     data:
       message: The oven is on and nobody is home
       title: Security Alert
+  mode: single
+- id: '1638330062399'
+  alias: 50 - Home Assistant - Fix Unavailable Entities Count
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.unavailable_entities
+    attribute: entity_list
+    to: None
+  condition: []
+  action:
+  - service: python_script.set_state
+    data:
+      entity_id: sensor.unavailable_entities
+      state: 0
+  mode: single
+- id: '1638997594019'
+  alias: Monitor Earth / Home Assistant Entities
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.out_of_date_zigbee_entities
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - platform: state
+    entity_id: sensor.unavailable_entities
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - platform: state
+    entity_id: sensor.software_update_available
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - platform: state
+    entity_id: input_text.test_monitor_helper
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - platform: state
+    entity_id: binary_sensor.earth
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+      milliseconds: 0
+    from: 'off'
+  - platform: state
+    entity_id: binary_sensor.earth
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+      milliseconds: 0
+    from: 'on'
+  - platform: state
+    entity_id: binary_sensor.earth_nginx_php_working
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+      milliseconds: 0
+  condition:
+  - condition: template
+    value_template: '{{ trigger.to_state.state != trigger.from_state.state }}'
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state | int(default=-1) > 0 or trigger.to_state.state
+          | string == "off" }}'
+      sequence:
+      - service: notify.gmail_to_mike
+        data:
+          message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
+            }}
+
+
+            {% if state_attr(trigger.entity_id, ''entity_list'') %}
+
+            Entity List: {{ state_attr(trigger.entity_id, ''entity_list'') }}
+
+            {% endif %}
+
+            '
+          title: '** PROBLEM Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
+            }} is {{ states(trigger.entity_id) }} **'
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state | int(default=-1) == 0 or trigger.to_state.state
+          | string == "on" }}'
+      sequence:
+      - service: notify.gmail_to_mike
+        data:
+          message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
+            }}
+
+            '
+          title: '** RECOVERY Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
+            }} is {{ states(trigger.entity_id) }} **'
+    default:
+    - service: notify.gmail_to_mike
+      data:
+        message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
+          }}
+
+
+          {% if state_attr(trigger.entity_id, ''entity_list'') %}
+
+          Entity List: {{ state_attr(trigger.entity_id, ''entity_list'') }}
+
+          {% endif %}
+
+          '
+        title: '** UNKNOWN Issue Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
+          }} is {{ states(trigger.entity_id) }} **'
   mode: single

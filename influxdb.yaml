@@ -2,9 +2,10 @@ host: influxdb.erdely.in
 port: 8086
 ssl: true
 verify_ssl: true
-database: homeassistant
-username: homeassistant
-password: !secret influxdb_password
+api_version: 2
+organization: erdelynet
+bucket: homeassistant/autogen
+token: !secret influxdb_apikey
 tags_attributes:
   - friendly_name
 exclude:

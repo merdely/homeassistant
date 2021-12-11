@@ -1343,3 +1343,16 @@ close_garage_door:
       payload: doorclose
   mode: single
   icon: mdi:garage
+scene_turn_off_the_office:
+  alias: Scene - Turn off the Office
+  sequence:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: switch.office
+  - service: homeassistant.turn_on
+    target:
+      entity_id:
+      - switch.mercury_screensaver
+      - switch.venus_screensaver
+  mode: single
+  icon: mdi:desk

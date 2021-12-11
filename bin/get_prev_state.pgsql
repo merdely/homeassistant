@@ -23,6 +23,7 @@ else:
     entity_id = sys.argv[1]
     current_state = sys.argv[2]
 
+prev_location = ''
 try:
    conn = psycopg2.connect(user=sqlusername,
                            password=sqlpassword,
@@ -46,8 +47,10 @@ finally:
         cursor.close()
         conn.close()
 
-try:
-    print(prev_location)
-except:
-    print(current_state)
+if prev_location == '' or prev_location == current_state:
+    if current_state == 'home':
+        prev_location = 'not_home'
+    else:
+        prev_location = 'home'
 
+print(prev_location)
