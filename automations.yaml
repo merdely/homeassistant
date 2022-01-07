@@ -233,7 +233,7 @@
       media_content_type: music
     target:
       entity_id: media_player.all_speakers
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: Water leak detected on {{ trigger.to_state.name }}
   - service: script.function_speakers_restore
@@ -404,7 +404,7 @@
   - service: input_boolean.turn_off
     data: {}
     entity_id: input_boolean.laundry_room_washer_running
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: The washing machine is done
   mode: single
@@ -429,7 +429,7 @@
     entity_id: input_boolean.gate_notifications
     state: 'on'
   action:
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
@@ -468,7 +468,7 @@
     entity_id: alarm_control_panel.home_alarm
     state: armed_away
   action:
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []\
         \ -%} {%- for entity_id in states.group.exterior_security_devices.attributes.entity_id\
@@ -510,7 +510,7 @@
   - service: script.function_speakers_prep
     data:
       speaker: all_speakers
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: '{{ states(''input_text.security_message'') }}
 
@@ -538,7 +538,6 @@
         target:
           entity_id: switch.siren
       - delay: '60'
-  - service: notify.mobile_app_pixel_6_pro
   mode: single
 - id: '1604856519122'
   alias: Notifications - Laundry Room Dryer Started
@@ -573,7 +572,7 @@
   - service: input_boolean.turn_off
     data: {}
     entity_id: input_boolean.laundry_room_dryer_running
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: The dryer is done
   mode: single
@@ -2134,7 +2133,7 @@
       - service: script.computer_mercury_unlock
         data: {}
     default:
-    - service: notify.hangouts_mike
+    - service: notify.mobile_app_pixel_6_pro
       data:
         message: Someone scanned at Mike's Desk
     - service: system_log.write
@@ -2170,7 +2169,7 @@
             }} tag to Disarm the Security System'
           level: warning
     default:
-    - service: notify.hangouts_security_alert
+    - service: notify.notify
       data:
         message: 'Warning: Someone scanned the {{ tags[trigger.event.data.tag_id]
           }} tag  (user_id: {{ trigger.event.context.user_id }})'
@@ -2610,9 +2609,14 @@
         entity_id: input_boolean.mail_delivered
         state: 'off'
       sequence:
-      - service: notify.hangouts_security_alert
+      - service: notify.notify
         data:
           message: The mail's here, the mail's here!  Woo-hoo!
+          title: The mail has been delivered
+          data:
+            actions:
+            - action: RESET_MAILBOX
+              title: Reset Mail Delivery Notification
       - service: homeassistant.turn_on
         target:
           entity_id: input_boolean.mail_delivered
@@ -2674,7 +2678,7 @@
     data:
       message: Turning on AC
       level: warning
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: Switching to AC
   - service: climate.set_hvac_mode
@@ -2707,7 +2711,7 @@
     data:
       message: Turning on Heat
       level: warning
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: Switching to Heat
   - service: climate.set_hvac_mode
@@ -2779,13 +2783,7 @@
     for: 00:01:00
   condition: []
   action:
-  - service: notify.persistent_notification
-    data:
-      title: Water Leak Detected
-      message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id\
-        \ -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')\
-        \ }}\n{% endif -%}{% endfor -%}"
-  - service: notify.hangouts_security_alert
+  - service: notify.notify
     data:
       message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id\
         \ -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')\
@@ -3564,4 +3562,18 @@
           '
         title: '** UNKNOWN Issue Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
           }} is {{ states(trigger.entity_id) }} **'
+  mode: single
+- id: '1641590686089'
+  alias: Actionable Notifications - RESET_MAILBOX
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: RESET_MAILBOX
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: input_boolean.mail_delivered
   mode: single

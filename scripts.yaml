@@ -57,7 +57,7 @@ announcement_nightly_security:
             \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',\
             \ 'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
             \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
-      - service: notify.hangouts_security_alert
+      - service: notify.notify
         data:
           message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door\
             \ is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',\
@@ -171,7 +171,7 @@ security_message_open_security_devices:
 security_message_list_all_security_devices_and_their_state:
   alias: Security - Message - List all security devices and their state
   sequence:
-  - service: notify.hangouts_mike
+  - service: notify.mobile_app_pixel_6_pro
     data:
       message: "{%- for entity_id in states.group.security_devices.attributes.entity_id\
         \ %}\n  {%- set domain, device = entity_id.split('.') -%}\n  {{ state_attr(entity_id,\"\
@@ -180,7 +180,7 @@ security_message_list_all_security_devices_and_their_state:
 security_message_list_all_security_devices_and_their_state_dup:
   alias: Security - Message - List all security devices and their state (Duplicate)
   sequence:
-  - service: notify.hangouts_mike
+  - service: notify.mobile_app_pixel_6_pro
     data:
       message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []\
         \ -%} {%- for entity_id in states.group.security_devices.attributes.entity_id\
