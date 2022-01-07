@@ -11,31 +11,49 @@ datetype=gnu
 date --version 2>&1 | grep -iq busybox && datetype=busybox
 default_day=Friday
 
+get_day_num() {
+  case "$1" in
+    Monday) echo 1;;
+    Tuesday) echo 2;;
+    Wednesday) echo 3;;
+    Thursday) echo 4;;
+    Friday) echo 5;;
+    Saturday) echo 6;;
+    *) echo 0;;
+  esac
+}
+get_day_name() {
+  case "$1" in
+    1) echo Monday;;
+    2) echo Tuesday;;
+    3) echo Wednesday;;
+    4) echo Thursday;;
+    5) echo Friday;;
+    6) echo Saturday;;
+    *) echo Sunday;;
+  esac
+}
+
 secrets_file="$(readlink -f $(dirname "$0")/../secrets.yaml)"
 [ ! -f "$secrets_file" ] && echo "Error: Could not find secrets.yaml" && exit 1
 
 county_url=$(awk "\$1 == \"recycle_url:\" { s=\$2;gsub(/(^\"|\"$)/,\"\",s);print s }" $secrets_file)
 
-# Check the county day for my address; if unreadable, throw a warning and use $default_day
-county_data=$(curl -fs "$county_url")
-[ $? != 0 ] && echo "$0: Warning: Could not download county data" > /dev/stderr
-county_day=$(echo "$county_data" | awk -F '[><]' '$2=="p class=\"day\"" { print $5;exit }')
-case $county_day in
+county_day=$(python3 -c "import re,bs4,requests;p=requests.get('$county_url');s=bs4.BeautifulSoup(p.text,'lxml');print(s.find_all('p',class_='day')[0].string)")
+
+case "$county_day" in
   Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)
     ;;
   *)
     county_day=$default_day
     ;;
 esac
+this_week_day=$(get_day_num $county_day)
 
 IFS=$(printf "\n\b")
 
 current_year=$(date "+%Y")
 current_week_number=$(date "+%U")
-
-# For testing
-#current_week_number=$((current_week_number - 1))
-#current_week_number=$((current_week_number + 1))
 
 # Download holiday data
 holiday_data=$(curl -fs "https://www.montgomerycountymd.gov/sws/holidays/")
@@ -44,17 +62,25 @@ holiday_data=$(curl -fs "https://www.montgomerycountymd.gov/sws/holidays/")
 # Loop through holiday data
 for f in $(echo "$holiday_data" | grep -A1 ">$county_day<" | sed 's/&nbsp;/ /g' | awk "\$0!~/>$county_day</&&\$0!=\"--\"{s=substr(\$0,index(\$0,\">\")+1);s=substr(s,1,index(s,\"<\")-1);gsub(/ \(no change\)/, \"\", s);print s}")
 do
-  ! echo "$f" | grep -Eq "^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday), (January|February|March|April|May|June|July|August|September|October|November|December) [123]?[0-9], [0-9]{4}$" && echo "$0: Warning: Invalid date string '$f'" > /dev/stderr && continue
+  ! echo "$f" | grep -Eq "^(Sun|Mon|Tues|Wednes|Thurs|Fri|Satur)day, (January|February|March|April|May|June|July|August|September|October|November|December) [123]?[0-9], [0-9]{4}$" && echo "$0: Warning: Invalid date string '$f'" > /dev/stderr && continue
   this_year=$(datecmd -d "$f" "+%Y")
   [ $? != 0 ] && echo "$0: Warning: Cannot get year for '$f'" > /dev/stderr && continue
 
   this_week_number=$(datecmd -d "$f" "+%U")
   [ $? != 0 ] && echo "$0: Warning: Cannot get week number for '$f'" > /dev/stderr && continue
 
-  [ $current_year = $this_year ] && [ $current_week_number = $this_week_number ] && this_week_day=$(datecmd -d "$f" "+%A")
+  [ $current_year = $this_year ] && [ $current_week_number = $this_week_number ] && this_week_day=$(datecmd -d "$f" "+%u")
 done
 
+update=$(python3 -c "import bs4;import requests;p=requests.get('https://montgomerycountymd.gov/sws/Common/UserControls/status-include.htm');s=bs4.BeautifulSoup(p.text,'lxml');print(s.find_all('div',class_='alert')[0].text)")
+if [[ "$update" =~ "(slide|slid|shift|shifted|bump|bumped)" ]]; then
+  this_week_day=$((this_week_day+1))
+fi
+
 case $this_week_day in
+  0|1|2|3|4|5|6|7)
+    get_day_name $this_week_day
+    ;;
   Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)
     echo $this_week_day
     ;;

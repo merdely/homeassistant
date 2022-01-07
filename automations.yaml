@@ -347,7 +347,6 @@
       hours: 0
       minutes: 0
       seconds: 5
-      milliseconds: 0
   - platform: state
     entity_id: binary_sensor.withings_in_bed_michael_e
     from: 'on'
@@ -356,10 +355,10 @@
       hours: 0
       minutes: 0
       seconds: 5
-      milliseconds: 0
   condition:
   - condition: time
     after: input_datetime.automatic_security_disarm
+    before: '21:00:00'
   action:
   - service: script.security_disarm_system
   - condition: state
@@ -2601,20 +2600,33 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.wyze_sense_778e4029
+    entity_id: binary_sensor.wyze_sense_778e4038
     to: 'on'
   condition: []
   action:
-  - service: notify.hangouts_security_alert
-    data:
-      message: The mail's here, the mail's here!  Woo-hoo!
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.mail_delivered
+        state: 'off'
+      sequence:
+      - service: notify.hangouts_security_alert
+        data:
+          message: The mail's here, the mail's here!  Woo-hoo!
+      - service: homeassistant.turn_on
+        target:
+          entity_id: input_boolean.mail_delivered
+    default:
+    - service: homeassistant.turn_off
+      target:
+        entity_id: input_boolean.mail_delivered
   mode: single
 - id: '1615411227750'
   alias: Mailbox State Reset
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.wyze_sense_778e4029
+    entity_id: binary_sensor.wyze_sense_778e4038
     to: 'on'
     for:
       hours: 0
@@ -2625,15 +2637,15 @@
   action:
   - service: mqtt.publish
     data:
-      topic: wyzesense2mqtt/778E4029
-      payload: '{"event": "{{ state_attr("binary_sensor.wyze_sense_778e4029", "event")
-        }}", "available": true, "mac": "{{ state_attr("binary_sensor.wyze_sense_778e4029",
-        "mac") }}", "device_class": "{{ state_attr("binary_sensor.wyze_sense_778e4029",
-        "device_class") }}", "last_seen": {{ state_attr("binary_sensor.wyze_sense_778e4029",
-        "last_seen") }}, "last_seen_iso": "{{ state_attr("binary_sensor.wyze_sense_778e4029",
-        "last_seen_iso") }}", "signal_strength": {{ state_attr("binary_sensor.wyze_sense_778e4029",
-        "signal_strength") }}, "battery": {{ state_attr("binary_sensor.wyze_sense_778e4029",
-        "battery") }}, "name": "{{ state_attr("binary_sensor.wyze_sense_778e4029",
+      topic: wyzesense2mqtt/778E4038
+      payload: '{"event": "{{ state_attr("binary_sensor.wyze_sense_778e4038", "event")
+        }}", "available": true, "mac": "{{ state_attr("binary_sensor.wyze_sense_778e4038",
+        "mac") }}", "device_class": "{{ state_attr("binary_sensor.wyze_sense_778e4038",
+        "device_class") }}", "last_seen": {{ state_attr("binary_sensor.wyze_sense_778e4038",
+        "last_seen") }}, "last_seen_iso": "{{ state_attr("binary_sensor.wyze_sense_778e4038",
+        "last_seen_iso") }}", "signal_strength": {{ state_attr("binary_sensor.wyze_sense_778e4038",
+        "signal_strength") }}, "battery": {{ state_attr("binary_sensor.wyze_sense_778e4038",
+        "battery") }}, "name": "{{ state_attr("binary_sensor.wyze_sense_778e4038",
         "friendly_name") }}", "state": 0}'
       retain: true
       qos: 0
@@ -3458,8 +3470,8 @@
     entity_id: sensor.unavailable_entities
     for:
       hours: 0
-      minutes: 0
-      seconds: 30
+      minutes: 3
+      seconds: 0
       milliseconds: 0
   - platform: state
     entity_id: sensor.software_update_available

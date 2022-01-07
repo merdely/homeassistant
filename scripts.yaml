@@ -1192,8 +1192,6 @@ scene_movie_time:
   - service: homeassistant.turn_on
     target:
       entity_id:
-      - switch.god_damn_tv
-      - switch.fireplace_light
       - switch.christmas_tree
   - service: homeassistant.turn_off
     target:
@@ -1203,6 +1201,7 @@ scene_movie_time:
       - light.den_overhead_light
       - light.laundry_room_light
       - switch.three_headed_lamp
+      - light.god_damn_light
   mode: single
   icon: mdi:movie
 scene_night_night:

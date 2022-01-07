@@ -378,6 +378,105 @@
     state: "{{ state_attr('weather.home_2', 'temperature') | round(1) }}"
 
 - sensor:
+    unique_id: attic_temperature
+    name: "Attic Temperature"
+    unit_of_measurement: "°F"
+    state: >-
+      {% if states("sensor.attic_multisensor_temperature") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.attic_multisensor_temperature") | round(1) }}
+      {% endif %}
+
+- sensor:
+    unique_id: bedroom_temperature
+    name: "Bedroom Temperature"
+    unit_of_measurement: "°F"
+    state: >-
+      {% if states("sensor.bedroom_multisensor_temperature") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.bedroom_multisensor_temperature") | round(1) }}
+      {% endif %}
+
+- sensor:
+    unique_id: master_bath_temperature
+    name: "Master Bath Temperature"
+    unit_of_measurement: "°F"
+    state: >-
+      {% if states("sensor.master_bath_multisensor_temperature") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.master_bath_multisensor_temperature") | round(1) }}
+      {% endif %}
+
+- sensor:
+    unique_id: master_bath_humidity
+    name: "Master Bath Humidity"
+    unit_of_measurement: "%"
+    state: >-
+      {% if states("sensor.master_bath_multisensor_humidity") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.master_bath_multisensor_humidity") | round(1) }}
+      {% endif %}
+
+- sensor:
+    unique_id: office_temperature
+    name: "Office Temperature"
+    unit_of_measurement: "°F"
+    state: >-
+      {% if states("sensor.office_multisensor_temperature") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.office_multisensor_temperature") | round(1) }}
+      {% endif %}
+
+- sensor:
+    unique_id: living_room_temperature
+    name: "Living Room Temperature"
+    unit_of_measurement: "°F"
+    state: >-
+      {% if states("sensor.living_room_multisensor_temperature") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.living_room_multisensor_temperature") | round(1) }}
+      {% endif %}
+
+- sensor:
+    unique_id: god_damn_temperature
+    name: "God Damn Temperature"
+    unit_of_measurement: "°F"
+    state: >-
+      {% if states("sensor.god_damn_multisensor_temperature") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.god_damn_multisensor_temperature") | round(1) }}
+      {% endif %}
+
+- sensor:
+    unique_id: garage_temperature
+    name: "Garage Temperature"
+    unit_of_measurement: "°F"
+    state: >-
+      {% if states("sensor.garage_multisensor_temperature") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.garage_multisensor_temperature") | round(1) }}
+      {% endif %}
+
+- sensor:
+    unique_id: outside_temperature
+    name: "Outside Temperature"
+    unit_of_measurement: "°F"
+    state: >-
+      {% if states("sensor.outside_multisensor_temperature") | float(default=-500.0) < -100.0 %}
+        --
+      {% else %}
+        {{ states("sensor.outside_multisensor_temperature") | round(1) }}
+      {% endif %}
+
+- sensor:
     unique_id: time_formatted
     name: "Time Formatted"
     icon: mdi:clock

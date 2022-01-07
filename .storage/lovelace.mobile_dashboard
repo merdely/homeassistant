@@ -1,5 +1,6 @@
 {
     "version": 1,
+    "minor_version": 1,
     "key": "lovelace.mobile_dashboard",
     "data": {
         "config": {
@@ -23,7 +24,7 @@
                                         {
                                             "type": "entities",
                                             "card_mod": {
-                                                "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  border: solid 1px grey;\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                                                "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  border: solid 1px grey;\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(default=100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(default=100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(default=100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(default=100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                                             },
                                             "entities": [
                                                 {
@@ -44,6 +45,29 @@
                                                     "show_state": false
                                                 },
                                                 {
+                                                    "entity": "person.holly_erdely",
+                                                    "name": "Bed Presence Sensor",
+                                                    "icon": "mdi:bed",
+                                                    "type": "custom:multiple-entity-row",
+                                                    "entities": [
+                                                        {
+                                                            "entity": "binary_sensor.withings_in_bed_holly_e",
+                                                            "name": "Holly",
+                                                            "styles": {
+                                                                "color": "var(--holly-bed-color)"
+                                                            }
+                                                        },
+                                                        {
+                                                            "entity": "binary_sensor.withings_in_bed_michael_e",
+                                                            "name": "Mike",
+                                                            "styles": {
+                                                                "color": "var(--mike-bed-color)"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "show_state": false
+                                                },
+                                                {
                                                     "entity": "alarm_control_panel.home_alarm",
                                                     "name": "Security System",
                                                     "type": "custom:multiple-entity-row",
@@ -56,7 +80,10 @@
                                                         },
                                                         {
                                                             "entity": "alarm_control_panel.home_alarm",
-                                                            "name": "Alarm"
+                                                            "name": "Alarm",
+                                                            "styles": {
+                                                                "color": "var(--alarm-color)"
+                                                            }
                                                         }
                                                     ],
                                                     "show_state": false
@@ -68,27 +95,27 @@
                                                     "show_state": false,
                                                     "entities": [
                                                         {
-                                                            "entity": "sensor.bedroom_multisensor_temperature",
+                                                            "entity": "sensor.bedroom_temperature",
                                                             "name": "BR",
                                                             "unit": " "
                                                         },
                                                         {
-                                                            "entity": "sensor.master_bath_multisensor_temperature",
+                                                            "entity": "sensor.master_bath_temperature",
                                                             "name": "MB",
                                                             "unit": " "
                                                         },
                                                         {
-                                                            "entity": "sensor.master_bath_multisensor_humidity",
+                                                            "entity": "sensor.master_bath_humidity",
                                                             "name": "MB(h)",
                                                             "unit": " "
                                                         },
                                                         {
-                                                            "entity": "sensor.office_multisensor_temperature",
+                                                            "entity": "sensor.office_temperature",
                                                             "name": "Ofc",
                                                             "unit": " "
                                                         },
                                                         {
-                                                            "entity": "sensor.living_room_multisensor_temperature",
+                                                            "entity": "sensor.living_room_temperature",
                                                             "name": "LR",
                                                             "unit": " "
                                                         }
@@ -110,7 +137,7 @@
                                                             "unit": " "
                                                         },
                                                         {
-                                                            "entity": "sensor.god_damn_multisensor_temperature",
+                                                            "entity": "sensor.god_damn_temperature",
                                                             "name": "Down",
                                                             "unit": " "
                                                         },
@@ -120,12 +147,12 @@
                                                             "unit": " "
                                                         },
                                                         {
-                                                            "entity": "sensor.garage_multisensor_temperature",
+                                                            "entity": "sensor.garage_temperature",
                                                             "name": "Garage",
                                                             "unit": " "
                                                         },
                                                         {
-                                                            "entity": "sensor.outside_multisensor_temperature",
+                                                            "entity": "sensor.outside_temperature",
                                                             "name": "Out",
                                                             "unit": " "
                                                         }
@@ -182,7 +209,7 @@
                                                 {
                                                     "type": "custom:multiple-entity-row",
                                                     "entity": "sensor.washer_and_dryer_state_pretty",
-                                                    "name": "Appliances",
+                                                    "name": "Status",
                                                     "show_state": false,
                                                     "entities": [
                                                         {
@@ -197,6 +224,15 @@
                                                             "name": "Oven",
                                                             "styles": {
                                                                 "color": "var(--oven-color)"
+                                                            }
+                                                        },
+                                                        {
+                                                            "entity": "input_boolean.mail_delivered",
+                                                            "tap_action": {
+                                                                "action": "toggle"
+                                                            },
+                                                            "styles": {
+                                                                "color": "var(--mail-color)"
                                                             }
                                                         }
                                                     ]
@@ -252,6 +288,46 @@
                                                 },
                                                 {
                                                     "type": "custom:multiple-entity-row",
+                                                    "entity": "switch.mercury_screensaver",
+                                                    "name": "Devices",
+                                                    "show_state": false,
+                                                    "entities": [
+                                                        {
+                                                            "entity": "switch.mercury_screensaver",
+                                                            "name": "Mercury SS",
+                                                            "styles": {
+                                                                "color": "var(--mercury-screensaver-color)",
+                                                                "width": "55px"
+                                                            }
+                                                        },
+                                                        {
+                                                            "entity": "switch.venus_screensaver",
+                                                            "name": "Venus SS",
+                                                            "styles": {
+                                                                "color": "var(--venus-screensaver-color)",
+                                                                "width": "50px"
+                                                            }
+                                                        },
+                                                        {
+                                                            "entity": "sensor.fully_kiosk_browser",
+                                                            "name": "FKB",
+                                                            "styles": {
+                                                                "color": "var(--fkb-color)",
+                                                                "width": "50px"
+                                                            }
+                                                        },
+                                                        {
+                                                            "entity": "sensor.fully_kiosk_browser_mbr",
+                                                            "name": "FKB MBR",
+                                                            "styles": {
+                                                                "color": "var(--fkb-mbr-color)",
+                                                                "width": "50px"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "custom:multiple-entity-row",
                                                     "entity": "binary_sensor.updater",
                                                     "name": "HA",
                                                     "icon": "mdi:home-assistant",
@@ -259,7 +335,7 @@
                                                     "state_color": true,
                                                     "tap_action": {
                                                         "action": "navigate",
-                                                        "navigation_path": "/hassio"
+                                                        "navigation_path": "/hassio/dashboard"
                                                     },
                                                     "entities": [
                                                         {
@@ -273,6 +349,12 @@
                                                             "tap_action": {
                                                                 "action": "navigate",
                                                                 "navigation_path": "/mobile-dashboard/software"
+                                                            },
+                                                            "double_tap_action": {
+                                                                "action": "more-info"
+                                                            },
+                                                            "hold_action": {
+                                                                "action": "more-info"
                                                             }
                                                         },
                                                         {
@@ -280,6 +362,16 @@
                                                             "name": "Unavailable",
                                                             "styles": {
                                                                 "color": "var(--unavailable-color)"
+                                                            },
+                                                            "tap_action": {
+                                                                "action": "navigate",
+                                                                "navigation_path": "/mobile-dashboard/unavailable-entities"
+                                                            },
+                                                            "double_tap_action": {
+                                                                "action": "more-info"
+                                                            },
+                                                            "hold_action": {
+                                                                "action": "more-info"
                                                             }
                                                         },
                                                         {
@@ -287,6 +379,16 @@
                                                             "name": "Zigbee",
                                                             "styles": {
                                                                 "color": "var(--zigbee-color)"
+                                                            },
+                                                            "tap_action": {
+                                                                "action": "navigate",
+                                                                "navigation_path": "/mobile-dashboard/unavailable-entities"
+                                                            },
+                                                            "double_tap_action": {
+                                                                "action": "more-info"
+                                                            },
+                                                            "hold_action": {
+                                                                "action": "more-info"
                                                             }
                                                         },
                                                         {
@@ -294,6 +396,16 @@
                                                             "name": "TVList",
                                                             "styles": {
                                                                 "color": "var(--tv-list-color)"
+                                                            },
+                                                            "tap_action": {
+                                                                "action": "navigate",
+                                                                "navigation_path": "/mobile-dashboard/tvs"
+                                                            },
+                                                            "double_tap_action": {
+                                                                "action": "more-info"
+                                                            },
+                                                            "hold_action": {
+                                                                "action": "more-info"
                                                             }
                                                         }
                                                     ]
@@ -302,7 +414,7 @@
                                                     "entity": "sensor.plex_plex",
                                                     "name": "Plex Status",
                                                     "card_mod": {
-                                                        "style": ":host {\n  {% if states('sensor.plex_plex') | int(default=0) > 0 %}\n  color: yellow;\n  {% endif %}\n}\n"
+                                                        "style": ":host {\n  color: var(--plex-color);\n}\n"
                                                     }
                                                 }
                                             ]
@@ -1664,7 +1776,7 @@
                                                         "entity": "binary_sensor.chimney_gate_contact"
                                                     },
                                                     {
-                                                        "entity": "binary_sensor.wyze_sense_778e4029"
+                                                        "entity": "binary_sensor.wyze_sense_778e4038"
                                                     },
                                                     {
                                                         "entity": "binary_sensor.garage_entry_door_contact"
@@ -1809,7 +1921,7 @@
                                         "cards": [
                                             {
                                                 "type": "grid",
-                                                "columns": 5,
+                                                "columns": 3,
                                                 "square": false,
                                                 "cards": [
                                                     {
@@ -1820,7 +1932,19 @@
                                                         },
                                                         "entity": "script.scene_good_night",
                                                         "name": "Software Versions",
-                                                        "icon": "mdi:home-assistant"
+                                                        "icon": "mdi:home-assistant",
+                                                        "show_name": false
+                                                    },
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "navigate",
+                                                            "navigation_path": "/mobile-dashboard/unavailable-entities"
+                                                        },
+                                                        "entity": "script.scene_good_night",
+                                                        "name": "Unavailable Entities",
+                                                        "icon": "mdi:help-rhombus",
+                                                        "show_name": false
                                                     },
                                                     {
                                                         "type": "button",
@@ -1830,7 +1954,8 @@
                                                         },
                                                         "entity": "script.scene_good_night",
                                                         "name": "Good Night",
-                                                        "icon": "mdi:weather-night"
+                                                        "icon": "mdi:weather-night",
+                                                        "show_name": false
                                                     },
                                                     {
                                                         "type": "button",
@@ -1840,7 +1965,8 @@
                                                         },
                                                         "entity": "script.scene_night_night",
                                                         "name": "Night Night",
-                                                        "icon": "mdi:moon-waning-crescent"
+                                                        "icon": "mdi:moon-waning-crescent",
+                                                        "show_name": false
                                                     },
                                                     {
                                                         "type": "button",
@@ -1850,7 +1976,8 @@
                                                         },
                                                         "entity": "script.scene_leaving_home",
                                                         "name": "Leaving Home",
-                                                        "icon": "mdi:exit-run"
+                                                        "icon": "mdi:exit-run",
+                                                        "show_name": false
                                                     },
                                                     {
                                                         "type": "button",
@@ -1860,7 +1987,8 @@
                                                         },
                                                         "entity": "script.scene_movie_time",
                                                         "name": "Movie Time",
-                                                        "icon": "mdi:movie"
+                                                        "icon": "mdi:movie",
+                                                        "show_name": false
                                                     }
                                                 ]
                                             },
@@ -1875,29 +2003,6 @@
                                                             "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-ping-color: {% if states('binary_sensor.earth') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-web-color: {% if states('binary_sensor.earth_nginx_php_working') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --ha-ver-color: {% if is_state('binary_sensor.updater', 'on') %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                                                         },
                                                         "entities": [
-                                                            {
-                                                                "entity": "person.holly_erdely",
-                                                                "name": "Bed Presence Sensor",
-                                                                "icon": "mdi:bed",
-                                                                "type": "custom:multiple-entity-row",
-                                                                "entities": [
-                                                                    {
-                                                                        "entity": "binary_sensor.withings_in_bed_holly_e",
-                                                                        "name": "Holly",
-                                                                        "styles": {
-                                                                            "color": "var(--holly-bed-color)"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "entity": "binary_sensor.withings_in_bed_michael_e",
-                                                                        "name": "Mike",
-                                                                        "styles": {
-                                                                            "color": "var(--mike-bed-color)"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "show_state": false
-                                                            },
                                                             {
                                                                 "type": "custom:multiple-entity-row",
                                                                 "entity": "sensor.printer_ink",
@@ -1936,28 +2041,6 @@
                                                                         "name": "K",
                                                                         "styles": {
                                                                             "color": "var(--black-color)"
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            },
-                                                            {
-                                                                "type": "custom:multiple-entity-row",
-                                                                "entity": "switch.mercury_screensaver",
-                                                                "name": "Screensavers",
-                                                                "show_state": false,
-                                                                "entities": [
-                                                                    {
-                                                                        "entity": "switch.mercury_screensaver",
-                                                                        "name": "Mercury",
-                                                                        "styles": {
-                                                                            "color": "var(--mercury-screensaver-color)"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "entity": "switch.venus_screensaver",
-                                                                        "name": "Venus",
-                                                                        "styles": {
-                                                                            "color": "var(--venus-screensaver-color)"
                                                                         }
                                                                     }
                                                                 ]
@@ -2039,7 +2122,7 @@
                                                                 "type": "custom:multiple-entity-row",
                                                                 "state_color": false,
                                                                 "show_state": false,
-                                                                "icon": "mdi:home-assistant",
+                                                                "icon": "mdi:earth",
                                                                 "tap_action": {
                                                                     "action": "navigate",
                                                                     "navigation_path": "/hassio"
@@ -2992,6 +3075,165 @@
                                                 },
                                                 "sort": {
                                                     "method": "name"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Unavailable Entities",
+                    "path": "unavailable-entities",
+                    "icon": "mdi:help-rhombus",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "button",
+                                                        "tap_action": {
+                                                            "action": "navigate",
+                                                            "navigation_path": "/mobile-dashboard/home"
+                                                        },
+                                                        "hold_action": {
+                                                            "action": "none"
+                                                        },
+                                                        "show_icon": false,
+                                                        "name": "Unavailable Entities"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "custom:mod-card",
+                                    "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                                    "card": {
+                                        "type": "grid",
+                                        "columns": 1,
+                                        "square": false,
+                                        "cards": [
+                                            {
+                                                "type": "entities",
+                                                "entities": [
+                                                    {
+                                                        "entity": "sensor.unavailable_entities"
+                                                    },
+                                                    {
+                                                        "type": "attribute",
+                                                        "entity": "sensor.unavailable_entities",
+                                                        "attribute": "entity_list",
+                                                        "name": " ",
+                                                        "icon": " "
+                                                    },
+                                                    {
+                                                        "type": "divider"
+                                                    },
+                                                    {
+                                                        "entity": "sensor.out_of_date_zigbee_entities"
+                                                    },
+                                                    {
+                                                        "type": "attribute",
+                                                        "entity": "sensor.out_of_date_zigbee_entities",
+                                                        "attribute": "entity_list",
+                                                        "name": " ",
+                                                        "icon": " "
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "custom:auto-entities",
+                                                "card": {
+                                                    "type": "entities"
+                                                },
+                                                "filter": {
+                                                    "include": [
+                                                        {
+                                                            "entity_id": "sensor.hacs",
+                                                            "options": {
+                                                                "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "homeassistant.update_entity",
+                                                                    "service_data": {},
+                                                                    "target": {
+                                                                        "entity_id": "this.entity_id"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "entity_id": "sensor.unavailable_entities",
+                                                            "options": {
+                                                                "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "homeassistant.update_entity",
+                                                                    "service_data": {},
+                                                                    "target": {
+                                                                        "entity_id": "this.entity_id"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "entity_id": "sensor.out_of_date_zigbee_entities",
+                                                            "options": {
+                                                                "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "homeassistant.update_entity",
+                                                                    "service_data": {},
+                                                                    "target": {
+                                                                        "entity_id": "this.entity_id"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "entity_id": "/_version$/",
+                                                            "domain": "sensor",
+                                                            "options": {
+                                                                "style": "* {\n  {% if states(\"this.entity_id\") != states(\"this.entity_id_latest\") %}\n  color: yellow;\n  {% endif %}\n}\n",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "homeassistant.update_entity",
+                                                                    "service_data": {},
+                                                                    "target": {
+                                                                        "entity_id": "this.entity_id"
+                                                                    }
+                                                                },
+                                                                "sort": "name"
+                                                            },
+                                                            "not": {
+                                                                "entity_id": "/^sensor\\.(ha_.*|hacs_.*|pixel_.*|.*_firmware)_version$/"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "exclude": []
+                                                },
+                                                "sort": {
+                                                    "method": "none"
                                                 }
                                             }
                                         ]

@@ -35,7 +35,7 @@
       command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock'
       command_off: '/bin/true'
       command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_status'
-      value_template: '{{ value == "true" }}'
+      value_template: '{{ value == "Screensaver is running" }}'
 
 - platform: template
   switches:
@@ -333,7 +333,7 @@
           entity_id: light.office_fan_light
       turn_off:
         - service: homeassistant.turn_off
-          entity_id: switch.office_tv, light.office_fan_light, switch.mike_desk_lamp, switch.mercury_screensaver, switch.venus_screensaver
+          entity_id: switch.office_tv, light.office_fan_light, switch.mike_desk_lamp
         - service: homeassistant.turn_on
           entity_id: switch.mercury_screensaver, switch.venus_screensaver
 
