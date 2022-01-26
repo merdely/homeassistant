@@ -1,6 +1,21 @@
 - name: syslog
   platform: syslog
 
+- name: signal_mike
+  platform: signal_messenger
+  url: "http://1315902c-signal-messenger:8080" # the URL where the Signal Messenger REST API is listening
+  number: "+13017741251"
+  recipients: # one or more recipients
+    - "+13019052224"
+
+- name: signal_security
+  platform: signal_messenger
+  url: "http://1315902c-signal-messenger:8080" # the URL where the Signal Messenger REST API is listening
+  number: "+13017741251"
+  recipients: # one or more recipients
+    - "+13019052224"
+    - "+13019086426"
+
 - name: hangouts_security_alert
   platform: hangouts
   default_conversations:

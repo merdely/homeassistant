@@ -49,11 +49,30 @@
   scan_interval: 15
   count: 4
 
+- platform: ping
+  name: God Damn TV Ping
+  host: 192.168.25.162
+  scan_interval: 15
+  count: 4
+
+- platform: ping
+  name: Bedroom TV Ping
+  host: 192.168.25.160
+  scan_interval: 15
+  count: 4
+
 - name: OctoPrint Camera Status
   platform: command_line
   command: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
   payload_on: 'Camera is streaming'
   payload_off: 'Camera is off'
+
+- name: Signal Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_signal_addon'
+  payload_on: 'on'
+  payload_off: 'off'
 
 - name: Garage Door Cam Status
   platform: command_line

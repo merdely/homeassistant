@@ -404,7 +404,7 @@
   - service: input_boolean.turn_off
     data: {}
     entity_id: input_boolean.laundry_room_washer_running
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: The washing machine is done
   mode: single
@@ -572,7 +572,7 @@
   - service: input_boolean.turn_off
     data: {}
     entity_id: input_boolean.laundry_room_dryer_running
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: The dryer is done
   mode: single
@@ -1487,24 +1487,16 @@
         entity_id: input_select.living_room_input
         state: Tivo
       sequence:
-      - service: script.function_tv_change_input
+      - service: rest_command.roku_rest_command
         data:
-          tv: living_room
-          input: tivo
-    - conditions:
-      - condition: state
-        entity_id: input_select.living_room_input
-        state: Chromecast
-      sequence:
-      - service: script.function_tv_change_input
-        data:
-          tv: living_room
-          input: chromecast
+          roku_ip: 192.168.25.182
+          roku_app_id: tvinput.hdmi1
     default:
-    - service: script.function_tv_change_input
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.living_room_roku_tv
       data:
-        tv: living_room
-        input: roku
+        source: Home
     - choose:
       - conditions:
         - condition: state
@@ -2620,6 +2612,9 @@
       - service: homeassistant.turn_on
         target:
           entity_id: input_boolean.mail_delivered
+      - service: notify.signal_security
+        data:
+          message: The mail's here, the mail's here!  Woo-hoo!
     default:
     - service: homeassistant.turn_off
       target:
@@ -2829,6 +2824,37 @@
             - action: RUN_GOODNIGHT
               title: Good Night
           title: Security Alert
+    default: []
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_1")
+            and states("input_boolean.trash_is_out") == "off" }}'
+        - condition: template
+          value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_2")
+            and states("input_boolean.trash_is_out") == "off" }}'
+      sequence:
+      - service: notify.notify
+        data:
+          message: Trash collection is tomorrow and Trash is not out!
+          data:
+            actions:
+            - action: TRASH_IS_OUT
+              title: Trash Is Already Out
+    - conditions:
+      - condition: template
+        value_template: '{{ states("sensor.weekday_tomorrow") == states("sensor.moco_recycle_day")
+          and states("input_boolean.recycle_is_out") == "off" }}'
+      sequence:
+      - service: notify.notify
+        data:
+          message: Recycling collection is tomorrow and Recycle is not out!
+          data:
+            actions:
+            - action: RECYCLE_IS_OUT
+              title: Recycling Is Already Out
     default: []
   - service: system_log.write
     data:
@@ -3403,9 +3429,7 @@
       action: ARM_AWAY
   condition: []
   action:
-  - service: alarm_control_panel.alarm_arm_away
-    target:
-      entity_id: alarm_control_panel.home_alarm
+  - service: script.scene_leaving_home
   - service: notify.notify
     data:
       message: Alarm Armed (Away) via Actionable Notification
@@ -3463,35 +3487,24 @@
       hours: 0
       minutes: 0
       seconds: 30
-      milliseconds: 0
-  - platform: state
-    entity_id: sensor.unavailable_entities
-    for:
-      hours: 0
-      minutes: 3
-      seconds: 0
-      milliseconds: 0
   - platform: state
     entity_id: sensor.software_update_available
     for:
       hours: 0
       minutes: 0
       seconds: 30
-      milliseconds: 0
   - platform: state
     entity_id: input_text.test_monitor_helper
     for:
       hours: 0
       minutes: 0
-      seconds: 0
-      milliseconds: 0
+      seconds: 30
   - platform: state
     entity_id: binary_sensor.earth
     for:
       hours: 0
-      minutes: 3
+      minutes: 5
       seconds: 0
-      milliseconds: 0
     from: 'off'
   - platform: state
     entity_id: binary_sensor.earth
@@ -3499,15 +3512,33 @@
       hours: 0
       minutes: 3
       seconds: 0
-      milliseconds: 0
     from: 'on'
   - platform: state
     entity_id: binary_sensor.earth_nginx_php_working
     for:
       hours: 0
-      minutes: 3
+      minutes: 5
       seconds: 0
-      milliseconds: 0
+  - platform: numeric_state
+    entity_id: sensor.unavailable_entities
+    above: '0'
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 30
+  - platform: numeric_state
+    entity_id: sensor.unavailable_entities
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    below: '1'
+  - platform: state
+    entity_id: binary_sensor.signal_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
   condition:
   - condition: template
     value_template: '{{ trigger.to_state.state != trigger.from_state.state }}'
@@ -3533,11 +3564,18 @@
             '
           title: '** PROBLEM Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
             }} is {{ states(trigger.entity_id) }} **'
+      - service: homeassistant.turn_on
+        target:
+          entity_id: '{{ "input_boolean." + trigger.entity_id.split(".")[1] + "_triggered"
+            }}'
     - conditions:
       - condition: template
         value_template: '{{ trigger.to_state.state | int(default=-1) == 0 or trigger.to_state.state
           | string == "on" }}'
       sequence:
+      - condition: template
+        value_template: '{{ states("input_boolean." + trigger.entity_id.split(".")[1]
+          + "_triggered") == "on" }}'
       - service: notify.gmail_to_mike
         data:
           message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
@@ -3546,6 +3584,10 @@
             '
           title: '** RECOVERY Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
             }} is {{ states(trigger.entity_id) }} **'
+      - service: homeassistant.turn_off
+        target:
+          entity_id: '{{ "input_boolean." + trigger.entity_id.split(".")[1] + "_triggered"
+            }}'
     default:
     - service: notify.gmail_to_mike
       data:
@@ -3576,4 +3618,33 @@
   - service: homeassistant.turn_off
     target:
       entity_id: input_boolean.mail_delivered
+  mode: single
+- id: '1642193974045'
+  alias: Actionable Notifications - TRASH_IS_OUT
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: TRASH_IS_OUT
+  condition: []
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id:
+      - input_boolean.trash_is_out
+  mode: single
+- id: '1642194163380'
+  alias: Actionable Notifications - RECYCLE_IS_OUT
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: RECYCLE_IS_OUT
+  condition: []
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id: input_boolean.recycle_is_out
   mode: single

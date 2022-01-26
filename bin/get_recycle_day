@@ -72,10 +72,10 @@ do
   [ $current_year = $this_year ] && [ $current_week_number = $this_week_number ] && this_week_day=$(datecmd -d "$f" "+%u")
 done
 
-update=$(python3 -c "import bs4;import requests;p=requests.get('https://montgomerycountymd.gov/sws/Common/UserControls/status-include.htm');s=bs4.BeautifulSoup(p.text,'lxml');print(s.find_all('div',class_='alert')[0].text)")
-if [[ "$update" =~ "(slide|slid|shift|shifted|bump|bumped)" ]]; then
-  this_week_day=$((this_week_day+1))
-fi
+#update=$(python3 -c "import bs4;import requests;p=requests.get('https://montgomerycountymd.gov/sws/Common/UserControls/status-include.htm');s=bs4.BeautifulSoup(p.text,'lxml');print(s.find_all('div',class_='alert')[0].text)")
+#if [[ "$update" =~ "(slide|slid|shift|shifted|bump|bumped)" ]]; then
+#  this_week_day=$((this_week_day+1))
+#fi
 
 case $this_week_day in
   0|1|2|3|4|5|6|7)

@@ -104,15 +104,16 @@
                                                         },
                                                         {
                                                             "type": "button",
-                                                            "card_mod": {
-                                                                "style": ".state {\n  {% if states('input_boolean.mail_delivered') == 'off' %}\n  color: var(--primary-text-color) !important;\n  {% else %}\n  color: yellow !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
-                                                            },
                                                             "entity": "input_boolean.mail_delivered",
                                                             "show_icon": true,
-                                                            "show_name": false,
+                                                            "show_name": true,
                                                             "show_state": false,
                                                             "tap_action": {
                                                                 "action": "toggle"
+                                                            },
+                                                            "name": "Mail",
+                                                            "card_mod": {
+                                                                "style": ".state {\n  {% if states('input_boolean.mail_delivered') == 'off' %}\n  color: var(--primary-text-color) !important;\n  {% else %}\n  color: yellow !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
                                                             }
                                                         }
                                                     ]
@@ -708,14 +709,11 @@
                                                 },
                                                 {
                                                     "type": "entity",
-                                                    "entity": "binary_sensor.oven_is_on",
-                                                    "show_name": true,
-                                                    "show_icon": true,
-                                                    "state_color": true,
-                                                    "name": "Oven",
-                                                    "icon": "mdi:stove",
+                                                    "entity": "sensor.thermostat_setpoints",
+                                                    "name": "SetPt",
+                                                    "icon": "mdi:thermostat",
                                                     "card_mod": {
-                                                        "style": "ha-card {\n  justify-content: flex-start !important;\n}\nha-state-icon {\n  {% if states('binary_sensor.oven_is_on') == \"on\" %}\n  color: yellow !important;\n  {% endif %}\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.name {\n  {% if states('binary_sensor.oven_is_on') == \"on\" %}\n  color: yellow !important;\n  {% endif %}\n}\n.value {\n  font-size: 32px !important;\n  text-align: center !important;\n  {% if states('binary_sensor.oven_is_on') == \"on\" %}\n  color: yellow !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if states('binary_sensor.oven_is_on') == \"on\" %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                                                        "style": "ha-card {\n  justify-content: flex-start !important;\n}\n.header {\n  padding-top: 0px !important;\n}\n.info {\n  padding-top: 5px !important;\n  padding-bottom: 0px !important;\n  padding-right: 0px !important;\n  padding-left: 0px !important;\n  text-align: center !important;\n}\n.value {\n  font-size: 22px !important;\n}\n.name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
                                                     }
                                                 },
                                                 {

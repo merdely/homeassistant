@@ -146,15 +146,16 @@
                                         },
                                         {
                                             "type": "button",
-                                            "card_mod": {
-                                                "style": ".state {\n  {% if states('input_boolean.mail_delivered') == 'off' %}\n  color: var(--primary-text-color) !important;\n  {% else %}\n  color: yellow !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
-                                            },
                                             "entity": "input_boolean.mail_delivered",
                                             "show_icon": true,
-                                            "show_name": false,
+                                            "show_name": true,
                                             "show_state": false,
                                             "tap_action": {
                                                 "action": "toggle"
+                                            },
+                                            "name": "Mail Delivery",
+                                            "card_mod": {
+                                                "style": ".state {\n  {% if states('input_boolean.mail_delivered') == 'off' %}\n  color: var(--primary-text-color) !important;\n  {% else %}\n  color: yellow !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
                                             }
                                         },
                                         {

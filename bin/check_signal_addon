@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ $(curl -sfo /dev/null -w %{http_code} --connect-timeout 2 http://1315902c-signal-messenger:8080/v1/about) = 200 ]
+then
+  echo on
+else
+  echo off
+fi
