@@ -363,7 +363,11 @@
     unique_id: thermostat_setpoints
     name: "Thermostat Setpoints"
     state: >-
+      {%- if not state_attr('climate.thermostat', 'target_temp_high') %}
+      {{ state_attr('climate.thermostat', 'temperature') | int(default=0) }}
+      {%- else %}
       {{ state_attr('climate.thermostat', 'target_temp_high') | int(default=0) }}/{{ state_attr('climate.thermostat', 'target_temp_low') | int(default=0) }}
+      {% endif %}
 
 - sensor:
     unique_id: outside_temperature_met_no

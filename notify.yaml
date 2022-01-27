@@ -37,7 +37,7 @@
   password: !secret smtp_relay_password
   recipient:
     - !secret mike_email
-  sender_name: Home Assistant
+  #sender_name: Home Assistant
 
 - name: gmail_to_mike_and_holly
   platform: smtp
@@ -51,7 +51,7 @@
   recipient:
     - !secret mike_email
     - !secret holly_email
-  sender_name: Home Assistant
+  #sender_name: Home Assistant
 
 - name: gmail_to_security
   platform: smtp
@@ -64,7 +64,7 @@
   password: !secret smtp_relay_password
   recipient:
     - !secret security_email
-  sender_name: Home Assistant
+  #sender_name: Home Assistant
 
 - name: Alarm State File
   platform: file

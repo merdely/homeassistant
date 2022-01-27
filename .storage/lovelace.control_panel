@@ -126,24 +126,6 @@
                                                         {
                                                             "type": "button",
                                                             "card_mod": {
-                                                                "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
-                                                            },
-                                                            "tap_action": {
-                                                                "action": "call-service",
-                                                                "service": "input_boolean.toggle",
-                                                                "service_data": {
-                                                                    "entity_id": "input_boolean.recycle_is_out"
-                                                                }
-                                                            },
-                                                            "entity": "sensor.recycle",
-                                                            "show_state": true,
-                                                            "show_icon": true,
-                                                            "icon_height": "30px",
-                                                            "show_name": false
-                                                        },
-                                                        {
-                                                            "type": "button",
-                                                            "card_mod": {
                                                                 "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
                                                             },
                                                             "tap_action": {
@@ -154,6 +136,24 @@
                                                                 }
                                                             },
                                                             "entity": "sensor.trash",
+                                                            "show_state": true,
+                                                            "show_icon": true,
+                                                            "icon_height": "30px",
+                                                            "show_name": false
+                                                        },
+                                                        {
+                                                            "type": "button",
+                                                            "card_mod": {
+                                                                "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
+                                                            },
+                                                            "tap_action": {
+                                                                "action": "call-service",
+                                                                "service": "input_boolean.toggle",
+                                                                "service_data": {
+                                                                    "entity_id": "input_boolean.recycle_is_out"
+                                                                }
+                                                            },
+                                                            "entity": "sensor.recycle",
                                                             "show_state": true,
                                                             "show_icon": true,
                                                             "icon_height": "30px",

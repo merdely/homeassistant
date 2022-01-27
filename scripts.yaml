@@ -1356,3 +1356,34 @@ scene_turn_off_the_office:
       - switch.venus_screensaver
   mode: single
   icon: mdi:desk
+function_frigate_send_email:
+  alias: Function - Frigate - Send Email
+  sequence:
+  - service: notify.gmail_to_security
+    data:
+      message: '{{ object | title }} detected by {{ camera }}
+
+        Images from {{ camera }} Camera
+
+        '
+      title: '{{ camera }} Camera'
+      data:
+        images:
+        - /media/frigate/clips/{{ camera }}-{{ eventid }}.jpg
+        html: '<p>{{ object | title }} detected by {{ camera }}</p>
+
+          <p>Images from {{ camera }} Camera</p>
+
+          '
+  fields:
+    object:
+      description: Object detected by Frigate
+      example: trigger.payload_json["after"]["label"]
+    camera:
+      description: Camera with which Frigate detected movement
+      example: trigger.payload_json["after"]["camera"]
+    eventid:
+      description: Frigate Event ID
+      example: trigger.payload_json['after']['id']
+  mode: single
+  icon: mdi:email-fast
