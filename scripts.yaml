@@ -57,7 +57,7 @@ announcement_nightly_security:
             \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',\
             \ 'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
             \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
-      - service: notify.notify
+      - service: notify.signal_security
         data:
           message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door\
             \ is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',\

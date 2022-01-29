@@ -233,7 +233,7 @@
       media_content_type: music
     target:
       entity_id: media_player.all_speakers
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: Water leak detected on {{ trigger.to_state.name }}
   - service: script.function_speakers_restore
@@ -429,7 +429,7 @@
     entity_id: input_boolean.gate_notifications
     state: 'on'
   action:
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
@@ -468,7 +468,7 @@
     entity_id: alarm_control_panel.home_alarm
     state: armed_away
   action:
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []\
         \ -%} {%- for entity_id in states.group.exterior_security_devices.attributes.entity_id\
@@ -510,7 +510,7 @@
   - service: script.function_speakers_prep
     data:
       speaker: all_speakers
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: '{{ states(''input_text.security_message'') }}
 
@@ -2161,7 +2161,7 @@
             }} tag to Disarm the Security System'
           level: warning
     default:
-    - service: notify.notify
+    - service: notify.signal_security
       data:
         message: 'Warning: Someone scanned the {{ tags[trigger.event.data.tag_id]
           }} tag  (user_id: {{ trigger.event.context.user_id }})'
@@ -2673,7 +2673,7 @@
     data:
       message: Turning on AC
       level: warning
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: Switching to AC
   - service: climate.set_hvac_mode
@@ -2706,7 +2706,7 @@
     data:
       message: Turning on Heat
       level: warning
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: Switching to Heat
   - service: climate.set_hvac_mode
@@ -2778,7 +2778,7 @@
     for: 00:01:00
   condition: []
   action:
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id\
         \ -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')\
@@ -3372,7 +3372,6 @@
       action: RUN_GOODNIGHT
   condition: []
   action:
-  - service: script.scene_good_night
   - service: notify.notify
     data:
       message: Good Night script run via Actionable Notification
@@ -3404,7 +3403,6 @@
       action: ARM_AWAY
   condition: []
   action:
-  - service: script.scene_leaving_home
   - service: notify.notify
     data:
       message: Alarm Armed (Away) via Actionable Notification
@@ -3432,7 +3430,7 @@
       seconds: 0
       milliseconds: 0
   action:
-  - service: notify.notify
+  - service: notify.signal_security
     data:
       message: The oven is on and nobody is home
       title: Security Alert
