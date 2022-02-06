@@ -115,10 +115,11 @@
   - service: mqtt.publish
     data:
       topic: cmnd/laundry_room_light/backlog
-      payload: rule2 off; Delay 40; rule2 on
+      payload: SetOption73 1; Delay 30; SetOption73 0
   - service: homeassistant.turn_on
     target:
       entity_id: light.laundry_room_light
+    data: {}
   mode: single
 - id: '1602628563183'
   alias: Lighting - Laundry Room - Motion Light Off
@@ -256,7 +257,7 @@
     to: 'on'
     entity_id: binary_sensor.office_door_motion_sensor_occupancy
   - platform: state
-    entity_id: binary_sensor.office_shelf_motion_sensor_occupancy
+    entity_id: binary_sensor.wyzesense_778e716f
     to: 'on'
   condition:
   - condition: state
@@ -281,7 +282,7 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.office_shelf_motion_sensor_occupancy
+    entity_id: binary_sensor.wyzesense_778e716f
     to: 'off'
     for:
       hours: 2
@@ -306,7 +307,7 @@
       seconds: 0
       milliseconds: 0
   - condition: state
-    entity_id: binary_sensor.office_shelf_motion_sensor_occupancy
+    entity_id: binary_sensor.wyzesense_778e716f
     state: 'off'
     for:
       hours: 2
@@ -413,14 +414,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.chimney_gate_contact, binary_sensor.shed_gate_contact,
-      binary_sensor.shed_door_contact
+    entity_id: binary_sensor.wyzesense_77ca82dc, binary_sensor.wyzesense_77ca82c5,
+      binary_sensor.wyzesense_77c741e9
     for: 00:00:01
     from: 'off'
     to: 'on'
   - platform: state
-    entity_id: binary_sensor.chimney_gate_contact, binary_sensor.shed_gate_contact,
-      binary_sensor.shed_door_contact
+    entity_id: binary_sensor.wyzesense_77ca82dc, binary_sensor.wyzesense_77ca82c5,
+      binary_sensor.wyzesense_77c741e9
     for: 00:00:01
     from: 'on'
     to: 'off'
@@ -451,7 +452,7 @@
   - service: homeassistant.turn_off
     target:
       entity_id: switch.siren
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=loadStartUrl
   mode: single
@@ -503,7 +504,7 @@
           attribute: currentPageUrl
           state: https://ha.erdely.in:38123/control-panel/security
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
     default: []
@@ -602,14 +603,14 @@
     entity_id: group.security_devices
     state: 'off'
   action:
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=setAudioVolume&level=100
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45_seconds_to_exit.mp3
   - delay: '10'
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=setAudioVolume&level=60
   mode: single
@@ -631,17 +632,17 @@
   action:
   - service: script.security_disarm_system
     data: {}
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=setAudioVolume&level=100
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/cannot_arm.mp3
   - delay: '10'
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=setAudioVolume&level=60
   mode: single
@@ -654,19 +655,19 @@
     to: pending
   condition: []
   action:
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=setAudioVolume&level=100
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
   - delay: '5'
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     entity_id: media_player.all_speakers
     data:
       command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45_seconds_to_enter_code.mp3
   - delay: '10'
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=setAudioVolume&level=60
   - service: input_text.set_value
@@ -708,7 +709,7 @@
     from: disarmed
   condition: []
   action:
-  - service: rest_command.control_panel_command
+  - service: rest_command.fkb_command
     data:
       command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
   mode: single
@@ -761,10 +762,10 @@
           entity_id: input_select.control_panel
           state: Lights Screen
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/home
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     - conditions:
@@ -777,10 +778,10 @@
           entity_id: input_select.control_panel
           state: Alarm Panel Screen
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     - conditions:
@@ -793,10 +794,10 @@
           entity_id: input_select.control_panel
           state: Security Screen
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     - conditions:
@@ -809,10 +810,10 @@
           entity_id: input_select.control_panel
           state: TVs
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/downstairs
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     - conditions:
@@ -828,10 +829,10 @@
           entity_id: input_select.control_panel
           state: Front Door
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     - conditions:
@@ -847,10 +848,10 @@
           entity_id: input_select.control_panel
           state: Garage
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     - conditions:
@@ -866,10 +867,10 @@
           entity_id: input_select.control_panel
           state: Chimney
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     - conditions:
@@ -885,10 +886,10 @@
           entity_id: input_select.control_panel
           state: Shed
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     - conditions:
@@ -904,14 +905,14 @@
           entity_id: input_select.control_panel
           state: Stop Screensaver
       sequence:
-      - service: rest_command.control_panel_command
+      - service: rest_command.fkb_command
         data:
           command_string: cmd=stopScreensaver
     default:
-    - service: rest_command.control_panel_command
+    - service: rest_command.fkb_command
       data:
         command_string: cmd=loadStartUrl
-    - service: rest_command.control_panel_command
+    - service: rest_command.fkb_command
       data:
         command_string: cmd=stopScreensaver
       entity_id: input_select.control_panel
@@ -1793,21 +1794,7 @@
   - service: homeassistant.turn_on
     target:
       entity_id: switch.god_damn_tv
-  - choose:
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.god_damn_tv_plug_power
-        below: '36'
-      sequence:
-      - repeat:
-          until:
-          - condition: numeric_state
-            entity_id: sensor.god_damn_tv_plug_power
-            above: '35'
-          sequence:
-          - delay: '1'
-      - delay: '2'
-    default: []
+    data: {}
   - service: system_log.write
     data:
       message: 'God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
@@ -1915,35 +1902,11 @@
     entity_id: switch.bedroom_tv
     from: 'on'
     to: 'off'
-  condition:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: sensor.bedroom_tv_plug_power
-      state: unavailable
+  condition: []
   action:
   - service: media_player.media_stop
     data: {}
     entity_id: media_player.plex_plex_for_roku_bedroom_roku
-  mode: single
-- id: '1607196694845'
-  alias: TV - Living Room - Power Off
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.living_room_tv
-    from: 'on'
-    to: 'off'
-  condition:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: sensor.living_room_tv_plug_power
-      state: unavailable
-  action:
-  - service: media_player.media_stop
-    data: {}
-    entity_id: media_player.plex_plex_for_roku_living_room_roku
   mode: single
 - id: '1607196736782'
   alias: TV - Family Room - Power Off
@@ -1954,12 +1917,7 @@
     from: 'on'
     to: 'off'
     for: 0:00:03
-  condition:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: sensor.god_damn_tv_plug_power
-      state: unavailable
+  condition: []
   action:
   - service: media_player.media_stop
     data: {}
@@ -1980,21 +1938,7 @@
   - service: homeassistant.turn_on
     target:
       entity_id: switch.living_room_tv
-  - choose:
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.living_room_tv_plug_power
-        below: '36'
-      sequence:
-      - repeat:
-          until:
-          - condition: numeric_state
-            entity_id: sensor.living_room_tv_plug_power
-            above: '36'
-          sequence:
-          - delay: '1'
-      - delay: '2'
-    default: []
+    data: {}
   - service: script.function_tv_change_input
     data:
       tv: living_room
@@ -2352,19 +2296,6 @@
         - action: ARM_HOME
           title: Arm Alarm (Home)
   mode: single
-- id: '1610329722929'
-  alias: TV - Family Room - Power On
-  description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.god_damn_tv_plug_power
-    above: '16'
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.god_damn_soundbar
-  mode: single
 - id: '1612040347239'
   alias: TV - Living Room - TV Volume to Soundbar Volume
   description: ''
@@ -2591,7 +2522,7 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.wyze_sense_778e4038
+    entity_id: binary_sensor.wyzesense_778e4038
     to: 'on'
   condition: []
   action:
@@ -2625,7 +2556,7 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.wyze_sense_778e4038
+    entity_id: binary_sensor.wyzesense_778e4038
     to: 'on'
     for:
       hours: 0
@@ -2637,14 +2568,14 @@
   - service: mqtt.publish
     data:
       topic: wyzesense2mqtt/778E4038
-      payload: '{"event": "{{ state_attr("binary_sensor.wyze_sense_778e4038", "event")
-        }}", "available": true, "mac": "{{ state_attr("binary_sensor.wyze_sense_778e4038",
-        "mac") }}", "device_class": "{{ state_attr("binary_sensor.wyze_sense_778e4038",
-        "device_class") }}", "last_seen": {{ state_attr("binary_sensor.wyze_sense_778e4038",
-        "last_seen") }}, "last_seen_iso": "{{ state_attr("binary_sensor.wyze_sense_778e4038",
-        "last_seen_iso") }}", "signal_strength": {{ state_attr("binary_sensor.wyze_sense_778e4038",
-        "signal_strength") }}, "battery": {{ state_attr("binary_sensor.wyze_sense_778e4038",
-        "battery") }}, "name": "{{ state_attr("binary_sensor.wyze_sense_778e4038",
+      payload: '{"event": "{{ state_attr("binary_sensor.wyzesense_778e4038", "event")
+        }}", "available": true, "mac": "{{ state_attr("binary_sensor.wyzesense_778e4038",
+        "mac") }}", "device_class": "{{ state_attr("binary_sensor.wyzesense_778e4038",
+        "device_class") }}", "last_seen": {{ state_attr("binary_sensor.wyzesense_778e4038",
+        "last_seen") }}, "last_seen_iso": "{{ state_attr("binary_sensor.wyzesense_778e4038",
+        "last_seen_iso") }}", "signal_strength": {{ state_attr("binary_sensor.wyzesense_778e4038",
+        "signal_strength") }}, "battery": {{ state_attr("binary_sensor.wyzesense_778e4038",
+        "battery") }}, "name": "{{ state_attr("binary_sensor.wyzesense_778e4038",
         "friendly_name") }}", "state": 0}'
       retain: true
       qos: 0
@@ -2749,10 +2680,11 @@
   - service: mqtt.publish
     data:
       topic: cmnd/den_overhead_light/backlog
-      payload: SetOption73 1; Delay 40; SetOption73 0
+      payload: SetOption73 1; Delay 30; SetOption73 0
   - service: homeassistant.turn_on
     target:
       entity_id: light.den_overhead_light
+    data: {}
   mode: single
 - id: '1617059380424'
   alias: Lighting - Den - Motion Light Off
@@ -3196,10 +3128,11 @@
   - service: mqtt.publish
     data:
       topic: cmnd/powder_room_light/backlog
-      payload: SetOption73 1; Delay 50; SetOption73 0
+      payload: SetOption73 1; Delay 30; SetOption73 0
   - service: homeassistant.turn_on
     target:
       entity_id: light.powder_room_light
+    data: {}
   mode: single
 - id: '1634428046004'
   alias: OctoPrint - Turn on Camera
@@ -3359,7 +3292,7 @@
   - service: system_log.write
     data:
       level: warning
-      message: 'binary_sensor.wyze_sense_778e4038 last seen: {{ state_attr(''binary_sensor.wyze_sense_778e4038'',
+      message: 'binary_sensor.wyzesense_778e4038 last seen: {{ state_attr(''binary_sensor.wyzesense_778e4038'',
         ''last_seen_iso'') }}'
   mode: single
 - id: '1637383119311'
@@ -3455,12 +3388,6 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: sensor.out_of_date_zigbee_entities
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - platform: state
     entity_id: sensor.software_update_available
     for:
       hours: 0
@@ -3512,6 +3439,34 @@
       hours: 0
       minutes: 0
       seconds: 30
+  - platform: numeric_state
+    entity_id: sensor.ood_zigbee_entities
+    above: '0'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: numeric_state
+    entity_id: sensor.ood_zigbee_entities
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    below: '1'
+  - platform: numeric_state
+    entity_id: sensor.ood_wyze_entities
+    above: '0'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: numeric_state
+    entity_id: sensor.ood_wyze_entities
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    below: '1'
   condition:
   - condition: template
     value_template: '{{ trigger.to_state.state != trigger.from_state.state }}'
@@ -3620,4 +3575,25 @@
   - service: homeassistant.turn_on
     target:
       entity_id: input_boolean.recycle_is_out
+  mode: single
+- id: '1644094351525'
+  alias: Turn Off Office Heater After Set Amount of Time
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states("switch.office_heater_plug") == "on" }}'
+    for:
+      minutes: '{{ states(''input_number.office_heater_auto_off'') | int(30) }}'
+  - platform: template
+    value_template: "{{ states(\"sensor.office_multisensor_temperature\") | float(default=0)\
+      \ >=\n  states(\"input_number.office_heater_auto_off_temperature\") | float(default=71.0)\
+      \ }}\n"
+    for:
+      minutes: 1
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: switch.office_heater_plug
   mode: single

@@ -57,7 +57,6 @@
     bedroom_tv:
       friendly_name: "Bedroom TV"
       icon_template: mdi:television
-        # {% if states('sensor.bedroom_tv_plug_power') | float(default=0) < 5 %}
       value_template: >-
         {% if states('binary_sensor.bedroom_tv_ping') != 'on' %}
           off
@@ -65,22 +64,15 @@
           on
         {% endif %}
       turn_on:
-        #- condition: template
-        #  value_template: '{{ states("sensor.bedroom_tv_plug_power") | float(default=0) < 5 }}'
-        - service: homeassistant.turn_on
-          entity_id: switch.bedroom_tv_plug
-        - delay: '1'
         - service: mqtt.publish
           data:
             topic: cmnd/bedroom_tv_remote/backlog
             payload: 'irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xe0e09966"}'
-        - delay: '1'
+        - delay: '2'
         - service: homeassistant.update_entity
           target:
             entity_id: binary_sensor.bedroom_tv_ping
       turn_off:
-        #- condition: template
-        #  value_template: '{{ states("sensor.bedroom_tv_plug_power") | float(default=0) >= 5 }}'
         - service: media_player.select_source
           entity_id: media_player.bedroom_roku
           data:
@@ -97,7 +89,6 @@
     god_damn_tv:
       friendly_name: "God Damn TV"
       icon_template: mdi:television
-        #{% if states('sensor.god_damn_tv_plug_power') | float(default=0) < 17 %}
       value_template: >-
         {% if states('binary_sensor.god_damn_tv_ping') != 'on' %}
           off
@@ -105,23 +96,15 @@
           on
         {% endif %}
       turn_on:
-        #- condition: template
-        #  value_template: '{{ states("sensor.god_damn_tv_plug_power") | float(default=0) < 17 }}'
-        - service: homeassistant.turn_on
-          entity_id: switch.god_damn_tv_plug
         - service: mqtt.publish
           data:
             topic: cmnd/god_damn_tv_remote/backlog
             payload: 'irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xe0e09966"}'
-        - delay: '1'
-        - service: homeassistant.turn_on
-          entity_id: switch.god_damn_soundbar
+        - delay: '2'
         - service: homeassistant.update_entity
           target:
             entity_id: binary_sensor.god_damn_tv_ping
       turn_off:
-        #- condition: template
-        #  value_template: '{{ states("sensor.god_damn_tv_plug_power") | float(default=0) >= 17 }}'
         - service: media_player.select_source
           entity_id: media_player.god_damn_roku
           data:
@@ -135,32 +118,6 @@
             entity_id: binary_sensor.god_damn_tv_ping
             state: off
 
-    god_damn_soundbar:
-      friendly_name: "God Damn Soundbar"
-      value_template: >-
-        {% if states('sensor.god_damn_soundbar_plug') | float(default=0) < 6 %}
-          off
-        {% else %}
-          on
-        {% endif %}
-      turn_on:
-        - condition: template
-          value_template: '{{ states("sensor.god_damn_soundbar_plug") | float(default=0) < 2 }}'
-        - service: homeassistant.turn_on
-          entity_id: switch.god_damn_soundbar_plug
-        - delay: '1'
-        - service: mqtt.publish
-          data:
-            topic: cmnd/god_damn_tv_remote/backlog
-            payload: 'irsend {"Protocol":"NEC","Bits":32,"Data":"0x212EFF00","DataLSB":"0x8474FF00","Repeat":0}'
-      turn_off:
-        - condition: template
-          value_template: '{{ states("sensor.god_damn_soundbar_plug") | float(default=0) >= 2 }}'
-        - service: mqtt.publish
-          data:
-            topic: cmnd/god_damn_tv_remote/backlog
-            payload: 'irsend {"Protocol":"NEC","Bits":32,"Data":"0x212EFF00","DataLSB":"0x8474FF00","Repeat":0}'
-
     living_room_tv:
       friendly_name: "Living Room TV"
       icon_template: mdi:television
@@ -171,17 +128,10 @@
           on
         {% endif %}
       turn_on:
-        #- condition: template
-        #  value_template: '{{ states("sensor.living_room_tv_plug_power") | float(default=0) < 17 }}'
-        - service: homeassistant.turn_on
-          entity_id: switch.living_room_tv_plug
-        - delay: '2'
         - service: media_player.turn_on
           target:
             entity_id: media_player.living_room_roku_tv
       turn_off:
-        #- condition: template
-        #  value_template: '{{ states("sensor.living_room_tv_plug_power") | float(default=0) >= 17 }}'
         - service: media_player.select_source
           entity_id: media_player.living_room_roku_tv
           data:

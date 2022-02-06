@@ -30,6 +30,9 @@ light.near_black_lamp:
   icon: mdi:lamp
 switch.far_black_lamp:
   icon: mdi:lamp
+switch.far_black_lamp_plug:
+  name: Far Black Lamp
+  icon: mdi:lamp
 switch.white_lamp:
   icon: mdi:lamp
 light.god_damn_light:
@@ -47,6 +50,9 @@ light.laundry_room_light:
 light.bench_light:
   icon: mdi:ceiling-light
 switch.dining_room_christmas_lights:
+  icon: mdi:string-lights
+switch.dining_room_christmas_lights_plug:
+  name: Dining Room Christmas Lights
   icon: mdi:string-lights
 switch.mantle_lights:
   icon: mdi:string-lights
@@ -122,10 +128,12 @@ switch.living_room_chromecast_plug:
   icon: mdi:cast
 switch.living_room_hdmi_switch:
   icon: mdi:video-switch
-switch.living_room_network_switch:
+switch.living_room_network_switch_plug:
   icon: mdi:network
 switch.living_room_roku_plug:
   icon: file:roku
+switch.living_room_soundbar_plug:
+  icon: file:speaker
 switch.living_room_tivo_plug:
   icon: mdi:television-play
 switch.laundry_room_usb_ports:
@@ -314,6 +322,41 @@ sensor.bedroom_tv_plug:
   friendly_name: Bedroom TV Plug
 sensor.ymir_plug:
   friendly_name: Ymir Plug
+binary_sensor.wyzesense_77ca82dc:
+  device_class: opening
+  friendly_name: Chimney Gate
+binary_sensor.wyzesense_77ca82c5:
+  device_class: opening
+  friendly_name: Shed Gate
+binary_sensor.wyzesense_77c741e9:
+  device_class: opening
+  friendly_name: Shed Door
+binary_sensor.wyzesense_778e716f:
+  friendly_name: Office Shelf Motion Sensor
+binary_sensor.wyzesense:
+  friendly_name: Wyze Door Sensor
+  device_class: opening
+binary_sensor.wyzesense_77c74300:
+  friendly_name: Garage Door Sensor
+  device_class: opening
+binary_sensor.wyzesense_77c74305:
+  friendly_name: Garage Entry Door
+  device_class: opening
+binary_sensor.wyzesense_778e4038:
+  friendly_name: Mailbox Sensor
+  icon: mdi:mailbox
+binary_sensor.wyze_sense_77c74300:
+  friendly_name: Garage Door Sensor
+sensor.wyze_sense_77c74300_battery:
+  friendly_name: Garage Door Sensor Battery
+sensor.wyze_sense_77c74300_signal_strength:
+  friendly_name: Garage Door Sensor Signal Strength
+binary_sensor.wyze_sense_77c74305:
+  friendly_name: Garage Entry Door
+sensor.wyze_sense_77c74305_battery:
+  friendly_name: Garage Entry Door Battery
+sensor.wyze_sense_77c74305_signal_strength:
+  friendly_name: Garage Entry Door Signal Strength
 binary_sensor.wyze_sense_778e4038:
   friendly_name: Mailbox Sensor
 sensor.wyze_sense_778e4038_battery:
@@ -476,3 +519,5 @@ switch.ymir_plug:
   icon: mdi:raspberry-pi
 sensor.hacs:
   friendly_name: HACS
+switch.office_heater_plug:
+  icon: mdi:radiator

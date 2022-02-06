@@ -1,16 +1,5 @@
-- name: Chimney Gate
-  platform: mqtt
-  state_topic: stat/chimney_gate/RESULT
-  value_template: '{{value_json.POWER}}'
-  payload_off: 'OFF'
-  payload_on: 'ON'
-  device_class: opening
-  unique_id: chimney_gate
-  device:
-    identifiers:
-      - 'chimney_gate'
-    name: chimney_gate
-    manufacturer: Tasmota
+- platform: wyzesense
+  device: auto
 
 - platform: command_line
   name: Earth Nginx/PHP Working

@@ -19,11 +19,135 @@
   unit_of_measurement: "°C"
   value_template: "{{ value | multiply(0.001) | round(2)  }}"
 
-- platform: mqtt
-  name: Out of Date Zigbee Entities
-  state_topic: ood_zigbee/count
-  value_template: "{{ value }}"
-  json_attributes_topic: ood_zigbee/entities
+#- platform: mqtt
+#  name: Out of Date Zigbee Entities
+#  state_topic: ood_zigbee/count
+#  value_template: "{{ value }}"
+#  json_attributes_topic: ood_zigbee/entities
+
+- platform: rest
+  name: FKB Control Panel
+  resource: !secret fkb_deviceinfo
+  value_template: "{{ value_json.batteryLevel }}"
+  json_attributes:
+    - deviceId
+    - deviceName
+    - packageName
+    - batteryLevel
+    - isPlugged
+    - SSID
+    - ip4
+    - hostname4
+    - wifiSignalLevel
+    - screenOrientation
+    - screenBrightness
+    - screenLocked
+    - screenOn
+    - batteryTemperature
+    - plugged
+    - keyguardLocked
+    - version
+    - versionCode
+    - build
+    - model
+    - manufacturer
+    - androidVersion
+    - SDK
+    - webviewUA
+    - foreground
+    - motionDetectorStatus
+    - isDeviceAdmin
+    - isDeviceOwner
+    - internalStorageFreeSpace
+    - internalStorageTotalSpace
+    - ramUsedMemory
+    - ramFreeMemory
+    - ramTotalMemory
+    - appUsedMemory
+    - appFreeMemory
+    - appTotalMemory
+    - scopedStorage
+    - displayHeightPixels
+    - displayWidthPixels
+    - isMenuOpen
+    - topFragmentTag
+    - isInDaydream
+    - appStartTime
+    - isRooted
+    - isLicensed
+    - isInScreensaver
+    - kioskLocked
+    - isInForcedSleep
+    - maintenaceMode
+    - kioskMode
+    - startURL
+    - currentTabIndex
+    - mqttConnected
+    - currentPageUrl
+    - sensorInfo
+  verify_ssl: false
+
+- platform: rest
+  name: FKBMBR Control Panel
+  resource: !secret fkbmbr_deviceinfo
+  value_template: "{{ value_json.batteryLevel }}"
+  json_attributes:
+    - deviceId
+    - deviceName
+    - packageName
+    - batteryLevel
+    - isPlugged
+    - SSID
+    - ip4
+    - hostname4
+    - wifiSignalLevel
+    - screenOrientation
+    - screenBrightness
+    - screenLocked
+    - screenOn
+    - batteryTemperature
+    - plugged
+    - keyguardLocked
+    - version
+    - versionCode
+    - build
+    - model
+    - manufacturer
+    - androidVersion
+    - SDK
+    - webviewUA
+    - foreground
+    - motionDetectorStatus
+    - isDeviceAdmin
+    - isDeviceOwner
+    - internalStorageFreeSpace
+    - internalStorageTotalSpace
+    - ramUsedMemory
+    - ramFreeMemory
+    - ramTotalMemory
+    - appUsedMemory
+    - appFreeMemory
+    - appTotalMemory
+    - scopedStorage
+    - displayHeightPixels
+    - displayWidthPixels
+    - isMenuOpen
+    - topFragmentTag
+    - isInDaydream
+    - appStartTime
+    - isRooted
+    - isLicensed
+    - isInScreensaver
+    - kioskLocked
+    - isInForcedSleep
+    - maintenaceMode
+    - kioskMode
+    - startURL
+    - currentTabIndex
+    - mqttConnected
+    - currentPageUrl
+    - sensorInfo
+  verify_ssl: false
 
 - platform: mqtt
   name: Fully Kiosk Browser
@@ -88,9 +212,9 @@
   # Request every 8 hours
   scan_interval: 28800
 
-- platform: version
-  name: Home Assistant Version
-  source: local
+#- platform: version
+#  name: Home Assistant Version
+#  source: local
 
 #- platform: mqtt
 #  name: Assistant Relay Version
@@ -415,19 +539,19 @@
 #    {{ value_json.tag_name }}
 #  scan_interval: 3660
 
-- platform: mqtt
-  name: Zigbee2MQTT TCP Version
-  state_topic: "zigbee2mqtt_tcp/bridge/config"
-  value_template: "{{ value_json.version }}"
+#- platform: mqtt
+#  name: Zigbee2MQTT TCP Version
+#  state_topic: "zigbee2mqtt_tcp/bridge/config"
+#  value_template: "{{ value_json.version }}"
 
-- platform: rest
-  name: Zigbee2MQTT TCP Version Latest
-  resource: "https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest"
-  username: !secret github_username
-  password: !secret github_secret
-  value_template: >-
-    {{ value_json.tag_name | replace('v', '') }}
-  scan_interval: 3660
+#- platform: rest
+#  name: Zigbee2MQTT TCP Version Latest
+#  resource: "https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest"
+#  username: !secret github_username
+#  password: !secret github_secret
+#  value_template: >-
+#    {{ value_json.tag_name | replace('v', '') }}
+#  scan_interval: 3660
 
 - platform: mqtt
   name: Printer Ink

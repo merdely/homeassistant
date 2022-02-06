@@ -13,8 +13,12 @@ roku_rest_command:
 # http://192.168.1.37:8060/launch/143683?view=single&camera=3
 # http://192.168.1.37:8060/launch/143683?view=split
 
-control_panel_command:
-  url: !secret fully_rest_command
+fkb_command:
+  url: !secret fkb_rest_command
+  verify_ssl: false
+
+fkbmbr_command:
+  url: !secret fkbmbr_rest_command
   verify_ssl: false
 
 # Examples:

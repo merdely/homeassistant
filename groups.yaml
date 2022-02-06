@@ -19,9 +19,9 @@ holly_mike:
 always_monitored_doors:
   name: Always Monitored Doors
   entities:
-    - binary_sensor.shed_door_contact
-    - binary_sensor.shed_gate_contact
-    - binary_sensor.chimney_gate_contact
+    - binary_sensor.wyzesense_77c741e9
+    - binary_sensor.wyzesense_77ca82c5
+    - binary_sensor.wyzesense_77ca82dc
 
 fake_security_devices:
   name: Fake Security Devices
@@ -30,13 +30,14 @@ fake_security_devices:
     - input_boolean.fake_gate_sensor
     - input_boolean.fake_window_sensor
 
+#    - binary_sensor.garage_entry_door_contact
 security_devices:
   name: All Security Devices
   entities:
-    - binary_sensor.shed_door_contact
-    - binary_sensor.shed_gate_contact
-    - binary_sensor.chimney_gate_contact
-    - binary_sensor.garage_entry_door_contact
+    - binary_sensor.wyzesense_77c741e9
+    - binary_sensor.wyzesense_77ca82c5
+    - binary_sensor.wyzesense_77ca82dc
+    - binary_sensor.wyzesense_77c74305
     - cover.garage_door
     - binary_sensor.front_door_contact
     - binary_sensor.back_door_contact
@@ -47,13 +48,14 @@ security_devices:
     - binary_sensor.den_window_contact
     - binary_sensor.powder_room_window_contact
 
+#    - binary_sensor.garage_entry_door_contact
 exterior_security_devices:
   name: Exterior Security Devices
   entities:
-    - binary_sensor.shed_door_contact
-    - binary_sensor.shed_gate_contact
-    - binary_sensor.chimney_gate_contact
-    - binary_sensor.garage_entry_door_contact
+    - binary_sensor.wyzesense_77c741e9
+    - binary_sensor.wyzesense_77ca82c5
+    - binary_sensor.wyzesense_77ca82dc
+    - binary_sensor.wyzesense_77c74305
     - cover.garage_door
 
 sliders:
@@ -72,13 +74,14 @@ int_doors_windows:
     - binary_sensor.den_window_contact
     - binary_sensor.powder_room_window_contact
 
+#    - binary_sensor.garage_entry_door_contact
 ext_doors_gates:
   name: Doors/Gates
   entities:
-    - binary_sensor.shed_door_contact
-    - binary_sensor.shed_gate_contact
-    - binary_sensor.chimney_gate_contact
-    - binary_sensor.garage_entry_door_contact
+    - binary_sensor.wyzesense_77c741e9
+    - binary_sensor.wyzesense_77ca82c5
+    - binary_sensor.wyzesense_77ca82dc
+    - binary_sensor.wyzesense_77c74305
 
 doors_windows:
   name: Doors and Windows
@@ -102,7 +105,7 @@ motion_sensors:
     - binary_sensor.laundry_room_motion_sensor_occupancy
     - binary_sensor.living_room_motion_sensor_occupancy
     - binary_sensor.office_door_motion_sensor_occupancy
-    - binary_sensor.office_shelf_motion_sensor_occupancy
+    - binary_sensor.wyzesense_778e716f
     - binary_sensor.powder_room_motion_sensor_occupancy
 
 up_motion_sensors:
@@ -112,7 +115,7 @@ up_motion_sensors:
     - binary_sensor.hall_bath_room_motion_sensor_occupancy
     - binary_sensor.living_room_motion_sensor_occupancy
     - binary_sensor.office_door_motion_sensor_occupancy
-    - binary_sensor.office_shelf_motion_sensor_occupancy
+    - binary_sensor.wyzesense_778e716f
 
 down_motion_sensors:
   name: Downstairs Motion Sensors

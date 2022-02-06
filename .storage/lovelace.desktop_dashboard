@@ -190,12 +190,12 @@
                                                     "name": "Laundry"
                                                 },
                                                 {
-                                                    "entity": "light.powder_room_light",
-                                                    "name": "Powder"
-                                                },
-                                                {
                                                     "entity": "light.den_overhead_light",
                                                     "name": "Den"
+                                                },
+                                                {
+                                                    "entity": "light.powder_room_light",
+                                                    "name": "Powder"
                                                 },
                                                 {
                                                     "entity": "switch.christmas_tree",
@@ -313,7 +313,7 @@
                                 {
                                     "type": "entities",
                                     "card_mod": {
-                                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.out_of_date_zigbee_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(default=100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(default=100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(default=100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(default=100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(default=100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(default=100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(default=100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(default=100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                                     },
                                     "entities": [
                                         {
@@ -709,7 +709,7 @@
                                                     }
                                                 },
                                                 {
-                                                    "entity": "sensor.out_of_date_zigbee_entities",
+                                                    "entity": "sensor.ood_zigbee_entities",
                                                     "name": "Zigbee",
                                                     "styles": {
                                                         "color": "var(--zigbee-color)"
@@ -778,7 +778,7 @@
                                 },
                                 {
                                     "type": "grid",
-                                    "columns": 4,
+                                    "columns": 3,
                                     "square": false,
                                     "cards": [
                                         {
@@ -787,7 +787,7 @@
                                             "name": "SetPt",
                                             "icon": "mdi:thermostat",
                                             "card_mod": {
-                                                "style": ".value {\n  font-size: 22px !important;\n}\n.name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
+                                                "style": ".name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
                                             }
                                         },
                                         {
@@ -799,7 +799,8 @@
                                                 "target": {}
                                             },
                                             "entity": "script.home_thermostat_down",
-                                            "name": "Cooler"
+                                            "name": "Cooler",
+                                            "icon_height": "40px"
                                         },
                                         {
                                             "type": "button",
@@ -810,7 +811,24 @@
                                                 "target": {}
                                             },
                                             "entity": "script.home_thermostat_up",
-                                            "name": "Warmer"
+                                            "name": "Warmer",
+                                            "icon_height": "40px"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 2,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "entity": "switch.office_heater_plug",
+                                            "name": "Office Heater",
+                                            "icon_height": "40px"
                                         },
                                         {
                                             "type": "button",
@@ -820,6 +838,7 @@
                                             },
                                             "entity": "script.scene_good_night",
                                             "icon": "mdi:weather-night",
+                                            "icon_height": "40px",
                                             "name": "Good Night"
                                         }
                                     ]
@@ -834,9 +853,6 @@
                                 {
                                     "type": "entities",
                                     "title": " ",
-                                    "card_mod": {
-                                        "style": "ha-card {\n  --bedroom-motion-color: {% if states('binary_sensor.bedroom_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-door-motion-color: {% if states('binary_sensor.office_door_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-color: {% if states('binary_sensor.office_shelf_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-motion-color: {% if states('binary_sensor.living_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-motion-color: {% if states('binary_sensor.god_damn_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-room-motion-color: {% if states('binary_sensor.laundry_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-motion-color: {% if states('binary_sensor.powder_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-motion-color: {% if states('binary_sensor.den_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --master-bath-water-color: {% if states('binary_sensor.master_bath_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --guest-bath-water-color: {% if states('binary_sensor.guest_bath_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --kitchen-water-color: {% if states('binary_sensor.kitchen_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-water-color: {% if states('binary_sensor.living_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dining-room-water-color: {% if states('binary_sensor.dining_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-water-color: {% if states('binary_sensor.god_damn_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-water-color: {% if states('binary_sensor.den_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-water-color: {% if states('binary_sensor.powder_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --washer-water-color: {% if states('binary_sensor.washer_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --water-heater-water-color: {% if states('binary_sensor.water_heater_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --bedroom-slider-color: {% if states('binary_sensor.bedroom_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-slider-color: {% if states('binary_sensor.living_room_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dining-room-slider-color: {% if states('binary_sensor.dining_room_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-slider-color: {% if states('binary_sensor.god_damn_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --front-door-color: {% if states('binary_sensor.front_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --back-door-color: {% if states('binary_sensor.back_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-window-color: {% if states('binary_sensor.den_window_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-window-color: {% if states('binary_sensor.powder_room_window_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-door-color: {% if states('binary_sensor.shed_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-gate-color: {% if states('binary_sensor.shed_gate_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --chimney-gate-color: {% if states('binary_sensor.chimney_gate_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-entry-door-color: {% if states('binary_sensor.garage_entry_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
-                                    },
                                     "entities": [
                                         {
                                             "entity": "group.up_motion_sensors",
@@ -860,7 +876,7 @@
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.office_shelf_motion_sensor_occupancy",
+                                                    "entity": "binary_sensor.wyzesense_778e716f",
                                                     "name": "Off.Shelf",
                                                     "styles": {
                                                         "color": "var(--office-shelf-motion-color)"
@@ -1077,28 +1093,28 @@
                                             "state_color": true,
                                             "entities": [
                                                 {
-                                                    "entity": "binary_sensor.shed_door_contact",
+                                                    "entity": "binary_sensor.wyzesense_77c741e9",
                                                     "name": "ShedDoor",
                                                     "styles": {
                                                         "color": "var(--shed-door-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.shed_gate_contact",
+                                                    "entity": "binary_sensor.wyzesense_77ca82c5",
                                                     "name": "ShedGate",
                                                     "styles": {
                                                         "color": "var(--shed-gate-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.chimney_gate_contact",
+                                                    "entity": "binary_sensor.wyzesense_77ca82dc",
                                                     "name": "Chimney",
                                                     "styles": {
                                                         "color": "var(--chimney-gate-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.garage_entry_door_contact",
+                                                    "entity": "binary_sensor.wyzesense_77c74305",
                                                     "name": "GargEntry",
                                                     "styles": {
                                                         "color": "var(--garage-entry-door-color)"
@@ -1107,20 +1123,62 @@
                                             ]
                                         },
                                         {
-                                            "entity": "binary_sensor.wyze_sense_778e4038"
+                                            "entity": "binary_sensor.wyzesense_778e4038",
+                                            "styles": {
+                                                "color": "var(--mailbox-sensor-color)"
+                                            }
                                         },
                                         {
-                                            "entity": "binary_sensor.garage_door_sensor_contact"
+                                            "entity": "binary_sensor.wyzesense_77c74300",
+                                            "styles": {
+                                                "color": "var(--garage-door-sensor-color)"
+                                            }
                                         },
                                         {
                                             "entity": "binary_sensor.garage_door_cam_status"
                                         },
                                         {
                                             "entity": "cover.garage_door"
+                                        },
+                                        {
+                                            "entity": "sensor.date",
+                                            "type": "custom:multiple-entity-row",
+                                            "show_state": false,
+                                            "state_color": true,
+                                            "name": "Wyze Days Since Seen",
+                                            "entities": [
+                                                {
+                                                    "entity": "sensor.garage_door_sensor_days_since_seen",
+                                                    "name": "Garage Door",
+                                                    "unit": false,
+                                                    "styles": {
+                                                        "color": "var(--garage-door-sensor-days-color)"
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "sensor.garage_entry_door_days_since_seen",
+                                                    "name": "Garage Entry",
+                                                    "unit": false,
+                                                    "styles": {
+                                                        "color": "var(--garage-entry-door-days-color)"
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "sensor.mailbox_sensor_days_since_seen",
+                                                    "name": "Mailbox",
+                                                    "unit": false,
+                                                    "styles": {
+                                                        "color": "var(--mailbox-sensor-days-color)"
+                                                    }
+                                                }
+                                            ]
                                         }
                                     ],
                                     "show_header_toggle": false,
-                                    "state_color": true
+                                    "state_color": true,
+                                    "card_mod": {
+                                        "style": "ha-card {\n  --bedroom-motion-color: {% if states('binary_sensor.bedroom_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-door-motion-color: {% if states('binary_sensor.office_door_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-color: {% if states('binary_sensor.wyzesense_778e716f') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-motion-color: {% if states('binary_sensor.living_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-motion-color: {% if states('binary_sensor.god_damn_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-room-motion-color: {% if states('binary_sensor.laundry_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-motion-color: {% if states('binary_sensor.powder_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-motion-color: {% if states('binary_sensor.den_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --master-bath-water-color: {% if states('binary_sensor.master_bath_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --guest-bath-water-color: {% if states('binary_sensor.guest_bath_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --kitchen-water-color: {% if states('binary_sensor.kitchen_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-water-color: {% if states('binary_sensor.living_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dining-room-water-color: {% if states('binary_sensor.dining_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-water-color: {% if states('binary_sensor.god_damn_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-water-color: {% if states('binary_sensor.den_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-water-color: {% if states('binary_sensor.powder_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --washer-water-color: {% if states('binary_sensor.washer_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --water-heater-water-color: {% if states('binary_sensor.water_heater_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --bedroom-slider-color: {% if states('binary_sensor.bedroom_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-slider-color: {% if states('binary_sensor.living_room_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dining-room-slider-color: {% if states('binary_sensor.dining_room_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-slider-color: {% if states('binary_sensor.god_damn_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --front-door-color: {% if states('binary_sensor.front_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --back-door-color: {% if states('binary_sensor.back_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-window-color: {% if states('binary_sensor.den_window_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-window-color: {% if states('binary_sensor.powder_room_window_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-door-color: {% if states('binary_sensor.wyzesense_77c741e9') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-gate-color: {% if states('binary_sensor.wyzesense_77ca82c5') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --chimney-gate-color: {% if states('binary_sensor.wyzesense_77ca82dc') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-color: {% if states('binary_sensor.wyzesense_778e4038') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-entry-door-color: {% if states('binary_sensor.wyzesense_77c74305') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-color: {% if states('binary_sensor.wyzesense_77c74300') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-days-color: {% if states('sensor.garage_door_sensor_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-entry-door-days-color: {% if states('sensor.garage_entry_door_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                                    }
                                 },
                                 {
                                     "type": "weather-forecast",
@@ -1274,27 +1332,27 @@
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.shed_door_contact",
+                                    "entity": "binary_sensor.wyzesense_77c741e9",
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.shed_gate_contact",
+                                    "entity": "binary_sensor.wyzesense_77ca82c5",
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.chimney_gate_contact",
+                                    "entity": "binary_sensor.wyzesense_77ca82dc",
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.wyze_sense_778e4029",
+                                    "entity": "binary_sensor.wyzesense_778e4038",
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.garage_entry_door_contact",
+                                    "entity": "binary_sensor.wyzesense_77c74305",
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.garage_door_sensor_contact",
+                                    "entity": "binary_sensor.wyzesense_77c74300",
                                     "secondary_info": "last-changed"
                                 },
                                 {
@@ -1349,6 +1407,12 @@
                                 },
                                 {
                                     "entity": "input_number.master_bath_fan_off"
+                                },
+                                {
+                                    "entity": "input_number.office_heater_auto_off"
+                                },
+                                {
+                                    "entity": "input_number.office_heater_auto_off_temperature"
                                 },
                                 {
                                     "type": "section",
@@ -2192,64 +2256,138 @@
                             "cards": [
                                 {
                                     "type": "entities",
+                                    "title": "Utilities",
                                     "entities": [
                                         {
-                                            "entity": "script.scene_good_night"
+                                            "type": "section",
+                                            "label": "In Bed Presence"
                                         },
                                         {
-                                            "entity": "script.scene_leaving_home"
+                                            "type": "custom:paper-buttons-row",
+                                            "position": "right",
+                                            "buttons": [
+                                                {
+                                                    "entity": "input_boolean.holly_is_in_bed",
+                                                    "name": "Holly",
+                                                    "tap_action": {
+                                                        "action": "none"
+                                                    },
+                                                    "hold_action": {
+                                                        "action": "none"
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "input_boolean.mike_is_in_bed",
+                                                    "name": "Mike",
+                                                    "tap_action": {
+                                                        "action": "none"
+                                                    },
+                                                    "hold_action": {
+                                                        "action": "none"
+                                                    }
+                                                }
+                                            ]
                                         },
                                         {
-                                            "entity": "script.scene_movie_time"
+                                            "type": "section",
+                                            "label": "Notifications Triggered"
                                         },
                                         {
-                                            "entity": "script.scene_night_night"
+                                            "type": "custom:paper-buttons-row",
+                                            "position": "right",
+                                            "buttons": [
+                                                {
+                                                    "entity": "input_boolean.earth_triggered",
+                                                    "name": "Earth"
+                                                },
+                                                {
+                                                    "entity": "input_boolean.earth_nginx_php_working_triggered",
+                                                    "name": "Earth PHP"
+                                                },
+                                                {
+                                                    "entity": "input_boolean.signal_add_on_running_triggered",
+                                                    "name": "Signal"
+                                                },
+                                                {
+                                                    "entity": "input_boolean.test_monitor_helper_triggered",
+                                                    "name": "Test"
+                                                }
+                                            ]
                                         },
                                         {
-                                            "entity": "script.fix_in_bed_sensors"
-                                        }
-                                    ],
-                                    "title": "Scripts",
-                                    "show_header_toggle": false
-                                },
-                                {
-                                    "type": "entities",
-                                    "entities": [
+                                            "type": "custom:paper-buttons-row",
+                                            "position": "right",
+                                            "buttons": [
+                                                {
+                                                    "entity": "input_boolean.ood_zigbee_entities_triggered",
+                                                    "name": "Zigbee"
+                                                },
+                                                {
+                                                    "entity": "input_boolean.ood_wyze_entities_triggered",
+                                                    "name": "Wyze"
+                                                },
+                                                {
+                                                    "entity": "input_boolean.unavailable_entities_triggered",
+                                                    "name": "Unavailable"
+                                                },
+                                                {
+                                                    "entity": "input_boolean.software_update_available_triggered",
+                                                    "name": "Software"
+                                                }
+                                            ]
+                                        },
                                         {
-                                            "entity": "input_boolean.security_test_mode"
+                                            "type": "section"
+                                        },
+                                        {
+                                            "entity": "input_number.ood_zigbee_seconds"
+                                        },
+                                        {
+                                            "entity": "input_number.ood_wyze_seconds"
                                         },
                                         {
                                             "entity": "input_text.test_monitor_helper"
                                         },
                                         {
-                                            "entity": "input_boolean.holly_is_in_bed"
+                                            "type": "section",
+                                            "label": "Scenes"
                                         },
                                         {
-                                            "entity": "input_boolean.mike_is_in_bed"
+                                            "type": "custom:paper-buttons-row",
+                                            "position": "right",
+                                            "buttons": [
+                                                {
+                                                    "entity": "script.scene_good_night",
+                                                    "name": "Good Night"
+                                                },
+                                                {
+                                                    "entity": "script.scene_night_night",
+                                                    "name": "Night Night"
+                                                },
+                                                {
+                                                    "entity": "script.scene_leaving_home",
+                                                    "name": "Leaving"
+                                                },
+                                                {
+                                                    "entity": "script.scene_movie_time",
+                                                    "name": "Movie"
+                                                }
+                                            ]
                                         },
                                         {
-                                            "entity": "input_boolean.earth_nginx_php_working_triggered"
+                                            "type": "section",
+                                            "label": "Other Scripts"
                                         },
                                         {
-                                            "entity": "input_boolean.earth_triggered"
-                                        },
-                                        {
-                                            "entity": "input_boolean.out_of_date_zigbee_entities_triggered"
-                                        },
-                                        {
-                                            "entity": "input_boolean.signal_add_on_running_triggered"
-                                        },
-                                        {
-                                            "entity": "input_boolean.software_update_available_triggered"
-                                        },
-                                        {
-                                            "entity": "input_boolean.test_monitor_helper_triggered"
-                                        },
-                                        {
-                                            "entity": "input_boolean.unavailable_entities_triggered"
+                                            "type": "custom:paper-buttons-row",
+                                            "position": "right",
+                                            "buttons": [
+                                                {
+                                                    "entity": "script.fix_in_bed_sensors"
+                                                }
+                                            ]
                                         }
-                                    ],
-                                    "title": "Utilities"
+                                    ]
                                 }
                             ]
                         },
@@ -2347,11 +2485,11 @@
                                             "type": "divider"
                                         },
                                         {
-                                            "entity": "sensor.out_of_date_zigbee_entities"
+                                            "entity": "sensor.ood_zigbee_entities"
                                         },
                                         {
                                             "type": "attribute",
-                                            "entity": "sensor.out_of_date_zigbee_entities",
+                                            "entity": "sensor.ood_zigbee_entities",
                                             "attribute": "entity_list",
                                             "name": " ",
                                             "icon": " "
@@ -2395,7 +2533,7 @@
                                                 }
                                             },
                                             {
-                                                "entity_id": "sensor.out_of_date_zigbee_entities",
+                                                "entity_id": "sensor.ood_zigbee_entities",
                                                 "options": {
                                                     "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
                                                     "tap_action": {
@@ -2737,6 +2875,53 @@
                     ]
                 },
                 {
+                    "title": "Zigbee",
+                    "path": "zigbee",
+                    "icon": "mdi:zigbee",
+                    "type": "custom:horizontal-layout",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "markdown",
+                            "content": "Count: {{ states('sensor.zigbee_entity_count') }} ; Sensor Updated: {{\nstates('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(default=0) }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute=iif(states('input_select.zigbee_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zigbee_entities_sort')=='Friendly Name',false,true)) -%}\n{% set ns.count = ns.count + 1 -%}\n{% if ns.count <= states('sensor.zigbee_entity_count') | int(default=0) / 2 %}{% endif %}* {% if entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(default=0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(default=0) * 0.50) %}<font color=\"yellow\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>\n{% endfor -%}\n",
+                            "title": "All Zigbee Devices"
+                        },
+                        {
+                            "type": "markdown",
+                            "content": "Count: {{ states('sensor.wyze_entity_count') }} ; Sensor Updated: {{\nstates('sensor.wyze_entities') }}; Threshold: {{ states(\"input_number.ood_wyze_seconds\")|int(default=0) }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.wyze_entities', 'entity_list')  | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true))-%}\n{% set ns.count = ns.count + 1 -%}\n* {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(default=0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(default=0) * 0.50) %}<font color=\"yellow\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>\n{% endfor -%}",
+                            "title": "All Wyze Devices"
+                        },
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "input_select.zigbee_entities_sort"
+                                        },
+                                        {
+                                            "entity": "input_select.wyze_entities_sort"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "Count: {{ states('sensor.ood_zigbee_entities') }}; Threshold: {{ states('input_number.ood_zigbee_seconds') | int(default=0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_zigbee_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_zigbee_entities', 'entity_list') }}\n",
+                                    "title": "Out of Date Zigbee Devices"
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "Count: {{ states('sensor.ood_wyze_entities') }}; Threshold: {{ states('input_number.ood_wyze_seconds') | int(default=0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_wyze_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_wyze_entities', 'entity_list') }}\n",
+                                    "title": "Out of Date Wyze Devices"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
                     "title": "Testing",
                     "path": "testing",
                     "icon": "mdi:test-tube",
@@ -2744,13 +2929,13 @@
                     "cards": [
                         {
                             "type": "button",
+                            "entity": "switch.mike_desk_lamp",
                             "tap_action": {
-                                "action": "more-info"
+                                "action": "none"
                             },
                             "hold_action": {
-                                "action": "more-info"
-                            },
-                            "entity": "switch.venus_screensaver"
+                                "action": "none"
+                            }
                         }
                     ]
                 }

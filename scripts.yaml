@@ -21,7 +21,7 @@ announcement_nightly_security:
           entity_id: group.doors_windows
           state: 'on'
         - condition: state
-          entity_id: binary_sensor.shed_door_contact
+          entity_id: binary_sensor.wyzesense_77c741e9
           state: 'on'
         - condition: not
           conditions:
@@ -31,10 +31,10 @@ announcement_nightly_security:
             entity_id: cover.garage_door
             type: is_closed
         - condition: state
-          entity_id: binary_sensor.chimney_gate_contact
+          entity_id: binary_sensor.wyzesense_77ca82dc
           state: 'on'
         - condition: state
-          entity_id: binary_sensor.shed_gate_contact
+          entity_id: binary_sensor.wyzesense_77ca82c5
           state: 'on'
       sequence:
       - service: script.function_speakers_prep
@@ -49,12 +49,12 @@ announcement_nightly_security:
             \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',\
             \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',\
             \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',\
-            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',\
+            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77c74305',\
             \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',\
             \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',\
-            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',\
-            \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_gate_contact',\
-            \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',\
+            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77c741e9',\
+            \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77ca82c5',\
+            \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77ca82dc',\
             \ 'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
             \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: notify.signal_security
@@ -65,10 +65,10 @@ announcement_nightly_security:
             \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',\
             \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',\
             \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',\
-            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',\
+            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77c74305',\
             \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',\
             \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',\
-            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',\
+            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77c741e9',\
             \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
             \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: script.function_speakers_restore
@@ -1387,3 +1387,33 @@ function_frigate_send_email:
       example: trigger.payload_json['after']['id']
   mode: single
   icon: mdi:email-fast
+fkb_reload:
+  alias: FKB - Reload
+  sequence:
+  - service: homeassistant.update_entity
+    target:
+      entity_id: sensor.fkb_control_panel
+  - service: rest_command.fkb_command
+    data:
+      command_string: cmd=clearCache
+  - service: rest_command.fkb_command
+    data:
+      command_string: cmd=loadUrl&url={{ state_attr('sensor.fkb_control_panel', 'currentPageUrl')
+        }}
+  mode: single
+  icon: mdi:tablet-dashboard
+fkbmbr_reload:
+  alias: FKBMBR - Reload
+  sequence:
+  - service: homeassistant.update_entity
+    target:
+      entity_id: sensor.fkbmbr_control_panel
+  - service: rest_command.fkbmbr_command
+    data:
+      command_string: cmd=clearCache
+  - service: rest_command.fkbmbr_command
+    data:
+      command_string: cmd=loadUrl&url={{ state_attr('sensor.fkbmbr_control_panel',
+        'currentPageUrl') }}
+  mode: single
+  icon: mdi:tablet-dashboard
