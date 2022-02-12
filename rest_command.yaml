@@ -33,26 +33,26 @@ fkbmbr_command:
 # command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45-seconds-to-exit.mp3
 # command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/cannot-arm.mp3
 
-assistant_broadcast:
-  url: !secret assistant_relay_url
-  method: POST
-  content_type: "application/json"
-  payload: '{"command":"{{ command }}", "user":"mike", "broadcast":true}'
-  username: ha
-  password: !secret assistant_relay_password
-
-assistant_converse:
-  url: !secret assistant_relay_url
-  method: POST
-  content_type: "application/json"
-  payload: '{"command":"{{ command }}", "user":"mike", "converse":true}'
-  username: ha
-  password: !secret assistant_relay_password
-
-assistant_relay:
-  url: !secret assistant_relay_url
-  method: POST
-  content_type: "application/json"
-  payload: '{"command":"{{ command }}", "user":"mike"}'
-  username: ha
-  password: !secret assistant_relay_password
+#assistant_broadcast:
+#  url: !secret assistant_relay_url
+#  method: POST
+#  content_type: "application/json"
+#  payload: '{"command":"{{ command }}", "user":"mike", "broadcast":true}'
+#  username: ha
+#  password: !secret assistant_relay_password
+#
+#assistant_converse:
+#  url: !secret assistant_relay_url
+#  method: POST
+#  content_type: "application/json"
+#  payload: '{"command":"{{ command }}", "user":"mike", "converse":true}'
+#  username: ha
+#  password: !secret assistant_relay_password
+#
+#assistant_relay:
+#  url: !secret assistant_relay_url
+#  method: POST
+#  content_type: "application/json"
+#  payload: '{"command":"{{ command }}", "user":"mike"}'
+#  username: ha
+#  password: !secret assistant_relay_password

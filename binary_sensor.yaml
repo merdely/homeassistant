@@ -56,10 +56,88 @@
   payload_on: 'Camera is streaming'
   payload_off: 'Camera is off'
 
+- name: Bitwarden Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state a0d7b954_bitwarden'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: Frigate Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state ccab4aaf_frigate'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: Google Backup Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state cebe7a76_hassio_google_drive_backup'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: MariaDB Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state core_mariadb'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: MQTT Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state core_mosquitto'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: NginxProxyMgr Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state a0d7b954_nginxproxymanager'
+  payload_on: 'on'
+  payload_off: 'off'
+
 - name: Signal Add-On Running
   platform: command_line
   device_class: running
-  command: '/config/bin/check_signal_addon'
+  #command: '/config/bin/check_signal_addon'
+  command: '/config/bin/check_addon_state 1315902c_signal_messenger'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: SSH Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state a0d7b954_ssh'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: TasmoBackup Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state 6a15710b_tasmobackup'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: Unifi Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state a0d7b954_unifi'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: Wireguard Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state a0d7b954_wireguard'
+  payload_on: 'on'
+  payload_off: 'off'
+
+- name: Zigbee2MQTT Add-On Running
+  platform: command_line
+  device_class: running
+  command: '/config/bin/check_addon_state 45df7312_zigbee2mqtt'
   payload_on: 'on'
   payload_off: 'off'
 

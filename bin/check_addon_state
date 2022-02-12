@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ $(curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/addons/$1/info | jq .data.state) == '"started"' ]
+then
+  echo on
+else
+  echo off
+fi

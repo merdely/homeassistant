@@ -1000,6 +1000,9 @@
   - condition: state
     entity_id: person.michael_erdely
     state: home
+  - condition: state
+    entity_id: input_boolean.announce_holly_presence
+    state: 'on'
   action:
   - choose:
     - conditions:
@@ -1042,6 +1045,9 @@
   - condition: state
     entity_id: person.holly_erdely
     state: home
+  - condition: state
+    entity_id: input_boolean.announce_mike_presence
+    state: 'on'
   action:
   - delay:
       hours: 0
@@ -2192,12 +2198,10 @@
     data:
       message: Starting Nightly Tasks
       level: warning
-  - service: rest_command.assistant_relay
-    data:
-      command: Synchronize Devices
   - service: shell_command.clean_alarm_state
     data: {}
   - service: shell_command.rotate_ha_logs
+    data: {}
   - choose:
     - conditions:
       - condition: template
@@ -2222,6 +2226,7 @@
   - service: homeassistant.update_entity
     target:
       entity_id: binary_sensor.new_npm_ssl_cert_available
+    data: {}
   - choose:
     - conditions:
       - condition: state
@@ -2237,6 +2242,7 @@
   - service: homeassistant.update_entity
     target:
       entity_id: binary_sensor.new_tv_show_list_ready
+    data: {}
   - service: hassio.addon_restart
     data:
       addon: core_letsencrypt
@@ -2248,6 +2254,7 @@
   - service: homeassistant.update_entity
     target:
       entity_id: binary_sensor.new_ssl_cert_available
+    data: {}
   - choose:
     - conditions:
       - condition: or
@@ -2259,6 +2266,10 @@
           entity_id: binary_sensor.new_ssl_cert_available
           state: 'on'
       sequence:
+      - service: system_log.write
+        data:
+          message: 'Nightly Tasks: Restarting Home Assistant'
+          level: warning
       - service: script.homeassistant_restart
         data: {}
     default: []
@@ -3038,7 +3049,7 @@
     entity_id: switch.bedroom_tv
     state: 'off'
   - condition: numeric_state
-    entity_id: sensor.bedroom_motion_sensor_illuminance
+    entity_id: sensor.bedroom_motion_sensor_illuminance_lux
     below: '16'
   - condition: state
     entity_id: binary_sensor.withings_in_bed_holly_e
@@ -3054,6 +3065,7 @@
   - service: homeassistant.turn_on
     target:
       entity_id: light.dresser_lamp
+    data: {}
   mode: single
 - id: '1632841431902'
   alias: Fan - Master Bath Humidity - Fan On
@@ -3281,20 +3293,6 @@
           entity_id: input_boolean.mike_is_in_bed
     default: []
   mode: single
-- id: '1636475211514'
-  alias: ++Mike Log Last Seen for Wyze Sensor
-  description: ''
-  trigger:
-  - platform: time_pattern
-    minutes: /1
-  condition: []
-  action:
-  - service: system_log.write
-    data:
-      level: warning
-      message: 'binary_sensor.wyzesense_778e4038 last seen: {{ state_attr(''binary_sensor.wyzesense_778e4038'',
-        ''last_seen_iso'') }}'
-  mode: single
 - id: '1637383119311'
   alias: Actionable Notifications - RUN_GOODNIGHT
   description: ''
@@ -3434,7 +3432,73 @@
       seconds: 30
     below: '1'
   - platform: state
+    entity_id: binary_sensor.bitwarden_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.frigate_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.google_backup_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.mariadb_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.mqtt_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.nginxproxymgr_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
     entity_id: binary_sensor.signal_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.ssh_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.tasmobackup_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.unifi_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.wireguard_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id: binary_sensor.zigbee2mqtt_add_on_running
     for:
       hours: 0
       minutes: 0
@@ -3596,4 +3660,43 @@
     data: {}
     target:
       entity_id: switch.office_heater_plug
+  mode: single
+- id: '1644246652989'
+  alias: Notifications - Fridge Door
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.wyzesense_77ca6210
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  - platform: state
+    entity_id: binary_sensor.wyzesense_77ca7f18
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  - platform: state
+    entity_id: binary_sensor.wyzesense_77ca7f1b
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  - platform: state
+    entity_id: binary_sensor.wyzesense_77ca8284
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.signal_security
+    data:
+      message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been open
+        for 5 minutes.
   mode: single

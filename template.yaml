@@ -78,7 +78,7 @@
     state: >-
       {% set ns = namespace(sensor = 'Off') -%}
       {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\..*_version_latest$') | map(attribute='entity_id') | list -%}
-        {% if states(software|replace('_latest','')) != states(software) -%} 
+        {% if states(software|replace('_latest','')) != states(software) -%}
           {% set ns.sensor = 'On' -%}
         {% endif -%}
       {% endfor -%}
@@ -92,7 +92,7 @@
       number: >-
         {% set ns = namespace(updates = 0) -%}
         {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\..*_version_latest$') | map(attribute='entity_id') | list -%}
-          {% if states(software|replace('_latest','')) != states(software) -%} 
+          {% if states(software|replace('_latest','')) != states(software) -%}
             {% set ns.updates = ns.updates + 1 -%}
           {% endif -%}
         {% endfor -%}
@@ -105,7 +105,7 @@
       entity_list: >-
         {% set ns = namespace(list = "") -%}
         {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\..*_version_latest$') | map(attribute='entity_id') | list -%}
-          {% if states(software|replace('_latest','')) != states(software) -%} 
+          {% if states(software|replace('_latest','')) != states(software) -%}
             {% set ns.list = ns.list + " " + software -%}
           {% endif -%}
         {% endfor -%}
@@ -207,7 +207,7 @@
       entity_list: >
         {% for entity in state_attr('sensor.wyze_entities', 'entity_list') | default([]) | sort(attribute='timediff', reverse=true) -%}
           {% if entity['timediff'] | int(default=0) > states('input_number.ood_wyze_seconds') | int(default=0) -%}
-            {{ entity['friendly_name'] }} ({{ entity['timediff'] }}), 
+            {{ entity['friendly_name'] }} ({{ entity['timediff'] }}),
           {% endif -%}
         {% endfor -%}
 
@@ -263,7 +263,7 @@
       entity_list: >
         {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | sort(attribute='timediff', reverse=true) -%}
           {% if entity['timediff'] | int(default=0) > states('input_number.ood_zigbee_seconds') | int(default=0) -%}
-            {{ entity['friendly_name'] }} ({{ entity['timediff'] }}), 
+            {{ entity['friendly_name'] }} ({{ entity['timediff'] }}),
           {% endif -%}
         {% endfor -%}
 
@@ -974,4 +974,132 @@
     name: Mailbox Sensor Days Since Seen
     state: "{{ ((utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_778e4038', 'timestamp'))) / 3600 / 24) | round(2) }}"
     unit_of_measurement: "Days"
+
+# WyzeSense 77c741e9 Days Since Seen
+- sensor:
+    unique_id: shed_door_days_since_seen
+    name: Shed Door Days Since Seen
+    state: "{{ ((utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77c741e9', 'timestamp'))) / 3600 / 24) | round(2) }}"
+    unit_of_measurement: "Days"
+
+# WyzeSense 77ca82c5 Days Since Seen
+- sensor:
+    unique_id: shed_gate_days_since_seen
+    name: Shed Gate Days Since Seen
+    state: "{{ ((utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77ca82c5', 'timestamp'))) / 3600 / 24) | round(2) }}"
+    unit_of_measurement: "Days"
+
+# WyzeSense 77ca82dc Days Since Seen
+- sensor:
+    unique_id: chimney_gate_days_since_seen
+    name: Chimney Gate Days Since Seen
+    state: "{{ ((utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77ca82dc', 'timestamp'))) / 3600 / 24) | round(2) }}"
+    unit_of_measurement: "Days"
+
+# Time Diff Sensors - Zigbee
+- sensor:
+    name: Dining Room Water Leak timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.dining_room_water_leak_sensor_water_leak', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Dining Room Slider timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.dining_room_slider_contact', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: God Damn Slider timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.god_damn_slider_contact', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: God Damn Temperature timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('sensor.god_damn_multisensor_temperature', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: God Damn Water Leak timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.god_damn_water_leak_sensor_water_leak', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Kitchen Water Leak timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.kitchen_water_leak_sensor_water_leak', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Shed Button timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('sensor.shed_button_click', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Living Room Water Leak timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.living_room_water_leak_sensor_water_leak', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Washer Water Leak timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.washer_water_leak_sensor_water_leak', 'last_seen')) }}"
+    unit_of_measurement: "Seconds"
+
+# Time Diff Sensors - Wyze
+- sensor:
+    name: 778e4029 timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_778e4029', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Mailbox Sensor timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_778e4038', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Office Shelf Motion Sensor timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_778e716f', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Shed Door timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77c741e9', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Garage Door timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77c74300', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Garage Entry Door timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77c74305', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: DR Freezer Door timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77ca6210', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: DR Fridge timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77ca7f18', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Freezer Door timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77ca7f1b', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Fridge timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77ca8284', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Shed Gate timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77ca82c5', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Chimney Gate timediff Wyze
+    state: "{{ utcnow().strftime('%s') | int(default=0) - as_timestamp(state_attr('binary_sensor.wyzesense_77ca82dc', 'timestamp')) }}"
+    unit_of_measurement: "Seconds"
 

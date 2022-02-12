@@ -19,9 +19,9 @@ holly_mike:
 always_monitored_doors:
   name: Always Monitored Doors
   entities:
-    - binary_sensor.wyzesense_77c741e9
-    - binary_sensor.wyzesense_77ca82c5
-    - binary_sensor.wyzesense_77ca82dc
+    - binary_sensor.wyzesense_77c741e9  # Shed Door
+    - binary_sensor.wyzesense_77ca82c5  # Shed Gate
+    - binary_sensor.wyzesense_77ca82dc  # Chimney Gate
 
 fake_security_devices:
   name: Fake Security Devices
@@ -34,10 +34,10 @@ fake_security_devices:
 security_devices:
   name: All Security Devices
   entities:
-    - binary_sensor.wyzesense_77c741e9
-    - binary_sensor.wyzesense_77ca82c5
-    - binary_sensor.wyzesense_77ca82dc
-    - binary_sensor.wyzesense_77c74305
+    - binary_sensor.wyzesense_77c741e9  # Shed Door
+    - binary_sensor.wyzesense_77ca82c5  # Shed Gate
+    - binary_sensor.wyzesense_77ca82dc  # Chimney Gate
+    - binary_sensor.wyzesense_77c74305  # Garage Entry Door
     - cover.garage_door
     - binary_sensor.front_door_contact
     - binary_sensor.back_door_contact
@@ -52,12 +52,19 @@ security_devices:
 exterior_security_devices:
   name: Exterior Security Devices
   entities:
-    - binary_sensor.wyzesense_77c741e9
-    - binary_sensor.wyzesense_77ca82c5
-    - binary_sensor.wyzesense_77ca82dc
-    - binary_sensor.wyzesense_77c74305
+    - binary_sensor.wyzesense_77c741e9  # Shed Door
+    - binary_sensor.wyzesense_77ca82c5  # Shed Gate
+    - binary_sensor.wyzesense_77ca82dc  # Chimney Gate
+    - binary_sensor.wyzesense_77c74305  # Garage Entry Door
     - cover.garage_door
 
+refrigerator_doors:
+  name: Refrigerator Doors
+  entities:
+    - binary_sensor.wyzesense_77ca6210  # Dining Room Freezer
+    - binary_sensor.wyzesense_77ca7f18  # Dining Room Refrigerator
+    - binary_sensor.wyzesense_77ca7f1b  # Kitchen Freezer
+    - binary_sensor.wyzesense_77ca8284  # Kitchen Refrigerator
 sliders:
   name: Sliders
   entities:
@@ -78,10 +85,10 @@ int_doors_windows:
 ext_doors_gates:
   name: Doors/Gates
   entities:
-    - binary_sensor.wyzesense_77c741e9
-    - binary_sensor.wyzesense_77ca82c5
-    - binary_sensor.wyzesense_77ca82dc
-    - binary_sensor.wyzesense_77c74305
+    - binary_sensor.wyzesense_77c741e9  # Shed Door
+    - binary_sensor.wyzesense_77ca82c5  # Shed Gate
+    - binary_sensor.wyzesense_77ca82dc  # Chimney Gate
+    - binary_sensor.wyzesense_77c74305  # Garage Entry Door
 
 doors_windows:
   name: Doors and Windows
@@ -105,7 +112,7 @@ motion_sensors:
     - binary_sensor.laundry_room_motion_sensor_occupancy
     - binary_sensor.living_room_motion_sensor_occupancy
     - binary_sensor.office_door_motion_sensor_occupancy
-    - binary_sensor.wyzesense_778e716f
+    - binary_sensor.wyzesense_778e716f  # Office Shelf Motion Sensor
     - binary_sensor.powder_room_motion_sensor_occupancy
 
 up_motion_sensors:
@@ -115,7 +122,7 @@ up_motion_sensors:
     - binary_sensor.hall_bath_room_motion_sensor_occupancy
     - binary_sensor.living_room_motion_sensor_occupancy
     - binary_sensor.office_door_motion_sensor_occupancy
-    - binary_sensor.wyzesense_778e716f
+    - binary_sensor.wyzesense_778e716f  # Office Shelf Motion Sensor
 
 down_motion_sensors:
   name: Downstairs Motion Sensors
