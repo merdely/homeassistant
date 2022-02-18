@@ -3680,14 +3680,14 @@
       minutes: 5
       seconds: 0
   - platform: state
-    entity_id: binary_sensor.wyzesense_77ca7f1b
+    entity_id: binary_sensor.freezer_door_contact
     to: 'on'
     for:
       hours: 0
       minutes: 5
       seconds: 0
   - platform: state
-    entity_id: binary_sensor.wyzesense_77ca8284
+    entity_id: binary_sensor.refrigerator_door_contact
     to: 'on'
     for:
       hours: 0
@@ -3699,4 +3699,28 @@
     data:
       message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been open
         for 5 minutes.
+  mode: single
+- id: '1645068726044'
+  alias: Security - 40 Armed - Disarm Security System in the morning after 6:30
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.automatic_security_disarm
+  condition:
+  - condition: state
+    entity_id: group.holly_mike
+    state: home
+  action:
+  - service: script.security_disarm_system
+    data: {}
+  - condition: state
+    entity_id: binary_sensor.christmas_tree_available
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.christmas_tree_is_up
+    state: 'on'
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.christmas_tree
+    data: {}
   mode: single

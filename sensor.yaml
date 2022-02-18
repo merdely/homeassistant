@@ -19,6 +19,18 @@
   unit_of_measurement: "°C"
   value_template: "{{ value | multiply(0.001) | round(2)  }}"
 
+- platform: command_line
+  name: Dynamic DNS
+  command: "/config/bin/update_ip.sh"
+  json_attributes:
+    - public_ip
+    - dns_record
+    - dynamic_hostname
+    - status
+    - updated_at
+  value_template: "{{ value_json.public_ip }}"
+  scan_interval: 900  # 15 minutes
+
 #- platform: mqtt
 #  name: Out of Date Zigbee Entities
 #  state_topic: ood_zigbee/count
