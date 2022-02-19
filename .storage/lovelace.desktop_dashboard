@@ -313,7 +313,7 @@
                                 {
                                     "type": "entities",
                                     "card_mod": {
-                                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(default=0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(default=0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(default=0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(default=0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(default=0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(default=0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(default=100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(default=100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(default=100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(default=100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                                     },
                                     "entities": [
                                         {
@@ -1094,28 +1094,28 @@
                                             "icon": "mdi:fridge-outline",
                                             "entities": [
                                                 {
-                                                    "entity": "binary_sensor.wyzesense_77ca6210",
+                                                    "entity": "binary_sensor.dining_room_freezer_door_contact",
                                                     "name": "DR Freezer",
                                                     "styles": {
                                                         "color": "var(--dr-freezer-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.wyzesense_77ca7f18",
+                                                    "entity": "binary_sensor.dining_room_refrigerator_door_contact",
                                                     "name": "DR Fridge",
                                                     "styles": {
                                                         "color": "var(--dr-fridge-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.freezer_door_contact",
+                                                    "entity": "binary_sensor.kitchen_freezer_door_contact",
                                                     "name": "Freezer",
                                                     "styles": {
                                                         "color": "var(--freezer-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.refrigerator_door_contact",
+                                                    "entity": "binary_sensor.kitchen_refrigerator_door_contact",
                                                     "name": "Fridge",
                                                     "styles": {
                                                         "color": "var(--fridge-color)"
@@ -1130,28 +1130,28 @@
                                             "state_color": true,
                                             "entities": [
                                                 {
-                                                    "entity": "binary_sensor.wyzesense_77c741e9",
+                                                    "entity": "binary_sensor.shed_door_contact",
                                                     "name": "ShedDoor",
                                                     "styles": {
                                                         "color": "var(--shed-door-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.wyzesense_77ca82c5",
+                                                    "entity": "binary_sensor.shed_gate_contact",
                                                     "name": "ShedGate",
                                                     "styles": {
                                                         "color": "var(--shed-gate-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.wyzesense_77ca82dc",
+                                                    "entity": "binary_sensor.chimney_gate_contact",
                                                     "name": "Chimney",
                                                     "styles": {
                                                         "color": "var(--chimney-gate-color)"
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.wyzesense_77c74305",
+                                                    "entity": "binary_sensor.garage_entry_door_contact",
                                                     "name": "GargEntry",
                                                     "styles": {
                                                         "color": "var(--garage-entry-door-color)"
@@ -1174,7 +1174,7 @@
                                                     }
                                                 },
                                                 {
-                                                    "entity": "binary_sensor.wyzesense_77c74300",
+                                                    "entity": "binary_sensor.garage_door_sensor_contact",
                                                     "name": "Garage Door",
                                                     "styles": {
                                                         "color": "var(--garage-door-sensor-color)"
@@ -1197,16 +1197,8 @@
                                             "name": "Wyze Days Since Seen",
                                             "entities": [
                                                 {
-                                                    "entity": "sensor.garage_door_sensor_days_since_seen",
-                                                    "name": "Garage Door",
-                                                    "unit": false,
-                                                    "styles": {
-                                                        "color": "var(--garage-door-sensor-days-color)"
-                                                    }
-                                                },
-                                                {
-                                                    "entity": "sensor.garage_entry_door_days_since_seen",
-                                                    "name": "Garage Entry",
+                                                    "entity": "sensor.office_shelf_motion_sensor_days_since_seen",
+                                                    "name": "Office Shelf Motion",
                                                     "unit": false,
                                                     "styles": {
                                                         "color": "var(--garage-entry-door-days-color)"
@@ -1221,45 +1213,12 @@
                                                     }
                                                 }
                                             ]
-                                        },
-                                        {
-                                            "entity": "sensor.date",
-                                            "type": "custom:multiple-entity-row",
-                                            "show_state": false,
-                                            "state_color": true,
-                                            "name": "Wyze Days Since Seen",
-                                            "entities": [
-                                                {
-                                                    "entity": "sensor.shed_door_days_since_seen",
-                                                    "name": "Shed Door",
-                                                    "unit": false,
-                                                    "styles": {
-                                                        "color": "var(--shed-door-days-color)"
-                                                    }
-                                                },
-                                                {
-                                                    "entity": "sensor.shed_gate_days_since_seen",
-                                                    "name": "Shed Gate",
-                                                    "unit": false,
-                                                    "styles": {
-                                                        "color": "var(--shed-gate-days-color)"
-                                                    }
-                                                },
-                                                {
-                                                    "entity": "sensor.chimney_gate_days_since_seen",
-                                                    "name": "Chimney",
-                                                    "unit": false,
-                                                    "styles": {
-                                                        "color": "var(--chimney-gate-days-color)"
-                                                    }
-                                                }
-                                            ]
                                         }
                                     ],
                                     "show_header_toggle": false,
                                     "state_color": true,
                                     "card_mod": {
-                                        "style": "ha-card {\n  --bedroom-motion-color: {% if states('binary_sensor.bedroom_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-door-motion-color: {% if states('binary_sensor.office_door_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-color: {% if states('binary_sensor.wyzesense_778e716f') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-motion-color: {% if states('binary_sensor.living_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-motion-color: {% if states('binary_sensor.god_damn_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-room-motion-color: {% if states('binary_sensor.laundry_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-motion-color: {% if states('binary_sensor.powder_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-motion-color: {% if states('binary_sensor.den_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --master-bath-water-color: {% if states('binary_sensor.master_bath_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --guest-bath-water-color: {% if states('binary_sensor.guest_bath_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --kitchen-water-color: {% if states('binary_sensor.kitchen_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-water-color: {% if states('binary_sensor.living_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dining-room-water-color: {% if states('binary_sensor.dining_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-water-color: {% if states('binary_sensor.god_damn_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-water-color: {% if states('binary_sensor.den_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-water-color: {% if states('binary_sensor.powder_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --washer-water-color: {% if states('binary_sensor.washer_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --water-heater-water-color: {% if states('binary_sensor.water_heater_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --bedroom-slider-color: {% if states('binary_sensor.bedroom_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-slider-color: {% if states('binary_sensor.living_room_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dining-room-slider-color: {% if states('binary_sensor.dining_room_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-slider-color: {% if states('binary_sensor.god_damn_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --front-door-color: {% if states('binary_sensor.front_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --back-door-color: {% if states('binary_sensor.back_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-window-color: {% if states('binary_sensor.den_window_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-window-color: {% if states('binary_sensor.powder_room_window_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-door-color: {% if states('binary_sensor.wyzesense_77c741e9') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-gate-color: {% if states('binary_sensor.wyzesense_77ca82c5') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --chimney-gate-color: {% if states('binary_sensor.wyzesense_77ca82dc') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-color: {% if states('binary_sensor.wyzesense_778e4038') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-entry-door-color: {% if states('binary_sensor.wyzesense_77c74305') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-color: {% if states('binary_sensor.wyzesense_77c74300') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-days-color: {% if states('sensor.garage_door_sensor_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-entry-door-days-color: {% if states('sensor.garage_entry_door_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-door-days-color: {% if states('sensor.shed_door_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-gate-days-color: {% if states('sensor.shed_gate_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --chimney-gate-days-color: {% if states('sensor.chimney_gate_days_since_seen') | float(default=0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dr-freezer-days-color: {% if states('binary_sensor.wyzesense_77ca6210') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dr-fridge-days-color: {% if states('binary_sensor.wyzesense_77ca7f18') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --freezer-color: {% if states('binary_sensor.freezer_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fridge-color: {% if states('binary_sensor.refrigerator_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                                        "style": "ha-card {\n  --bedroom-motion-color: {% if states('binary_sensor.bedroom_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-door-motion-color: {% if states('binary_sensor.office_door_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-color: {% if states('binary_sensor.wyzesense_778e716f') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-motion-color: {% if states('binary_sensor.living_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-motion-color: {% if states('binary_sensor.god_damn_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-room-motion-color: {% if states('binary_sensor.laundry_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-motion-color: {% if states('binary_sensor.powder_room_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-motion-color: {% if states('binary_sensor.den_motion_sensor_occupancy') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --master-bath-water-color: {% if states('binary_sensor.master_bath_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --guest-bath-water-color: {% if states('binary_sensor.guest_bath_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --kitchen-water-color: {% if states('binary_sensor.kitchen_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-water-color: {% if states('binary_sensor.living_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dining-room-water-color: {% if states('binary_sensor.dining_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-water-color: {% if states('binary_sensor.god_damn_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-water-color: {% if states('binary_sensor.den_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-water-color: {% if states('binary_sensor.powder_room_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --washer-water-color: {% if states('binary_sensor.washer_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --water-heater-water-color: {% if states('binary_sensor.water_heater_water_leak_sensor_water_leak') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --bedroom-slider-color: {% if states('binary_sensor.bedroom_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --living-room-slider-color: {% if states('binary_sensor.living_room_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dining-room-slider-color: {% if states('binary_sensor.dining_room_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --god-damn-slider-color: {% if states('binary_sensor.god_damn_slider_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --front-door-color: {% if states('binary_sensor.front_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --back-door-color: {% if states('binary_sensor.back_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --den-window-color: {% if states('binary_sensor.den_window_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --powder-room-window-color: {% if states('binary_sensor.powder_room_window_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-door-color: {% if states('binary_sensor.shed_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --shed-gate-color: {% if states('binary_sensor.shed_gate_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --chimney-gate-color: {% if states('binary_sensor.chimney_gate_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-color: {% if states('binary_sensor.wyzesense_778e4038') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-entry-door-color: {% if states('binary_sensor.garage_entry_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-color: {% if states('binary_sensor.garage_door_sensor_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dr-freezer-color: {% if states('binary_sensor.dining_room_freezer_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --dr-fridge-color: {% if states('binary_sensor.dining_room_refrigerator_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --freezer-color: {% if states('binary_sensor.kitchen_freezer_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fridge-color: {% if states('binary_sensor.kitchen_refrigerator_door_contact') == \"on\" %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                                     }
                                 },
                                 {
@@ -1414,15 +1373,15 @@
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.wyzesense_77c741e9",
+                                    "entity": "binary_sensor.shed_door_contact",
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.wyzesense_77ca82c5",
+                                    "entity": "binary_sensor.shed_gate_contact",
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.wyzesense_77ca82dc",
+                                    "entity": "binary_sensor.chimney_gate_contact",
                                     "secondary_info": "last-changed"
                                 },
                                 {
@@ -1430,11 +1389,11 @@
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.wyzesense_77c74305",
+                                    "entity": "binary_sensor.garage_entry_door_contact",
                                     "secondary_info": "last-changed"
                                 },
                                 {
-                                    "entity": "binary_sensor.wyzesense_77c74300",
+                                    "entity": "binary_sensor.garage_door_sensor_contact",
                                     "secondary_info": "last-changed"
                                 },
                                 {
@@ -2060,39 +2019,8 @@
                                     "content": "## Software\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th> </tr>\n{% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\.(?!(hacs|home_assistant|operating_system|supervisor)_).*_version_latest$') | map(attribute='entity_id') | list -%} <tr> <td><font color=\"{{'#44739e' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software|replace('_latest','')) }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software) }}</font></td> </tr> {% endfor -%} </table>"
                                 },
                                 {
-                                    "type": "grid",
-                                    "columns": 2,
-                                    "square": false,
-                                    "cards": [
-                                        {
-                                            "type": "gauge",
-                                            "entity": "sensor.speedtest_download",
-                                            "min": 0,
-                                            "max": 1000,
-                                            "severity": {
-                                                "green": 600,
-                                                "yellow": 300,
-                                                "red": 0
-                                            },
-                                            "needle": true
-                                        },
-                                        {
-                                            "type": "gauge",
-                                            "entity": "sensor.speedtest_upload",
-                                            "min": 0,
-                                            "max": 1000,
-                                            "severity": {
-                                                "green": 600,
-                                                "yellow": 300,
-                                                "red": 0
-                                            },
-                                            "needle": true
-                                        }
-                                    ]
-                                },
-                                {
                                     "type": "markdown",
-                                    "content": "  ## Other Info\n\n  <table width=\"100%\"> <tr>\n    <th></th>\n    <th align=\"left\">Name</th>\n    <th align=\"right\">Status</th>\n  </tr>  <tr> <td><font color=\"{{'#44739e' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\"><ha-icon\n  icon='mdi:cloud-question'></font></td> <td><font style=\"color: {{'var(--primary-text-color)' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\">Unavailable\n  Entities</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if\n  states('sensor.unavailable_entities') | int(default=0) == 0 else 'yellow'}}\">{{\n  states('sensor.unavailable_entities') }} unavailable entities</font></td>\n  </tr>  <tr> <td><font color=\"{{'#44739e' if states('sensor.plex_plex') | int(default=0)\n  == 0 else 'yellow'}}\"><ha-icon icon='mdi:plex'></font></td> <td><font\n  style=\"color: {{'var(--primary-text-color)' if states('sensor.plex_plex') | int(default=0) == 0 else\n  'yellow'}}\">Plex Status</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if states('sensor.plex_plex') | int(default=0) == 0 else\n  'yellow'}}\">{{ states('sensor.plex_plex') }} Watching</font></td> </tr> <tr>\n  <td><font color=\"{{'#44739e' if states('binary_sensor.new_tv_show_list_ready')\n  == 'off' else 'yellow'}}\"><ha-icon icon='mdi:television'></font></td>\n  <td><font style=\"color: {{'var(--primary-text-color)' if\n  states('binary_sensor.new_tv_show_list_ready') == 'off' else 'yellow'}}\">New\n  TV Show List Ready</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if\n  states('binary_sensor.new_tv_show_list_ready') == 'off' else 'yellow'}}\">{{\n  states('binary_sensor.new_tv_show_list_ready') | title }}</font></td> </tr>\n  <tr> <td><font color=\"{{'#44739e' if\n  as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600 *\n  24 * 7 * 2) else 'yellow'}}\"><ha-icon icon='mdi:shield-lock'></font></td>\n  <td><font style=\"color: {{'var(--primary-text-color)' if\n  (as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600\n  * 24 * 7 * 2)) else 'yellow'}}\">SSL Expiry Date</font></td> <td\n  align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if     \n  (as_timestamp(states('sensor.ssl_expiry_date')) - as_timestamp(now()) > (3600\n  * 24 * 7 * 2)) else 'yellow'}}\">{{ states('sensor.ssl_expiry_date')\n  }}</font></td> </tr>\n<tr> <td><font color=\"{{'#44739e' if states('binary_sensor.earth') == 'on' else 'yellow'}}\"><ha-icon icon='mdi:{{ \"server-network\" if states('binary_sensor.earth') == 'on' else \"server-network-off\" }}'></font></td> <td><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth') == 'on' else\n  'yellow'}}\">Earth Host Status</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth') == 'on' else\n  'yellow'}}\">{{ \"Up\" if states('binary_sensor.earth') == 'on' else \"Down\" }}</font></td> </tr>\n<tr> <td><font color=\"{{'#44739e' if states('binary_sensor.earth_nginx_php_working') == 'on' else 'yellow'}}\"><ha-icon icon='mdi:{{ \"web-check\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"web-off\"}}'></font></td> <td><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth_nginx_php_working') == 'on' else\n  'yellow'}}\">Earth Nginx/PHP Status</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth_nginx_php_working') == 'on' else\n  'yellow'}}\">{{ \"Up\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"Down\" }}</font></td> </tr>\n<tr> <td><font color=\"{{'#44739e' if states('binary_sensor.earth_nginx_php_working') == 'on' else 'yellow'}}\"><ha-icon icon='mdi:{{ \"web-check\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"web-off\"}}'></font></td> <td><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth_nginx_php_working') == 'on' else\n  'yellow'}}\">Dynamic DNS</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if states('binary_sensor.earth_nginx_php_working') == 'on' else\n  'yellow'}}\">{{ states('sensor.dynamic_dns') }}</font></td> </tr>\n</table>\n"
+                                    "content": "## Other Info\n<table width=\"100%\"><tr> <th></th> <th align=\"left\">Name</th> <th align=\"right\">Status</th> </tr><tr><td><font color=\"{{'#44739e' if states('sensor.unavailable_entities') | int(0) == 0 else 'yellow'}}\"><ha-icon icon='mdi:cloud-question'></font></td><td>{{ '<font color=\"yellow\">' if states('sensor.unavailable_entities') | int(0) != 0 }}Unavailable Entities</font></td> <td align=\"right\">{{'<font color=\"yellow\">' if states('sensor.unavailable_entities') | int(0) != 0 }}{{ states('sensor.unavailable_entities') }} unavailable entities</font></td></tr> <tr><td><font color=\"{{'#44739e' if states('sensor.plex_plex') | int(0) == 0 else 'yellow' }}\"><ha-icon icon='mdi:plex'></font></td><td>{{ '<font color=\"yellow\">' if states('sensor.plex_plex') | int(0) != 0 }}Plex Status</font></td> <td align=\"right\">{{ '<font color=\"yellow\">' if states('sensor.plex_plex') | int(0) != 0 }}{{ states('sensor.plex_plex') }} Watching</font></td></tr><tr><td><font color=\"{{ '#44739e' if states('binary_sensor.new_tv_show_list_ready') == 'off' else 'yellow' }}\"><ha-icon icon='mdi:television'></font></td><td>{{ '<font color=\"yellow\">' if states('binary_sensor.new_tv_show_list_ready') != 'off' }}New TV Show List Ready</font></td> <td align=\"right\">{{'<font color=\"yellow\">' if states('binary_sensor.new_tv_show_list_ready') != 'off' }}{{ states('binary_sensor.new_tv_show_list_ready') | title }}</font></td></tr> <tr><td><font color=\"{{'#44739e' if as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) > (3600 * 24 * 7 * 2) else 'yellow' }}\"><ha-icon icon='mdi:shield-lock'></font></td><td>{{'<font color=\"yellow\">' if (as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2)) }}SSL Expiry Date</font></td><td align=\"right\">{{ '<font color=\"yellow\">' if (as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2)) }}{{ states('sensor.ssl_expiry_date') }}</font></td></tr> <tr><td><font color=\"{{'#44739e' if states('binary_sensor.earth') == 'on' else 'yellow' }}\"><ha-icon icon='mdi:{{ \"server-network\" if states('binary_sensor.earth') == 'on' else \"server-network-off\" }}'></font></td><td> {{ '<font color=\"yellow\">' if states('binary_sensor.earth') != 'on' }}Earth Host Status</font></td><td align=\"right\"> {{ '<font color=\"yellow\">' if states('binary_sensor.earth') != 'on'  }}{{ \"Up\" if states('binary_sensor.earth') == 'on' else \"Down\" }}</font></td></tr><tr><td><font color=\"{{ '#44739e' if states('binary_sensor.earth_nginx_php_working') == 'on' else 'yellow' }}\"><ha-icon icon='mdi:{{ \"web-check\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"web-off\"}}'></font></td><td>{{ '<font color=\"yellow\">' if states('binary_sensor.earth_nginx_php_working') != 'on' }}Earth Nginx/PHP Status</font></td> <td align=\"right\"> {{ '<font color=\"yellow>' if states('binary_sensor.earth_nginx_php_working') != 'on' }}{{ \"Up\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"Down\" }}</font></td></tr> <tr><td><font color=\"{{'#44739e' if state_attr('sensor.dynamic_dns', 'status') == 'Up to date' else 'yellow' }}\"> <ha-icon icon='mdi:ip-network'></font></td><td><font style=\"color:{{ 'var(--primary-text-color)' if state_attr('sensor.dynamic_dns', 'status') == 'Up to date' else 'yellow' }}\">Dynamic DNS IP</font></td><td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if state_attr('sensor.dynamic_dns', 'status') == 'Up to date' else 'yellow' }}\">{{ states('sensor.dynamic_dns') }}</font></td></tr> <tr><td><font color=\"{{'#44739e' if state_attr('sensor.dynamic_dns', 'status') == 'Up to date' else 'yellow'}}\"> <ha-icon icon='mdi:ip-network'></font></td><td>{{ \"<font color='yellow'>\" if state_attr('sensor.dynamic_dns', 'status') != 'Up to date' }}Dynamic DNS Updated At</font></td><td align=\"right\">{{'<font color=\"yellow\">' if state_attr('sensor.dynamic_dns', 'status') != 'Up to date' }}{{ as_timestamp(state_attr('sensor.dynamic_dns', 'updated_at'), 0) | timestamp_custom(\"%F %_I:%M:%S %p\", True, \"Unavailable\") }}</font></td></tr> </table>"
                                 }
                             ]
                         },
@@ -2103,7 +2031,7 @@
                             "cards": [
                                 {
                                     "type": "markdown",
-                                    "content": "## Home Assistant\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} {% for addon in state_attr(\"sensor.ha_add_ons\", \"addons\") | rejectattr('installed', 'eq', False) | sort(attribute='name') -%} \n  <tr> <td><font color=\"{{'#44739e' if\n  addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\"><ha-icon\n  icon='mdi:briefcase-{{ 'check' if addon['version'] ==\n  addon['version_latest'] else 'download'}}' /></font>\n  </td> <td><font style=\"color: {{'var(--primary-text-color)' if addon['version']\n  == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant ', '') }}*</td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version'] }}</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version_latest'] }}</font></td> </tr>\n{% endfor -%} </table>",
+                                    "content": "## Home Assistant\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} {% for addon in state_attr(\"sensor.ha_add_ons\", \"data\")[\"addons\"] | rejectattr('installed', 'eq', False) | sort(attribute='name') -%} \n  <tr> <td><font color=\"{{'#44739e' if\n  addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\"><ha-icon\n  icon='mdi:briefcase-{{ 'check' if addon['version'] ==\n  addon['version_latest'] else 'download'}}' /></font>\n  </td> <td><font style=\"color: {{'var(--primary-text-color)' if addon['version']\n  == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant ', '') }}*</td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version'] }}</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version_latest'] }}</font></td> </tr>\n{% endfor -%} </table>",
                                     "card_mod": {
                                         "styles": "table {\n    width: 100%;\n    border: 1px;\n}\n"
                                     }
@@ -2172,6 +2100,7 @@
                         {
                             "type": "grid",
                             "columns": 1,
+                            "square": false,
                             "cards": [
                                 {
                                     "type": "custom:auto-entities",
@@ -2200,9 +2129,39 @@
                                     "sort": {
                                         "method": "entity_id"
                                     }
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 2,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.speedtest_download",
+                                            "min": 0,
+                                            "max": 1000,
+                                            "severity": {
+                                                "green": 600,
+                                                "yellow": 300,
+                                                "red": 0
+                                            },
+                                            "needle": true
+                                        },
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.speedtest_upload",
+                                            "min": 0,
+                                            "max": 1000,
+                                            "severity": {
+                                                "green": 600,
+                                                "yellow": 300,
+                                                "red": 0
+                                            },
+                                            "needle": true
+                                        }
+                                    ]
                                 }
-                            ],
-                            "square": false
+                            ]
                         }
                     ]
                 },
@@ -2338,7 +2297,6 @@
                             "cards": [
                                 {
                                     "type": "entities",
-                                    "title": "Utilities",
                                     "entities": [
                                         {
                                             "type": "section",
@@ -2631,34 +2589,6 @@
                             "square": false,
                             "cards": [
                                 {
-                                    "type": "entities",
-                                    "entities": [
-                                        {
-                                            "entity": "sensor.unavailable_entities"
-                                        },
-                                        {
-                                            "type": "attribute",
-                                            "entity": "sensor.unavailable_entities",
-                                            "attribute": "entity_list",
-                                            "name": " ",
-                                            "icon": " "
-                                        },
-                                        {
-                                            "type": "divider"
-                                        },
-                                        {
-                                            "entity": "sensor.ood_zigbee_entities"
-                                        },
-                                        {
-                                            "type": "attribute",
-                                            "entity": "sensor.ood_zigbee_entities",
-                                            "attribute": "entity_list",
-                                            "name": " ",
-                                            "icon": " "
-                                        }
-                                    ]
-                                },
-                                {
                                     "type": "custom:auto-entities",
                                     "card": {
                                         "type": "entities",
@@ -2741,20 +2671,6 @@
                                                     },
                                                     "sort": "name"
                                                 }
-                                            },
-                                            {
-                                                "entity_id": "sensor.dynamic_dns",
-                                                "options": {
-                                                    "tap_action": {
-                                                        "action": "call-service",
-                                                        "service": "homeassistant.update_entity",
-                                                        "service_data": {},
-                                                        "target": {
-                                                            "entity_id": "this.entity_id"
-                                                        }
-                                                    },
-                                                    "sort": "name"
-                                                }
                                             }
                                         ],
                                         "exclude": []
@@ -2762,6 +2678,34 @@
                                     "sort": {
                                         "method": "none"
                                     }
+                                },
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.unavailable_entities"
+                                        },
+                                        {
+                                            "type": "attribute",
+                                            "entity": "sensor.unavailable_entities",
+                                            "attribute": "entity_list",
+                                            "name": " ",
+                                            "icon": " "
+                                        },
+                                        {
+                                            "type": "divider"
+                                        },
+                                        {
+                                            "entity": "sensor.ood_zigbee_entities"
+                                        },
+                                        {
+                                            "type": "attribute",
+                                            "entity": "sensor.ood_zigbee_entities",
+                                            "attribute": "entity_list",
+                                            "name": " ",
+                                            "icon": " "
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -3060,13 +3004,13 @@
                     "cards": [
                         {
                             "type": "markdown",
-                            "content": "Count: {{ states('sensor.zigbee_entity_count') }} ; Sensor Updated: {{\nstates('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(default=0) }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute=iif(states('input_select.zigbee_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zigbee_entities_sort')=='Friendly Name',false,true)) -%}\n{% set ns.count = ns.count + 1 -%}\n{% if ns.count <= states('sensor.zigbee_entity_count') | int(default=0) / 2 %}{% endif %}* {% if entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(default=0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(default=0) * 0.50) %}<font color=\"yellow\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>\n{% endfor -%}\n",
-                            "title": "All Zigbee Devices"
+                            "content": "Count: {{ states('sensor.zigbee_entity_count') }} ; Sensor Updated: {{\nstates('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute=iif(states('input_select.zigbee_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zigbee_entities_sort')=='Friendly Name',false,true)) -%}\n{% set ns.count = ns.count + 1 -%}\n{% if ns.count <= states('sensor.zigbee_entity_count') | int(0) / 2 %}* {% if entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) %}<font color=\"yellow\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>{% endif %}\n{% endfor -%}\n",
+                            "title": "Zigbee Devices"
                         },
                         {
                             "type": "markdown",
-                            "content": "Count: {{ states('sensor.wyze_entity_count') }} ; Sensor Updated: {{\nstates('sensor.wyze_entities') }}; Threshold: {{ states(\"input_number.ood_wyze_seconds\")|int(default=0) }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.wyze_entities', 'entity_list')  | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true))-%}\n{% set ns.count = ns.count + 1 -%}\n* {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(default=0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(default=0) * 0.50) %}<font color=\"yellow\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>\n{% endfor -%}",
-                            "title": "All Wyze Devices"
+                            "content": "Count: {{ states('sensor.zigbee_entity_count') }} ; Sensor Updated: {{\nstates('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute=iif(states('input_select.zigbee_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zigbee_entities_sort')=='Friendly Name',false,true)) -%}\n{% set ns.count = ns.count + 1 -%}\n{% if ns.count > states('sensor.zigbee_entity_count') | int(0) / 2 %}* {% if entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) %}<font color=\"yellow\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>{% endif %}\n{% endfor -%}\n",
+                            "title": "Zigbee Devices"
                         },
                         {
                             "type": "grid",
@@ -3086,13 +3030,18 @@
                                 },
                                 {
                                     "type": "markdown",
-                                    "content": "Count: {{ states('sensor.ood_zigbee_entities') }}; Threshold: {{ states('input_number.ood_zigbee_seconds') | int(default=0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_zigbee_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_zigbee_entities', 'entity_list') }}\n",
+                                    "content": "Count: {{ states('sensor.ood_zigbee_entities') }}; Threshold: {{ states('input_number.ood_zigbee_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_zigbee_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_zigbee_entities', 'entity_list') }}\n",
                                     "title": "Out of Date Zigbee Devices"
                                 },
                                 {
                                     "type": "markdown",
-                                    "content": "Count: {{ states('sensor.ood_wyze_entities') }}; Threshold: {{ states('input_number.ood_wyze_seconds') | int(default=0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_wyze_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_wyze_entities', 'entity_list') }}\n",
+                                    "content": "Count: {{ states('sensor.ood_wyze_entities') }}; Threshold: {{ states('input_number.ood_wyze_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_wyze_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_wyze_entities', 'entity_list') }}\n",
                                     "title": "Out of Date Wyze Devices"
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "Count: {{ states('sensor.wyze_entity_count') }} ; Sensor Updated: {{\nstates('sensor.wyze_entities') }}; Threshold: {{ states(\"input_number.ood_wyze_seconds\")|int(0) }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.wyze_entities', 'entity_list')  | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true))-%}\n{% set ns.count = ns.count + 1 -%}\n* {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * 0.50) %}<font color=\"yellow\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>\n{% endfor -%}",
+                                    "title": "All Wyze Devices"
                                 }
                             ]
                         }
@@ -3104,13 +3053,6 @@
                     "icon": "mdi:test-tube",
                     "badges": [],
                     "cards": [
-                        {
-                            "type": "button",
-                            "entity": "switch.mike_desk_lamp",
-                            "hold_action": {
-                                "action": "none"
-                            }
-                        },
                         {
                             "type": "custom:auto-entities",
                             "card": {
@@ -3124,6 +3066,20 @@
                                         "options": {
                                             "secondary_info": "battery_level"
                                         }
+                                    }
+                                ],
+                                "exclude": []
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "sensor.ha_add_ons"
                                     }
                                 ],
                                 "exclude": []

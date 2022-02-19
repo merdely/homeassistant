@@ -21,7 +21,7 @@ announcement_nightly_security:
           entity_id: group.doors_windows
           state: 'on'
         - condition: state
-          entity_id: binary_sensor.wyzesense_77c741e9
+          entity_id: binary_sensor.shed_door_contact
           state: 'on'
         - condition: not
           conditions:
@@ -31,10 +31,10 @@ announcement_nightly_security:
             entity_id: cover.garage_door
             type: is_closed
         - condition: state
-          entity_id: binary_sensor.wyzesense_77ca82dc
+          entity_id: binary_sensor.shed_gate_contact
           state: 'on'
         - condition: state
-          entity_id: binary_sensor.wyzesense_77ca82c5
+          entity_id: binary_sensor.chimney_gate_contact
           state: 'on'
       sequence:
       - service: script.function_speakers_prep
@@ -49,12 +49,12 @@ announcement_nightly_security:
             \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',\
             \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',\
             \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',\
-            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77c74305',\
+            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',\
             \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',\
             \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',\
-            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77c741e9',\
-            \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77ca82c5',\
-            \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77ca82dc',\
+            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',\
+            \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_gate_contact',\
+            \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',\
             \ 'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
             \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: notify.signal_security
@@ -65,10 +65,10 @@ announcement_nightly_security:
             \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',\
             \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',\
             \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',\
-            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77c74305',\
+            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',\
             \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',\
             \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',\
-            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.wyzesense_77c741e9',\
+            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',\
             \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
             \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: script.function_speakers_restore
@@ -1076,15 +1076,15 @@ home_thermostat_down:
     data:
       message: Lowering thermostat from {{ state_attr('climate.thermostat', 'target_temp_high')
         }}/{{ state_attr('climate.thermostat', 'target_temp_low') }} to {{ state_attr('climate.thermostat',
-        'target_temp_high') | float(default=0) | round - 1.0 }}/{{ state_attr('climate.thermostat',
-        'target_temp_low') | float(default=0) | round - 1.0 }}
+        'target_temp_high') | float(0) | round - 1.0 }}/{{ state_attr('climate.thermostat',
+        'target_temp_low') | float(0) | round - 1.0 }}
       level: warning
   - service: climate.set_temperature
     data:
       target_temp_high: '{{ state_attr(''climate.thermostat'', ''target_temp_high'')
-        | float(default=0) | round - 1.0 }}'
+        | float(0) | round - 1.0 }}'
       target_temp_low: '{{ state_attr(''climate.thermostat'', ''target_temp_low'')
-        | float(default=0) | round - 1.0 }}'
+        | float(0) | round - 1.0 }}'
     target:
       entity_id: climate.thermostat
   mode: single
@@ -1253,15 +1253,15 @@ home_thermostat_up:
     data:
       message: Raising thermostat from {{ state_attr('climate.thermostat', 'target_temp_high')
         }}/{{ state_attr('climate.thermostat', 'target_temp_low') }} to {{ state_attr('climate.thermostat',
-        'target_temp_high') | float(default=0) | round + 1.0 }}/{{ state_attr('climate.thermostat',
-        'target_temp_low') | float(default=0) | round + 1.0 }}
+        'target_temp_high') | float(0) | round + 1.0 }}/{{ state_attr('climate.thermostat',
+        'target_temp_low') | float(0) | round + 1.0 }}
       level: warning
   - service: climate.set_temperature
     data:
       target_temp_high: '{{ state_attr(''climate.thermostat'', ''target_temp_high'')
-        | float(default=0) | round + 1.0 }}'
+        | float(0) | round + 1.0 }}'
       target_temp_low: '{{ state_attr(''climate.thermostat'', ''target_temp_low'')
-        | float(default=0) | round + 1.0 }}'
+        | float(0) | round + 1.0 }}'
     target:
       entity_id: climate.thermostat
   mode: single

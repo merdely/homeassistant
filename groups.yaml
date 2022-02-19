@@ -19,9 +19,9 @@ holly_mike:
 always_monitored_doors:
   name: Always Monitored Doors
   entities:
-    - binary_sensor.wyzesense_77c741e9  # Shed Door
-    - binary_sensor.wyzesense_77ca82c5  # Shed Gate
-    - binary_sensor.wyzesense_77ca82dc  # Chimney Gate
+    - binary_sensor.shed_door_contact
+    - binary_sensor.shed_gate_contact
+    - binary_sensor.chimney_gate_contact
 
 fake_security_devices:
   name: Fake Security Devices
@@ -30,14 +30,13 @@ fake_security_devices:
     - input_boolean.fake_gate_sensor
     - input_boolean.fake_window_sensor
 
-#    - binary_sensor.garage_entry_door_contact
 security_devices:
   name: All Security Devices
   entities:
-    - binary_sensor.wyzesense_77c741e9  # Shed Door
-    - binary_sensor.wyzesense_77ca82c5  # Shed Gate
-    - binary_sensor.wyzesense_77ca82dc  # Chimney Gate
-    - binary_sensor.wyzesense_77c74305  # Garage Entry Door
+    - binary_sensor.shed_door_contact
+    - binary_sensor.shed_gate_contact
+    - binary_sensor.chimney_gate_contact
+    - binary_sensor.garage_entry_door_contact
     - cover.garage_door
     - binary_sensor.front_door_contact
     - binary_sensor.back_door_contact
@@ -48,23 +47,22 @@ security_devices:
     - binary_sensor.den_window_contact
     - binary_sensor.powder_room_window_contact
 
-#    - binary_sensor.garage_entry_door_contact
 exterior_security_devices:
   name: Exterior Security Devices
   entities:
-    - binary_sensor.wyzesense_77c741e9  # Shed Door
-    - binary_sensor.wyzesense_77ca82c5  # Shed Gate
-    - binary_sensor.wyzesense_77ca82dc  # Chimney Gate
-    - binary_sensor.wyzesense_77c74305  # Garage Entry Door
+    - binary_sensor.shed_door_contact
+    - binary_sensor.shed_gate_contact
+    - binary_sensor.chimney_gate_contact
+    - binary_sensor.garage_entry_door_contact
     - cover.garage_door
 
 refrigerator_doors:
   name: Refrigerator Doors
   entities:
-    - binary_sensor.wyzesense_77ca6210  # Dining Room Freezer
-    - binary_sensor.wyzesense_77ca7f18  # Dining Room Refrigerator
-    - binary_sensor.freezer_door_contact
-    - binary_sensor.refrigerator_door_contact
+    - binary_sensor.dining_room_freezer_door_contact
+    - binary_sensor.dining_room_refrigerator_door_contact
+    - binary_sensor.kitchen_freezer_door_contact
+    - binary_sensor.kitchen_refrigerator_door_contact
 sliders:
   name: Sliders
   entities:
@@ -81,14 +79,13 @@ int_doors_windows:
     - binary_sensor.den_window_contact
     - binary_sensor.powder_room_window_contact
 
-#    - binary_sensor.garage_entry_door_contact
 ext_doors_gates:
   name: Doors/Gates
   entities:
-    - binary_sensor.wyzesense_77c741e9  # Shed Door
-    - binary_sensor.wyzesense_77ca82c5  # Shed Gate
-    - binary_sensor.wyzesense_77ca82dc  # Chimney Gate
-    - binary_sensor.wyzesense_77c74305  # Garage Entry Door
+    - binary_sensor.shed_door_contact
+    - binary_sensor.shed_gate_contact
+    - binary_sensor.chimney_gate_contact
+    - binary_sensor.garage_entry_door_contact
 
 doors_windows:
   name: Doors and Windows

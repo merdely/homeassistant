@@ -145,14 +145,14 @@
       friendly_name: "Office TV"
       icon_template: mdi:television
       value_template: >-
-        {% if states('sensor.office_tv_plug_power') | float(default=0) < 5 %}
+        {% if states('sensor.office_tv_plug_power') | float(0) < 5 %}
           off
         {% else %}
           on
         {% endif %}
       turn_on:
         - condition: template
-          value_template: '{{ states("sensor.office_tv_plug_power") | float(default=0) < 5 }}'
+          value_template: '{{ states("sensor.office_tv_plug_power") | float(0) < 5 }}'
         - service: homeassistant.turn_on
           entity_id: switch.office_tv_plug
         - delay: '2'
@@ -162,7 +162,7 @@
             payload: 'irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33C13E","DataLSB":"0x33CC837C","Repeat":0}'
       turn_off:
         - condition: template
-          value_template: '{{ states("sensor.office_tv_plug_power") | float(default=0) >= 5 }}'
+          value_template: '{{ states("sensor.office_tv_plug_power") | float(0) >= 5 }}'
         - service: media_player.select_source
           entity_id: media_player.office_roku
           data:

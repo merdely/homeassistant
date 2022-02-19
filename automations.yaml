@@ -41,7 +41,7 @@
     offset: -00:15:00
   condition:
   - condition: template
-    value_template: '{{ as_timestamp(states("sensor.date_time_iso")) | timestamp_custom("%m-%d")  !=
+    value_template: '{{ as_timestamp(states("sensor.date_time_iso"), 0) | timestamp_custom("%m-%d", True, "Unavailable")  !=
       "10-31" }}'
   action:
   - choose:
@@ -414,14 +414,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.wyzesense_77ca82dc, binary_sensor.wyzesense_77ca82c5,
-      binary_sensor.wyzesense_77c741e9
+    entity_id: binary_sensor.shed_door_contact, binary_sensor.shed_gate_contact,
+      binary_sensor.chimney_gate_contact
     for: 00:00:01
     from: 'off'
     to: 'on'
   - platform: state
-    entity_id: binary_sensor.wyzesense_77ca82dc, binary_sensor.wyzesense_77ca82c5,
-      binary_sensor.wyzesense_77c741e9
+    entity_id: binary_sensor.shed_door_contact, binary_sensor.shed_gate_contact,
+      binary_sensor.chimney_gate_contact
     for: 00:00:01
     from: 'on'
     to: 'off'
@@ -2206,7 +2206,7 @@
     - conditions:
       - condition: template
         value_template: '{{ now().weekday() == (states(''sensor.recycle_weekday'')
-          | int(default=0) + 1) % 7 }}'
+          | int(0) + 1) % 7 }}'
       sequence:
       - service: input_boolean.turn_off
         data: {}
@@ -2216,8 +2216,8 @@
     - conditions:
       - condition: template
         value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1_number'')
-          | int(default=0) + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
-          | int(default=0) + 1) % 7 }}'
+          | int(0) + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
+          | int(0) + 1) % 7 }}'
       sequence:
       - service: input_boolean.turn_off
         data: {}
@@ -2321,7 +2321,7 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(default=0)
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0)
           == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0E01F" }}'
@@ -2342,7 +2342,7 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(default=0)
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0)
           == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0D02F" }}'
@@ -2363,7 +2363,7 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(default=0)
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0)
           == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0F00F" }}'
@@ -2516,7 +2516,7 @@
     value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec_like"
       }}'
   - condition: template
-    value_template: '{{ trigger.payload_json.IrReceived.Bits | int(default=0) == 32
+    value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32
       }}'
   - condition: template
     value_template: '{{ trigger.payload_json.IrReceived.Data == "0xA10C2C03" }}'
@@ -2597,8 +2597,8 @@
   trigger:
   - platform: template
     value_template: '{{ (state_attr(''climate.thermostat'', ''current_temperature'')
-      | float(default=0)) >= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
-      + ''_cool_'' + states.group.holly_mike.state) | float(default=0)) }}'
+      | float(0)) >= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+      + ''_cool_'' + states.group.holly_mike.state) | float(0)) }}'
   condition:
   - condition: not
     conditions:
@@ -2630,8 +2630,8 @@
   trigger:
   - platform: template
     value_template: '{{ (state_attr(''climate.thermostat'', ''current_temperature'')
-      | float(default=0)) <= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
-      + ''_heat_'' + states.group.holly_mike.state) | float(default=0)) }}'
+      | float(0)) <= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
+      + ''_heat_'' + states.group.holly_mike.state) | float(0)) }}'
   condition:
   - condition: not
     conditions:
@@ -3072,8 +3072,8 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(default=0)
-      > states(''input_number.master_bath_fan_on'') | float(default=100) }}'
+    value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(0)
+      > states(''input_number.master_bath_fan_on'') | float(100) }}'
   condition:
   - condition: state
     entity_id: light.master_bath_light
@@ -3102,8 +3102,8 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(default=0)
-      < states(''input_number.master_bath_fan_off'') | float(default=100) }}'
+    value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(0)
+      < states(''input_number.master_bath_fan_off'') | float(100) }}'
   condition:
   - condition: state
     entity_id: switch.master_bath_fan
@@ -3538,7 +3538,7 @@
   - choose:
     - conditions:
       - condition: template
-        value_template: '{{ trigger.to_state.state | int(default=-1) > 0 or trigger.to_state.state
+        value_template: '{{ trigger.to_state.state | int(-1) > 0 or trigger.to_state.state
           | string == "off" }}'
       sequence:
       - service: notify.gmail_to_mike
@@ -3562,7 +3562,7 @@
             }}'
     - conditions:
       - condition: template
-        value_template: '{{ trigger.to_state.state | int(default=-1) == 0 or trigger.to_state.state
+        value_template: '{{ trigger.to_state.state | int(-1) == 0 or trigger.to_state.state
           | string == "on" }}'
       sequence:
       - condition: template
@@ -3649,8 +3649,8 @@
     for:
       minutes: '{{ states(''input_number.office_heater_auto_off'') | int(30) }}'
   - platform: template
-    value_template: "{{ states(\"sensor.office_multisensor_temperature\") | float(default=0)\
-      \ >=\n  states(\"input_number.office_heater_auto_off_temperature\") | float(default=71.0)\
+    value_template: "{{ states(\"sensor.office_multisensor_temperature\") | float(0)\
+      \ >=\n  states(\"input_number.office_heater_auto_off_temperature\") | float(71.0)\
       \ }}\n"
     for:
       minutes: 1
@@ -3666,33 +3666,33 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.wyzesense_77ca6210
-    to: 'on'
+    entity_id: binary_sensor.dining_room_freezer_door_contact
     for:
       hours: 0
       minutes: 5
       seconds: 0
+    from: 'off'
   - platform: state
-    entity_id: binary_sensor.wyzesense_77ca7f18
-    to: 'on'
+    entity_id: binary_sensor.dining_room_refrigerator_door_contact
     for:
       hours: 0
       minutes: 5
       seconds: 0
+    from: 'off'
   - platform: state
-    entity_id: binary_sensor.freezer_door_contact
-    to: 'on'
+    entity_id: binary_sensor.kitchen_freezer_door_contact
     for:
       hours: 0
       minutes: 5
       seconds: 0
+    from: 'off'
   - platform: state
-    entity_id: binary_sensor.refrigerator_door_contact
-    to: 'on'
+    entity_id: binary_sensor.kitchen_refrigerator_door_contact
     for:
       hours: 0
       minutes: 5
       seconds: 0
+    from: 'off'
   condition: []
   action:
   - service: notify.signal_security
