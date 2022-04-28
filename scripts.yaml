@@ -1417,3 +1417,70 @@ fkbmbr_reload:
         'currentPageUrl') }}
   mode: single
   icon: mdi:tablet-dashboard
+flash_back_porch_lights:
+  sequence:
+  - repeat:
+      count: '5'
+      sequence:
+      - service: homeassistant.turn_on
+        data: {}
+        target:
+          entity_id: light.back_porch_light
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 1
+          milliseconds: 0
+      - service: homeassistant.turn_off
+        data: {}
+        target:
+          entity_id: light.back_porch_light
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 1
+          milliseconds: 0
+  mode: single
+  alias: Flash Back Porch Lights
+fix_3way_light:
+  alias: Fix 3-way Light
+  sequence:
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: and
+          conditions:
+          - condition: template
+            value_template: '{{ states(light_entity+"_load_sensor") == "on" }}'
+          - condition: template
+            value_template: '{{ states(light_entity+"_2") == "on" }}'
+        - condition: and
+          conditions:
+          - condition: template
+            value_template: '{{ states(light_entity+"_load_sensor") == "on" }}'
+          - condition: template
+            value_template: '{{ states(light_entity+"_2") == "off" }}'
+      sequence:
+      - service: python_script.set_state
+        data:
+          entity_id: '{{ light_entity }}'
+          state: 'on'
+    default:
+    - service: python_script.set_state
+      data:
+        entity_id: '{{ light_entity }}'
+        state: 'off'
+  - service: homeassistant.update_entity
+    data: {}
+    target:
+      entity_id: '{{ light_entity }}'
+  mode: single
+  icon: mdi:ceiling-light-multiple
+  fields:
+    light_entity:
+      description: The 3-way light entity to fix
+      example: '"light.god_damn_light", "light.hallway_light", or "light.kitchen_overhead_light"'
+      selector:
+        entity:
+          domain: light

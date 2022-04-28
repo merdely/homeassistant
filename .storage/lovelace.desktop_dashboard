@@ -716,7 +716,7 @@
                                                     },
                                                     "tap_action": {
                                                         "action": "navigate",
-                                                        "navigation_path": "/desktop-dashboard/utilities"
+                                                        "navigation_path": "/desktop-dashboard/zigbee"
                                                     },
                                                     "double_tap_action": {
                                                         "action": "more-info"
@@ -1938,18 +1938,10 @@
                             "square": false,
                             "cards": [
                                 {
+                                    "square": false,
+                                    "columns": 4,
                                     "type": "grid",
-                                    "columns": 3,
                                     "cards": [
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "navigate",
-                                                "navigation_path": "/config/integrations"
-                                            },
-                                            "name": "Integrations",
-                                            "icon": "mdi:cogs"
-                                        },
                                         {
                                             "type": "button",
                                             "tap_action": {
@@ -1964,13 +1956,6 @@
                                             "hold_action": {
                                                 "action": "none"
                                             }
-                                        },
-                                        {
-                                            "type": "button",
-                                            "tap_action": {
-                                                "action": "toggle"
-                                            },
-                                            "entity": "script.fix_in_bed_sensors"
                                         },
                                         {
                                             "type": "button",
@@ -2008,15 +1993,14 @@
                                                 "action": "none"
                                             }
                                         }
-                                    ],
-                                    "square": false
+                                    ]
                                 },
                                 {
                                     "type": "markdown",
                                     "card_mod": {
                                         "styles": "table {\n    width: 100%;\n    border: 1px;\n}\n"
                                     },
-                                    "content": "## Software\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th> </tr>\n{% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\.(?!(hacs|home_assistant|operating_system|supervisor)_).*_version_latest$') | map(attribute='entity_id') | list -%} <tr> <td><font color=\"{{'#44739e' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software|replace('_latest','')) }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software) }}</font></td> </tr> {% endfor -%} </table>"
+                                    "content": "## Software\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th> </tr>\n\n{% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list -%} <tr> <td><font color=\"{{'#44739e' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software|replace('_latest','')) }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software) }}</font></td> </tr> {% endfor -%}\n<tr><td><font color=\"{{'#44739e' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}' /></font> </td> <td><font style=\"color:{{'var(--primary-text-color)' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'yellow'}}\">OPNsense</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'yellow'}}\">{{ states('sensor.opnsense_versions') }}</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'yellow'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</font></td></tr> {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr><td><font color=\"{{'#44739e' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}' /></font> </td> <td><font style=\"color:{{'var(--primary-text-color)' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'yellow'}}\">OPNsense Plugin {{ plugin }}</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'yellow'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'yellow'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</font></td></tr> {% endfor -%} {% for ap in state_attr('sensor.unifi_ap_versions', 'data') | sort(attribute=\"name\") -%} <tr><td><font color=\"{{'#44739e' if ap['version'] == ap['version_available'] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}' /></font> </td> <td><font style=\"color:{{'var(--primary-text-color)' if ap['version'] == ap['version_available'] else 'yellow'}}\">Unifi {{ ap['name'] | replace('wap-','') | title }} AP</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if ap['version'] == ap['version_available'] else 'yellow'}}\">{{ ap['version'] }}</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if ap['version'] == ap['version_available'] else 'yellow'}}\">{{ ap['version_available'] }}</font></td></tr> {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td><font color=\"orange\"><ha-icon icon='mdi:alert-circle'></ha-icon></font></td><td colspan=\"3\"><font color=\"orange\">Error: Could not load Unifi Data</font></td></tr>{% endif %}</table>"
                                 },
                                 {
                                     "type": "markdown",
@@ -2031,7 +2015,7 @@
                             "cards": [
                                 {
                                     "type": "markdown",
-                                    "content": "## Home Assistant\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} {% for addon in state_attr(\"sensor.ha_add_ons\", \"data\")[\"addons\"] | rejectattr('installed', 'eq', False) | sort(attribute='name') -%} \n  <tr> <td><font color=\"{{'#44739e' if\n  addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\"><ha-icon\n  icon='mdi:briefcase-{{ 'check' if addon['version'] ==\n  addon['version_latest'] else 'download'}}' /></font>\n  </td> <td><font style=\"color: {{'var(--primary-text-color)' if addon['version']\n  == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant ', '') }}*</td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version'] }}</font></td> <td align=\"right\"><font\n  style=\"color: {{'var(--primary-text-color)' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version_latest'] }}</font></td> </tr>\n{% endfor -%} </table>",
+                                    "content": "## Home Assistant\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') | replace('Operating System', 'OS') }}</td><td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td> </tr> {% endfor -%} <tr><td><font color=\"{{'#44739e' if states('sensor.hacs') == '0' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.hacs') == '0' else 'download'}}' /></font> </td><td><font style=\"color: {{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">HACS</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">-</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">{{ states('sensor.hacs') }}</font></td></tr>  {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') }} *</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td> </tr> {% endfor -%} </table>",
                                     "card_mod": {
                                         "styles": "table {\n    width: 100%;\n    border: 1px;\n}\n"
                                     }
@@ -2166,125 +2150,6 @@
                     ]
                 },
                 {
-                    "title": "3D Printing",
-                    "path": "3d-printing",
-                    "icon": "mdi:printer-3d",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "grid",
-                            "columns": 1,
-                            "cards": [
-                                {
-                                    "type": "entities",
-                                    "entities": [
-                                        {
-                                            "entity": "switch.ender3_plug"
-                                        },
-                                        {
-                                            "entity": "switch.guest_room_usb_hub"
-                                        },
-                                        {
-                                            "entity": "switch.octoprint_light_plug"
-                                        },
-                                        {
-                                            "entity": "switch.octoprint_camera"
-                                        },
-                                        {
-                                            "entity": "binary_sensor.octoprint_printing"
-                                        },
-                                        {
-                                            "entity": "binary_sensor.octoprint_printing_error"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_current_state"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_actual_bed_temp"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_job_percentage"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_time_remaining"
-                                        },
-                                        {
-                                            "entity": "sensor.octoprint_time_elapsed"
-                                        }
-                                    ]
-                                }
-                            ],
-                            "square": false
-                        },
-                        {
-                            "type": "grid",
-                            "columns": 1,
-                            "cards": [
-                                {
-                                    "type": "picture-entity",
-                                    "entity": "camera.octoprint",
-                                    "camera_view": "live"
-                                }
-                            ],
-                            "square": false
-                        }
-                    ]
-                },
-                {
-                    "title": "People",
-                    "path": "people",
-                    "icon": "mdi:human-male-female",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Holly's Phone"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "entity_id": "person.holly_erdely"
-                                    },
-                                    {
-                                        "entity_id": "sensor.holly_previous_location"
-                                    },
-                                    {
-                                        "entity_id": "/pixel_(3|5)/"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        },
-                        {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "Mike's Phone"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "entity_id": "person.michael_erdely"
-                                    },
-                                    {
-                                        "entity_id": "sensor.mike_previous_location"
-                                    },
-                                    {
-                                        "entity_id": "*pixel_6_pro*"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
-                        }
-                    ]
-                },
-                {
                     "title": "Utilities",
                     "path": "utilities",
                     "icon": "mdi:tools",
@@ -2361,6 +2226,10 @@
                                                 {
                                                     "entity": "input_boolean.earth_nginx_php_working_triggered",
                                                     "name": "Earth PHP"
+                                                },
+                                                {
+                                                    "entity": "input_boolean.nginx_proxy_manager_working_triggered",
+                                                    "name": "NPM"
                                                 },
                                                 {
                                                     "entity": "input_boolean.test_monitor_helper_triggered",
@@ -2496,14 +2365,95 @@
                                         },
                                         {
                                             "type": "section",
-                                            "label": "Other Scripts"
+                                            "label": "Fix Scripts"
                                         },
                                         {
                                             "type": "custom:paper-buttons-row",
                                             "position": "right",
                                             "buttons": [
                                                 {
-                                                    "entity": "script.fix_in_bed_sensors"
+                                                    "entity": "script.fix_in_bed_sensors",
+                                                    "name": "Bed Sensors"
+                                                },
+                                                {
+                                                    "entity": "light.god_damn_light",
+                                                    "name": "God Damn",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.fix_3way_light",
+                                                        "service_data": {
+                                                            "light_entity": "light.god_damn_light"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "light.hallway_light",
+                                                    "name": "Hallway",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.fix_3way_light",
+                                                        "service_data": {
+                                                            "light_entity": "light.hallway_light"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "light.kitchen_overhead_light",
+                                                    "name": "Kitchen",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.fix_3way_light",
+                                                        "service_data": {
+                                                            "light_entity": "light.kitchen_overhead_light"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:paper-buttons-row",
+                                            "position": "right",
+                                            "buttons": [
+                                                {
+                                                    "entity": "sensor.opnsense_package_versions",
+                                                    "name": "OpnSense",
+                                                    "icon": "mdi:briefcase-download",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "homeassistant.update_entity",
+                                                        "service_data": {
+                                                            "entity_id": [
+                                                                "sensor.opnsense_package_versions",
+                                                                "sensor.opnsense_versions"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "cover.garage_door",
+                                                    "name": "Garage Closed",
+                                                    "icon": "mdi:garage",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "python_script.set_state",
+                                                        "service_data": {
+                                                            "entity_id": "cover.garage_door",
+                                                            "state": "closed"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "entity": "cover.garage_door",
+                                                    "name": "Garage Open",
+                                                    "icon": "mdi:garage-open",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "python_script.set_state",
+                                                        "service_data": {
+                                                            "entity_id": "cover.garage_door",
+                                                            "state": "open"
+                                                        }
+                                                    }
                                                 }
                                             ]
                                         }
@@ -2639,25 +2589,6 @@
                                                 }
                                             },
                                             {
-                                                "entity_id": "/_version$/",
-                                                "domain": "sensor",
-                                                "options": {
-                                                    "style": "* {\n  {% if states(\"this.entity_id\") != states(\"this.entity_id_latest\") %}\n  color: yellow;\n  {% endif %}\n}\n",
-                                                    "tap_action": {
-                                                        "action": "call-service",
-                                                        "service": "homeassistant.update_entity",
-                                                        "service_data": {},
-                                                        "target": {
-                                                            "entity_id": "this.entity_id"
-                                                        }
-                                                    },
-                                                    "sort": "name"
-                                                },
-                                                "not": {
-                                                    "entity_id": "/^sensor\\.(ha_.*|hacs_.*|pixel_.*|.*_firmware)_version$/"
-                                                }
-                                            },
-                                            {
                                                 "entity_id": "sensor.moco_recycle_day",
                                                 "options": {
                                                     "style": "",
@@ -2708,6 +2639,125 @@
                                     ]
                                 }
                             ]
+                        }
+                    ]
+                },
+                {
+                    "title": "3D Printing",
+                    "path": "3d-printing",
+                    "icon": "mdi:printer-3d",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "cards": [
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "switch.ender3_plug"
+                                        },
+                                        {
+                                            "entity": "switch.3dprinter_usb_hub"
+                                        },
+                                        {
+                                            "entity": "switch.octoprint_light_plug"
+                                        },
+                                        {
+                                            "entity": "switch.octoprint_camera"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.octoprint_printing"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.octoprint_printing_error"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_current_state"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_actual_bed_temp"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_job_percentage"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_time_remaining"
+                                        },
+                                        {
+                                            "entity": "sensor.octoprint_time_elapsed"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "square": false
+                        },
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "cards": [
+                                {
+                                    "type": "picture-entity",
+                                    "entity": "camera.octoprint",
+                                    "camera_view": "live"
+                                }
+                            ],
+                            "square": false
+                        }
+                    ]
+                },
+                {
+                    "title": "People",
+                    "path": "people",
+                    "icon": "mdi:human-male-female",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Holly's Phone"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "person.holly_erdely"
+                                    },
+                                    {
+                                        "entity_id": "sensor.holly_previous_location"
+                                    },
+                                    {
+                                        "entity_id": "/pixel_(3|5)/"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "name"
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "title": "Mike's Phone"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "person.michael_erdely"
+                                    },
+                                    {
+                                        "entity_id": "sensor.mike_previous_location"
+                                    },
+                                    {
+                                        "entity_id": "*pixel_6_pro*"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "name"
+                            }
                         }
                     ]
                 },
@@ -3054,36 +3104,48 @@
                     "badges": [],
                     "cards": [
                         {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "title": "WyzeSense Sensors"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "entity_id": "/wyzesense.*/",
-                                        "options": {
-                                            "secondary_info": "battery_level"
-                                        }
-                                    }
-                                ],
-                                "exclude": []
-                            }
+                            "type": "entity",
+                            "entity": "binary_sensor.withings_in_bed_holly_e"
                         },
                         {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "entity_id": "sensor.ha_add_ons"
+                            "type": "entity",
+                            "entity": "binary_sensor.withings_in_bed_michael_e"
+                        },
+                        {
+                            "type": "media-control",
+                            "entity": "media_player.emby_pixel_6_pro"
+                        },
+                        {
+                            "type": "grid",
+                            "columns": 1,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "custom:auto-entities",
+                                    "card": {
+                                        "type": "entities"
+                                    },
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "domain": "update",
+                                                "options": {
+                                                    "icon": "mdi:briefcase-download",
+                                                    "style": "* {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n  margin-top: 0px !important;\n  margin-bottom: 0px !important;\n  line-height: 10px;\n}\n"
+                                                }
+                                            },
+                                            {
+                                                "entity_id": "sensor.hacs"
+                                            }
+                                        ],
+                                        "exclude": []
+                                    },
+                                    "sort": {
+                                        "method": "entity_id",
+                                        "reverse": false
                                     }
-                                ],
-                                "exclude": []
-                            }
+                                }
+                            ]
                         }
                     ]
                 }

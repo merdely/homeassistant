@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+import json
+import os
+import re
+import requests
+import sys
+from datetime import datetime, timezone
+
+unifiurl = username = password = ''
+secrets = os.path.dirname(os.path.dirname(os.path.realpath(sys.argv[0]))) + '/secrets.yaml'
+with open(secrets, 'r') as file:
+    for line in file.readlines():
+        m = re.search(r"^unifi_(.*): '?([^']+)'?$", line)
+        if m and m.group(1) == 'unifiurl':
+            unifiurl = m.group(2)
+        if m and m.group(1) == 'username':
+            username = m.group(2)
+        if m and m.group(1) == 'password':
+            password = m.group(2)
+
+if unifiurl[-1:] == "/":
+    unifiurl = unifiurl[:-1]
+
+pwdata={ "username": username, "password": password }
+try:
+    resp = requests.post("{}/api/login".format(unifiurl), json=pwdata)
+except:
+    retval = {}
+    retval['last_updated'] = datetime.now(timezone.utc).astimezone().isoformat()
+    retval['data'] = []
+    retval['error'] = "Could not log into {}".format(unifiurl)
+    print(json.dumps(retval))
+    quit(0)
+
+cookies = resp.cookies
+
+resp = requests.get("{}/api/s/default/stat/device".format(unifiurl), cookies=cookies)
+json_obj = json.loads(resp.content.decode('utf-8'))
+if 'data' in json_obj.keys():
+    data = json_obj['data']
+else:
+    print("JSON error: 'data' object not found")
+    quit(1)
+
+# Dimensions Fields
+# name, essid, ifname, radio, radio_name, state, usage, t
+
+aps = []
+count=0
+
+for ap in data:
+    thisap = {
+        "name": ap['name'],
+        "model": ap['model'],
+        "model_in_lts": ap['model_in_lts'],
+        "model_in_eol": ap['model_in_eol'],
+        "version": ap['version'],
+        "version_available": ap['upgrade_to_firmware'] if 'upgrade_to_firmware' in ap.keys() else ap['version']
+        }
+    aps.append(thisap)
+    count += 1
+
+retval = {}
+retval['last_updated'] = datetime.now(timezone.utc).astimezone().isoformat()
+retval['data'] = aps
+retval['error'] = False
+print(json.dumps(retval))

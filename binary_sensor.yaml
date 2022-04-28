@@ -3,10 +3,17 @@
 
 - platform: command_line
   name: Earth Nginx/PHP Working
-  command: "curl -s https://earth.erdely.in/phptest.php | grep '^PHP is working!' || echo 'PHP is not working!'"
+  command: "curl -m 2 -s https://earth.erdely.in/phptest.php | grep '^PHP is working!' || echo 'PHP is not working!'"
   #device_class: connectivity
   payload_on: "PHP is working!"
   payload_off: "PHP is not working!"
+
+- platform: command_line
+  name: Nginx Proxy Manager Working
+  command: "curl -s -f -m 2 -w %{http_code} -o /dev/null https://npm.erdely.in | grep '^200$' || echo 1"
+  #device_class: connectivity
+  payload_on: "200"
+  payload_off: "1"
 
 - platform: ping
   name: Google

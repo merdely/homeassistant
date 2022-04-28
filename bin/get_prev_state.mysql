@@ -3,6 +3,7 @@
 import os
 import re
 import sys
+from packaging import version
 
 secrets = os.path.dirname(os.path.dirname(os.path.realpath(sys.argv[0]))) + '/secrets.yaml'
 with open(secrets, 'r') as file:
@@ -31,10 +32,16 @@ else:
 
 prev_location = ''
 try:
-   conn = _mysql.connect(host=sqlhostname,
-                         user=sqlusername,
-                         passwd=sqlpassword,
-                         db=sqldatabase)
+   if version.parse(_mysql.__version__) < version.parse('2.1.0'):
+       conn = _mysql.connect(host=sqlhostname,
+                             user=sqlusername,
+                             passwd=sqlpassword,
+                             db=sqldatabase)
+   else:
+       conn = _mysql.connect(host=sqlhostname,
+                             user=sqlusername,
+                             password=sqlpassword,
+                             database=sqldatabase)
    query = "SELECT state FROM states WHERE entity_id = '{}' AND states.last_updated = (SELECT MAX(states2.last_updated) FROM states AS states2 WHERE states2.entity_id = states.entity_id AND state != 'unknown' AND state != '{}');".format(entity_id, current_state)
    conn.query(query)
    result = conn.store_result()

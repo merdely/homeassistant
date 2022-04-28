@@ -82,10 +82,26 @@
           {% set ns.sensor = 'On' -%}
         {% endif -%}
       {% endfor -%}
-      {% for addon in state_attr("sensor.ha_add_ons", "data")["addons"] | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
-        {% if addon['version'] != addon['version_latest'] %}
+      {% for software in states | selectattr('domain', 'equalto', 'update') | map(attribute='entity_id') | list -%}
+        {% if states(software) == "on" -%}
           {% set ns.sensor = 'On' -%}
-        {% endif %}
+        {% endif -%}
+      {% endfor -%}
+      {% if states('sensor.hacs') | int(default=0) > 0 -%}
+        {% set ns.sensor = 'On' -%}
+      {% endif -%}
+      {% if states('sensor.opnsense_versions') != state_attr('sensor.opnsense_package_versions', 'plugins')["opnsense"] -%}
+        {% set ns.sensor = 'On' -%}
+      {% endif -%}
+      {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%}
+        {% if state_attr('sensor.opnsense_versions', 'plugins')[plugin] != state_attr('sensor.opnsense_package_versions', 'plugins')["os-"+plugin] -%}
+          {% set ns.sensor = 'On' -%}
+        {% endif -%}
+      {% endfor -%}
+      {% for ap in state_attr('sensor.unifi_ap_versions', 'data') -%}
+        {% if ap['version'] != ap['version_available'] -%}
+          {% set ns.sensor = 'On' -%}
+        {% endif -%}
       {% endfor -%}
       {{ ns.sensor }}
     attributes:
@@ -96,10 +112,26 @@
             {% set ns.updates = ns.updates + 1 -%}
           {% endif -%}
         {% endfor -%}
-        {% for addon in state_attr("sensor.ha_add_ons", "data")["addons"] | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
-          {% if addon['version'] != addon['version_latest'] %}
+        {% for software in states | selectattr('domain', 'equalto', 'update') | map(attribute='entity_id') | list -%}
+          {% if states(software) == "on" -%}
             {% set ns.updates = ns.updates + 1 -%}
-          {% endif %}
+          {% endif -%}
+        {% endfor -%}
+        {% if states('sensor.hacs') | int(default=0) > 0 -%}
+          {% set ns.updates = ns.updates + 1 -%}
+        {% endif %}
+        {% if states('sensor.opnsense_versions') != state_attr('sensor.opnsense_package_versions', 'plugins')["opnsense"] -%}
+          {% set ns.updates = ns.updates + 1 -%}
+        {% endif -%}
+        {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%}
+          {% if state_attr('sensor.opnsense_versions', 'plugins')[plugin] != state_attr('sensor.opnsense_package_versions', 'plugins')["os-"+plugin] -%}
+            {% set ns.updates = ns.updates + 1 -%}
+          {% endif -%}
+        {% endfor -%}
+        {% for ap in state_attr('sensor.unifi_ap_versions', 'data') -%}
+          {% if ap['version'] != ap['version_available'] -%}
+            {% set ns.updates = ns.updates + 1 -%}
+          {% endif -%}
         {% endfor -%}
         {{ ns.updates }}
       entity_list: >-
@@ -109,10 +141,26 @@
             {% set ns.list = ns.list + " " + software -%}
           {% endif -%}
         {% endfor -%}
-        {% for addon in state_attr("sensor.ha_add_ons", "data")["addons"] | rejectattr('installed', 'eq', False) | sort(attribute='name') %}
-          {% if addon['version'] != addon['version_latest'] %}
-            {% set ns.list = ns.list + " " + addon['name'] + " Add-On" -%}
-          {% endif %}
+        {% for software in states | selectattr('domain', 'equalto', 'update') | map(attribute='entity_id') | list -%}
+          {% if states(software) == "on" -%}
+            {% set ns.list = ns.list + " " + software -%}
+          {% endif -%}
+        {% endfor -%}
+        {% if states('sensor.hacs') | int(default=0) > 0 -%}
+          {% set ns.list = ns.list + " Hacs" -%}
+        {% endif %}
+        {% if states('sensor.opnsense_versions') != state_attr('sensor.opnsense_package_versions', 'plugins')["opnsense"] -%}
+          {% set ns.list = ns.list + " " + " OPNsense" -%}
+        {% endif -%}
+        {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%}
+          {% if state_attr('sensor.opnsense_versions', 'plugins')[plugin] != state_attr('sensor.opnsense_package_versions', 'plugins')["os-"+plugin] -%}
+            {% set ns.list = ns.list + " " + " OPNsense Plugin " + plugin -%}
+          {% endif -%}
+        {% endfor -%}
+        {% for ap in state_attr('sensor.unifi_ap_versions', 'data') -%}
+          {% if ap['version'] != ap['version_available'] -%}
+            {% set ns.list = ns.list + " " + ap['name'] -%}
+          {% endif -%}
         {% endfor -%}
         {{ ns.list | trim }}
       ha_count: true
@@ -146,9 +194,9 @@
     unique_id: unavailable_entities
     name: Unavailable Entities
     icon: mdi:cloud-question
-    state: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    state: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
     attributes:
-      entity_list: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
+      entity_list: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
 - trigger:
@@ -243,7 +291,7 @@
     attributes:
       entity_list: |
         {% set ns = namespace(entities = []) -%}
-        {% for entity in states | selectattr('entity_id', 'match', '^(binary_)?sensor\..*_(button_click|contact|occupancy|multisensor_temperature|plug_power|water_leak_sensor_water_leak)$') | selectattr('attributes.linkquality', 'defined') | map(attribute='entity_id') | list -%}
+        {% for entity in states | selectattr('entity_id', 'match', '^(binary_)?sensor\..*_(button_click|contact|occupancy|multisensor_temperature|plug_power|usb_router_last_seen|water_leak_sensor_water_leak)$') | selectattr('attributes.linkquality', 'defined') | map(attribute='entity_id') | list -%}
           {% set ns.entities = ns.entities + [{"entity_id": entity,
             "friendly_name": state_attr(entity, 'friendly_name'),
             "timediff": (utcnow().strftime('%s') | int(0) - as_timestamp(state_attr(entity, 'last_seen'), 0) | int(0)) }] -%}
@@ -919,41 +967,6 @@
         {{ ns.list[:-2] }}
 
 - sensor:
-    unique_id: home_assistant_version_latest
-    name: Home Assistant Version Latest
-    state: "{{ state_attr('binary_sensor.updater', 'newest_version') }}"
-
-- sensor:
-    unique_id: operating_system_version
-    name: Operating System Version
-    state: "{{ state_attr('sensor.ha_operating_system_version', 'version') }}"
-
-- sensor:
-    unique_id: operating_system_version_latest
-    name: Operating System Version Latest
-    state: "{{ state_attr('sensor.ha_operating_system_version', 'version_latest') }}"
-
-- sensor:
-    unique_id: supervisor_version
-    name: Supervisor Version
-    state: "{{ state_attr('sensor.ha_supervisor_version', 'version') }}"
-
-- sensor:
-    unique_id: supervisor_version_latest
-    name: Supervisor Version Latest
-    state: "{{ state_attr('sensor.ha_supervisor_version', 'version_latest') }}"
-
-- sensor:
-    unique_id: hacs_version
-    name: HACS Update Count Version
-    state: "0"
-
-- sensor:
-    unique_id: hacs_version_latest
-    name: HACS Update Count Version Latest
-    state: "{{ states('sensor.hacs') }}"
-
-- sensor:
     unique_id: fully_kiosk_browser_version
     name: Fully Kiosk Browser Version
     state: "{{ state_attr('sensor.fully_kiosk_browser', 'version') }}"
@@ -1004,6 +1017,106 @@
     unit_of_measurement: "Seconds"
 
 - sensor:
+    name: Dining Room Freezer Door timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.dining_room_freezer_door_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Dining Room Refrigerator Door timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.dining_room_refrigerator_door_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Kitchen Freezer Door timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.kitchen_freezer_door_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Kitchen Refrigerator Door timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.kitchen_refrigerator_door_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Kitchen Water Leak timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.kitchen_water_leak_sensor_water_leak', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Back Door timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.back_door_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Front Door timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.front_door_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Garage Entry Door timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.garage_entry_door_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Garage Door Sensor timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.garage_door_sensor_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Garage Temperature timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('sensor.garage_multisensor_temperature', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Outside Temperature timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('sensor.outside_multisensor_temperature', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Attic Temperature timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('sensor.attic_multisensor_temperature', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Living Room Motion Sensor timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.living_room_motion_sensor_occupancy', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Living Room Temperature timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('sensor.living_room_multisensor_temperature', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Living Room Slider timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.living_room_slider_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Living Room Water Leak timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.living_room_water_leak_sensor_water_leak', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Shed Button timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('sensor.shed_button_click', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Shed Gate timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.shed_gate_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Shed Door timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.shed_door_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Chimney Gate timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.chimney_gate_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
     name: God Damn Slider timediff Zigbee
     state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.god_damn_slider_contact', 'last_seen'), 0) }}"
     unit_of_measurement: "Seconds"
@@ -1014,28 +1127,33 @@
     unit_of_measurement: "Seconds"
 
 - sensor:
+    name: God Damn Slider timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.god_damn_slider_contact', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
     name: God Damn Water Leak timediff Zigbee
     state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.god_damn_water_leak_sensor_water_leak', 'last_seen'), 0) }}"
     unit_of_measurement: "Seconds"
 
 - sensor:
-    name: Kitchen Water Leak timediff Zigbee
-    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.kitchen_water_leak_sensor_water_leak', 'last_seen'), 0) }}"
+    name: Powder Room Window timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.powder_room_window_contact', 'last_seen'), 0) }}"
     unit_of_measurement: "Seconds"
 
 - sensor:
-    name: Shed Button timediff Zigbee
-    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('sensor.shed_button_click', 'last_seen'), 0) }}"
-    unit_of_measurement: "Seconds"
-
-- sensor:
-    name: Living Room Water Leak timediff Zigbee
-    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.living_room_water_leak_sensor_water_leak', 'last_seen'), 0) }}"
+    name: Den Window timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.den_window_contact', 'last_seen'), 0) }}"
     unit_of_measurement: "Seconds"
 
 - sensor:
     name: Washer Water Leak timediff Zigbee
     state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.washer_water_leak_sensor_water_leak', 'last_seen'), 0) }}"
+    unit_of_measurement: "Seconds"
+
+- sensor:
+    name: Water Heater Water Leak timediff Zigbee
+    state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.water_heater_water_leak_sensor_water_leak', 'last_seen'), 0) }}"
     unit_of_measurement: "Seconds"
 
 # Time Diff Sensors - Wyze

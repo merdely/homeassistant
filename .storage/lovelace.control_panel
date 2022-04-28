@@ -822,8 +822,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -853,10 +853,6 @@
                                                 {
                                                     "type": "conditional",
                                                     "conditions": [
-                                                        {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
                                                         {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
@@ -940,6 +936,212 @@
                                                     }
                                                 }
                                             ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "theme": "Backend-selected",
+                    "title": "Sensors",
+                    "path": "sensors",
+                    "icon": "mdi:shield-home",
+                    "type": "panel",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 2,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "button",
+                                                    "entity": "sensor.time_formatted",
+                                                    "show_state": true,
+                                                    "show_name": false,
+                                                    "show_icon": false,
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.fkb_reload",
+                                                        "service_data": {},
+                                                        "target": {}
+                                                    },
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "sensor",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "entities",
+                                            "card_mod": {
+                                                "style": "ha-card {\n}\n.card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n"
+                                            },
+                                            "state_color": true,
+                                            "entities": [
+                                                {
+                                                    "entity": "binary_sensor.dining_room_freezer_door_contact"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.dining_room_refrigerator_door_contact"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.kitchen_freezer_door_contact"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.kitchen_refrigerator_door_contact"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.bedroom_motion_sensor_occupancy"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.office_door_motion_sensor_occupancy"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.wyzesense_778e716f"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.living_room_motion_sensor_occupancy"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.god_damn_motion_sensor_occupancy"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.laundry_room_motion_sensor_occupancy"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.den_motion_sensor_occupancy"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.powder_room_motion_sensor_occupancy"
+                                                }
+                                            ],
+                                            "show_header_toggle": false
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 1,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "entities",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "person.holly_erdely",
+                                                                        "name": "Holly"
+                                                                    },
+                                                                    {
+                                                                        "entity": "person.michael_erdely",
+                                                                        "name": "Mike"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state": "on"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "entity",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
+                                                        "entity": "sensor.spotify_artist_title",
+                                                        "name": "Spotify Music Player",
+                                                        "icon": "mdi:music"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "entities",
+                                            "card_mod": {
+                                                "style": "ha-card {\n}\n.card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n"
+                                            },
+                                            "state_color": true,
+                                            "entities": [
+                                                {
+                                                    "entity": "binary_sensor.hall_bath_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.master_bath_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.dining_room_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.kitchen_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.living_room_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.god_damn_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.washer_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.water_heater_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.den_water_leak_sensor_water_leak"
+                                                },
+                                                {
+                                                    "entity": "binary_sensor.powder_room_water_leak_sensor_water_leak"
+                                                }
+                                            ],
+                                            "show_header_toggle": false
                                         }
                                     ]
                                 }
@@ -1206,8 +1408,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -1237,10 +1439,6 @@
                                                 {
                                                     "type": "conditional",
                                                     "conditions": [
-                                                        {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
                                                         {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
@@ -1718,8 +1916,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -1749,10 +1947,6 @@
                                                 {
                                                     "type": "conditional",
                                                     "conditions": [
-                                                        {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
                                                         {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
@@ -2065,8 +2259,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -2096,10 +2290,6 @@
                                                 {
                                                     "type": "conditional",
                                                     "conditions": [
-                                                        {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
                                                         {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
@@ -2467,8 +2657,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -2498,10 +2688,6 @@
                                                 {
                                                     "type": "conditional",
                                                     "conditions": [
-                                                        {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
                                                         {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
@@ -2864,8 +3050,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -2895,10 +3081,6 @@
                                                 {
                                                     "type": "conditional",
                                                     "conditions": [
-                                                        {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
                                                         {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
@@ -3041,8 +3223,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -3072,10 +3254,6 @@
                                                 {
                                                     "type": "conditional",
                                                     "conditions": [
-                                                        {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
                                                         {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
@@ -3475,8 +3653,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -3507,10 +3685,6 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
-                                                        {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
                                                         }
@@ -3534,9 +3708,6 @@
                                             "cards": [
                                                 {
                                                     "type": "entities",
-                                                    "card_mod": {
-                                                        "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.out_of_date_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
-                                                    },
                                                     "entities": [
                                                         {
                                                             "entity": "person.holly_erdely",
@@ -3785,9 +3956,19 @@
                                                             "name": "Plex Status",
                                                             "card_mod": {
                                                                 "style": ":host {\n  color: var(--plex-color);\n}\n"
+                                                            },
+                                                            "tap_action": {
+                                                                "action": "navigate",
+                                                                "navigation_path": "/control-panel/plex"
+                                                            },
+                                                            "hold_action": {
+                                                                "action": "more-info"
                                                             }
                                                         }
-                                                    ]
+                                                    ],
+                                                    "card_mod": {
+                                                        "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.out_of_date_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                                                    }
                                                 }
                                             ]
                                         }
@@ -3848,7 +4029,7 @@
                                         },
                                         {
                                             "type": "markdown",
-                                            "content": "<table width=\"100%\"> <tr>\n {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%}\n<tr><td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> <ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font></td> <td><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font color=\"{{'lightgray' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td></tr> {% endfor -%} <tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr> {% for addon in (state_attr(\"sensor.ha_add_ons\", \"data\")[\"addons\"] | rejectattr('installed', 'eq', False) | sort(attribute='name')) -%} {% if (addon['name']| replace('Home Assistant ', ''))[:1] in ['A','B','C','D','E','F'] %}<tr> <td><font color=\"{{'#44739e' if\n  addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\"><ha-icon\n  icon='mdi:briefcase-{{ 'check' if addon['version'] ==\n  addon['version_latest'] else 'download'}}' /></font>\n  </td> <td><font color=\"{{'lightgray' if addon['version']\n  == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant ', '') }}*</td> <td align=\"right\"><font\n  color=\"{{'lightgray' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version'] }}</font></td> <td align=\"right\"><font\n  color=\"{{'lightgray' if addon['version'] ==\n  addon['version_latest'] else 'yellow'}}\">{{\n  addon['version_latest'] }}</font></td> </tr>\n{% endif -%}{% endfor -%} </table>",
+                                            "content": "<table width=\"100%\"> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') | replace('Operating System', 'OS') }}</td><td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td></tr> {% endfor -%} <tr><td><font color=\"{{'#44739e' if states('sensor.hacs') == '0' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.hacs') == '0' else 'download'}}' /></font> </td><td><font style=\"color: {{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">HACS</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">-</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">{{ states('sensor.hacs') }}</font></td></tr>           <tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list -%} <tr> <td><font color=\"{{'#44739e' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software|replace('_latest','')) }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software) }}</font></td> </tr> {% endfor -%}\n <tr><td><font color=\"{{'#44739e' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'download'}}' /></font> </td> <td><font\n  style=\"color:{{'var(--primary-text-color)' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'yellow'}}\">OPNsense</font></td> <td align=\"right\"><font\n  style=\"color:{{'var(--primary-text-color)' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'yellow'}}\">{{ states('sensor.opnsense_versions') }}</font></td> <td\n  align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'yellow'}}\">{{ state_attr('sensor.opnsense_package_versions',\n  'plugins')[\"opnsense\"] }}</font></td></tr> {% for plugin in\n  state_attr('sensor.opnsense_versions', 'plugins') -%} <tr><td><font\n  color=\"{{'#44739e' if state_attr('sensor.opnsense_versions',\n  'plugins')[plugin] == state_attr('sensor.opnsense_package_versions',\n  'plugins')[\"os-\"+plugin] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{\n  'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else\n  'download'}}' /></font> </td> <td><font\n  style=\"color:{{'var(--primary-text-color)' if\n  state_attr('sensor.opnsense_versions', 'plugins')[plugin] ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else\n  'yellow'}}\">OPNsense {{ plugin }}</font></td> <td align=\"right\"><font\n  style=\"color:{{'var(--primary-text-color)' if\n  state_attr('sensor.opnsense_versions', 'plugins')[plugin] ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else\n  'yellow'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin]\n  }}</font></td> <td align=\"right\"><font\n  style=\"color:{{'var(--primary-text-color)' if\n  state_attr('sensor.opnsense_versions', 'plugins')[plugin] ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else\n  'yellow'}}\">{{ state_attr('sensor.opnsense_package_versions',\n  'plugins')[\"os-\"+plugin] }}</font></td></tr> {% endfor -%}\n  {% for ap in\n  state_attr('sensor.unifi_ap_versions', 'data') | sort(attribute=\"name\")\n  -%} <tr><td><font color=\"{{'#44739e' if ap['version'] ==\n  ap['version_available'] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{\n  'check' if ap['version'] == ap['version_available'] else 'download'}}'\n  /></font> </td> <td><font style=\"color:{{'var(--primary-text-color)' if\n  ap['version'] == ap['version_available'] else 'yellow'}}\">Unifi {{\n  ap['name'] | replace('wap-','') | title }} AP</font></td> <td\n  align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if\n  ap['version'] == ap['version_available'] else 'yellow'}}\">{{ ap['version']\n  }}</font></td> <td align=\"right\"><font\n  style=\"color:{{'var(--primary-text-color)' if ap['version'] ==\n  ap['version_available'] else 'yellow'}}\">{{ ap['version_available']\n  }}</font></td></tr> {% endfor -%} {% if\n  state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td><font\n  color=\"orange\"><ha-icon icon='mdi:alert-circle'></ha-icon></font></td><td\n  colspan=\"3\"><font color=\"orange\">Error: Could not load Unifi\n  Data</font></td></tr>{% endif %}           </table>",
                                             "card_mod": {
                                                 "style": "* {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n  font-size: 14px;\n  --mdc-icon-size: 16px;\n}\n"
                                             }
@@ -3869,8 +4050,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -3901,10 +4082,6 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
-                                                        {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
                                                         }
@@ -3923,7 +4100,7 @@
                                         },
                                         {
                                             "type": "markdown",
-                                            "content": "<table width=\"100%\">  {% for addon in (state_attr(\"sensor.ha_add_ons\", \"data\")[\"addons\"] | rejectattr('installed', 'eq', False) | sort(attribute='name')) -%} {% if not (addon['name']| replace('Home Assistant ', ''))[:1] in ['A','B','C','D','E','F'] %}<tr> <td><font color=\"{{'#44739e' if addon['version'] == addon['version_latest'] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if addon['version'] == addon['version_latest'] else 'download'}}' /></font> </td> <td><font color=\"{{'lightgray' if addon['version'] == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant ', '') }}*</td> <td align=\"right\"><font color=\"{{'lightgray' if addon['version'] == addon['version_latest'] else 'yellow'}}\">{{ addon['version'] }}</font></td> <td align=\"right\"><font color=\"{{'lightgray' if addon['version'] == addon['version_latest'] else 'yellow'}}\">{{ addon['version_latest'] }}</font></td> </tr> {% endif -%}{% endfor -%} </table>",
+                                            "content": "<table width=\"100%\"> {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') }} *</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td> </tr> {% endfor -%} </table>",
                                             "card_mod": {
                                                 "style": "* {\n  padding-top: 0px !important;\n  padding-bottom: 0px !important;\n  font-size: 14px;\n  --mdc-icon-size: 16px;\n}\n"
                                             }
@@ -3994,20 +4171,6 @@
                                             "filter": {
                                                 "include": [
                                                     {
-                                                        "entity_id": "sensor.hacs",
-                                                        "options": {
-                                                            "style": "* {\n  height: 16px !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
-                                                            "tap_action": {
-                                                                "action": "call-service",
-                                                                "service": "homeassistant.update_entity",
-                                                                "service_data": {},
-                                                                "target": {
-                                                                    "entity_id": "this.entity_id"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    {
                                                         "entity_id": "sensor.unavailable_entities",
                                                         "options": {
                                                             "style": "* {\n  height: 16px !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
@@ -4051,7 +4214,7 @@
                                                             "sort": "name"
                                                         },
                                                         "not": {
-                                                            "entity_id": "/^sensor\\.(ha_.*|hacs_.*|pixel_.*|.*_firmware)_version$/"
+                                                            "entity_id": "/^sensor\\.(ha_.*|hacs_.*|pixel_.*|.*_firmware|home_assistant)_version$/"
                                                         }
                                                     }
                                                 ],
@@ -4099,8 +4262,8 @@
                                                     "type": "conditional",
                                                     "conditions": [
                                                         {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state_not": "playing"
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
                                                         }
                                                     ],
                                                     "card": {
@@ -4130,10 +4293,6 @@
                                                 {
                                                     "type": "conditional",
                                                     "conditions": [
-                                                        {
-                                                            "entity": "media_player.spotify_merdely",
-                                                            "state": "playing"
-                                                        },
                                                         {
                                                             "entity": "binary_sensor.spotify_broadcasting",
                                                             "state": "on"
@@ -4192,8 +4351,419 @@
                                                             "icon": " "
                                                         }
                                                     ]
+                                                },
+                                                {
+                                                    "type": "entities",
+                                                    "entities": [
+                                                        {
+                                                            "type": "custom:paper-buttons-row",
+                                                            "position": "right",
+                                                            "buttons": [
+                                                                {
+                                                                    "entity": "script.fix_in_bed_sensors",
+                                                                    "name": "Bed Sensors"
+                                                                },
+                                                                {
+                                                                    "entity": "light.god_damn_light",
+                                                                    "name": "God Damn",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "script.fix_3way_light",
+                                                                        "service_data": {
+                                                                            "light_entity": "light.god_damn_light"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "entity": "light.hallway_light",
+                                                                    "name": "Hallway",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "script.fix_3way_light",
+                                                                        "service_data": {
+                                                                            "light_entity": "light.hallway_light"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "entity": "light.kitchen_overhead_light",
+                                                                    "name": "Kitchen",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "script.fix_3way_light",
+                                                                        "service_data": {
+                                                                            "light_entity": "light.kitchen_overhead_light"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "custom:paper-buttons-row",
+                                                            "position": "right",
+                                                            "buttons": [
+                                                                {
+                                                                    "entity": "sensor.opnsense_package_versions",
+                                                                    "name": "OpnSense",
+                                                                    "icon": "mdi:briefcase-download",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "homeassistant.update_entity",
+                                                                        "service_data": {
+                                                                            "entity_id": [
+                                                                                "sensor.opnsense_package_versions",
+                                                                                "sensor.opnsense_versions"
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "entity": "cover.garage_door",
+                                                                    "name": "Garage Closed",
+                                                                    "icon": "mdi:garage",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "python_script.set_state",
+                                                                        "service_data": {
+                                                                            "entity_id": "cover.garage_door",
+                                                                            "state": "closed"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "entity": "cover.garage_door",
+                                                                    "name": "Garage Open",
+                                                                    "icon": "mdi:garage-open",
+                                                                    "tap_action": {
+                                                                        "action": "call-service",
+                                                                        "service": "python_script.set_state",
+                                                                        "service_data": {
+                                                                            "entity_id": "cover.garage_door",
+                                                                            "state": "open"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
                                                 }
                                             ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Plex",
+                    "path": "plex",
+                    "icon": "mdi:plex",
+                    "type": "panel",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "grid",
+                            "columns": 2,
+                            "square": false,
+                            "cards": [
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 2,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "button",
+                                                    "entity": "sensor.time_formatted",
+                                                    "show_state": true,
+                                                    "show_name": false,
+                                                    "show_icon": false,
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.fkb_reload",
+                                                        "service_data": {},
+                                                        "target": {}
+                                                    },
+                                                    "card_mod": {
+                                                        "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}\n"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "sensor",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Panel Battery",
+                                                    "detail": 1,
+                                                    "card_mod": {
+                                                        "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 44px !important;\n}\n"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "entities",
+                                            "entities": [
+                                                {
+                                                    "entity": "sensor.plex_plex",
+                                                    "name": "Plex Status",
+                                                    "card_mod": {
+                                                        "style": ":host {\n  color: var(--plex-color);\n}\n"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:entity-attributes-card",
+                                                    "heading_name": [],
+                                                    "heading_state": [],
+                                                    "filter": {
+                                                        "include": [
+                                                            {
+                                                                "key": "sensor.plex_plex.*"
+                                                            }
+                                                        ],
+                                                        "exclude": [
+                                                            {
+                                                                "key": "sensor.plex_plex.icon"
+                                                            },
+                                                            {
+                                                                "key": "sensor.plex_plex.friendly_name"
+                                                            },
+                                                            {
+                                                                "key": "sensor.plex_plex.unit_of_measurement"
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "columns": 1,
+                                    "square": false,
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "columns": 1,
+                                            "square": false,
+                                            "cards": [
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state_not": "on"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "entities",
+                                                                "card_mod": {
+                                                                    "style": ".card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -1px 0px;\n  font-size: 24px;\n}\n"
+                                                                },
+                                                                "entities": [
+                                                                    {
+                                                                        "entity": "person.holly_erdely",
+                                                                        "name": "Holly"
+                                                                    },
+                                                                    {
+                                                                        "entity": "person.michael_erdely",
+                                                                        "name": "Mike"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "conditional",
+                                                    "conditions": [
+                                                        {
+                                                            "entity": "binary_sensor.spotify_broadcasting",
+                                                            "state": "on"
+                                                        }
+                                                    ],
+                                                    "card": {
+                                                        "type": "entity",
+                                                        "card_mod": {
+                                                            "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                                                        },
+                                                        "entity": "sensor.spotify_artist_title",
+                                                        "name": "Spotify Music Player",
+                                                        "icon": "mdi:music"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:mod-card",
+                                            "style": "ha-card {\n  padding: 4px;\n}\n",
+                                            "card": {
+                                                "type": "grid",
+                                                "columns": 1,
+                                                "square": false,
+                                                "cards": [
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 1,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "none"
+                                                                },
+                                                                "entity": "switch.family_room",
+                                                                "show_icon": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columns": 4,
+                                                        "square": false,
+                                                        "cards": [
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "switch.god_damn_tv",
+                                                                "name": "TV"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_god_damn_input_tivo",
+                                                                "name": "Tivo"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_god_damn_input_roku",
+                                                                "icon": "mdi:cast",
+                                                                "name": "Roku"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_god_damn_mute",
+                                                                "name": "Mute"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_select.select_option",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_select.god_damn_channel",
+                                                                        "option": "The Tennis Channel"
+                                                                    }
+                                                                },
+                                                                "icon": "mdi:tennis",
+                                                                "show_name": false,
+                                                                "name": "Tennis Channel"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_select.select_option",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_select.god_damn_channel",
+                                                                        "option": "TBS"
+                                                                    }
+                                                                },
+                                                                "name": "TBS"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_select.select_option",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_select.god_damn_plex_show",
+                                                                        "option": "The Big Bang Theory"
+                                                                    }
+                                                                },
+                                                                "name": "BBT",
+                                                                "show_name": false,
+                                                                "icon": "mdi:atom"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "input_select.select_option",
+                                                                    "service_data": {
+                                                                        "entity_id": "input_select.god_damn_plex_show",
+                                                                        "option": "Friends"
+                                                                    }
+                                                                },
+                                                                "name": "Friends",
+                                                                "show_name": false,
+                                                                "icon": "mdi:account-group"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_god_damn_volume_down",
+                                                                "icon": "mdi:volume-minus",
+                                                                "show_name": false,
+                                                                "name": "Volume Down"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_god_damn_tivo_pause",
+                                                                "icon": "mdi:pause",
+                                                                "show_name": true,
+                                                                "name": "Tivo",
+                                                                "icon_height": "30px"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_god_damn_roku_pause",
+                                                                "icon": "mdi:pause",
+                                                                "show_name": true,
+                                                                "name": "Roku",
+                                                                "icon_height": "30px"
+                                                            },
+                                                            {
+                                                                "type": "button",
+                                                                "tap_action": {
+                                                                    "action": "toggle"
+                                                                },
+                                                                "entity": "script.tv_god_damn_volume_up",
+                                                                "icon": "mdi:volume-plus",
+                                                                "show_name": false,
+                                                                "name": "Volume Up"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
                                         }
                                     ]
                                 }

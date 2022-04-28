@@ -1,0 +1,10 @@
+#!/bin/sh
+
+ret=$(curl -o /dev/null -f -m 2 -s -w %{http_code} https://npm.erdely.in)
+
+if [ "$ret" = 200 ]; then
+  echo on
+else
+  echo off
+fi
+

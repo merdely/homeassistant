@@ -41,8 +41,8 @@
     offset: -00:15:00
   condition:
   - condition: template
-    value_template: '{{ as_timestamp(states("sensor.date_time_iso"), 0) | timestamp_custom("%m-%d", True, "Unavailable")  !=
-      "10-31" }}'
+    value_template: '{{ as_timestamp(states("sensor.date_time_iso"), 0) | timestamp_custom("%m-%d",
+      True, "Unavailable")  != "10-31" }}'
   action:
   - choose:
     - conditions:
@@ -111,6 +111,15 @@
     - condition: state
       entity_id: binary_sensor.withings_in_bed_michael_e
       state: 'off'
+    - condition: state
+      entity_id: light.hallway_light
+      state: 'on'
+    - condition: state
+      entity_id: light.kitchen_table_light
+      state: 'on'
+    - condition: state
+      entity_id: light.kitchen_overhead_light
+      state: 'on'
   action:
   - service: mqtt.publish
     data:
@@ -333,7 +342,29 @@
     data_template:
       command: convert
       package: imagemagick
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
   - service: script.fix_in_bed_sensors
+    data: {}
+  - service: script.fix_3way_light
+    data:
+      light_entity: light.god_damn_light
+  - service: script.fix_3way_light
+    data:
+      light_entity: light.hallway_light
+  - service: script.fix_3way_light
+    data:
+      light_entity: light.kitchen_overhead_light
+  - service: homeassistant.update_entity
+    data: {}
+    target:
+      entity_id:
+      - sensor.opnsense_package_versions
+      - sensor.opnsense_versions
+      - sensor.unifi_ap_versions
   mode: single
 - id: '1603391662402'
   alias: Security - 40 Armed - Disarm Security System in the morning when someone
@@ -414,14 +445,12 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.shed_door_contact, binary_sensor.shed_gate_contact,
-      binary_sensor.chimney_gate_contact
+    entity_id: binary_sensor.shed_door_contact, binary_sensor.shed_gate_contact, binary_sensor.chimney_gate_contact
     for: 00:00:01
     from: 'off'
     to: 'on'
   - platform: state
-    entity_id: binary_sensor.shed_door_contact, binary_sensor.shed_gate_contact,
-      binary_sensor.chimney_gate_contact
+    entity_id: binary_sensor.shed_door_contact, binary_sensor.shed_gate_contact, binary_sensor.chimney_gate_contact
     for: 00:00:01
     from: 'on'
     to: 'off'
@@ -1022,10 +1051,6 @@
       data:
         entity_id: media_player.security_speakers
         message: Holly is at {{ states('person.holly_erdely') }}
-  - service: media_player.media_stop
-    data: {}
-    target:
-      entity_id: media_player.security_speakers
   mode: single
 - id: '1607095172887'
   alias: Notifications - Presence - Mike
@@ -1049,11 +1074,6 @@
     entity_id: input_boolean.announce_mike_presence
     state: 'on'
   action:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 6
-      milliseconds: 0
   - choose:
     - conditions:
       - condition: state
@@ -1072,10 +1092,6 @@
       data:
         entity_id: media_player.security_speakers
         message: Mike is at {{ states("person.michael_erdely") }}
-  - service: media_player.media_stop
-    data: {}
-    target:
-      entity_id: media_player.security_speakers
   mode: single
 - id: '1607108298703'
   alias: TV - Office - Change Channel
@@ -2273,6 +2289,19 @@
       - service: script.homeassistant_restart
         data: {}
     default: []
+  - service: homeassistant.toggle
+    data: {}
+    target:
+      entity_id: sensor.living_room_zigbee_router_plug_power
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - service: homeassistant.toggle
+    data: {}
+    target:
+      entity_id: sensor.living_room_zigbee_router_plug_power
   - service: system_log.write
     data:
       message: Finishing Nightly Tasks
@@ -2321,8 +2350,7 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0)
-          == 32 }}'
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0E01F" }}'
       - condition: template
@@ -2342,8 +2370,7 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0)
-          == 32 }}'
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0D02F" }}'
       - condition: template
@@ -2363,8 +2390,7 @@
         value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
           }}'
       - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0)
-          == 32 }}'
+        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32 }}'
       - condition: template
         value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0F00F" }}'
       - condition: template
@@ -2516,8 +2542,7 @@
     value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec_like"
       }}'
   - condition: template
-    value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32
-      }}'
+    value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32 }}'
   - condition: template
     value_template: '{{ trigger.payload_json.IrReceived.Data == "0xA10C2C03" }}'
   - condition: template
@@ -2554,6 +2579,7 @@
       - service: homeassistant.turn_on
         target:
           entity_id: input_boolean.mail_delivered
+        data: {}
       - service: notify.signal_security
         data:
           message: The mail's here, the mail's here!  Woo-hoo!
@@ -2561,6 +2587,31 @@
     - service: homeassistant.turn_off
       target:
         entity_id: input_boolean.mail_delivered
+      data: {}
+    - choose:
+      - conditions:
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: person.holly_erdely
+            state: home
+        sequence:
+        - service: notify.signal_security
+          data:
+            message: Somebody retrieved the mail
+      default: []
+    - choose:
+      - conditions:
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: person.michael_erdely
+            state: home
+        sequence:
+        - service: notify.signal_mike
+          data:
+            message: Somebody retrieved the mail
+      default: []
   mode: single
 - id: '1615411227750'
   alias: Mailbox State Reset
@@ -2687,6 +2738,15 @@
     - condition: state
       entity_id: binary_sensor.withings_in_bed_michael_e
       state: 'off'
+    - condition: state
+      entity_id: light.hallway_light
+      state: 'on'
+    - condition: state
+      entity_id: light.kitchen_table_light
+      state: 'on'
+    - condition: state
+      entity_id: light.kitchen_overhead_light
+      state: 'on'
   action:
   - service: mqtt.publish
     data:
@@ -3306,6 +3366,8 @@
   - service: notify.notify
     data:
       message: Good Night script run via Actionable Notification
+  - service: script.scene_good_night
+    data: {}
   mode: single
 - id: '1637383160091'
   alias: Actionable Notifications - ARM_HOME
@@ -3334,6 +3396,10 @@
       action: ARM_AWAY
   condition: []
   action:
+  - service: alarm_control_panel.alarm_arm_away
+    data: {}
+    target:
+      entity_id: alarm_control_panel.home_alarm
   - service: notify.notify
     data:
       message: Alarm Armed (Away) via Actionable Notification
@@ -3413,6 +3479,12 @@
     from: 'on'
   - platform: state
     entity_id: binary_sensor.earth_nginx_php_working
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  - platform: state
+    entity_id: binary_sensor.nginx_proxy_manager_working
     for:
       hours: 0
       minutes: 5
@@ -3723,4 +3795,198 @@
     target:
       entity_id: switch.christmas_tree
     data: {}
+  mode: single
+- id: '1645564166244'
+  alias: 000-RF Bridge Test
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: tele/rf_bridge/RESULT
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload_json.RfReceived.Data == "C13B02" }}'
+      sequence:
+      - service: homeassistant.toggle
+        data: {}
+        target:
+          entity_id: light.hallway_light
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload_json.RfReceived.Data == "C13B01" }}'
+      sequence:
+      - service: homeassistant.toggle
+        data: {}
+        target:
+          entity_id: light.guest_room_light
+    default: []
+  mode: single
+- id: '1650048811718'
+  alias: Fix 3-way Lights
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: light.hallway_light
+    to: unknown
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  - platform: state
+    entity_id: light.god_damn_light
+    to: unknown
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  - platform: state
+    entity_id: light.kitchen_overhead_light
+    to: unknown
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - service: script.fix_3way_light
+    data:
+      light_entity: '{{ trigger.entity_id }}'
+  - service: homeassistant.update_entity
+    data: {}
+    target:
+      entity_id: '{{ trigger.entity_id }}'
+  mode: single
+- id: '1650211137772'
+  alias: Fix MariaDB/Nginx Proxy Manager
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.nginx_proxy_manager_working
+    from: 'on'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - service: hassio.addon_restart
+    data:
+      addon: core_mariadb
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: hassio.addon_restart
+    data:
+      addon: a0d7b954_nginxproxymanager
+  - service: notify.gmail_to_mike
+    data:
+      title: MariaDB/NPM Restarted
+      message: The MariaDB and Nginx Proxy Manager Add-Ons were restarted.
+  mode: single
+- id: '1650743525982'
+  alias: Notifications - Presence - Holly (Backup)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: person.holly_erdely
+    from: not_home
+    for: 00:01:00
+  - platform: state
+    entity_id: person.holly_erdely
+    to: not_home
+  condition:
+  - condition: time
+    after: input_datetime.holly_presence_notifications_on
+    before: input_datetime.holly_presence_notifications_off
+  - condition: state
+    entity_id: person.michael_erdely
+    state: home
+  - condition: state
+    entity_id: input_boolean.announce_holly_presence
+    state: 'on'
+  action:
+  - service: script.function_speakers_prep
+    data:
+      speaker: security_speakers
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.holly_erdely
+        state: not_home
+      sequence:
+      - service: homeassistant.update_entity
+        data: {}
+        entity_id: sensor.holly_previous_location
+      - service: tts.cloud_say
+        data:
+          entity_id: media_player.security_speakers
+          message: Holly has left {{ states("sensor.holly_previous_location") }}
+    default:
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.security_speakers
+        message: Holly is at {{ states('person.holly_erdely') }}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - service: media_player.media_stop
+    data: {}
+    target:
+      entity_id: media_player.security_speakers
+  mode: single
+- id: '1650743598113'
+  alias: Notifications - Presence - Mike (Backup)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: person.michael_erdely
+    from: not_home
+    for: 00:01:00
+  - platform: state
+    entity_id: person.michael_erdely
+    to: not_home
+  condition:
+  - condition: time
+    after: input_datetime.mike_presence_notifications_on
+    before: input_datetime.mike_presence_notifications_off
+  - condition: state
+    entity_id: person.holly_erdely
+    state: home
+  - condition: state
+    entity_id: input_boolean.announce_mike_presence
+    state: 'on'
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 6
+      milliseconds: 0
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.michael_erdely
+        state: not_home
+      sequence:
+      - service: homeassistant.update_entity
+        data: {}
+        entity_id: sensor.mike_previous_location
+      - service: tts.cloud_say
+        data:
+          entity_id: media_player.security_speakers
+          message: Mike has left {{ states("sensor.mike_previous_location") }}
+    default:
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.security_speakers
+        message: Mike is at {{ states("person.michael_erdely") }}
+  - service: media_player.media_stop
+    data: {}
+    target:
+      entity_id: media_player.security_speakers
   mode: single

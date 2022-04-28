@@ -433,6 +433,29 @@
                                                     "card_mod": {
                                                         "style": ":host {\n  color: var(--plex-color);\n}\n"
                                                     }
+                                                },
+                                                {
+                                                    "type": "custom:entity-attributes-card",
+                                                    "heading_name": [],
+                                                    "heading_state": [],
+                                                    "filter": {
+                                                        "include": [
+                                                            {
+                                                                "key": "sensor.plex_plex.*"
+                                                            }
+                                                        ],
+                                                        "exclude": [
+                                                            {
+                                                                "key": "sensor.plex_plex.icon"
+                                                            },
+                                                            {
+                                                                "key": "sensor.plex_plex.friendly_name"
+                                                            },
+                                                            {
+                                                                "key": "sensor.plex_plex.unit_of_measurement"
+                                                            }
+                                                        ]
+                                                    }
                                                 }
                                             ]
                                         }
@@ -2468,7 +2491,7 @@
                                                 "cards": [
                                                     {
                                                         "type": "markdown",
-                                                        "content": "<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in ['home_assistant', 'operating_system', 'supervisor', 'hacs_update_count'] -%} <tr> <td><font color=\"{{'#44739e' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\"> {{ software | replace('_', ' ') | title }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states('sensor.'+software+'_version') == states('sensor.'+software+'_version_latest') else 'yellow'}}\">{{ states('sensor.'+software+'_version_latest') }}</font></td> </tr> {% endfor -%} {% for addon in state_attr(\"sensor.ha_add_ons\", \"data\")[\"addons\"] | rejectattr('installed', 'eq', False) | sort(attribute='name') -%} <tr> <td><font color=\"{{'#44739e' if addon['version'] == addon['version_latest'] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if addon['version'] == addon['version_latest'] else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if addon['version'] == addon['version_latest'] else 'yellow'}}\"> {{ addon['name'] | replace('Home Assistant ', '') }}*</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if addon['version'] == addon['version_latest'] else 'yellow'}}\">{{ addon['version'] }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if addon['version'] == addon['version_latest'] else 'yellow'}}\">{{ addon['version_latest'] }}</font></td> </tr> {% endfor -%} <tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\.(?!(hacs|home_assistant|operating_system|supervisor)_).*_version_latest$') | map(attribute='entity_id') | list -%} <tr> <td><font color=\"{{'#44739e' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software|replace('_latest','')) }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software) }}</font></td> </tr> {% endfor -%} </table>\n"
+                                                        "content": "<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') | replace('Operating System', 'OS') }}</td><td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td></tr> {% endfor -%} <tr><td><font color=\"{{'#44739e' if states('sensor.hacs') == '0' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.hacs') == '0' else 'download'}}' /></font> </td><td><font style=\"color: {{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">HACS</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">-</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">{{ states('sensor.hacs') }}</font></td></tr>           {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') }} *</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td> </tr> {% endfor -%}\n<tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list -%} <tr> <td><font color=\"{{'#44739e' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software|replace('_latest','')) }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'yellow'}}\">{{ states(software) }}</font></td> </tr> {% endfor -%}\n <tr><td><font color=\"{{'#44739e' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'download'}}' /></font> </td> <td><font\n  style=\"color:{{'var(--primary-text-color)' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'yellow'}}\">OPNsense</font></td> <td align=\"right\"><font\n  style=\"color:{{'var(--primary-text-color)' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'yellow'}}\">{{ states('sensor.opnsense_versions') }}</font></td> <td\n  align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if\n  states('sensor.opnsense_versions') ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else\n  'yellow'}}\">{{ state_attr('sensor.opnsense_package_versions',\n  'plugins')[\"opnsense\"] }}</font></td></tr> {% for plugin in\n  state_attr('sensor.opnsense_versions', 'plugins') -%} <tr><td><font\n  color=\"{{'#44739e' if state_attr('sensor.opnsense_versions',\n  'plugins')[plugin] == state_attr('sensor.opnsense_package_versions',\n  'plugins')[\"os-\"+plugin] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{\n  'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else\n  'download'}}' /></font> </td> <td><font\n  style=\"color:{{'var(--primary-text-color)' if\n  state_attr('sensor.opnsense_versions', 'plugins')[plugin] ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else\n  'yellow'}}\">OPNsense {{ plugin }}</font></td> <td align=\"right\"><font\n  style=\"color:{{'var(--primary-text-color)' if\n  state_attr('sensor.opnsense_versions', 'plugins')[plugin] ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else\n  'yellow'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin]\n  }}</font></td> <td align=\"right\"><font\n  style=\"color:{{'var(--primary-text-color)' if\n  state_attr('sensor.opnsense_versions', 'plugins')[plugin] ==\n  state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else\n  'yellow'}}\">{{ state_attr('sensor.opnsense_package_versions',\n  'plugins')[\"os-\"+plugin] }}</font></td></tr> {% endfor -%}\n  {% for ap in state_attr('sensor.unifi_ap_versions', 'data') -%} <tr><td><font\n  color=\"{{'#44739e' if ap['version'] == ap['version_available'] else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{\n  'check' if ap['version'] == ap['version_available']\n  else 'download'}}' /></font> </td> <td><font\n  style=\"color:{{'var(--primary-text-color)' if\n  ap['version'] == ap['version_available']\n  else 'yellow'}}\">{{ ap['name'] }}</font></td> <td\n  align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if\n  ap['version'] == ap['version_available']\n  else 'yellow'}}\">{{ ap['version'] }}</font></td> <td align=\"right\"><font\n  style=\"color:{{'var(--primary-text-color)' if\n  ap['version'] == ap['version_available']\n  else 'yellow'}}\">{{ ap['version_available'] }}</font></td></tr> {% endfor -%}\n</table>\n"
                                                     }
                                                 ]
                                             }
@@ -3375,35 +3398,7 @@
                                                 "filter": {
                                                     "include": [
                                                         {
-                                                            "entity_id": "sensor.hacs",
-                                                            "options": {
-                                                                "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
-                                                                "tap_action": {
-                                                                    "action": "call-service",
-                                                                    "service": "homeassistant.update_entity",
-                                                                    "service_data": {},
-                                                                    "target": {
-                                                                        "entity_id": "this.entity_id"
-                                                                    }
-                                                                }
-                                                            }
-                                                        },
-                                                        {
                                                             "entity_id": "sensor.unavailable_entities",
-                                                            "options": {
-                                                                "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
-                                                                "tap_action": {
-                                                                    "action": "call-service",
-                                                                    "service": "homeassistant.update_entity",
-                                                                    "service_data": {},
-                                                                    "target": {
-                                                                        "entity_id": "this.entity_id"
-                                                                    }
-                                                                }
-                                                            }
-                                                        },
-                                                        {
-                                                            "entity_id": "sensor.out_of_date_zigbee_entities",
                                                             "options": {
                                                                 "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: yellow;\n  {% endif %}\n}\n",
                                                                 "tap_action": {
@@ -3432,7 +3427,7 @@
                                                                 "sort": "name"
                                                             },
                                                             "not": {
-                                                                "entity_id": "/^sensor\\.(ha_.*|hacs_.*|pixel_.*|.*_firmware)_version$/"
+                                                                "entity_id": "/^sensor\\.(ha_.*|hacs_.*|pixel_.*|.*_firmware|home_assistant|hacs)_version$/"
                                                             }
                                                         }
                                                     ],
@@ -3441,6 +3436,101 @@
                                                 "sort": {
                                                     "method": "none"
                                                 }
+                                            },
+                                            {
+                                                "type": "entities",
+                                                "entities": [
+                                                    {
+                                                        "type": "custom:paper-buttons-row",
+                                                        "position": "right",
+                                                        "buttons": [
+                                                            {
+                                                                "entity": "script.fix_in_bed_sensors",
+                                                                "name": "Bed Sensors"
+                                                            },
+                                                            {
+                                                                "entity": "light.god_damn_light",
+                                                                "name": "God Damn",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "script.fix_3way_light",
+                                                                    "service_data": {
+                                                                        "light_entity": "light.god_damn_light"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "entity": "light.hallway_light",
+                                                                "name": "Hallway",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "script.fix_3way_light",
+                                                                    "service_data": {
+                                                                        "light_entity": "light.hallway_light"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "entity": "light.kitchen_overhead_light",
+                                                                "name": "Kitchen",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "script.fix_3way_light",
+                                                                    "service_data": {
+                                                                        "light_entity": "light.kitchen_overhead_light"
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "custom:paper-buttons-row",
+                                                        "position": "right",
+                                                        "buttons": [
+                                                            {
+                                                                "entity": "sensor.opnsense_package_versions",
+                                                                "name": "OpnSense",
+                                                                "icon": "mdi:briefcase-download",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "homeassistant.update_entity",
+                                                                    "service_data": {
+                                                                        "entity_id": [
+                                                                            "sensor.opnsense_package_versions",
+                                                                            "sensor.opnsense_versions"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "entity": "cover.garage_door",
+                                                                "name": "Garage Closed",
+                                                                "icon": "mdi:garage",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "python_script.set_state",
+                                                                    "service_data": {
+                                                                        "entity_id": "cover.garage_door",
+                                                                        "state": "closed"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "entity": "cover.garage_door",
+                                                                "name": "Garage Open",
+                                                                "icon": "mdi:garage-open",
+                                                                "tap_action": {
+                                                                    "action": "call-service",
+                                                                    "service": "python_script.set_state",
+                                                                    "service_data": {
+                                                                        "entity_id": "cover.garage_door",
+                                                                        "state": "open"
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
                                             }
                                         ]
                                     }

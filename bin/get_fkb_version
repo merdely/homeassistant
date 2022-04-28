@@ -1,0 +1,16 @@
+#!/bin/sh
+
+ver=$(curl -fs https://www.fully-kiosk.com/en/ | awk '
+  /<a href="https:\/\/www.fully-kiosk.com\/files\/[0-9]{4}\/[0-9]{2}\/.*\.apk"><img/ {
+    print gensub(/.*<a href="https:\/\/www.fully-kiosk.com\/files\/[0-9]{4}\/[0-9]{2}\/Fully-Kiosk-Browser-v(.*)\.apk"><img.*/,
+    "\\1", "g", $0);
+    exit}
+  ')
+err=$?
+if [ $err != 0 ]; then
+  echo "error ($ver)"
+  exit $err
+else
+  echo "$ver"
+  exit 0
+fi
