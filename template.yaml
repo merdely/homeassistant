@@ -194,9 +194,9 @@
     unique_id: unavailable_entities
     name: Unavailable Entities
     icon: mdi:cloud-question
-    state: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    state: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
     attributes:
-      entity_list: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
+      entity_list: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
 - trigger:
@@ -825,6 +825,25 @@
         {% if days2 < days%}{% set days = days2 %}{% endif %}
         {{ days }} days
       {% endif %}
+
+- sensor:
+    unique_id: days_until_cleaners
+    name: Days Until Cleaners
+    state: >
+      {% set clean_day = state_attr("input_select.cleaners_weekday", "options").index(states("input_select.cleaners_weekday")) | int -%}
+      {% set week_day = (as_timestamp(now()) | timestamp_custom("%w")) | int -%}
+      {% set is_week = ((as_timestamp(now()) | timestamp_custom("%U"))) | int % 2 == iif(is_state("input_boolean.cleaner_week_even", "off"), 1, 0) -%}
+      {%- if is_week and clean_day == week_day -%}
+      Today
+      {%- elif is_week and clean_day - week_day == 1 -%}
+      Tomorrow
+      {%- elif is_week and clean_day > week_day -%}
+      {{ clean_day - week_day }} days
+      {%- elif is_week and clean_day < week_day -%}
+      {{ 14 + clean_day - week_day }} days
+      {%- else -%}
+      {{ 7 + clean_day - week_day }} days
+      {%- endif -%}
 
 - sensor:
     unique_id: trash_or_recycle

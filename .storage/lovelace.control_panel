@@ -50,13 +50,14 @@
                                                     "square": false,
                                                     "cards": [
                                                         {
-                                                            "type": "sensor",
-                                                            "entity": "sensor.fully_kiosk_browser",
-                                                            "name": "Panel",
-                                                            "detail": 1,
+                                                            "type": "button",
                                                             "card_mod": {
-                                                                "style": "ha-card.type-entity {\n  height: 80px;\n}\n.header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 30px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.info {\n  line-height: 50px !important;\n  padding: 0px 16px 1px !important;\n}\n.value {\n  line-height: 50px !important;\n  font-size: 40px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n"
-                                                            }
+                                                                "style": ".state {\n  {% if states('sensor.washer_and_dryer_state_pretty') == 'Laundry Idle' %}\n  font-size: 26px !important;\n  color: var(--primary-text-color) !important;\n  {% elif states('sensor.washer_and_dryer_state_pretty') == 'Washer' %}\n  font-size: 30px !important;\n  color: yellow !important;\n  {% elif states('sensor.washer_and_dryer_state_pretty') == 'Dryer' %}\n  font-size: 30px !important;\n  color: yellow !important;\n  {% else %}\n  font-size: 26px !important;\n  color: yellow !important;\n  line-height: 1.0 !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                                                            },
+                                                            "entity": "sensor.washer_and_dryer_state_pretty",
+                                                            "show_icon": false,
+                                                            "show_name": false,
+                                                            "show_state": true
                                                         },
                                                         {
                                                             "type": "button",
@@ -92,16 +93,6 @@
                                                     "cards": [
                                                         {
                                                             "type": "button",
-                                                            "card_mod": {
-                                                                "style": ".state {\n  {% if states('sensor.washer_and_dryer_state_pretty') == 'Laundry Idle' %}\n  font-size: 26px !important;\n  color: var(--primary-text-color) !important;\n  {% elif states('sensor.washer_and_dryer_state_pretty') == 'Washer' %}\n  font-size: 30px !important;\n  color: yellow !important;\n  {% elif states('sensor.washer_and_dryer_state_pretty') == 'Dryer' %}\n  font-size: 30px !important;\n  color: yellow !important;\n  {% else %}\n  font-size: 26px !important;\n  color: yellow !important;\n  line-height: 1.0 !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
-                                                            },
-                                                            "entity": "sensor.washer_and_dryer_state_pretty",
-                                                            "show_icon": false,
-                                                            "show_name": false,
-                                                            "show_state": true
-                                                        },
-                                                        {
-                                                            "type": "button",
                                                             "entity": "input_boolean.mail_delivered",
                                                             "show_icon": true,
                                                             "show_name": true,
@@ -112,6 +103,24 @@
                                                             "name": "Mail",
                                                             "card_mod": {
                                                                 "style": ".state {\n  {% if states('input_boolean.mail_delivered') == 'off' %}\n  color: var(--primary-text-color) !important;\n  {% else %}\n  color: yellow !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                                                            }
+                                                        },
+                                                        {
+                                                            "type": "button",
+                                                            "card_mod": {
+                                                                "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}\n    color: yellow !important;\n  {% elif is_state('sensor.days_until_cleaners', 'Today') %}\n    color: #00FF00 !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% elif states(\"sensor.days_until_cleaners\") | replace(\" days\", \"\") | int(default=0) > 9 %}\n    font-size: 24px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}\n    color: yellow !important;\n  {% elif is_state('sensor.days_until_cleaners', 'Today') %}\n    color: #00FF00 !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
+                                                            },
+                                                            "entity": "sensor.days_until_cleaners",
+                                                            "icon": "mdi:broom",
+                                                            "show_state": true,
+                                                            "show_icon": true,
+                                                            "icon_height": "30px",
+                                                            "show_name": false,
+                                                            "tap_action": {
+                                                                "action": "none"
+                                                            },
+                                                            "hold_action": {
+                                                                "action": "none"
                                                             }
                                                         }
                                                     ]
@@ -519,11 +528,12 @@
                                                     }
                                                 },
                                                 {
-                                                    "type": "entity",
-                                                    "entity": "sensor.master_bath_humidity",
-                                                    "name": "Mastr Bath",
+                                                    "type": "sensor",
+                                                    "entity": "sensor.fully_kiosk_browser",
+                                                    "name": "Panel",
+                                                    "detail": 1,
                                                     "card_mod": {
-                                                        "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                                                        "style": ".header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.info {\n  padding: 0px 16px 1px !important;\n}\n.value {\n  font-size: 32px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n"
                                                     }
                                                 },
                                                 {
@@ -3510,7 +3520,7 @@
                                                                 },
                                                                 {
                                                                     "type": "custom:multiple-entity-row",
-                                                                    "entity": "binary_sensor.updater",
+                                                                    "entity": "binary_sensor.software_update_available",
                                                                     "name": "HA",
                                                                     "icon": "mdi:home-assistant",
                                                                     "show_state": false,
@@ -4364,36 +4374,11 @@
                                                                     "name": "Bed Sensors"
                                                                 },
                                                                 {
-                                                                    "entity": "light.god_damn_light",
-                                                                    "name": "God Damn",
+                                                                    "entity": "script.0000000mwe",
+                                                                    "name": "Fix 3-way Lights",
                                                                     "tap_action": {
                                                                         "action": "call-service",
-                                                                        "service": "script.fix_3way_light",
-                                                                        "service_data": {
-                                                                            "light_entity": "light.god_damn_light"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    "entity": "light.hallway_light",
-                                                                    "name": "Hallway",
-                                                                    "tap_action": {
-                                                                        "action": "call-service",
-                                                                        "service": "script.fix_3way_light",
-                                                                        "service_data": {
-                                                                            "light_entity": "light.hallway_light"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    "entity": "light.kitchen_overhead_light",
-                                                                    "name": "Kitchen",
-                                                                    "tap_action": {
-                                                                        "action": "call-service",
-                                                                        "service": "script.fix_3way_light",
-                                                                        "service_data": {
-                                                                            "light_entity": "light.kitchen_overhead_light"
-                                                                        }
+                                                                        "service": "script.0000000mwe"
                                                                     }
                                                                 }
                                                             ]

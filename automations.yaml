@@ -349,15 +349,8 @@
       milliseconds: 0
   - service: script.fix_in_bed_sensors
     data: {}
-  - service: script.fix_3way_light
-    data:
-      light_entity: light.god_damn_light
-  - service: script.fix_3way_light
-    data:
-      light_entity: light.hallway_light
-  - service: script.fix_3way_light
-    data:
-      light_entity: light.kitchen_overhead_light
+  - service: script.0000000mwe
+    data: {}
   - service: homeassistant.update_entity
     data: {}
     target:
@@ -365,6 +358,10 @@
       - sensor.opnsense_package_versions
       - sensor.opnsense_versions
       - sensor.unifi_ap_versions
+      - light.god_damn_light
+      - light.kitchen_overhead_light
+      - light.hallway_light
+      - sensor.unavailable_entities
   mode: single
 - id: '1603391662402'
   alias: Security - 40 Armed - Disarm Security System in the morning when someone
@@ -439,6 +436,20 @@
   - service: notify.signal_security
     data:
       message: The washing machine is done
+  - if:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.withings_in_bed_holly_e
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.withings_in_bed_michael_e
+        state: 'off'
+    then:
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.security_speakers
+        message: The washing machine is done
   mode: single
 - id: '1604378332593'
   alias: Security - 90 Triggered - Alert of Always Monitored Door Open (Always)
@@ -605,6 +616,20 @@
   - service: notify.signal_security
     data:
       message: The dryer is done
+  - if:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.withings_in_bed_holly_e
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.withings_in_bed_michael_e
+        state: 'off'
+    then:
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.security_speakers
+        message: The dryer is done
   mode: single
 - id: '1605633972450'
   alias: Security - 40 Armed - Re-enable Gate Notifications
@@ -3850,25 +3875,21 @@
       seconds: 0
   condition: []
   action:
-  - service: script.fix_3way_light
-    data:
-      light_entity: '{{ trigger.entity_id }}'
-  - service: homeassistant.update_entity
+  - service: script.0000000mwe
     data: {}
-    target:
-      entity_id: '{{ trigger.entity_id }}'
   mode: single
 - id: '1650211137772'
   alias: Fix MariaDB/Nginx Proxy Manager
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.nginx_proxy_manager_working
-    from: 'on'
+    entity_id:
+    - binary_sensor.nginx_proxy_manager_working
     for:
       hours: 0
       minutes: 2
       seconds: 0
+    to: 'off'
   condition: []
   action:
   - service: hassio.addon_restart

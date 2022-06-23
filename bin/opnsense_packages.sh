@@ -16,7 +16,7 @@ cat $tmpfile | awk -v status="$status" -F'[<>]' '
     print "  \"plugins\": {";
     d=""
   }
-  $13 ~ /^(opnsense|os)-.*\.txz$/ {
+  $13 ~ /^(opnsense|os)-.*\.(txz|pkg)$/ {
     p=substr($13,1,length($13)-4);
     split(p,a,"-");
     v=a[length(a)];

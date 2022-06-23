@@ -313,7 +313,7 @@
                                 {
                                     "type": "entities",
                                     "card_mod": {
-                                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}yellow{% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                                     },
                                     "entities": [
                                         {
@@ -519,6 +519,13 @@
                                                     "entity": "input_boolean.mail_delivered",
                                                     "styles": {
                                                         "color": "var(--mail-color)"
+                                                    },
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "input_boolean.toggle",
+                                                        "service_data": {
+                                                            "entity_id": "input_boolean.mail_delivered"
+                                                        }
                                                     }
                                                 }
                                             ]
@@ -526,8 +533,16 @@
                                         {
                                             "type": "custom:multiple-entity-row",
                                             "entity": "sensor.recycle",
-                                            "name": "Trash/Recycle",
+                                            "name": "Schedule",
+                                            "icon": "mdi:calendar",
                                             "entities": [
+                                                {
+                                                    "entity": "sensor.days_until_cleaners",
+                                                    "name": "Cleaners",
+                                                    "styles": {
+                                                        "color": "var(--cleaners-color)"
+                                                    }
+                                                },
                                                 {
                                                     "entity": "sensor.trash",
                                                     "styles": {
@@ -656,7 +671,7 @@
                                         },
                                         {
                                             "type": "custom:multiple-entity-row",
-                                            "entity": "binary_sensor.updater",
+                                            "entity": "binary_sensor.software_update_available",
                                             "name": "HA",
                                             "icon": "mdi:home-assistant",
                                             "show_state": false,
@@ -747,6 +762,7 @@
                                         {
                                             "entity": "sensor.plex_plex",
                                             "name": "Plex Status",
+                                            "show_state": true,
                                             "card_mod": {
                                                 "style": ":host {\n  color: var(--plex-color);\n}\n"
                                             }
@@ -1464,6 +1480,12 @@
                                 },
                                 {
                                     "entity": "input_select.trash_day_2"
+                                },
+                                {
+                                    "entity": "input_select.cleaners_weekday"
+                                },
+                                {
+                                    "entity": "input_boolean.cleaner_week_even"
                                 }
                             ],
                             "title": "Configuration Settings",
@@ -2165,7 +2187,7 @@
                                     "entities": [
                                         {
                                             "type": "section",
-                                            "label": "Presence Announcements"
+                                            "label": "Toggles"
                                         },
                                         {
                                             "type": "custom:paper-buttons-row",
@@ -2173,11 +2195,15 @@
                                             "buttons": [
                                                 {
                                                     "entity": "input_boolean.announce_holly_presence",
-                                                    "name": "Holly"
+                                                    "name": "Holly Pres. Ann."
                                                 },
                                                 {
                                                     "entity": "input_boolean.announce_mike_presence",
-                                                    "name": "Mike"
+                                                    "name": "Mike Pres. Ann."
+                                                },
+                                                {
+                                                    "entity": "input_boolean.cleaner_week_even",
+                                                    "name": "Cleaners Even"
                                                 }
                                             ]
                                         },
@@ -2376,36 +2402,11 @@
                                                     "name": "Bed Sensors"
                                                 },
                                                 {
-                                                    "entity": "light.god_damn_light",
-                                                    "name": "God Damn",
+                                                    "entity": "script.0000000mwe",
+                                                    "name": "Fix 3way",
                                                     "tap_action": {
                                                         "action": "call-service",
-                                                        "service": "script.fix_3way_light",
-                                                        "service_data": {
-                                                            "light_entity": "light.god_damn_light"
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    "entity": "light.hallway_light",
-                                                    "name": "Hallway",
-                                                    "tap_action": {
-                                                        "action": "call-service",
-                                                        "service": "script.fix_3way_light",
-                                                        "service_data": {
-                                                            "light_entity": "light.hallway_light"
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    "entity": "light.kitchen_overhead_light",
-                                                    "name": "Kitchen",
-                                                    "tap_action": {
-                                                        "action": "call-service",
-                                                        "service": "script.fix_3way_light",
-                                                        "service_data": {
-                                                            "light_entity": "light.kitchen_overhead_light"
-                                                        }
+                                                        "service": "script.0000000mwe"
                                                     }
                                                 }
                                             ]
@@ -2928,17 +2929,17 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "A-K Plugs"
+                                "title": "A-L Plugs"
                             },
                             "filter": {
                                 "include": [
                                     {
                                         "domain": "switch",
                                         "entity_id": "*plug*",
+                                        "name": "/^[A-La-l].*/",
                                         "options": {
                                             "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[A-Ka-k].*/"
+                                        }
                                     },
                                     {
                                         "entity_id": "*holly*desk*",
@@ -2962,17 +2963,17 @@
                             "type": "custom:auto-entities",
                             "card": {
                                 "type": "entities",
-                                "title": "L-Z Plugs"
+                                "title": "M-Z Plugs"
                             },
                             "filter": {
                                 "include": [
                                     {
                                         "domain": "switch",
                                         "entity_id": "*plug*",
+                                        "name": "/^[M-Zm-z].*/",
                                         "options": {
                                             "secondary_info": "last-changed"
-                                        },
-                                        "name": "/^[L-Zl-z].*/"
+                                        }
                                     }
                                 ]
                             },
