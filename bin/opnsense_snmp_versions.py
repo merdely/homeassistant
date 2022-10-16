@@ -29,7 +29,8 @@ def get(host, oid, version, commstring='public', user=None, authpw=None, privpw=
                 ver = sysDescr[4].split('.')
                 arch = sysDescr[-1]
                 sw="{}:{}:{}".format(os,ver[0],arch)
-    return sw
+                abi=re.split('[/-]', sysDescr[5])[1]
+    return [ sw, abi ]
 
 def walk(host, oid, version, commstring='public', user=None, authpw=None, privpw=None):
     swlist = {}
@@ -98,7 +99,7 @@ with open(secrets, 'r') as file:
             privpw = m.group(2)
 file.close()
 versions = walk(ipaddress, oid, version, commstring, user, authpw, privpw)
-sys_abi = get(ipaddress, '.1.3.6.1.2.1.1.1.0', version, commstring, user, authpw, privpw)
+[ sys_abi, versions['core-abi'] ] = get(ipaddress, '.1.3.6.1.2.1.1.1.0', version, commstring, user, authpw, privpw)
 versions['sys-abi'] = sys_abi
 print(json.dumps(versions))
 

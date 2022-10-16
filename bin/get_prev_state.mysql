@@ -30,6 +30,7 @@ else:
     entity_id = sys.argv[1]
     current_state = " ".join(sys.argv[2:]).replace("'", "\\'")
 
+exit_code = 0
 prev_location = ''
 try:
    if version.parse(_mysql.__version__) < version.parse('2.1.0'):
@@ -53,7 +54,9 @@ try:
    conn.close()
 
 except Exception as error :
-    print ("Error while fetching data from MySQL", error)
+    exit_code = 1
+    #pass
+    #print ("Error while fetching data from MySQL", error)
 
 if prev_location == '' or prev_location == current_state:
     if current_state == 'home':
@@ -63,3 +66,4 @@ if prev_location == '' or prev_location == current_state:
 
 print(prev_location)
 
+quit(exit_code)

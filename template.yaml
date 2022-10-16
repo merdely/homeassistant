@@ -82,7 +82,7 @@
           {% set ns.sensor = 'On' -%}
         {% endif -%}
       {% endfor -%}
-      {% for software in states | selectattr('domain', 'equalto', 'update') | map(attribute='entity_id') | list -%}
+      {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\.wap_') | map(attribute='entity_id') | list -%}
         {% if states(software) == "on" -%}
           {% set ns.sensor = 'On' -%}
         {% endif -%}
@@ -112,7 +112,7 @@
             {% set ns.updates = ns.updates + 1 -%}
           {% endif -%}
         {% endfor -%}
-        {% for software in states | selectattr('domain', 'equalto', 'update') | map(attribute='entity_id') | list -%}
+        {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\.wap_') | map(attribute='entity_id') | list -%}
           {% if states(software) == "on" -%}
             {% set ns.updates = ns.updates + 1 -%}
           {% endif -%}
@@ -141,7 +141,7 @@
             {% set ns.list = ns.list + " " + software -%}
           {% endif -%}
         {% endfor -%}
-        {% for software in states | selectattr('domain', 'equalto', 'update') | map(attribute='entity_id') | list -%}
+        {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\.wap_') | map(attribute='entity_id') | list -%}
           {% if states(software) == "on" -%}
             {% set ns.list = ns.list + " " + software -%}
           {% endif -%}
@@ -194,9 +194,9 @@
     unique_id: unavailable_entities
     name: Unavailable Entities
     icon: mdi:cloud-question
-    state: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    state: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
     attributes:
-      entity_list: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
+      entity_list: "{{ states | rejectattr('entity_id','match','^((binary_sensor|light|sensor|switch).(bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
 - trigger:

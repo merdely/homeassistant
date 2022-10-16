@@ -1,0 +1,115 @@
+cover:
+  - name: "Garage Door"
+    unique_id: garage_door
+    command_topic: "cmnd/garage_door/event"
+    state_topic: "stat/garage_door/POWER"
+    availability_topic: "tele/garage_door/LWT"
+    qos: 1
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    payload_open: "dooropen"
+    payload_stop: "doorclose"
+    payload_close: "doorclose"
+    state_open: "OFF"
+    state_closed: "ON"
+    device_class: "garage"
+    retain: false
+
+sensor:
+  - name: Fully Kiosk Browser
+    json_attributes_topic: fully/deviceInfo/32e18972-a62f66fd
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_topic: fully/deviceInfo/32e18972-a62f66fd
+    value_template: "{{ value_json.batteryLevel }}"
+
+  - name: Fully Kiosk Browser MBR
+    json_attributes_topic: fully/deviceInfo/fe195503-ca16fc27
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_topic: fully/deviceInfo/fe195503-ca16fc27
+    value_template: "{{ value_json.batteryLevel }}"
+
+  - name: Printer Ink
+    state_topic: "ink2mqtt/192.168.25.25"
+    value_template: "{{ value_json.printer }}"
+    json_attributes_topic: "ink2mqtt/192.168.25.25"
+
+
+fan:
+  - name: "Bedroom Fan"
+    unique_id: "bedroom_fan"
+    qos: 0
+    state_topic: "stat/bedroom_fan/POWER1"
+    command_topic: "cmnd/bedroom_fan/POWER1"
+    availability_topic: "tele/bedroom_fan/LWT"
+    percentage_state_topic: "stat/bedroom_fan/speed"
+    percentage_value_template: '{{ ((value | replace("3,","")) | int(0) + 1) * 25 }}'
+    percentage_command_topic: "cmnd/bedroom_fan/tuyasend4"
+    percentage_command_template: "3,{{ ((value | int(0) - 1) / 25) | int(0) }}"
+    preset_mode_value_template: '{{ value | replace("3,0", "low") | replace("3,1", "medium") | replace("3,2", "high") | replace("3,3", "cyclone") }}'
+    preset_mode_command_topic: "cmnd/bedroom_fan/tuyasend4"
+    preset_mode_command_template: '{{ value | replace("low", "3,0") | replace("medium", "3,1") | replace("high", "3,2") | replace("cyclone", "3,3") }}'
+    preset_modes:
+      - "low"
+      - "medium"
+      - "high"
+      - "cyclone"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: false
+
+  - name: "Office Fan"
+    unique_id: "office_fan"
+    qos: 0
+    state_topic: "stat/office_fan/POWER1"
+    command_topic: "cmnd/office_fan/POWER1"
+    availability_topic: "tele/office_fan/LWT"
+    percentage_state_topic: "stat/office_fan/speed"
+    percentage_value_template: '{{ ((value | replace("3,","")) | int(0) + 1) * 25 }}'
+    percentage_command_topic: "cmnd/office_fan/tuyasend4"
+    percentage_command_template: "3,{{ ((value | int(0) - 1) / 25) | int(0) }}"
+    preset_mode_state_topic: "stat/office_fan/speed"
+    preset_mode_value_template: '{{ value | replace("3,0", "low") | replace("3,1", "medium") | replace("3,2", "high") | replace("3,3", "cyclone") }}'
+    preset_mode_command_topic: "cmnd/office_fan/tuyasend4"
+    preset_mode_command_template: '{{ value | replace("low", "3,0") | replace("medium", "3,1") | replace("high", "3,2") | replace("cyclone", "3,3") }}'
+    preset_modes:
+      - "low"
+      - "medium"
+      - "high"
+      - "cyclone"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: false
+
+light:
+  - name: "Hallway Light"
+    state_topic: "stat/hallway_light/POWER1"
+    command_topic: "cmnd/hallway_light/EVENT"
+    availability_topic: "tele/hallway_light/LWT"
+    payload_on: "ON"
+    payload_off: "OFF"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+
+  - name: "God Damn Light"
+    state_topic: "stat/god_damn_light/POWER1"
+    command_topic: "cmnd/god_damn_light/EVENT"
+    availability_topic: "tele/god_damn_light/LWT"
+    payload_on: "ON"
+    payload_off: "OFF"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+
+  - name: "Kitchen Overhead Light"
+    state_topic: "stat/kitchen_overhead_light/POWER1"
+    command_topic: "cmnd/kitchen_overhead_light/EVENT"
+    availability_topic: "tele/kitchen_overhead_light/LWT"
+    payload_on: "ON"
+    payload_off: "OFF"
+    payload_available: "Online"
+    payload_not_available: "Offline"

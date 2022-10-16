@@ -2,6 +2,12 @@
   device: auto
 
 - platform: command_line
+  name: WyzeCam Status
+  command: "/config/bin/check_wyzecam"
+  payload_on: "on"
+  payload_off: "off"
+
+- platform: command_line
   name: Earth Nginx/PHP Working
   command: "curl -m 2 -s https://earth.erdely.in/phptest.php | grep '^PHP is working!' || echo 'PHP is not working!'"
   #device_class: connectivity

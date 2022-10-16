@@ -1,0 +1,23 @@
+#!/bin/sh
+
+[ "$1" = "-h" ] && { echo "usage: $(basename $0) [-h]"; exit 0; }
+
+hapath=/srv/docker/homeassistant
+[ -f /config/.HA_VERSION ] && hapath=/config
+
+
+tmpd=$(mktemp -d)
+ffmpeg -y -rtsp_transport tcp -i rtsp://admin:michael1@192.168.25.252:554/unicast -frames:v 1 $tmpd/test.jpg > /dev/null 2>&1
+
+out=$(identify $tmpd/test.jpg 2>&1)
+
+if [[ "$out" =~ "$tmpd/test.jpg JPEG 1920x1080" ]]; then
+  echo "on"
+else
+  echo "off"
+fi
+
+rm -Rf $tmpd
+
+#ssh -i $hapath/.ssh/homeassistant root@wyzecam.erdely.in reboot
+

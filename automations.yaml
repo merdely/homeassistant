@@ -511,18 +511,17 @@
   action:
   - service: notify.signal_security
     data:
-      message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []\
-        \ -%} {%- for entity_id in states.group.exterior_security_devices.attributes.entity_id\
-        \ -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state\
-        \ != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities\
-        \ = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-\
-        \ endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n\
-        \  {{ open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities\
-        \ | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n\
-        \  {%- if ns.count == ns.open_entities | length - 1 %} and {% endif -%}\n\
-        {%- endfor -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %}\
-        \ are{% endif %} {%- if ns.count > 0 %}open{% else %}No devices are open{%\
-        \ endif %}"
+      message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
+        -%} {%- for entity_id in states.group.exterior_security_devices.attributes.entity_id
+        -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state
+        != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities
+        = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-
+        endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n  {{
+        open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities
+        | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n  {%-
+        if ns.count == ns.open_entities | length - 1 %} and {% endif -%}\n{%- endfor
+        -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
+        %} {%- if ns.count > 0 %}open{% else %}No devices are open{% endif %}"
   mode: single
 - id: '1604422951001'
   alias: Security - 90 Triggered - Start Siren
@@ -680,9 +679,41 @@
     to: armed_home
     from: disarmed
   condition:
-  - condition: state
-    entity_id: group.doors_windows
-    state: 'on'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: "{{ expand(\"group.doors_windows\") | selectattr('state',
+          'eq', 'on') |\n      list | count > 0 }}"
+      - condition: time
+        before: input_datetime.automatic_security_disarm
+        weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sat
+        - sun
+        after: input_datetime.ignore_bedroom_slider
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: "{{ expand(\"group.doors_windows\") | rejectattr('entity_id',
+          'eq', 'binary_sensor.bedroom_slider_contact')\n      | selectattr('state',
+          'eq', 'on') | list | count > 0 }}"
+      - condition: time
+        after: input_datetime.automatic_security_disarm
+        weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sat
+        - sun
+        before: input_datetime.ignore_bedroom_slider
   action:
   - service: script.security_disarm_system
     data: {}
@@ -726,33 +757,64 @@
       command_string: cmd=setAudioVolume&level=60
   - service: input_text.set_value
     data:
-      value: "{%- set ns = namespace(count = 0) %} {%- for entity_id in states.group.doors_windows.attributes.entity_id\
-        \ %}\n  {%- set domain, device = entity_id.split('.') %}\n  {%- if states[domain][device].state\
-        \ == 'on' -%}\n    {%- set ns.count = ns.count + 1 -%}\n    {%- if ns.count\
-        \ > 1 %} and {% endif -%}\n    {{ state_attr(entity_id,\"friendly_name\")\
-        \ }}\n  {%- endif %}\n{%- endfor %} {%- if not is_state('cover.garage_door',\
-        \ 'closed') -%}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.count\
-        \ > 1 %} and {% endif -%}\n  Garage Door\n{%- endif %} {%- if ns.count ==\
-        \ 0 %} No doors or windows are {%- elif ns.count > 1 %} are{% else %} is{%\
-        \ endif %} Open\n"
+      value: "{%- set ns = namespace(count = 0) %} {%- for entity_id in states.group.doors_windows.attributes.entity_id
+        %}\n  {%- set domain, device = entity_id.split('.') %}\n  {%- if states[domain][device].state
+        == 'on' -%}\n    {%- set ns.count = ns.count + 1 -%}\n    {%- if ns.count
+        > 1 %} and {% endif -%}\n    {{ state_attr(entity_id,\"friendly_name\") }}\n
+        \ {%- endif %}\n{%- endfor %} {%- if not is_state('cover.garage_door', 'closed')
+        -%}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.count > 1 %} and {%
+        endif -%}\n  Garage Door\n{%- endif %} {%- if ns.count == 0 %} No doors or
+        windows are {%- elif ns.count > 1 %} are{% else %} is{% endif %} Open\n"
     entity_id: input_text.security_message
   mode: single
 - id: '1606772769370'
   alias: Security - 60 Tripped - Trigger Alarm Home
   description: ''
   trigger:
-  - platform: state
-    entity_id: group.security_devices
-    to: 'on'
+  - platform: template
+    value_template: '{{ expand("group.security_devices") | selectattr(''state'', ''eq'',
+      ''on'') | list | count > 0 }}'
     for: 00:00:01
   condition:
   - condition: state
     entity_id: alarm_control_panel.home_alarm
     state: armed_home
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: '{{ trigger.entity_id == "binary_sensor.bedroom_slider_contact"
+          }}'
+      - condition: time
+        before: input_datetime.automatic_security_disarm
+        weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sat
+        - sun
+        after: input_datetime.ignore_bedroom_slider
+      alias: Is Bedroom Slider
+    - condition: or
+      conditions:
+      - condition: template
+        value_template: '{{ trigger.entity_id != "binary_sensor.bedroom_slider_contact"
+          }}'
+      alias: Is NOT Bedroom Slider
+    alias: Handle Bedroom Slider
   action:
   - service: alarm_control_panel.alarm_trigger
     data: {}
     entity_id: alarm_control_panel.home_alarm
+  - service: system_log.write
+    data:
+      message: entity_id = {{ trigger.entity_id }} ; now = {{ now() }} ; ignore =
+        {{ today_at(states("input_datetime.ignore_bedroom_slider")) }} ; disarm =
+        {{ today_at(states("input_datetime.automatic_security_disarm")) }}
+    enabled: false
   mode: single
 - id: '1606776219305'
   alias: Security - 40 Armed - Set Control Panel to Alarm Panel
@@ -2116,7 +2178,7 @@
       - service: script.computer_mercury_unlock
         data: {}
     default:
-    - service: notify.mobile_app_pixel_6_pro
+    - service: notify.mobile_app_pixel_7_pro
       data:
         message: Someone scanned at Mike's Desk
     - service: system_log.write
@@ -2808,9 +2870,9 @@
   action:
   - service: notify.signal_security
     data:
-      message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id\
-        \ -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')\
-        \ }}\n{% endif -%}{% endfor -%}"
+      message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id
+        -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')
+        }}\n{% endif -%}{% endfor -%}"
   mode: single
 - id: '1618083518993'
   alias: Lighting - Living Room - Far Black Lamp
@@ -3746,9 +3808,9 @@
     for:
       minutes: '{{ states(''input_number.office_heater_auto_off'') | int(30) }}'
   - platform: template
-    value_template: "{{ states(\"sensor.office_multisensor_temperature\") | float(0)\
-      \ >=\n  states(\"input_number.office_heater_auto_off_temperature\") | float(71.0)\
-      \ }}\n"
+    value_template: "{{ states(\"sensor.office_multisensor_temperature\") | float(0)
+      >=\n  states(\"input_number.office_heater_auto_off_temperature\") | float(71.0)
+      }}\n"
     for:
       minutes: 1
   condition: []
@@ -4010,4 +4072,112 @@
     data: {}
     target:
       entity_id: media_player.security_speakers
+  mode: single
+- id: '1656031673970'
+  alias: Notifications - Refrigerator Plug Turned Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - switch.kitchen_refrigerator_plug
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: The Refrigerator Plug is Off! You should turn it back on immediately!
+      title: The Refrigerator Plug is Off!!!
+      data:
+        actions:
+        - action: TURN_ON_FRIDGE
+          title: Turn On Fridge
+  mode: single
+- id: '1656031837820'
+  alias: Actionable Notifications - TURN_ON_FRIDGE
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: TURN_ON_FRIDGE
+  condition: []
+  action:
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id: switch.kitchen_refrigerator_plug
+  - service: notify.notify
+    data:
+      message: The Refrigerator Plug was turned on by Actionable Notification
+      title: Fridge turned back on
+  mode: single
+- id: '1657398934743'
+  alias: Fix WyzeCam
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.wyzecam_status
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  condition: []
+  action:
+  - service: shell_command.ssh_command
+    data:
+      server: root@wyzecam.erdely.in
+      command: /opt/restart_rtsp.sh
+    enabled: false
+  - service: shell_command.ssh_command
+    data:
+      server: root@wyzecam.erdely.in
+      command: reboot
+  - service: notify.gmail_to_mike
+    data:
+      message: WyzeCam rebooted
+      title: WyzeCam rebooted
+  mode: single
+- id: '1660352175401'
+  alias: TV - Living Room - Turn On Tivo with TV
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.living_room_roku_tv
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id: switch.living_room_tivo_plug
+  mode: single
+- id: '1660352213868'
+  alias: TV - Living Room - Turn Off Tivo with TV
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.living_room_roku_tv
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    to: 'off'
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: switch.living_room_tivo_plug
   mode: single

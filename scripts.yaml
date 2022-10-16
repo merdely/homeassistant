@@ -1,7 +1,7 @@
 announcement_ha_app_test_announcement:
   alias: Announcement - HA App - Test Announcement
   sequence:
-  - service: notify.mobile_app_pixel_6_pro
+  - service: notify.mobile_app_pixel_7_pro
     data:
       message: The dryer is still running
       title: Laundry
@@ -43,34 +43,34 @@ announcement_nightly_security:
       - service: tts.cloud_say
         entity_id: media_player.all_speakers
         data:
-          message: "{% if is_state('binary_sensor.front_door_contact', 'on') %}\n\
-            \  Front Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',\
-            \ 'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',\
-            \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',\
-            \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',\
-            \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',\
-            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',\
-            \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',\
-            \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',\
-            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',\
-            \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_gate_contact',\
-            \ 'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',\
-            \ 'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
-            \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
+          message: "{% if is_state('binary_sensor.front_door_contact', 'on') %}\n
+            \ Front Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',
+            'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',
+            'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',
+            'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',
+            'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',
+            'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',
+            'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',
+            'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',
+            'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',
+            'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_gate_contact',
+            'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',
+            'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',
+            'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: notify.signal_security
         data:
-          message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door\
-            \ is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',\
-            \ 'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',\
-            \ 'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',\
-            \ 'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',\
-            \ 'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',\
-            \ 'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',\
-            \ 'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',\
-            \ 'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',\
-            \ 'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',\
-            \ 'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',\
-            \ 'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
+          message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door
+            is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',
+            'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',
+            'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',
+            'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',
+            'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',
+            'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',
+            'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',
+            'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',
+            'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',
+            'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',
+            'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
       - service: script.function_speakers_restore
         data:
           speaker: all_speakers
@@ -154,46 +154,44 @@ security_message_open_security_devices:
   sequence:
   - service: input_text.set_value
     data:
-      value: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []\
-        \ -%} {%- for entity_id in states.group.security_devices.attributes.entity_id\
-        \ -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state\
-        \ != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities\
-        \ = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-\
-        \ endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n\
-        \  {{ open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities\
-        \ | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n\
-        \  {%- if ns.count == ns.open_entities | length - 1 %} and {% endif -%}\n\
-        {%- endfor -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %}\
-        \ are{% endif %} {% if ns.count > 0 %}open{% else %}No devices are open{%\
-        \ endif %}"
+      value: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
+        -%} {%- for entity_id in states.group.security_devices.attributes.entity_id
+        -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state
+        != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities
+        = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-
+        endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n  {{
+        open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities
+        | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n  {%-
+        if ns.count == ns.open_entities | length - 1 %} and {% endif -%}\n{%- endfor
+        -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
+        %} {% if ns.count > 0 %}open{% else %}No devices are open{% endif %}"
     entity_id: input_text.security_message
   mode: single
 security_message_list_all_security_devices_and_their_state:
   alias: Security - Message - List all security devices and their state
   sequence:
-  - service: notify.mobile_app_pixel_6_pro
+  - service: notify.mobile_app_pixel_7_pro
     data:
-      message: "{%- for entity_id in states.group.security_devices.attributes.entity_id\
-        \ %}\n  {%- set domain, device = entity_id.split('.') -%}\n  {{ state_attr(entity_id,\"\
-        friendly_name\") }} - {{ states[domain][device].state }}\n{% endfor %}\n"
+      message: "{%- for entity_id in states.group.security_devices.attributes.entity_id
+        %}\n  {%- set domain, device = entity_id.split('.') -%}\n  {{ state_attr(entity_id,\"friendly_name\")
+        }} - {{ states[domain][device].state }}\n{% endfor %}\n"
   mode: single
 security_message_list_all_security_devices_and_their_state_dup:
   alias: Security - Message - List all security devices and their state (Duplicate)
   sequence:
-  - service: notify.mobile_app_pixel_6_pro
+  - service: notify.mobile_app_pixel_7_pro
     data:
-      message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []\
-        \ -%} {%- for entity_id in states.group.security_devices.attributes.entity_id\
-        \ -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state\
-        \ != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities\
-        \ = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-\
-        \ endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n\
-        \  {{ open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities\
-        \ | length > 2 and ns.count < ns.open_entities | length %}, {%- endif %}\n\
-        \  {%- if ns.count == ns.open_entities | length - 1 %} and {%- endif %}\n\
-        {% endfor -%} {%- if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %}\
-        \ are{% endif %} {% if ns.count > 0 %}open{% else %}No devices are open{%\
-        \ endif %}"
+      message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
+        -%} {%- for entity_id in states.group.security_devices.attributes.entity_id
+        -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state
+        != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities
+        = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-
+        endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n  {{
+        open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities
+        | length > 2 and ns.count < ns.open_entities | length %}, {%- endif %}\n  {%-
+        if ns.count == ns.open_entities | length - 1 %} and {%- endif %}\n{% endfor
+        -%} {%- if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
+        %} {% if ns.count > 0 %}open{% else %}No devices are open{% endif %}"
   mode: single
 testing_speaker_announcement_2:
   alias: Testing - Speaker Announcement 2
@@ -1478,3 +1476,21 @@ flash_back_porch_lights:
             message: light.{{ repeat.item }} set to off
             level: error
   mode: single
+power_cycle_ymir:
+  alias: Power Cycle Ymir
+  sequence:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: switch.ymir_plug
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id: switch.ymir_plug
+  mode: single
+  icon: mdi:sync
