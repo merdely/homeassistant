@@ -1980,9 +1980,15 @@
                       "type": "button",
                       "tap_action": {
                         "action": "call-service",
-                        "service": "speedtestdotnet.speedtest",
-                        "service_data": {},
-                        "target": {}
+                        "service": "homeassistant.update_entity",
+                        "target": {
+                          "entity_id": [
+                            "sensor.speedtest_download",
+                            "sensor.speedtest_upload",
+                            "sensor.speedtest_ping"
+                          ]
+                        },
+                        "data": {}
                       },
                       "entity": "sensor.speedtest_download",
                       "show_state": true,
@@ -2101,12 +2107,12 @@
                     {
                       "type": "gauge",
                       "entity": "sensor.cpu_temperature",
-                      "min": 70,
-                      "max": 120,
+                      "min": 0,
+                      "max": 90,
                       "severity": {
                         "green": 0,
-                        "yellow": 85,
-                        "red": 95
+                        "yellow": 50,
+                        "red": 70
                       },
                       "needle": true,
                       "name": "CPU"
@@ -3191,6 +3197,9 @@
                 },
                 {
                   "entity": "update.wap_upstairs"
+                },
+                {
+                  "entity": "light.my_test"
                 }
               ]
             }

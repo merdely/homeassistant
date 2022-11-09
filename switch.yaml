@@ -183,7 +183,7 @@
         {% endif %}
       turn_on:
         - service: homeassistant.turn_on
-          entity_id: light.god_damn_light, switch.god_damn_tv
+          entity_id: light.god_damn_switch, switch.god_damn_tv
       turn_off:
         - service: homeassistant.turn_off
           entity_id: switch.family_room, switch.den
@@ -192,7 +192,7 @@
       friendly_name: "Family Room"
       value_template: >-
         {% if is_state('switch.god_damn_tv', 'on') or
-              is_state('light.god_damn_light', 'on') or
+              is_state('light.god_damn_switch', 'on') or
               is_state('switch.fireplace_light', 'on') or
               is_state('switch.three_headed_lamp', 'on') or
               is_state('switch.christmas_tree', 'on') %}
@@ -202,10 +202,10 @@
         {% endif %}
       turn_on:
         - service: homeassistant.turn_on
-          entity_id: light.god_damn_light
+          entity_id: light.god_damn_switch
       turn_off:
         - service: homeassistant.turn_off
-          entity_id: switch.god_damn_tv, light.god_damn_light, switch.fireplace_light, switch.three_headed_lamp, switch.christmas_tree
+          entity_id: switch.god_damn_tv, light.god_damn_switch, switch.fireplace_light, switch.three_headed_lamp, switch.christmas_tree
 
     den:
       friendly_name: "Den"

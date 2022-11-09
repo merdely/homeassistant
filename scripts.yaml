@@ -1445,7 +1445,7 @@ flash_back_porch_lights:
   sequence:
   - repeat:
       for_each:
-      - god_damn_light
+      - god_damn_switch
       - hallway_light
       - kitchen_overhead_light
       sequence:
@@ -1494,3 +1494,10 @@ power_cycle_ymir:
       entity_id: switch.ymir_plug
   mode: single
   icon: mdi:sync
+testing_signal_mike:
+  alias: Testing - Signal Mike
+  sequence:
+  - service: notify.signal_mike
+    data:
+      message: test signal message
+  mode: single

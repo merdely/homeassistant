@@ -492,9 +492,14 @@
   - service: homeassistant.turn_off
     target:
       entity_id: switch.siren
+    data: {}
   - service: rest_command.fkb_command
     data:
       command_string: cmd=loadStartUrl
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: switch.petcam_plug
   mode: single
 - id: '1604422426174'
   alias: Security - 90 Triggered - Alert of Exterior Doors (Away)
@@ -656,6 +661,10 @@
     entity_id: group.security_devices
     state: 'off'
   action:
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id: switch.petcam_plug
   - service: rest_command.fkb_command
     data:
       command_string: cmd=setAudioVolume&level=100
@@ -2655,6 +2664,13 @@
         entity_id: input_boolean.mail_delivered
         state: 'off'
       sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id: input_boolean.mail_delivered
+        data: {}
+      - service: notify.signal_security
+        data:
+          message: The mail's here, the mail's here!  Woo-hoo!
       - service: notify.notify
         data:
           message: The mail's here, the mail's here!  Woo-hoo!
@@ -2663,13 +2679,6 @@
             actions:
             - action: RESET_MAILBOX
               title: Reset Mail Delivery Notification
-      - service: homeassistant.turn_on
-        target:
-          entity_id: input_boolean.mail_delivered
-        data: {}
-      - service: notify.signal_security
-        data:
-          message: The mail's here, the mail's here!  Woo-hoo!
     default:
     - service: homeassistant.turn_off
       target:
