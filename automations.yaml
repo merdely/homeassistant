@@ -52,13 +52,29 @@
       sequence:
       - service: homeassistant.turn_on
         target:
-          entity_id: switch.outside_xmas
+          entity_id:
+          - switch.outside_xmas
+          - light.front_porch_light
+        data: {}
+      - service: scene.turn_on
+        data: {}
+        target:
+          entity_id: scene.front_porch_christmas
+      - service: scene.turn_on
+        target:
+          entity_id: scene.back_porch_christmas
+        metadata: {}
     default:
     - service: homeassistant.turn_on
       target:
         entity_id:
         - light.front_porch_light
         - light.outside_garage_lights
+      data: {}
+    - service: scene.turn_on
+      data: {}
+      target:
+        entity_id: scene.front_porch_normal
   - choose:
     - conditions:
       - condition: not
@@ -70,10 +86,12 @@
       - service: homeassistant.turn_on
         target:
           entity_id: light.kitchen_table_light
+        data: {}
     default: []
   - service: homeassistant.turn_on
     target:
       entity_id: switch.dining_room_christmas_lights
+    data: {}
   mode: single
 - id: '1600529040720'
   alias: Lighting - Sunset Lights Off at Night
@@ -168,13 +186,13 @@
     event_type: zha_event
     event_data:
       device_ieee: 00:15:8d:00:02:83:c5:c8
-      command: single
+      command: double
   - platform: device
     domain: mqtt
     device_id: 8b32a51920b7a78f8166618d7a13e87d
     type: action
-    subtype: single
-    discovery_id: 0x00158d000283c5c8 action_single
+    subtype: double
+    discovery_id: 0x00158d000283c5c8 action_double
   condition: []
   action:
   - service: homeassistant.toggle
@@ -189,13 +207,13 @@
     event_type: zha_event
     event_data:
       device_ieee: 00:15:8d:00:02:83:c5:c8
-      command: double
+      command: single
   - platform: device
     domain: mqtt
     device_id: 8b32a51920b7a78f8166618d7a13e87d
     type: action
-    subtype: double
-    discovery_id: 0x00158d000283c5c8 action_double
+    subtype: single
+    discovery_id: 0x00158d000283c5c8 action_single
   condition: []
   action:
   - service: homeassistant.toggle
@@ -351,6 +369,7 @@
     data: {}
   - service: script.0000000mwe
     data: {}
+    enabled: true
   - service: homeassistant.update_entity
     data: {}
     target:
@@ -358,10 +377,28 @@
       - sensor.opnsense_package_versions
       - sensor.opnsense_versions
       - sensor.unifi_ap_versions
-      - light.god_damn_light
+      - light.god_damn_switch
       - light.kitchen_overhead_light
       - light.hallway_light
       - sensor.unavailable_entities
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.chimney_cam_plug
+      - switch.carpo_plug
+      - switch.carme_plug
+      - switch.backyard_cam_plug
+      - switch.earth_plug
+      - switch.elara_plug
+      - switch.garage_cam_plug
+      - switch.garage_netgear_plug
+      - switch.garagedoorcam_plug
+      - switch.jupiter_plug
+      - switch.kitchen_refrigerator_plug
+      - switch.mars_plug
+      - switch.metis_plug
+      - switch.office_tv_plug
   mode: single
 - id: '1603391662402'
   alias: Security - 40 Armed - Disarm Security System in the morning when someone
@@ -1104,8 +1141,8 @@
   - service: homeassistant.turn_off
     target:
       entity_id:
-      - switch.far_black_lamp
-      - switch.white_lamp
+      - light.far_black_lamp
+      - light.white_lamp
   mode: single
 - id: '1607093471372'
   alias: Notifications - Presence - Holly
@@ -1608,7 +1645,7 @@
       sequence:
       - service: rest_command.roku_rest_command
         data:
-          roku_ip: 192.168.25.182
+          roku_ip: 192.168.27.52
           roku_app_id: tvinput.hdmi1
     default:
     - service: media_player.select_source
@@ -1776,8 +1813,10 @@
           minutes: 0
           seconds: 1
           milliseconds: 0
-      - service: plex.scan_for_clients
+      - service: button.press
         data: {}
+        target:
+          entity_id: button.scan_clients_plex
   - service: system_log.write
     data:
       message: 'state of office roku plex client: {{ states(''media_player.plex_plex_for_roku_office_roku'')
@@ -1866,8 +1905,10 @@
           message: 'state of bedroom roku plex client: {{ states(''media_player.plex_plex_for_roku_bedroom_roku'')
             }}'
           level: info
-      - service: plex.scan_for_clients
+      - service: button.press
         data: {}
+        target:
+          entity_id: button.scan_clients_plex
       - delay: '1'
   - service: system_log.write
     data:
@@ -1966,8 +2007,10 @@
                   message: 'God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
                     ''app_name'') }}'
                   level: warning
-      - service: plex.scan_for_clients
+      - service: button.press
         data: {}
+        target:
+          entity_id: button.scan_clients_plex
       - delay: '1'
   - service: system_log.write
     data:
@@ -2098,8 +2141,10 @@
           message: 'state of living room roku plex client: {{ states(''media_player.plex_plex_for_roku_living_room_roku'')
             }}'
           level: info
-      - service: plex.scan_for_clients
+      - service: button.press
         data: {}
+        target:
+          entity_id: button.scan_clients_plex
       - delay: '1'
   - service: system_log.write
     data:
@@ -2204,6 +2249,12 @@
     tag_id: 741a22c8-f682-4319-8d86-eeaa31516012
   - platform: tag
     tag_id: 494e4399-01f7-4ad4-91e4-940b1377cf60
+  - platform: tag
+    tag_id: 3eb9caa6-d3ed-4532-a368-8b9fd2a659a5
+  - platform: tag
+    tag_id: 421d7d13-d4de-429c-bb85-7f2e6adf98cf
+  - platform: tag
+    tag_id: 5cc6779c-7fcf-46b0-baa5-90f0daf05073
   condition: []
   action:
   - choose:
@@ -2215,6 +2266,28 @@
         - condition: template
           value_template: '{{ users[trigger.event.context.user_id] == ''Holly'' }}'
       sequence:
+      - if:
+        - condition: or
+          conditions:
+          - condition: template
+            value_template: '{{ tags[trigger.event.data.tag_id] == ''Garage'' }}'
+          - condition: template
+            value_template: '{{ tags[trigger.event.data.tag_id] == ''Front Door''
+              }}'
+          - condition: template
+            value_template: '{{ tags[trigger.event.data.tag_id] == ''Holly Car'' }}'
+          - condition: template
+            value_template: '{{ tags[trigger.event.data.tag_id] == ''Mike Car'' }}'
+          alias: Unlock Door if Garage, Front Door, or a Car Tag
+        then:
+        - service: button.press
+          data: {}
+          target:
+            entity_id: button.front_door_wake
+        - service: lock.unlock
+          data: {}
+          target:
+            entity_id: lock.front_door
       - service: script.security_disarm_system
         data: {}
       - service: system_log.write
@@ -2237,6 +2310,9 @@
     tags:
       741a22c8-f682-4319-8d86-eeaa31516012: Foyer
       494e4399-01f7-4ad4-91e4-940b1377cf60: Garage
+      3eb9caa6-d3ed-4532-a368-8b9fd2a659a5: Front Door
+      421d7d13-d4de-429c-bb85-7f2e6adf98cf: Mike Car
+      5cc6779c-7fcf-46b0-baa5-90f0daf05073: Holly Car
     users:
       80ad218b0cf54379b5ee622fbb721c6b: Mike
       3109b2f6d085440f92db502bc4e30a3b: Holly
@@ -2568,8 +2644,10 @@
           minutes: 0
           seconds: 1
           milliseconds: 0
-      - service: plex.scan_for_clients
+      - service: button.press
         data: {}
+        target:
+          entity_id: button.scan_clients_plex
   - service: system_log.write
     data:
       message: 'state of god_damn roku plex client: {{ states(''media_player.plex_plex_for_roku_god_damn_roku'')
@@ -2893,7 +2971,7 @@
   action:
   - service: homeassistant.toggle
     target:
-      entity_id: switch.far_black_lamp
+      entity_id: light.far_black_lamp
   mode: single
 - id: '1622222404078'
   alias: 20 - Home Assistant - Bedtime Tasks
@@ -2999,196 +3077,33 @@
       value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
         }}'
   - condition: template
-    value_template: '{{ trigger.payload_json["after"]["camera"] == "Front Door 2"
+    value_template: '{{ trigger.payload_json["after"]["camera"] == "Front_Door_2"
       }}'
   action:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 30
+      seconds: 3
       milliseconds: 0
   - service: script.function_frigate_send_email
     data:
       object: '{{ trigger.payload_json["after"]["label"] }}'
+      camera: '{{ trigger.payload_json["after"]["camera"] }}'
+      eventid: '{{ trigger.payload_json["after"]["id"] }}'
+    enabled: false
+  - service: python_script.send_frigate_email
+    data:
+      detected_object: '{{ trigger.payload_json["after"]["label"] }}'
+      camera: '{{ trigger.payload_json["after"]["camera"] }}'
+      eventid: '{{ trigger.payload_json["after"]["id"] }}'
+    enabled: false
+  - service: shell_command.send_frigate_email
+    data:
+      detected_object: '{{ trigger.payload_json["after"]["label"] }}'
       camera: '{{ trigger.payload_json["after"]["camera"] }}'
       eventid: '{{ trigger.payload_json["after"]["id"] }}'
   mode: single
   max: 10
-- id: '1631904966054'
-  alias: Notifications - Frigate - Front Door Cam
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: frigate/events
-  condition:
-  - condition: template
-    value_template: '{{ trigger.payload_json["after"]["camera"] == "Front Door" }}'
-  - condition: or
-    conditions:
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
-        }}'
-  action:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 30
-      milliseconds: 0
-  - service: script.function_frigate_send_email
-    data:
-      object: '{{ trigger.payload_json["after"]["label"] }}'
-      camera: '{{ trigger.payload_json["after"]["camera"] }}'
-      eventid: '{{ trigger.payload_json["after"]["id"] }}'
-  mode: single
-  max: 5
-- id: '1631905000334'
-  alias: Notifications - Frigate - Backyard Cam
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: frigate/events
-  condition:
-  - condition: template
-    value_template: '{{ trigger.payload_json["after"]["camera"] == "Backyard" }}'
-  - condition: or
-    conditions:
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
-        }}'
-  action:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 30
-      milliseconds: 0
-  - service: script.function_frigate_send_email
-    data:
-      object: '{{ trigger.payload_json["after"]["label"] }}'
-      camera: '{{ trigger.payload_json["after"]["camera"] }}'
-      eventid: '{{ trigger.payload_json["after"]["id"] }}'
-  mode: single
-  max: 5
-- id: '1631905024497'
-  alias: Notifications - Frigate - Chimney Cam
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: frigate/events
-  condition:
-  - condition: template
-    value_template: '{{ trigger.payload_json["after"]["camera"] == "Chimney" }}'
-  - condition: or
-    conditions:
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
-        }}'
-  action:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 30
-      milliseconds: 0
-  - service: script.function_frigate_send_email
-    data:
-      object: '{{ trigger.payload_json["after"]["label"] }}'
-      camera: '{{ trigger.payload_json["after"]["camera"] }}'
-      eventid: '{{ trigger.payload_json["after"]["id"] }}'
-  mode: single
-  max: 5
-- id: '1631905054901'
-  alias: Notifications - Frigate - Shed Cam
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: frigate/events
-  condition:
-  - condition: template
-    value_template: '{{ trigger.payload_json["after"]["camera"] == "Shed" }}'
-  - condition: or
-    conditions:
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
-        }}'
-  action:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 30
-      milliseconds: 0
-  - service: script.function_frigate_send_email
-    data:
-      object: '{{ trigger.payload_json["after"]["label"] }}'
-      camera: '{{ trigger.payload_json["after"]["camera"] }}'
-      eventid: '{{ trigger.payload_json["after"]["id"] }}'
-  mode: single
-  max: 5
-- id: '1632588168154'
-  alias: Notifications - Frigate - Garage Cam
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: frigate/events
-  condition:
-  - condition: template
-    value_template: '{{ trigger.payload_json["after"]["camera"] == "Garage" }}'
-  - condition: or
-    conditions:
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "person" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "dog" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "cat" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "bird" }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
-        }}'
-  action:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 30
-      milliseconds: 0
-  - service: script.function_frigate_send_email
-    data:
-      object: '{{ trigger.payload_json["after"]["label"] }}'
-      camera: '{{ trigger.payload_json["after"]["camera"] }}'
-      eventid: '{{ trigger.payload_json["after"]["id"] }}'
-  mode: single
-  max: 5
 - id: '1632758469302'
   alias: Lighting - Bedroom - Motion Light On
   description: ''
@@ -3213,11 +3128,24 @@
   - condition: state
     entity_id: binary_sensor.withings_in_bed_michael_e
     state: 'off'
+  - condition: time
+    after: 06:00:00
+    before: '23:00:00'
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
   action:
   - service: mqtt.publish
     data:
       topic: cmnd/dresser_lamp/backlog
       payload: rule2 off; Delay 40; rule2 on
+      qos: 0
+      retain: false
   - service: homeassistant.turn_on
     target:
       entity_id: light.dresser_lamp
@@ -3239,12 +3167,24 @@
       minutes: 0
       seconds: 0
       milliseconds: 0
-  - condition: state
-    entity_id: binary_sensor.withings_in_bed_holly_e
-    state: 'off'
-  - condition: state
-    entity_id: binary_sensor.withings_in_bed_michael_e
-    state: 'off'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_holly_e
+      state: 'off'
+    - condition: state
+      entity_id: switch.bedroom_tv
+      state: 'on'
+    alias: Holly is not in bed OR the TV is on
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_michael_e
+      state: 'off'
+    - condition: state
+      entity_id: switch.bedroom_tv
+      state: 'on'
+    alias: Mike is not in bed OR the TV is on
   - condition: state
     entity_id: switch.master_bath_fan
     state: 'off'
@@ -3252,6 +3192,7 @@
   - service: homeassistant.turn_on
     target:
       entity_id: switch.master_bath_fan
+    data: {}
   mode: single
 - id: '1632841500873'
   alias: Fan - Master Bath Humidity - Fan Off
@@ -3665,6 +3606,7 @@
       hours: 0
       minutes: 0
       seconds: 30
+    enabled: false
   - platform: state
     entity_id: binary_sensor.zigbee2mqtt_add_on_running
     for:
@@ -3702,6 +3644,18 @@
   condition:
   - condition: template
     value_template: '{{ trigger.to_state.state != trigger.from_state.state }}'
+  - condition: time
+    after: 02:30:00
+    before: 01:59:00
+    weekday:
+    - sat
+    - fri
+    - thu
+    - wed
+    - tue
+    - mon
+    - sun
+    alias: Don't fire between 2 & 2:30 AM (nightly maintenance)
   action:
   - choose:
     - conditions:
@@ -3830,8 +3784,8 @@
       entity_id: switch.office_heater_plug
   mode: single
 - id: '1644246652989'
-  alias: Notifications - Fridge Door
-  description: ''
+  alias: Notifications - Fridge Door Open
+  description: Send an alert if the Fridge or Freezer doors have been open for 5 minutes
   trigger:
   - platform: state
     entity_id: binary_sensor.dining_room_freezer_door_contact
@@ -3855,7 +3809,8 @@
       seconds: 0
     from: 'off'
   - platform: state
-    entity_id: binary_sensor.kitchen_refrigerator_door_contact
+    entity_id:
+    - binary_sensor.kitchen_refrigerator_door_contact
     for:
       hours: 0
       minutes: 5
@@ -3863,6 +3818,10 @@
     from: 'off'
   condition: []
   action:
+  - service: homeassistant.turn_on
+    data:
+      entity_id: '{{ trigger.entity_id | regex_replace("binary_sensor\.(.*)_contact$",
+        "input_boolean.\\1_open_alert") }}'
   - service: notify.signal_security
     data:
       message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been open
@@ -3931,7 +3890,7 @@
       minutes: 2
       seconds: 0
   - platform: state
-    entity_id: light.god_damn_light
+    entity_id: light.god_damn_switch
     to: unknown
     for:
       hours: 0
@@ -3961,7 +3920,18 @@
       minutes: 2
       seconds: 0
     to: 'off'
-  condition: []
+  condition:
+  - condition: time
+    after: 02:30:00
+    before: 01:59:00
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
   action:
   - service: hassio.addon_restart
     data:
@@ -4125,7 +4095,7 @@
       title: Fridge turned back on
   mode: single
 - id: '1657398934743'
-  alias: Fix WyzeCam
+  alias: Fix WyzeCam/GarageDoorCam
   description: ''
   trigger:
   - platform: state
@@ -4135,7 +4105,7 @@
     for:
       hours: 0
       minutes: 0
-      seconds: 5
+      seconds: 30
   condition: []
   action:
   - service: shell_command.ssh_command
@@ -4143,14 +4113,51 @@
       server: root@wyzecam.erdely.in
       command: /opt/restart_rtsp.sh
     enabled: false
-  - service: shell_command.ssh_command
-    data:
-      server: root@wyzecam.erdely.in
-      command: reboot
-  - service: notify.gmail_to_mike
-    data:
-      message: WyzeCam rebooted
-      title: WyzeCam rebooted
+    alias: Restart v4l2rtspserver
+  - if:
+    - condition: state
+      entity_id: binary_sensor.wyzecam
+      state: 'off'
+    then:
+    - service: homeassistant.turn_off
+      data: {}
+      target:
+        entity_id: switch.garagedoorcam_plug
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 3
+        milliseconds: 0
+    - service: homeassistant.turn_on
+      data: {}
+      target:
+        entity_id: switch.garagedoorcam_plug
+    - service: system_log.write
+      data:
+        level: error
+        message: WyzeCam Plug Reset
+    - service: notify.gmail_to_mike
+      data:
+        message: WyzeCam Plug Reset
+        title: WyzeCam Plug Reset
+      alias: Email Mike
+      enabled: false
+    else:
+    - service: shell_command.ssh_command
+      data:
+        server: root@wyzecam.erdely.in
+        command: reboot
+      alias: Reboot via SSH
+    - service: system_log.write
+      data:
+        level: error
+        message: WyzeCam Rebooted via SSH
+    - service: notify.gmail_to_mike
+      data:
+        message: WyzeCam rebooted via SSH
+        title: WyzeCam rebooted via SSH
+      alias: Email Mike
+      enabled: false
   mode: single
 - id: '1660352175401'
   alias: TV - Living Room - Turn On Tivo with TV
@@ -4177,7 +4184,7 @@
   trigger:
   - platform: state
     entity_id:
-    - media_player.living_room_roku_tv
+    - remote.living_room_roku_tv
     for:
       hours: 0
       minutes: 0
@@ -4189,4 +4196,373 @@
     data: {}
     target:
       entity_id: switch.living_room_tivo_plug
+  mode: single
+- id: '1670901378517'
+  alias: Lighting - Turn Den Lights Off
+  description: Turn Den Lights Off when turning off Laundry Room Lights
+  trigger:
+  - platform: state
+    entity_id:
+    - light.laundry_room_light
+    to: 'off'
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: light.den_overhead_light
+  mode: single
+- id: '1670901378518'
+  alias: Lighting - Turn Den Lights Off
+  description: Turn Den Lights Off when turning off Laundry Room Lights
+  trigger:
+  - platform: state
+    entity_id:
+    - light.laundry_room_light
+    to: 'off'
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: light.den_overhead_light
+  mode: single
+- id: '1671061951151'
+  alias: Lighting - Shed Lamp Auto On
+  description: Turn on Shed Lamp when Shed Door opens
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.shed_door_contact
+    to: 'on'
+  condition:
+  - condition: sun
+    before: sunrise
+    after: sunset
+    after_offset: -00:30:00
+    before_offset: +00:30:00
+  action:
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id: switch.shed_lamp
+  mode: single
+- id: '1671062103330'
+  alias: Lighting - Shed Lamp Auto Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.shed_door_contact
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: switch.shed_lamp
+  mode: single
+- id: '1671213044073'
+  alias: Reset Crappy Christmas Lights
+  description: The timer on the green tree lights sucks and automatically turns off
+    after 6 hours.  So twice during the time we want them on, turn them off and then
+    back on again.
+  trigger:
+  - platform: time
+    at: '21:30:00'
+  - platform: time
+    at: 01:00:00
+  condition:
+  - condition: state
+    entity_id: binary_sensor.outside_christmas_lights
+    state: 'on'
+  action:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: switch.outdoor_strip_p2
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id: switch.outdoor_strip_p2
+  mode: single
+- id: '1671217553135'
+  alias: Fan - Hall Bath Humidity - Fan On
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.hall_bath_multisensor_humidity'') | float(0)
+      > states(''input_number.hall_bath_fan_on'') | float(100) }}'
+  condition:
+  - condition: state
+    entity_id: light.hall_bath_light
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_holly_e
+      state: 'off'
+    - condition: state
+      entity_id: switch.bedroom_tv
+      state: 'on'
+    alias: Holly is not in bed OR the TV is on
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.withings_in_bed_michael_e
+      state: 'off'
+    - condition: state
+      entity_id: switch.bedroom_tv
+      state: 'on'
+    alias: Mike is not in bed OR the TV is on
+  - condition: state
+    entity_id: switch.hall_bath_fan
+    state: 'off'
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.hall_bath_fan
+    data: {}
+  mode: single
+- id: '1671217825195'
+  alias: Fan - Hall Bath Humidity - Fan Off
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.hall_bath_multisensor_humidity'') | float(0)
+      < states(''input_number.hall_bath_fan_off'') | float(100) }}'
+  condition:
+  - condition: state
+    entity_id: switch.hall_bath_fan
+    state: 'on'
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: switch.hall_bath_fan
+    data: {}
+  mode: single
+- id: '1671565614293'
+  alias: Notifications - Fridge Door Closed
+  description: Notify when the Fridge or Freezer Doors close after having been opened
+    for 5 mintues
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.dining_room_freezer_door_contact
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    to: 'off'
+  - platform: state
+    entity_id:
+    - binary_sensor.dining_room_refrigerator_door_contact
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    to: 'off'
+  - platform: state
+    entity_id:
+    - binary_sensor.kitchen_freezer_door_contact
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    to: 'off'
+  - platform: state
+    entity_id:
+    - binary_sensor.kitchen_refrigerator_door_contact
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    to: 'off'
+  condition: []
+  action:
+  - if:
+    - condition: template
+      value_template: '{{ states(trigger.entity_id | regex_replace("binary_sensor\.(.*)_contact$",
+        "input_boolean.\\1_open_alert")) != "off" }}'
+    then:
+    - service: notify.signal_security
+      data:
+        message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been
+          closed.
+  - service: homeassistant.turn_off
+    data:
+      entity_id: '{{ trigger.entity_id | regex_replace("binary_sensor\.(.*)_contact$",
+        "input_boolean.\\1_open_alert") }}'
+  mode: single
+- id: '1671648815254'
+  alias: Lighting - Holly Nightstand Light
+  description: ''
+  trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_ieee: 00:15:8d:00:08:83:47:37
+      command: single
+  - platform: device
+    domain: mqtt
+    device_id: 4e082175ea365830e3200bd784ab1a81
+    type: action
+    subtype: single
+    discovery_id: 0x00158d0008834737 action_single
+  condition: []
+  action:
+  - service: homeassistant.toggle
+    data: {}
+    target:
+      entity_id: light.holly_nightstand_lamp
+  mode: single
+- id: '1671832619134'
+  alias: Lighting - Bedroom - Holly in Bed LEDs off
+  description: Disable the LEDs on the light switches when Holly is in bed.
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.withings_in_bed_holly_e
+    to: 'on'
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/dresser_lamp/ledpower
+      payload: '1'
+  - service: mqtt.publish
+    data:
+      topic: cmnd/master_bath_light/ledpower
+      payload: '1'
+  - service: mqtt.publish
+    data:
+      topic: cmnd/master_bath_fan/ledpower
+      payload: '1'
+  mode: single
+- id: '1671832783300'
+  alias: Lighting - Bedroom - Holly out of Bed LEDs on
+  description: Enable the LEDs on the light switches when Holly is out of bed.
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.withings_in_bed_holly_e
+    to: 'off'
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/dresser_lamp/ledstate
+      payload: '1'
+  - service: mqtt.publish
+    data:
+      topic: cmnd/master_bath_light/ledstate
+      payload: '1'
+  - service: mqtt.publish
+    data:
+      topic: cmnd/master_bath_fan/ledstate
+      payload: '1'
+  mode: single
+- id: '1673482501074'
+  alias: Security - Lock Front Door when Arming
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.front_door_contact
+    to: 'off'
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: arming
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_away
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_home
+  action:
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.front_door_wake
+  - service: lock.lock
+    data: {}
+    target:
+      entity_id: lock.front_door
+  mode: single
+- id: '1679241143151'
+  alias: Lighting - Turn on Nighttime Stairway/Hallway Lights
+  description: Add extra lighting over stairs at night
+  trigger:
+  - platform: state
+    entity_id:
+    - light.hallway_light
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+    enabled: true
+  - condition: state
+    entity_id: light.nighttime_hallway_lighting
+    state: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  action:
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id:
+      - light.kitchen_table_light
+      - light.foyer_light
+  mode: single
+- id: '1679241221562'
+  alias: Lighting - Turn off extra lights over stairway/hallway at night
+  description: Add extra lighting over stairs at night
+  trigger:
+  - platform: state
+    entity_id:
+    - light.hallway_light
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+    enabled: true
+  - condition: state
+    entity_id: light.nighttime_hallway_lighting
+    state: 'off'
+  action:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.kitchen_table_light
+      - light.foyer_light
   mode: single

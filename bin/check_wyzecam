@@ -2,12 +2,19 @@
 
 [ "$1" = "-h" ] && { echo "usage: $(basename $0) [-h]"; exit 0; }
 
+which ffmpeg > /dev/null 2>&1
+if [ $? != 0 ]; then
+  echo "Error: Cannot find ffmpeg" > /dev/stderr
+  echo "off"
+  exit 1
+fi
+
 hapath=/srv/docker/homeassistant
 [ -f /config/.HA_VERSION ] && hapath=/config
 
-
 tmpd=$(mktemp -d)
-ffmpeg -y -rtsp_transport tcp -i rtsp://admin:michael1@192.168.25.252:554/unicast -frames:v 1 $tmpd/test.jpg > /dev/null 2>&1
+#ffmpeg -y -rtsp_transport tcp -i rtsp://admin:michael1@192.168.25.252:554/unicast -frames:v 1 $tmpd/test.jpg > /dev/null 2>&1
+ffmpeg -y -i https://restreamer.erdely.in/memfs/5780e360-1d59-4d5b-ab2e-311c24a69ac3.m3u8 -frames:v 1 $tmpd/test.jpg > /dev/null 2>&1
 
 out=$(identify $tmpd/test.jpg 2>&1)
 

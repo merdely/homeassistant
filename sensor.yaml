@@ -64,12 +64,6 @@
   value_template: "{{ value_json.public_ip }}"
   scan_interval: 900  # 15 minutes
 
-#- platform: mqtt
-#  name: Out of Date Zigbee Entities
-#  state_topic: ood_zigbee/count
-#  value_template: "{{ value }}"
-#  json_attributes_topic: ood_zigbee/entities
-
 - platform: rest
   name: FKB Control Panel
   resource: !secret fkb_deviceinfo
@@ -194,22 +188,6 @@
     - sensorInfo
   verify_ssl: false
 
-#- platform: mqtt
-#  name: Fully Kiosk Browser
-#  json_attributes_topic: fully/deviceInfo/32e18972-a62f66fd
-#  unit_of_measurement: "%"
-#  device_class: "battery"
-#  state_topic: fully/deviceInfo/32e18972-a62f66fd
-#  value_template: "{{ value_json.batteryLevel }}"
-#
-#- platform: mqtt
-#  name: Fully Kiosk Browser MBR
-#  json_attributes_topic: fully/deviceInfo/fe195503-ca16fc27
-#  unit_of_measurement: "%"
-#  device_class: "battery"
-#  state_topic: fully/deviceInfo/fe195503-ca16fc27
-#  value_template: "{{ value_json.batteryLevel }}"
-
 - platform: command_line
   name: YAML LOC
   command: "find /config/ -name '*.yaml' | xargs cat | wc -l"
@@ -224,12 +202,6 @@
   name: Fully Kiosk Browser Version Latest
   command: bin/get_fkb_version
   scan_interval: 3600
-
-#- platform: mqtt
-#  name: Printer Ink
-#  state_topic: "ink2mqtt/192.168.25.25"
-#  value_template: "{{ value_json.printer }}"
-#  json_attributes_topic: "ink2mqtt/192.168.25.25"
 
 - platform: time_date
   display_options:

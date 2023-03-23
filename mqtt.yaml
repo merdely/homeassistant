@@ -16,6 +16,11 @@ cover:
     retain: false
 
 sensor:
+  - name: Fully Kiosk Browser Version
+    #json_attributes_topic: fully/deviceInfo/32e18972-a62f66fd
+    state_topic: fully/deviceInfo/32e18972-a62f66fd
+    value_template: "{{ value_json.version }}"
+
   - name: Fully Kiosk Browser
     json_attributes_topic: fully/deviceInfo/32e18972-a62f66fd
     unit_of_measurement: "%"
@@ -31,9 +36,9 @@ sensor:
     value_template: "{{ value_json.batteryLevel }}"
 
   - name: Printer Ink
-    state_topic: "ink2mqtt/192.168.25.25"
+    state_topic: "ink2mqtt/192.168.27.150"
     value_template: "{{ value_json.printer }}"
-    json_attributes_topic: "ink2mqtt/192.168.25.25"
+    json_attributes_topic: "ink2mqtt/192.168.27.150"
 
 
 fan:

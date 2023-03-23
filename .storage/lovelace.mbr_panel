@@ -48,7 +48,7 @@
                         "navigation_path": "/mbr-panel/utilities"
                       },
                       "card_mod": {
-                        "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.quick_status') != \"0  | 0  | 0  | 0\" %}\n  color: yellow !important;\n  {% endif %}\n}\n.state, span {\n  font-size: 19px !important;\n  // padding-top: 7px !important;\n  {% if states('sensor.quick_status') != \"0  | 0  | 0  | 0\" %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                        "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.quick_status')[:4] != \"0  |\" and states('sensor.quick_status')[3:] == \"| 0  | 0  | 0\" %}\n    color: #00C000 !important;\n  {% elif states('sensor.quick_status') != \"0  | 0  | 0  | 0\" %}\n    color: yellow !important;\n  {% endif %}\n}\n.state, span {\n  font-size: 19px !important;\n  // padding-top: 7px !important;\n  {% if states('sensor.quick_status')[:4] != \"0  |\" and states('sensor.quick_status')[3:] == \"| 0  | 0  | 0\" %}\n    color: #00C000 !important;\n  {% elif states('sensor.quick_status') != \"0  | 0  | 0  | 0\" %}\n    color: yellow !important;\n  {% endif %}\n}\n"
                       }
                     },
                     {
@@ -571,6 +571,305 @@
           ]
         },
         {
+          "theme": "Backend-selected",
+          "title": "Lights",
+          "path": "lights",
+          "icon": "mdi:ceiling-light-multiple",
+          "badges": [],
+          "cards": [
+            {
+              "type": "grid",
+              "columns": 1,
+              "square": false,
+              "cards": [
+                {
+                  "type": "grid",
+                  "columns": 1,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "picture",
+                      "image": "/local/images/homeassistant-banner-back-sm.png",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/mbr-panel/home"
+                      },
+                      "hold_action": {
+                        "action": "none"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "grid",
+                  "columns": 1,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.dresser_lamp",
+                              "name": "BR Dresser"
+                            },
+                            {
+                              "entity": "light.holly_nightstand_lamp",
+                              "name": "Holly"
+                            },
+                            {
+                              "entity": "light.bedroom_fan_light",
+                              "name": "Bedrm"
+                            },
+                            {
+                              "entity": "fan.bedroom_fan",
+                              "name": "Bedrm",
+                              "icon": "mdi:fan"
+                            },
+                            {
+                              "entity": "switch.bedroom_tv",
+                              "name": "BR"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.office_fan_light",
+                              "name": "Office"
+                            },
+                            {
+                              "entity": "fan.office_fan",
+                              "name": "Office",
+                              "icon": "mdi:fan"
+                            },
+                            {
+                              "entity": "switch.office_tv",
+                              "name": "Office"
+                            },
+                            {
+                              "entity": "light.guest_room_light",
+                              "name": "Guest"
+                            },
+                            {
+                              "entity": "light.hallway_light",
+                              "name": "Hall"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.master_bath_light",
+                              "name": "M. Bath"
+                            },
+                            {
+                              "entity": "switch.master_bath_fan",
+                              "icon": "mdi:fan",
+                              "name": "M. Bath"
+                            },
+                            {
+                              "entity": "light.hall_bath_light",
+                              "name": "H. Bath"
+                            },
+                            {
+                              "entity": "switch.hall_bath_fan",
+                              "icon": "mdi:fan",
+                              "name": "H. Bath"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.kitchen_table_light",
+                              "name": "K. Table"
+                            },
+                            {
+                              "entity": "light.kitchen_overhead_light",
+                              "name": "K. Overhead"
+                            },
+                            {
+                              "entity": "light.foyer_light",
+                              "name": "Foyer"
+                            },
+                            {
+                              "entity": "light.dining_room_overhead_light",
+                              "name": "Dining"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.near_black_lamp",
+                              "name": "LR Near"
+                            },
+                            {
+                              "entity": "light.far_black_lamp",
+                              "name": "LR Far"
+                            },
+                            {
+                              "entity": "light.white_lamp",
+                              "name": "LR White"
+                            },
+                            {
+                              "entity": "switch.living_room_tv",
+                              "name": "LR TV"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.god_damn_light",
+                              "name": "God Damn"
+                            },
+                            {
+                              "entity": "switch.fireplace_light",
+                              "name": "Fireplace"
+                            },
+                            {
+                              "entity": "switch.three_headed_lamp",
+                              "name": "3-Headed"
+                            },
+                            {
+                              "entity": "switch.god_damn_tv",
+                              "name": "GD TV"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.laundry_room_light",
+                              "name": "Laundry"
+                            },
+                            {
+                              "entity": "light.den_overhead_light",
+                              "name": "Den"
+                            },
+                            {
+                              "entity": "light.powder_room_light",
+                              "name": "Powder"
+                            },
+                            {
+                              "entity": "switch.christmas_tree",
+                              "name": "Christmas"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.bench_light",
+                              "name": "Garage Bench"
+                            },
+                            {
+                              "entity": "light.middle_garage_light",
+                              "name": "Garage Middle"
+                            },
+                            {
+                              "entity": "light.far_garage_light",
+                              "name": "Garage Far"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.front_porch_light",
+                              "name": "Front Porch"
+                            },
+                            {
+                              "entity": "light.outside_garage_lights",
+                              "name": "Garage"
+                            },
+                            {
+                              "entity": "switch.outside_xmas",
+                              "name": "Christmas"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "light.back_porch_light",
+                              "name": "Back Porch"
+                            },
+                            {
+                              "entity": "light.deck_lights",
+                              "name": "Deck"
+                            },
+                            {
+                              "entity": "switch.shed_lamp",
+                              "name": "Shed"
+                            },
+                            {
+                              "entity": "switch.flood_light",
+                              "name": "Flood"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "switch.dining_room_christmas_lights",
+                              "name": "Dining Room"
+                            },
+                            {
+                              "entity": "switch.mantle_lights",
+                              "name": "Mantle"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "title": "Upstairs",
           "path": "upstairs",
           "icon": "mdi:stairs-up",
@@ -631,7 +930,7 @@
                 },
                 {
                   "type": "grid",
-                  "columns": 2,
+                  "columns": 3,
                   "square": false,
                   "cards": [
                     {
@@ -639,7 +938,17 @@
                       "tap_action": {
                         "action": "toggle"
                       },
+                      "entity": "light.holly_nightstand_lamp",
+                      "name": "Holly Lamp",
+                      "icon_height": "50px"
+                    },
+                    {
+                      "type": "button",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
                       "entity": "light.master_bath_light",
+                      "name": "M. Bath Light",
                       "icon_height": "50px"
                     },
                     {
@@ -648,6 +957,7 @@
                         "action": "toggle"
                       },
                       "entity": "switch.master_bath_fan",
+                      "name": "M. Bath Fan",
                       "icon_height": "50px",
                       "icon": "mdi:fan"
                     }
@@ -810,7 +1120,7 @@
                       "tap_action": {
                         "action": "toggle"
                       },
-                      "entity": "switch.far_black_lamp",
+                      "entity": "light.far_black_lamp",
                       "name": "Far Black",
                       "icon_height": "50px"
                     },
@@ -819,7 +1129,7 @@
                       "tap_action": {
                         "action": "toggle"
                       },
-                      "entity": "switch.white_lamp",
+                      "entity": "light.white_lamp",
                       "name": "Small White",
                       "icon_height": "50px"
                     },
@@ -1768,7 +2078,7 @@
                       "cards": [
                         {
                           "type": "markdown",
-                          "content": "<table width=\"100%\" style=\"padding:0;border-spacing:0;\"> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') | replace('Operating System', 'OS') }}</td><td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td></tr> {% endfor -%} <tr><td><font color=\"{{'#44739e' if states('sensor.hacs') == '0' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.hacs') == '0' else 'download'}}' /></font> </td><td><font style=\"color: {{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">HACS</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">-</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">{{ states('sensor.hacs') }}</font></td></tr>           {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') }} *</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td> </tr> {% endfor -%} </table>",
+                          "content": "<table width=\"100%\" style=\"padding:0;border-spacing:0;\"> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') | replace('Operating System', 'OS') }}</td><td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td></tr> {% endfor -%} <tr><td><font color=\"{{'#44739e' if states('sensor.hacs') == '0' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.hacs') == '0' else 'download'}}' /></font> </td><td><font style=\"color: {{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">HACS</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">-</font></td><td align=\"right\"><font color=\"{{ 'var(--primary-text-color)' if states('sensor.hacs') == '0' else 'yellow'}}\">{{ states('sensor.hacs') }}</font></td></tr>           {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}{% if state_attr(software, 'title') != None %}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'yellow'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\"> {{ state_attr(software, 'title') }} *</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'yellow'}}\">{{ state_attr(software, 'latest_version') }}</font></td> </tr>{% endif -%}{% endfor -%} </table>",
                           "card_mod": {
                             "style": "ha-markdown {\n  padding-top: 1px !important;\n}\n* {\n  font-size: 14px;\n  --mdc-icon-size: 16px;\n}\n"
                           }

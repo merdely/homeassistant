@@ -233,13 +233,6 @@ testing_write_warning_to_log:
       message: Config is good
       level: warning
   mode: single
-testing_hangouts_mike:
-  alias: Testing - Hangouts Mike
-  sequence:
-  - service: notify.hangouts_mike
-    data:
-      message: test message
-  mode: single
 testing_speaker_announcement:
   alias: Testing - Speaker Announcement
   sequence:
@@ -962,10 +955,10 @@ function_tv_roku_choose_camera:
   alias: Function - TV - Roku - Choose Camera
   variables:
     rokus:
-      bedroom: 192.168.25.215
-      god_damn: 192.168.25.216
-      living_room: 192.168.25.115
-      office: 192.168.25.128
+      bedroom: 192.168.27.50
+      god_damn: 192.168.27.51
+      living_room: 192.168.27.52
+      office: 192.168.27.53
     cameras:
       front_door: ?view=single&camera=0
       garage: ?view=single&camera=1
@@ -1124,11 +1117,20 @@ scene_good_night:
       - service: homeassistant.turn_on
         target:
           entity_id: light.hallway_light
+        data: {}
     default: []
   - service: alarm_control_panel.alarm_arm_home
     data: {}
     target:
       entity_id: alarm_control_panel.home_alarm
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.front_door_wake
+  - service: lock.lock
+    data: {}
+    target:
+      entity_id: lock.front_door
   - service: homeassistant.turn_off
     target:
       entity_id:
@@ -1139,6 +1141,7 @@ scene_good_night:
       - light.front_porch_light
       - switch.mantle_lights
       - light.deck_lights
+    data: {}
   - service: cover.close_cover
     data: {}
     entity_id: cover.garage_door
@@ -1156,6 +1159,7 @@ scene_good_night:
   - service: homeassistant.turn_on
     target:
       entity_id: switch.bedroom_tv
+    data: {}
   - service: input_select.select_option
     data:
       option: Nickelodeon
@@ -1176,9 +1180,9 @@ scene_leaving_home:
       - switch.back_yard
       - switch.garage
       - light.kitchen_overhead_light
-      - switch.far_black_lamp
+      - light.far_black_lamp
       - light.near_black_lamp
-      - switch.white_lamp
+      - light.white_lamp
       - switch.living_room_tv
       - switch.mantle_lights
       - light.dining_room_overhead_light
@@ -1325,13 +1329,6 @@ fix_in_bed_sensors:
       state: '{{ states(''input_boolean.mike_is_in_bed'') }}'
   mode: single
   icon: mdi:bed
-testing_hangouts_security:
-  alias: Testing - Hangouts Security
-  sequence:
-  - service: notify.hangouts_security_alert
-    data:
-      message: test message
-  mode: single
 close_garage_door:
   alias: Close Garage Door
   sequence:
@@ -1359,18 +1356,18 @@ function_frigate_send_email:
   sequence:
   - service: notify.gmail_to_security
     data:
-      message: '{{ object | title }} detected by {{ camera }}
+      message: '{{ object | title }} detected
 
-        Images from {{ camera }} Camera
+        Images from {{ camera | replace("_", " ") }} Camera
 
         '
-      title: '{{ camera }} Camera'
+      title: '{{ camera | replace("_", " ") }} Camera'
       data:
         images:
         - /media/frigate/clips/{{ camera }}-{{ eventid }}.jpg
-        html: '<p>{{ object | title }} detected by {{ camera }}</p>
+        html: '<p>{{ object | title }} detected</p>
 
-          <p>Images from {{ camera }} Camera</p>
+          <p>Images from {{ camera | replace("_", " ") }} Camera</p>
 
           '
   fields:
@@ -1501,3 +1498,209 @@ testing_signal_mike:
     data:
       message: test signal message
   mode: single
+lighting_living_room_exercise:
+  alias: Lighting - Living Room - Exercise
+  sequence:
+  - service: light.turn_on
+    data:
+      color_temp: 153
+      brightness: 255
+    target:
+      entity_id:
+      - light.far_black_lamp
+      - light.near_black_lamp
+      - light.white_lamp
+  mode: single
+  icon: mdi:lamps
+lighting_living_room_normal:
+  alias: Lighting - Living Room - Normal
+  sequence:
+  - service: light.turn_on
+    data:
+      color_temp: 351
+      brightness_pct: 85
+    target:
+      entity_id:
+      - light.far_black_lamp
+      - light.near_black_lamp
+      - light.white_lamp
+  mode: single
+  icon: mdi:lamps
+lighting_living_room_christmas:
+  alias: Lighting - Living Room - Christmas
+  sequence:
+  - service: light.turn_on
+    data:
+      color_name: green
+      brightness_pct: 50
+    target:
+      entity_id:
+      - light.far_black_lamp
+      - light.near_black_lamp
+  - service: light.turn_on
+    data:
+      color_name: red
+      brightness_pct: 50
+    target:
+      entity_id: light.white_lamp
+  mode: single
+  icon: mdi:string-lights
+lighting_bedroom_sexy_time:
+  alias: Lighting - Bedroom - Sexy Time
+  sequence:
+  - parallel:
+    - service: light.turn_on
+      data:
+        color_name: violet
+        brightness_pct: 24
+      target:
+        entity_id:
+        - light.holly_dresser_bulb
+        - light.dresser_lamp
+    - service: homeassistant.turn_off
+      data: {}
+      target:
+        entity_id: light.bedroom_fan_light
+  mode: single
+lighting_bedroom_normal:
+  alias: Lighting - Bedroom - Normal
+  sequence:
+  - service: light.turn_on
+    data:
+      color_temp: 311
+      brightness_pct: 86
+    target:
+      entity_id:
+      - light.holly_dresser_bulb
+      - light.dresser_lamp
+  mode: single
+testing_signal_security:
+  alias: Testing - Signal Security
+  sequence:
+  - service: notify.signal_security
+    data:
+      message: Test message of signal_security
+  mode: single
+if_then_test:
+  alias: if-then test
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ 1 == 1 }}'
+    - condition: template
+      value_template: '{{ 4 == 4 }}'
+    - condition: template
+      value_template: '{{ 3 == 3 }}'
+    then:
+    - service: system_log.write
+      data:
+        message: test successful
+  mode: single
+lock_garage_entry_door:
+  alias: 'Locking: Garage Entry Door Lock'
+  sequence:
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.garage_entry_door_ping
+  - service: lock.lock
+    data: {}
+    target:
+      entity_id: lock.garage_entry_door
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.garage_entry_door_ping
+  mode: single
+  icon: mdi:lock
+unlock_garage_entry_door:
+  alias: 'Locking: Garage Entry Door Unlock'
+  sequence:
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.garage_entry_door_ping
+  - service: lock.unlock
+    data: {}
+    target:
+      entity_id: lock.garage_entry_door
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.garage_entry_door_ping
+  mode: single
+  icon: mdi:lock-open-variant
+locking_garage_entry_door_toggle:
+  alias: 'Locking: Garage Entry Door Toggle'
+  sequence:
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.garage_entry_door_ping
+  - if:
+    - condition: state
+      entity_id: lock.garage_entry_door
+      state: locked
+    then:
+    - service: lock.unlock
+      data: {}
+      target:
+        entity_id: lock.garage_entry_door
+    else:
+    - service: lock.lock
+      data: {}
+      target:
+        entity_id: lock.garage_entry_door
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.garage_entry_door_ping
+  mode: single
+  icon: mdi:lock-open
+locking_front_door_toggle_duplicate:
+  alias: 'Locking: Front Door Toggle'
+  sequence:
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.front_door_wake
+  - if:
+    - condition: state
+      entity_id: lock.front_door
+      state: locked
+    then:
+    - service: lock.unlock
+      data: {}
+      target:
+        entity_id: lock.front_door
+    else:
+    - service: lock.lock
+      data: {}
+      target:
+        entity_id: lock.front_door
+  - service: button.press
+    data: {}
+    target:
+      entity_id: button.front_door_wake
+  mode: single
+  icon: mdi:lock-open
+power_cycle_closet_switch:
+  alias: Power Cycle Closet Switch
+  sequence:
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.closet_switch_plug
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.closet_switch_plug
+  mode: single
+  icon: mdi:sync

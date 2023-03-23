@@ -33,7 +33,7 @@ newshows=$(mktemp /tmp/newshows.XXXXXXXXXXXXXXXXXXXXXXXXXXXX)
 { echo '  - Select Show'; \
   /config/bin/plex_list_shows $config_file | \
   sed -r "s/^(Battlestar Galactica) \(2003\)$/\1 mwe/;s/ \([0-9][0-9][0-9][0-9]\)$//;s/ mwe$/ 2003/;s/(^DC's |^Marvel's |^Phillip K. Dick's |^Tom Clancy's | Motion Comic$)//;s/[^a-zA-Z0-9[:space:]'-]//g;s/^/  - /" | \
-  sort; } > $newshows
+  sort -u; } > $newshows
 
 if [ x$force = x1 ] || ! cmp -s $showfile $newshows || ! test -e $showfile; then
   cp $newshows $showfile.new

@@ -194,9 +194,18 @@
     unique_id: unavailable_entities
     name: Unavailable Entities
     icon: mdi:cloud-question
-    state: "{{ states | rejectattr('entity_id','match','^(number..*_plug_overload_protection|(binary_sensor|light|sensor|switch).(.*_plug_consumer_connected|bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.google_pixel_watch|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    state: "{{ states | rejectattr('entity_id','match','^(number..*_plug_overload_protection|(binary_sensor|light|sensor|select|switch).(home_cloud_ceiling|home_hours_of_sun_.*|home_precipitation|home_pressure_tendency|home_realfeel_.*|home_thunderstorm_probability_.*|home_uv_index.*|home_wind.*|.*_plug_consumer_connected|.*_effect|.*_power_on_behavior|bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.google_pixel_watch|camera.garage_door_cam|update..*_bulb|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['update', 'button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
     attributes:
-      entity_list: "{{ states | rejectattr('entity_id','match','^(number..*_plug_overload_protection|(binary_sensor|light|sensor|switch).(.*_plug_consumer_connected|bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.google_pixel_watch|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
+      entity_list: "{{ states | rejectattr('entity_id','match','^(number..*_plug_overload_protection|(binary_sensor|light|sensor|select|switch).(home_cloud_ceiling|home_hours_of_sun_.*|home_precipitation|home_pressure_tendency|home_realfeel_.*|home_thunderstorm_probability_.*|home_uv_index.*|home_wind.*|.*_plug_consumer_connected|.*_effect|.*_power_on_behavior|bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.google_pixel_watch|camera.garage_door_cam|update..*_bulb|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['update', 'button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
+      ha_count: true
+
+- sensor:
+    unique_id: unavailable_entities_full_list
+    name: Unavailable Entities Full List
+    icon: mdi:cloud-question
+    state: "{{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    attributes:
+      entity_list: "{{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
 - trigger:
@@ -902,8 +911,8 @@
       {%- if is_state('light.dining_room_overhead_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {%- if is_state('switch.dining_room_christmas_lights', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {%- if is_state('light.near_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-      {%- if is_state('switch.far_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-      {%- if is_state('switch.white_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.far_black_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
+      {%- if is_state('light.white_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {%- if is_state('light.foyer_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {{ count }}
 
@@ -925,8 +934,8 @@
       {%- if is_state('light.office_fan_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {%- if is_state('fan.office_fan', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {%- if is_state('switch.mike_desk_lamp', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
-      {%- if is_state('light.guest_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
       {{ count }}
+    # {%- if is_state('light.guest_room_light', 'on') -%} {%- set count = count + 1 -%} {%- endif -%}
 
 - sensor:
     unique_id: num_outside_lights_on
@@ -985,10 +994,13 @@
         {% endfor -%}
         {{ ns.list[:-2] }}
 
-- sensor:
-    unique_id: fully_kiosk_browser_version
-    name: Fully Kiosk Browser Version
-    state: "{{ state_attr('sensor.fully_kiosk_browser', 'version') }}"
+#- sensor:
+#    unique_id: fully_kiosk_browser_version
+#    name: Fully Kiosk Browser Version
+#    state: "{{ '%.2f'|format(float(state_attr('sensor.fully_kiosk_browser', 'version'))) }}"
+#    attributes:
+#      test: "{{ state_attr('sensor.fully_kiosk_browser', 'version') }}"
+#      test2: "{{ '%.2f'|format(float(state_attr('sensor.fully_kiosk_browser', 'version'))) }}"
 
 - sensor:
     unique_id: spotify_artist_title

@@ -4,6 +4,9 @@
 # If the public IP address is different than the IP address in DNS for the configured hostname, update
 # it in LUADNS
 
+unset insecure
+insecure="-k"
+
 usage() {
   echo "usage: ${0##*/} [-h] [-d] [-f]"
   exit
@@ -51,12 +54,12 @@ pass=$(awk "\$1 == \"luadns_token:\" { print \$2 }" $secrets_file)
 dynamic_name=$host.$domain_name
 
 # Determine pubip
-pubip=$(curl -s http://checkip.dyndns.org | sed -r 's/.*: ([0-9]{1,3}(\.[0-9]{1,3}){3}).*$/\1/')
+pubip=$(curl -s $insecure http://checkip.dyndns.org | sed -r 's/.*: ([0-9]{1,3}(\.[0-9]{1,3}){3}).*$/\1/')
 # Verify pubip is valid (no errors from the curl command)
 if ! [[ $pubip =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}$ ]]; then
-  pubip=$(curl -s http://ip.me)
+  pubip=$(curl -s $insecure http://ip.me)
   if ! [[ $pubip =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}$ ]]; then
-    pubip=$(curl -s http://ifconfig.co)
+    pubip=$(curl -s $insecure http://ifconfig.co)
     if ! [[ $pubip =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}$ ]]; then
       pubip="Error with checkip.dyndns.org"
     fi
@@ -81,9 +84,9 @@ unset silent
 
 # Get Zone Number for domain
 [ -n "$debug" ] && echo "Determining Zone Number for $domain_name"
-[ -n "$debug" ] && echo curl $silent -f -u "$user:$pass" -H 'Accept: application/json' https://api.luadns.com/v1/zones \| \
+[ -n "$debug" ] && echo curl $silent $insecure -f -u "$user:$pass" -H 'Accept: application/json' https://api.luadns.com/v1/zones \| \
            jq '.[] \| select(.name=="'"$domain_name"'").id'
-zone_num=$(curl $silent -f -u "$user:$pass" -H 'Accept: application/json' https://api.luadns.com/v1/zones | \
+zone_num=$(curl $silent $insecure -f -u "$user:$pass" -H 'Accept: application/json' https://api.luadns.com/v1/zones | \
            jq '.[] | select(.name=="'"$domain_name"'").id')
 [ -z "$zone_num" ] && echo "Error: Could not determine the Zone ID for $domain_name" && exit 1
 
@@ -91,20 +94,20 @@ zone_num=$(curl $silent -f -u "$user:$pass" -H 'Accept: application/json' https:
 if [[ $pubip != $dnsip ]] || [[ $force_update = 1 ]]; then
   # Get Record number for host
   [ -n "$debug" ] && echo "Determining Record Number and TTL for $dynamic_name"
-  [ -n "$debug" ] && echo curl $silent -f -u "$user:$pass" -H 'Accept: application/json' \
+  [ -n "$debug" ] && echo curl $silent $insecure -f -u "$user:$pass" -H 'Accept: application/json' \
              https://api.luadns.com/v1/zones/52069/records \| \
              jq -r '.[] | select(.name=="'"$dynamic_name"'." and .type=="A")|.id,.ttl'
-  read -d "\n" record_num ttl <<< $(curl $silent -f -u "$user:$pass" -H 'Accept: application/json' \
+  read -d "\n" record_num ttl <<< $(curl $silent $insecure -f -u "$user:$pass" -H 'Accept: application/json' \
              https://api.luadns.com/v1/zones/52069/records | \
              jq -r '.[] | select(.name=="'"$dynamic_name"'." and .type=="A")|.id,.ttl')
   [ -z "$record_num" -o -z "$ttl" ] && echo "Error: Could not determine the Record ID or TTL for $dynamic_name" && exit 1
 
   # Update IP address
   [ -n "$debug" ] && echo "Updating IP address for $dynamic_name"
-  [ -n "$debug" ] && echo curl $silent -f -u "$user:$pass" -X PUT \
+  [ -n "$debug" ] && echo curl $silent $insecure -f -u "$user:$pass" -X PUT \
     -d '{"name": "'"$dynamic_name."'", "type": "A", "ttl": '"$ttl"', "content": "'"$pubip"'"}' \
     -H 'Accept: application/json' https://api.luadns.com/v1/zones/$zone_num/records/$record_num
-  output=$(curl $silent -f -u "$user:$pass" -X PUT \
+  output=$(curl $silent $insecure -f -u "$user:$pass" -X PUT \
     -d '{"name": "'"$dynamic_name."'", "type": "A", "ttl": '"$ttl"', "content": "'"$pubip"'"}' \
     -H 'Accept: application/json' https://api.luadns.com/v1/zones/$zone_num/records/$record_num)
   err=$?
@@ -113,7 +116,7 @@ if [[ $pubip != $dnsip ]] || [[ $force_update = 1 ]]; then
 fi
 
 # Get the time the IP was last updated
-updated_at=$(curl $silent -f -u "$user:$pass" -H 'Accept: application/json' \
+updated_at=$(curl $silent $insecure -f -u "$user:$pass" -H 'Accept: application/json' \
              https://api.luadns.com/v1/zones/52069/records | \
              jq -r '.[] | select(.name=="'"$dynamic_name"'." and .type=="A").updated_at')
 

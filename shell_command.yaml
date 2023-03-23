@@ -4,6 +4,7 @@ install_apk: /config/bin/install_apk {{ command }} {{ package }}
 rm_newshows_flag: rm -f /config/.newtvshowfile
 rotate_ha_logs: /config/bin/rotate_ha_logs
 save_homeassistant_log: /config/bin/save_homeassistant_log
+send_frigate_email: /config/bin/send_frigate_email.py "{{ detected_object }}" "{{ camera }}" "{{ eventid }}"
 ssh_command: /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant {{ server }} {{ command }}
 tivo_button: /config/bin/tivo_button {{ tv_device }}.erdely.in {{ tivo_button }}
 tivo_record: /config/bin/tivo_record {{ tv_device }}.erdely.in
