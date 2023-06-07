@@ -1172,18 +1172,25 @@
         entity_id: person.holly_erdely
         state: not_home
       sequence:
-      - service: homeassistant.update_entity
-        data: {}
-        entity_id: sensor.holly_previous_location
       - service: tts.cloud_say
         data:
           entity_id: media_player.security_speakers
-          message: Holly has left {{ states("sensor.holly_previous_location") }}
+          message: Holly has left {{ trigger.from_state.state }}
+      - service: notify.gmail_to_mike
+        data:
+          message: Holly has left {{ trigger.from_state.state }}
+          title: Holly has left {{ trigger.from_state.state }}
+        enabled: false
     default:
     - service: tts.cloud_say
       data:
         entity_id: media_player.security_speakers
         message: Holly is at {{ states('person.holly_erdely') }}
+    - service: notify.gmail_to_mike
+      data:
+        title: Holly is at {{ states('person.holly_erdely') }}
+        message: Holly is at {{ states('person.holly_erdely') }}
+      enabled: false
   mode: single
 - id: '1607095172887'
   alias: Notifications - Presence - Mike
@@ -1213,13 +1220,10 @@
         entity_id: person.michael_erdely
         state: not_home
       sequence:
-      - service: homeassistant.update_entity
-        data: {}
-        entity_id: sensor.mike_previous_location
       - service: tts.cloud_say
         data:
           entity_id: media_player.security_speakers
-          message: Mike has left {{ states("sensor.mike_previous_location") }}
+          message: Mike has left {{ trigger.from_state.state }}
     default:
     - service: tts.cloud_say
       data:
@@ -2255,6 +2259,8 @@
     tag_id: 421d7d13-d4de-429c-bb85-7f2e6adf98cf
   - platform: tag
     tag_id: 5cc6779c-7fcf-46b0-baa5-90f0daf05073
+  - platform: tag
+    tag_id: 5819cd71-c1a6-4059-ad5d-db702981c169
   condition: []
   action:
   - choose:
@@ -2312,7 +2318,7 @@
       494e4399-01f7-4ad4-91e4-940b1377cf60: Garage
       3eb9caa6-d3ed-4532-a368-8b9fd2a659a5: Front Door
       421d7d13-d4de-429c-bb85-7f2e6adf98cf: Mike Car
-      5cc6779c-7fcf-46b0-baa5-90f0daf05073: Holly Car
+      5819cd71-c1a6-4059-ad5d-db702981c169: Holly Car
     users:
       80ad218b0cf54379b5ee622fbb721c6b: Mike
       3109b2f6d085440f92db502bc4e30a3b: Holly
@@ -3948,109 +3954,6 @@
     data:
       title: MariaDB/NPM Restarted
       message: The MariaDB and Nginx Proxy Manager Add-Ons were restarted.
-  mode: single
-- id: '1650743525982'
-  alias: Notifications - Presence - Holly (Backup)
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: person.holly_erdely
-    from: not_home
-    for: 00:01:00
-  - platform: state
-    entity_id: person.holly_erdely
-    to: not_home
-  condition:
-  - condition: time
-    after: input_datetime.holly_presence_notifications_on
-    before: input_datetime.holly_presence_notifications_off
-  - condition: state
-    entity_id: person.michael_erdely
-    state: home
-  - condition: state
-    entity_id: input_boolean.announce_holly_presence
-    state: 'on'
-  action:
-  - service: script.function_speakers_prep
-    data:
-      speaker: security_speakers
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: person.holly_erdely
-        state: not_home
-      sequence:
-      - service: homeassistant.update_entity
-        data: {}
-        entity_id: sensor.holly_previous_location
-      - service: tts.cloud_say
-        data:
-          entity_id: media_player.security_speakers
-          message: Holly has left {{ states("sensor.holly_previous_location") }}
-    default:
-    - service: tts.cloud_say
-      data:
-        entity_id: media_player.security_speakers
-        message: Holly is at {{ states('person.holly_erdely') }}
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 15
-      milliseconds: 0
-  - service: media_player.media_stop
-    data: {}
-    target:
-      entity_id: media_player.security_speakers
-  mode: single
-- id: '1650743598113'
-  alias: Notifications - Presence - Mike (Backup)
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: person.michael_erdely
-    from: not_home
-    for: 00:01:00
-  - platform: state
-    entity_id: person.michael_erdely
-    to: not_home
-  condition:
-  - condition: time
-    after: input_datetime.mike_presence_notifications_on
-    before: input_datetime.mike_presence_notifications_off
-  - condition: state
-    entity_id: person.holly_erdely
-    state: home
-  - condition: state
-    entity_id: input_boolean.announce_mike_presence
-    state: 'on'
-  action:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 6
-      milliseconds: 0
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: person.michael_erdely
-        state: not_home
-      sequence:
-      - service: homeassistant.update_entity
-        data: {}
-        entity_id: sensor.mike_previous_location
-      - service: tts.cloud_say
-        data:
-          entity_id: media_player.security_speakers
-          message: Mike has left {{ states("sensor.mike_previous_location") }}
-    default:
-    - service: tts.cloud_say
-      data:
-        entity_id: media_player.security_speakers
-        message: Mike is at {{ states("person.michael_erdely") }}
-  - service: media_player.media_stop
-    data: {}
-    target:
-      entity_id: media_player.security_speakers
   mode: single
 - id: '1656031673970'
   alias: Notifications - Refrigerator Plug Turned Off

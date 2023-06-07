@@ -12,31 +12,6 @@
 #  payload_not_available: "Offline"
 #  retain: false
 
-- platform: command_line
-  switches:
-    octoprint_camera:
-      friendly_name: OctoPrint Camera
-      command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in start_camera'
-      command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in stop_camera'
-      command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
-      value_template: '{{ value == "Camera is streaming" }}'
-    mercury_screensaver:
-      friendly_name: Mercury Screensaver
-      #command_on: '/bin/true'
-      #command_off: '/bin/true'
-      #command_state: '/bin/true'
-      command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_lock'
-      command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_unlock'
-      command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_status'
-      value_template: '{{ value == "Screensaver is running" }}'
-      # command_off: '/bin/false'
-    venus_screensaver:
-      friendly_name: Venus Screensaver
-      command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock'
-      command_off: '/bin/true'
-      command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_status'
-      value_template: '{{ value == "Screensaver is running" }}'
-
 - platform: template
   switches:
     outside_xmas:
@@ -288,8 +263,7 @@
       value_template: >-
         {% if is_state('switch.office_tv', 'on') or
               is_state('light.office_fan_light', 'on') or
-              is_state('fan.office_fan', 'on') or
-              is_state('switch.mike_desk_lamp', 'on') %}
+              is_state('fan.office_fan', 'on') %}
           on
         {% else %}
           off
@@ -299,7 +273,7 @@
           entity_id: light.office_fan_light
       turn_off:
         - service: homeassistant.turn_off
-          entity_id: switch.office_tv, light.office_fan_light, switch.mike_desk_lamp
+          entity_id: switch.office_tv, light.office_fan_light
         - service: homeassistant.turn_on
           entity_id: switch.mercury_screensaver, switch.venus_screensaver
 

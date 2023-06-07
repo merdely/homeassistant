@@ -1,0 +1,257 @@
+- binary_sensor:
+    name: WyzeCam Status
+    command: "/config/bin/check_wyzecam"
+    payload_on: "on"
+    payload_off: "off"
+
+- binary_sensor:
+    name: Earth Nginx/PHP Working
+    command: "curl -m 2 -s https://earth.erdely.in/phptest.php | grep '^PHP is working!' || echo 'PHP is not working!'"
+    #device_class: connectivity
+    payload_on: "PHP is working!"
+    payload_off: "PHP is not working!"
+
+- binary_sensor:
+    name: Nginx Proxy Manager Working
+    command: "curl -s -f -m 2 -w %{http_code} -o /dev/null https://npm.erdely.in | grep '^200$' || echo 1"
+    #device_class: connectivity
+    payload_on: "200"
+    payload_off: "1"
+
+- binary_sensor:
+    name: OctoPrint Camera Status
+    command: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+    payload_on: 'Camera is streaming'
+    payload_off: 'Camera is off'
+
+- binary_sensor:
+    name: Bitwarden Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state a0d7b954_bitwarden'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: Frigate Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state ccab4aaf_frigate'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: Google Backup Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state cebe7a76_hassio_google_drive_backup'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: MariaDB Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state core_mariadb'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: MQTT Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state core_mosquitto'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: NginxProxyMgr Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state a0d7b954_nginxproxymanager'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: Signal Add-On Running
+    device_class: running
+    #command: '/config/bin/check_signal_addon'
+    command: '/config/bin/check_addon_state 1315902c_signal_messenger'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: SSH Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state a0d7b954_ssh'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: TasmoBackup Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state 6a15710b_tasmobackup'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: Unifi Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state a0d7b954_unifi'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: Wireguard Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state a0d7b954_wireguard'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: Zigbee2MQTT Add-On Running
+    device_class: running
+    command: '/config/bin/check_addon_state 45df7312_zigbee2mqtt'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: Garage Door Cam Status
+    device_class: garage_door
+    command: '/config/bin/get_garage_door_state'
+    payload_on: 'on'
+    payload_off: 'off'
+    scan_interval: 15
+
+- binary_sensor:
+    name: New SSL Cert Available
+    command: '/config/bin/check_ssl_renewed'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: New NPM SSL Cert Available
+    command: '/config/bin/check_ssl_renewed_npm'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: Christmas Lights Should Be On
+    command: '/config/bin/xmas_lights'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- binary_sensor:
+    name: New TV Show List Ready
+    command: 'test -f /config/.newtvshowfile && echo on || echo off'
+    payload_on: 'on'
+    payload_off: 'off'
+
+- sensor:
+    name: CPU Temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: "{{ value | multiply(0.001) | round(2)  }}"
+
+- sensor:
+    name: Unifi AP Versions
+    command: "/config/bin/get_unifi_versions"
+    json_attributes:
+      - data
+      - error
+    value_template: "{{ value_json.last_updated }}"
+    scan_interval: 3600  # 1 hour
+
+- sensor:
+    name: OpnSense Versions
+    command: "/config/bin/opnsense_snmp_versions.py"
+    json_attributes:
+      - core-abi
+      - sys-abi
+      - opnsense-update
+      - plugins
+    value_template: "{{ value_json.opnsense }}"
+    scan_interval: 3600  # 1 hour
+
+- sensor:
+    name: OpnSense Package Versions
+    command: >-
+      /config/bin/opnsense_packages.sh
+      {{ state_attr('sensor.opnsense_versions', 'sys-abi') }}
+      {{ state_attr('sensor.opnsense_versions', 'core-abi') }}
+    json_attributes:
+      - timestamp
+      - status
+      - plugins
+    value_template: "{{ value_json.timestamp }}"
+    scan_interval: 14400  # 4 hours
+
+- sensor:
+    name: Dynamic DNS
+    command: "/config/bin/update_ip.sh"
+    json_attributes:
+      - public_ip
+      - dns_record
+      - dynamic_hostname
+      - status
+      - updated_at
+    value_template: "{{ value_json.public_ip }}"
+    scan_interval: 900  # 15 minutes
+
+- sensor:
+    name: YAML LOC
+    command: "find /config/ -name '*.yaml' | xargs cat | wc -l"
+
+- sensor:
+    name: MoCo Recycle Day
+    command: bin/get_recycle_day
+    # Request every 8 hours
+    scan_interval: 28800
+
+- sensor:
+    name: Fully Kiosk Browser Version Latest
+    command: bin/get_fkb_version
+    scan_interval: 3600
+
+- sensor:
+    name: Bedroom TV Next Episode
+    command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.bedroom_plex_show") }}"'
+
+- sensor:
+    name: God Damn TV Next Episode
+    command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.god_damn_plex_show") }}"'
+
+- sensor:
+    name: Living Room TV Next Episode
+    command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.living_room_plex_show") }}"'
+
+- sensor:
+    name: Office TV Next Episode
+    command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.office_plex_show") }}"'
+
+- sensor:
+    name: SSL Expiry Date
+    command: "bin/get_ssl_expire.py"
+
+- switch:
+    unique_id: octoprint_camera
+    name: OctoPrint Camera
+    command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in start_camera'
+    command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in stop_camera'
+    command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+    value_template: '{{ value == "Camera is streaming" }}'
+
+- switch:
+    unique_id: mercury_screensaver
+    name: Mercury Screensaver
+    #command_on: '/bin/true'
+    #command_off: '/bin/true'
+    #command_state: '/bin/true'
+    command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_lock'
+    command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_unlock'
+    command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_status'
+    value_template: '{{ value == "Screensaver is running" }}'
+    # command_off: '/bin/false'
+
+- switch:
+    unique_id: venus_screensaver
+    name: Venus Screensaver
+    command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock'
+    command_off: '/bin/true'
+    command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_status'
+    value_template: '{{ value == "Screensaver is running" }}'
+

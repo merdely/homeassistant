@@ -43,7 +43,10 @@ try:
                              user=sqlusername,
                              password=sqlpassword,
                              database=sqldatabase)
-   query = "SELECT state FROM states WHERE entity_id = '{}' AND states.last_updated_ts = (SELECT MAX(states2.last_updated_ts) FROM states AS states2 WHERE states2.entity_id = states.entity_id AND state != 'unknown' AND state != '{}');".format(entity_id, current_state)
+   # query = "SELECT state FROM states WHERE entity_id = '{}' AND states.last_updated_ts = (SELECT MAX(states2.last_updated_ts) FROM states AS states2 WHERE states2.entity_id = states.entity_id AND state != 'unknown' AND state != '{}');".format(entity_id, current_state)
+   #query = f"SELECT states.state as state FROM states INNER JOIN states_meta on states_meta.metadata_id=states.metadata_id WHERE states_meta.entity_id = '{entity_id}' AND states.last_updated_ts = (SELECT MAX(states2.last_updated_ts) FROM states AS states2 WHERE states2.metadata_id = states.metadata_id AND states.state != 'unknown' AND states.state != '{current_state}');"
+   query = f"SELECT states.state as state FROM states INNER JOIN states_meta on states_meta.metadata_id=states.metadata_id WHERE states_meta.entity_id = '{entity_id}' AND states.state != 'unknown' AND states.state != '{current_state}';"
+   #print(query)
    conn.query(query)
    result = conn.store_result()
 
@@ -58,11 +61,13 @@ except Exception as error :
     #pass
     #print ("Error while fetching data from MySQL", error)
 
-if prev_location == '' or prev_location == current_state:
-    if current_state == 'home':
-        prev_location = 'not_home'
-    else:
-        prev_location = 'home'
+if prev_location == '':
+    prev_location = 'unknown'
+#if prev_location == '' or prev_location == current_state:
+#    if current_state == 'home':
+#        prev_location = 'not_home'
+#    else:
+#        prev_location = 'home'
 
 print(prev_location)
 

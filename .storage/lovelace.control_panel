@@ -5884,6 +5884,767 @@
               ]
             }
           ]
+        },
+        {
+          "title": "Home Backup",
+          "path": "home-backup",
+          "icon": "mdi:home-outline",
+          "type": "panel",
+          "badges": [],
+          "cards": [
+            {
+              "type": "grid",
+              "columns": 2,
+              "square": false,
+              "cards": [
+                {
+                  "type": "grid",
+                  "columns": 1,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "grid",
+                      "columns": 2,
+                      "square": false,
+                      "cards": [
+                        {
+                          "type": "button",
+                          "entity": "sensor.time_formatted",
+                          "show_state": true,
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.fkb_reload",
+                            "service_data": {},
+                            "target": {}
+                          },
+                          "card_mod": {
+                            "style": ".state {\n  font-size: 50px !important;\n  color: var(--primary-text-color) !important;\n}\nha-card.type-button {\n  height: 80px;\n}"
+                          }
+                        },
+                        {
+                          "type": "grid",
+                          "columns": 2,
+                          "square": false,
+                          "cards": [
+                            {
+                              "type": "button",
+                              "card_mod": {
+                                "style": ".state {\n  {% if states('sensor.washer_and_dryer_state_pretty') == 'Laundry Idle' %}\n  font-size: 26px !important;\n  color: var(--primary-text-color) !important;\n  {% elif states('sensor.washer_and_dryer_state_pretty') == 'Washer' %}\n  font-size: 30px !important;\n  color: yellow !important;\n  {% elif states('sensor.washer_and_dryer_state_pretty') == 'Dryer' %}\n  font-size: 30px !important;\n  color: yellow !important;\n  {% else %}\n  font-size: 26px !important;\n  color: yellow !important;\n  line-height: 1.0 !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                              },
+                              "entity": "sensor.washer_and_dryer_state_pretty",
+                              "show_icon": false,
+                              "show_name": false,
+                              "show_state": true
+                            },
+                            {
+                              "type": "button",
+                              "entity": "sensor.quick_status",
+                              "show_name": true,
+                              "show_icon": true,
+                              "show_state": true,
+                              "state_color": true,
+                              "icon_height": "20px",
+                              "icon": "mdi:home-assistant",
+                              "name": "P | S | U | Z",
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "/control-panel/utilities"
+                              },
+                              "card_mod": {
+                                "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.quick_status')[:4] != \"0  |\" and states('sensor.quick_status')[3:] == \"| 0  | 0  | 0\" %}\n  color: #00C000 !important;\n  {% elif states('sensor.quick_status') != \"0  | 0  | 0  | 0\" %}\n  color: yellow !important;\n  {% endif %}\n}\n.state, span {\n  font-size: 20px !important;\n  // padding-top: 7px !important;\n  {% if states('sensor.quick_status')[:4] != \"0  |\" and states('sensor.quick_status')[3:] == \"| 0  | 0  | 0\" %}\n  color: #00C000 !important;\n  {% elif states('sensor.quick_status') != \"0  | 0  | 0  | 0\" %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "grid",
+                      "columns": 2,
+                      "square": false,
+                      "cards": [
+                        {
+                          "type": "grid",
+                          "columns": 2,
+                          "square": false,
+                          "cards": [
+                            {
+                              "type": "button",
+                              "entity": "input_boolean.mail_delivered",
+                              "show_icon": true,
+                              "icon_height": "30px",
+                              "show_name": true,
+                              "show_state": false,
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "name": "Mail",
+                              "card_mod": {
+                                "style": ".state {\n  {% if states('input_boolean.mail_delivered') == 'off' %}\n  color: var(--primary-text-color) !important;\n  {% else %}\n  color: yellow !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                              }
+                            },
+                            {
+                              "type": "button",
+                              "card_mod": {
+                                "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}\n    color: yellow !important;\n  {% elif is_state('sensor.days_until_cleaners', 'Today') %}\n    color: #00FF00 !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% elif states(\"sensor.days_until_cleaners\") | replace(\" days\", \"\") | int(default=0) > 9 %}\n    font-size: 24px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}\n    color: yellow !important;\n  {% elif is_state('sensor.days_until_cleaners', 'Today') %}\n    color: #00FF00 !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
+                              },
+                              "entity": "sensor.days_until_cleaners",
+                              "icon": "mdi:broom",
+                              "show_state": true,
+                              "show_icon": true,
+                              "icon_height": "30px",
+                              "show_name": false,
+                              "tap_action": {
+                                "action": "none"
+                              },
+                              "hold_action": {
+                                "action": "none"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "grid",
+                          "columns": 2,
+                          "square": false,
+                          "cards": [
+                            {
+                              "type": "button",
+                              "card_mod": {
+                                "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
+                              },
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "input_boolean.toggle",
+                                "service_data": {
+                                  "entity_id": "input_boolean.trash_is_out"
+                                }
+                              },
+                              "entity": "sensor.trash",
+                              "show_state": true,
+                              "show_icon": true,
+                              "icon_height": "30px",
+                              "show_name": false
+                            },
+                            {
+                              "type": "button",
+                              "card_mod": {
+                                "style": "ha-card.type-button {\n  height: 80px;\n}\nha-state-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 18px !important;\n  {% else %}\n    font-size: 32px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\n"
+                              },
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "input_boolean.toggle",
+                                "service_data": {
+                                  "entity_id": "input_boolean.recycle_is_out"
+                                }
+                              },
+                              "entity": "sensor.recycle",
+                              "show_state": true,
+                              "show_icon": true,
+                              "icon_height": "30px",
+                              "show_name": false
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "grid",
+                      "columns": 1,
+                      "square": false,
+                      "cards": [
+                        {
+                          "type": "grid",
+                          "columns": 1,
+                          "square": false,
+                          "cards": [
+                            {
+                              "type": "conditional",
+                              "conditions": [
+                                {
+                                  "entity": "alarm_control_panel.home_alarm",
+                                  "state": "disarmed"
+                                }
+                              ],
+                              "card": {
+                                "type": "grid",
+                                "columns": 2,
+                                "square": false,
+                                "cards": [
+                                  {
+                                    "type": "conditional",
+                                    "conditions": [
+                                      {
+                                        "entity": "sensor.alarm_state",
+                                        "state": "disarmed_secure"
+                                      }
+                                    ],
+                                    "card": {
+                                      "type": "button",
+                                      "card_mod": {
+                                        "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 1px !important;\n}\nha-card.type-button span {\n  margin-top: -4px !important;\n}\n"
+                                      },
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "alarm_control_panel.alarm_arm_home",
+                                        "service_data": {
+                                          "entity_id": "alarm_control_panel.home_alarm"
+                                        }
+                                      },
+                                      "entity": "alarm_control_panel.home_alarm",
+                                      "name": "Arm Home",
+                                      "show_icon": true,
+                                      "icon": "mdi:home-lock",
+                                      "icon_height": "40px",
+                                      "theme": "green-button"
+                                    }
+                                  },
+                                  {
+                                    "type": "conditional",
+                                    "conditions": [
+                                      {
+                                        "entity": "sensor.alarm_state",
+                                        "state": "disarmed_secure"
+                                      }
+                                    ],
+                                    "card": {
+                                      "type": "button",
+                                      "card_mod": {
+                                        "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                      },
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "alarm_control_panel.alarm_arm_away",
+                                        "service_data": {
+                                          "entity_id": "alarm_control_panel.home_alarm"
+                                        }
+                                      },
+                                      "entity": "alarm_control_panel.home_alarm",
+                                      "name": "Arm Away",
+                                      "show_icon": true,
+                                      "icon": "mdi:shield-lock",
+                                      "icon_height": "35px",
+                                      "theme": "green-button"
+                                    }
+                                  },
+                                  {
+                                    "type": "conditional",
+                                    "conditions": [
+                                      {
+                                        "entity": "sensor.alarm_state",
+                                        "state": "disarmed_insecure"
+                                      }
+                                    ],
+                                    "card": {
+                                      "type": "button",
+                                      "card_mod": {
+                                        "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                      },
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "alarm_control_panel.alarm_arm_home",
+                                        "service_data": {
+                                          "entity_id": "alarm_control_panel.home_alarm"
+                                        }
+                                      },
+                                      "entity": "sun.sun",
+                                      "name": "Arm Home",
+                                      "show_icon": true,
+                                      "icon": "mdi:home-lock",
+                                      "icon_height": "40px",
+                                      "theme": "yellow-button"
+                                    }
+                                  },
+                                  {
+                                    "type": "conditional",
+                                    "conditions": [
+                                      {
+                                        "entity": "sensor.alarm_state",
+                                        "state": "disarmed_insecure"
+                                      }
+                                    ],
+                                    "card": {
+                                      "type": "button",
+                                      "card_mod": {
+                                        "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 5px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                      },
+                                      "tap_action": {
+                                        "action": "call-service",
+                                        "service": "alarm_control_panel.alarm_arm_away",
+                                        "service_data": {
+                                          "entity_id": "alarm_control_panel.home_alarm"
+                                        }
+                                      },
+                                      "entity": "sun.sun",
+                                      "name": "Arm Away",
+                                      "show_icon": true,
+                                      "icon": "mdi:shield-lock",
+                                      "icon_height": "35px",
+                                      "theme": "yellow-button"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "conditions": [
+                                {
+                                  "entity": "alarm_control_panel.home_alarm",
+                                  "state": "armed_home"
+                                }
+                              ],
+                              "card": {
+                                "type": "button",
+                                "card_mod": {
+                                  "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                },
+                                "entity": "alarm_control_panel.home_alarm",
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/alarm-panel/home"
+                                },
+                                "hold_action": {
+                                  "action": "none"
+                                },
+                                "show_icon": true,
+                                "show_name": true,
+                                "name": "Armed Home",
+                                "icon": "mdi:shield-lock",
+                                "icon_height": "35px"
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "conditions": [
+                                {
+                                  "entity": "alarm_control_panel.home_alarm",
+                                  "state": "armed_away"
+                                }
+                              ],
+                              "card": {
+                                "type": "button",
+                                "card_mod": {
+                                  "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                },
+                                "entity": "alarm_control_panel.home_alarm",
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/alarm-panel/home"
+                                },
+                                "hold_action": {
+                                  "action": "none"
+                                },
+                                "show_icon": true,
+                                "show_name": true,
+                                "name": "Armed Away",
+                                "icon": "mdi:shield-lock",
+                                "icon_height": "35px"
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "conditions": [
+                                {
+                                  "entity": "alarm_control_panel.home_alarm",
+                                  "state": "arming"
+                                }
+                              ],
+                              "card": {
+                                "type": "button",
+                                "card_mod": {
+                                  "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                },
+                                "entity": "alarm_control_panel.home_alarm",
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/alarm-panel/home"
+                                },
+                                "hold_action": {
+                                  "action": "none"
+                                },
+                                "show_icon": true,
+                                "show_name": true,
+                                "name": "Arming",
+                                "icon": "mdi:shield-lock-outline",
+                                "icon_height": "35px"
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "conditions": [
+                                {
+                                  "entity": "alarm_control_panel.home_alarm",
+                                  "state": "pending"
+                                }
+                              ],
+                              "card": {
+                                "type": "button",
+                                "card_mod": {
+                                  "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                },
+                                "entity": "alarm_control_panel.home_alarm",
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/alarm-panel/home"
+                                },
+                                "hold_action": {
+                                  "action": "none"
+                                },
+                                "show_icon": true,
+                                "show_name": true,
+                                "name": "Pending",
+                                "icon": "mdi:shield-sync",
+                                "icon_height": "35px"
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "conditions": [
+                                {
+                                  "entity": "alarm_control_panel.home_alarm",
+                                  "state": "triggered"
+                                }
+                              ],
+                              "card": {
+                                "type": "button",
+                                "card_mod": {
+                                  "style": "ha-card.type-button {\n  height: 60px;\n  padding-top: 18px !important;\n}\nha-card.type-button span {\n  margin-top: 1px !important;\n}\n"
+                                },
+                                "entity": "alarm_control_panel.home_alarm",
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/alarm-panel/home"
+                                },
+                                "hold_action": {
+                                  "action": "none"
+                                },
+                                "show_icon": true,
+                                "show_name": true,
+                                "name": "Triggered",
+                                "icon": "mdi:shield-alert",
+                                "icon_height": "35px"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "weather-forecast",
+                      "entity": "weather.home",
+                      "show_forecast": true,
+                      "secondary_info_attribute": "wind_speed"
+                    }
+                  ]
+                },
+                {
+                  "type": "grid",
+                  "columns": 1,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "grid",
+                      "columns": 1,
+                      "square": false,
+                      "cards": [
+                        {
+                          "type": "conditional",
+                          "conditions": [
+                            {
+                              "entity": "binary_sensor.spotify_broadcasting",
+                              "state_not": "on"
+                            }
+                          ],
+                          "card": {
+                            "type": "markdown",
+                            "card_mod": {
+                              "style": "ha-markdown.no-header {\n  padding-top: 2px !important;\n  padding-bottom: 0px !important;\n}\nha-markdown {\n  padding: 0px 16px !important;\n}\n"
+                            },
+                            "content": "<table width=\"100%\" border=0>\n<tr><td width=30 align=left><img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /></td><td align=left><font size=5>Holly</font></td><td align=right><font size=5>{{ states('person.holly_erdely') | replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n<tr><td width=30 align=left><img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /></td><td align=left><font size=5>Mike</font></td><td align=right><font size=5>{{ states('person.michael_erdely') | replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n</table>\n"
+                          }
+                        },
+                        {
+                          "type": "conditional",
+                          "conditions": [
+                            {
+                              "entity": "binary_sensor.spotify_broadcasting",
+                              "state": "on"
+                            }
+                          ],
+                          "card": {
+                            "type": "entity",
+                            "card_mod": {
+                              "style": ".info, .header {\n  padding-top: 3px !important;\n  padding-bottom: 3px !important;\n}\n.value {\n  font-size: 20px !important\n}\n"
+                            },
+                            "entity": "sensor.spotify_artist_title",
+                            "name": "Spotify Music Player",
+                            "icon": "mdi:music"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "grid",
+                      "columns": 3,
+                      "square": false,
+                      "cards": [
+                        {
+                          "type": "entity",
+                          "entity": "sensor.attic_temperature",
+                          "name": "Attic",
+                          "card_mod": {
+                            "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon, ha-state-icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "entity",
+                          "entity": "sensor.bedroom_temperature",
+                          "name": "Mastr BR",
+                          "card_mod": {
+                            "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "sensor",
+                          "entity": "sensor.fully_kiosk_browser",
+                          "name": "Panel",
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".header {\n  padding: 1px 16px 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.info {\n  padding: 0px 16px 1px !important;\n}\n.value {\n  font-size: 32px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n.measurement {\n  font-size: 16px !important;\n  {% if state_attr('sensor.fully_kiosk_browser', 'isPlugged') == False and states('sensor.fully_kiosk_browser') | int(0) >= 25 and states('sensor.fully_kiosk_browser') | int(0) < 40 %}\n  color: yellow !important;\n  {% elif states('sensor.fully_kiosk_browser') | int(0) < 25 %}\n  color: red !important;\n  {% endif %}\n}\n"
+                          }
+                        },
+                        {
+                          "type": "entity",
+                          "entity": "sensor.office_temperature",
+                          "name": "Office",
+                          "card_mod": {
+                            "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "entity",
+                          "entity": "climate.thermostat",
+                          "name": "Thermostat",
+                          "attribute": "current_temperature",
+                          "unit": "°F",
+                          "card_mod": {
+                            "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.name {\n  font-size: 14px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "entity",
+                          "name": "Living Rm",
+                          "entity": "sensor.living_room_temperature",
+                          "card_mod": {
+                            "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "entity",
+                          "name": "Family Rm",
+                          "entity": "sensor.god_damn_temperature",
+                          "card_mod": {
+                            "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "entity",
+                          "name": "Garage",
+                          "entity": "sensor.garage_temperature",
+                          "card_mod": {
+                            "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "entity",
+                          "entity": "sensor.outside_temperature",
+                          "name": "Outside",
+                          "card_mod": {
+                            "style": ".header {\n  padding-top: 0px !important;\n}\n.name, .icon {\n  line-height: 32px !important;\n}\n.info {\n  padding-bottom: 0px !important;\n}\n.value {\n  font-size: 32px !important;\n}\n.measurement {\n  font-size: 24px !important;\n}\n"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "grid",
+                      "columns": 4,
+                      "square": false,
+                      "cards": [
+                        {
+                          "type": "button",
+                          "entity": "sensor.upstairs_lights_on",
+                          "show_name": true,
+                          "show_icon": true,
+                          "show_state": true,
+                          "state_color": true,
+                          "icon_height": "20px",
+                          "name": "Upstairs",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/control-panel/upstairs"
+                          },
+                          "hold_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.toggle",
+                            "target": {
+                              "entity_id": "switch.upstairs"
+                            }
+                          },
+                          "card_mod": {
+                            "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.upstairs_lights_on')|int(0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.upstairs_lights_on')|int(0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                          }
+                        },
+                        {
+                          "type": "button",
+                          "entity": "sensor.middle_level_lights_on",
+                          "show_name": true,
+                          "show_icon": true,
+                          "show_state": true,
+                          "state_color": true,
+                          "icon_height": "20px",
+                          "name": "Middle",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/control-panel/middle-level"
+                          },
+                          "hold_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.toggle",
+                            "target": {
+                              "entity_id": "switch.middle_level"
+                            }
+                          },
+                          "card_mod": {
+                            "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.middle_level_lights_on')|int(0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.middle_level_lights_on')|int(0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                          }
+                        },
+                        {
+                          "type": "button",
+                          "entity": "sensor.downstairs_lights_on",
+                          "show_name": true,
+                          "show_icon": true,
+                          "show_state": true,
+                          "state_color": true,
+                          "icon_height": "20px",
+                          "name": "Downstrs",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/control-panel/downstairs"
+                          },
+                          "hold_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.toggle",
+                            "target": {
+                              "entity_id": "switch.downstairs"
+                            }
+                          },
+                          "card_mod": {
+                            "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.downstairs_lights_on')|int(0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.downstairs_lights_on')|int(0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                          }
+                        },
+                        {
+                          "type": "button",
+                          "entity": "sensor.outside_plus_garage_lights_on",
+                          "show_name": true,
+                          "show_icon": true,
+                          "show_state": true,
+                          "state_color": true,
+                          "icon_height": "20px",
+                          "name": "Outside",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/control-panel/outside"
+                          },
+                          "hold_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.toggle",
+                            "target": {
+                              "entity_id": "switch.outside"
+                            }
+                          },
+                          "card_mod": {
+                            "style": "ha-state-icon, ha-card.type-button {\n  {% if states('sensor.outside_plus_garage_lights_on')|int(0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n.state {\n  font-size: 16px !important;\n  padding-top: 7px !important;\n  {% if states('sensor.outside_plus_garage_lights_on')|int(0) > 0 %}\n  color: yellow !important;\n  {% endif %}\n}\n"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "grid",
+                      "columns": 4,
+                      "square": false,
+                      "cards": [
+                        {
+                          "type": "button",
+                          "card_mod": {
+                            "style": "ha-card.type-button {\n  height: 80px;\n}\n"
+                          },
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.scene_good_night"
+                          },
+                          "hold_action": {
+                            "action": "call-service",
+                            "service": "script.scene_night_night"
+                          },
+                          "entity": "script.scene_good_night",
+                          "show_icon": true,
+                          "show_name": true,
+                          "icon_height": "30px",
+                          "name": "Good Night"
+                        },
+                        {
+                          "type": "button",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.locking_front_door_toggle_duplicate",
+                            "service_data": {},
+                            "target": {}
+                          },
+                          "entity": "lock.front_door",
+                          "name": "Front",
+                          "icon_height": "30px",
+                          "card_mod": {
+                            "style": "ha-card.type-button {\n  height: 80px;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "button",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.locking_garage_entry_door_toggle",
+                            "service_data": {},
+                            "target": {}
+                          },
+                          "entity": "lock.garage_entry_door",
+                          "name": "Garage",
+                          "icon_height": "30px",
+                          "card_mod": {
+                            "style": "ha-card.type-button {\n  height: 80px;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "button",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "entity": "switch.petcam_plug",
+                          "name": "PetCam",
+                          "icon": "mdi:dog",
+                          "icon_height": "30px",
+                          "card_mod": {
+                            "style": "ha-card.type-button {\n  height: 80px;\n}\n"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }
