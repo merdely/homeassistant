@@ -169,10 +169,7 @@
 
 - sensor:
     name: OpnSense Package Versions
-    command: >-
-      /config/bin/opnsense_packages.sh
-      {{ state_attr('sensor.opnsense_versions', 'sys-abi') }}
-      {{ state_attr('sensor.opnsense_versions', 'core-abi') }}
+    command: "/config/bin/opnsense_packages.sh"  # {{ state_attr('sensor.opnsense_versions', 'sys-abi') }} {{ state_attr('sensor.opnsense_versions', 'core-abi') }}"
     json_attributes:
       - timestamp
       - status

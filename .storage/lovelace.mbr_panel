@@ -138,26 +138,21 @@
                   "square": false,
                   "cards": [
                     {
-                      "type": "button",
-                      "tap_action": {
-                        "action": "navigate",
-                        "navigation_path": "/mbr-panel/cameras"
-                      },
-                      "icon": "mdi:cctv",
-                      "name": "Cameras"
+                      "type": "entity",
+                      "entity": "person.holly_erdely",
+                      "name": "Holly",
+                      "icon": "mdi:face-woman",
+                      "card_mod": {
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.name {\n  font-size: 14px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
                     },
                     {
-                      "type": "button",
-                      "entity": "input_boolean.mail_delivered",
-                      "show_icon": true,
-                      "show_name": true,
-                      "show_state": false,
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "name": "Mail Delivery",
+                      "type": "entity",
+                      "entity": "person.michael_erdely",
+                      "name": "Mike",
+                      "icon": "mdi:face-man",
                       "card_mod": {
-                        "style": ".state {\n  {% if states('input_boolean.mail_delivered') == 'off' %}\n  color: var(--primary-text-color) !important;\n  {% else %}\n  color: yellow !important;\n  {% endif %}\n}\nha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.name {\n  font-size: 14px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -168,7 +163,10 @@
                       },
                       "entity": "script.scene_night_night",
                       "name": "Night Night",
-                      "icon": "mdi:moon-waning-crescent"
+                      "icon": "mdi:moon-waning-crescent",
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
                     },
                     {
                       "type": "button",
@@ -178,7 +176,10 @@
                       },
                       "entity": "script.scene_good_night",
                       "icon": "mdi:weather-night",
-                      "name": "Good Night"
+                      "name": "Good Night",
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
                     }
                   ]
                 },
@@ -193,7 +194,7 @@
                       "name": "MBR",
                       "unit": " °F",
                       "card_mod": {
-                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -202,7 +203,7 @@
                       "name": "Bath",
                       "unit": "%H",
                       "card_mod": {
-                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -211,7 +212,7 @@
                       "name": "Ofc",
                       "unit": " °F",
                       "card_mod": {
-                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -220,7 +221,7 @@
                       "name": "Attic",
                       "unit": " °F",
                       "card_mod": {
-                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -229,7 +230,7 @@
                       "name": "LR",
                       "unit": " °F",
                       "card_mod": {
-                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -238,7 +239,7 @@
                       "name": "Dwn",
                       "unit": " °F",
                       "card_mod": {
-                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -247,7 +248,7 @@
                       "name": "Grge",
                       "unit": " °F",
                       "card_mod": {
-                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\n"
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.value {\n  font-size: 26px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -257,7 +258,7 @@
                       "unit": "°F",
                       "name": " ",
                       "card_mod": {
-                        "style": ".info {\n   padding: 0px 0px 10px 10px !important;\n }\n.value {\n   font-size: 26px !important;\n }\n .measurement {\n   font-size: 16px !important;\n }\n"
+                        "style": ".info {\n   padding: 0px 0px 10px 10px !important;\n }\n.value {\n   font-size: 26px !important;\n }\n .measurement {\n   font-size: 16px !important;\n }\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     }
                   ]
@@ -277,6 +278,9 @@
                       "icon": "mdi:stairs-up",
                       "hold_action": {
                         "action": "toggle"
+                      },
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -289,6 +293,9 @@
                       "icon": "mdi:format-align-middle",
                       "hold_action": {
                         "action": "toggle"
+                      },
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -301,6 +308,9 @@
                       "icon": "mdi:stairs-down",
                       "hold_action": {
                         "action": "toggle"
+                      },
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     },
                     {
@@ -313,6 +323,9 @@
                       "icon": "mdi:image",
                       "hold_action": {
                         "action": "toggle"
+                      },
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
                       }
                     }
                   ]
@@ -334,86 +347,108 @@
                       "tap_action": {
                         "action": "toggle"
                       },
-                      "entity": "switch.bedroom_tv"
+                      "entity": "switch.bedroom_tv",
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
                     },
                     {
                       "type": "button",
                       "tap_action": {
-                        "action": "call-service",
-                        "service": "input_select.select_option",
-                        "service_data": {
-                          "entity_id": "input_select.bedroom_channel",
-                          "option": "The Tennis Channel"
-                        }
+                        "action": "navigate",
+                        "navigation_path": "/mbr-panel/cameras"
                       },
-                      "icon": "mdi:tennis",
+                      "icon": "mdi:cctv",
+                      "name": "Cameras",
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
+                    },
+                    {
+                      "type": "entity",
+                      "entity": "sensor.holly_is_in_bed",
+                      "name": "Holly",
+                      "icon": "mdi:bed",
+                      "card_mod": {
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.name {\n  font-size: 14px !important;\n}\n.value {\n  font-size: 16px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
+                    },
+                    {
+                      "type": "entity",
+                      "entity": "sensor.mike_is_in_bed",
+                      "name": "Mike",
+                      "icon": "mdi:bed",
+                      "card_mod": {
+                        "style": ".info {\n  padding: 0px 0px 10px 10px !important;\n}\n.name {\n  font-size: 14px !important;\n}\n.value {\n  font-size: 16px !important;\n}\n.measurement {\n  font-size: 16px !important;\n}\nha-card.type-entity {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "entity": "input_boolean.mail_delivered",
+                      "show_icon": true,
                       "show_name": true,
-                      "name": "TC"
+                      "show_state": false,
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "name": "Mail",
+                      "card_mod": {
+                        "style": ".state {\n  {% if states('input_boolean.mail_delivered') == 'off' %}\n  color: var(--primary-text-color) !important;\n  {% else %}\n  color: yellow !important;\n  {% endif %}\n}\nha-card.type-button {\n  padding: 0;\n  height: 80px;\n}\n"
+                      }
                     },
                     {
                       "type": "button",
+                      "card_mod": {
+                        "style": "ha-state-icon {\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}\n    color: yellow !important;\n  {% elif is_state('sensor.days_until_cleaners', 'Today') %}\n    color: #00FF00 !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %} \n    font-size: 14px !important;\n  {% elif states(\"sensor.days_until_cleaners\") | replace(\" days\", \"\") | int(default=0) > 9 %}\n    font-size: 18px !important;\n  {% else %}\n    font-size: 24px !important;\n  {% endif %}\n  {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}\n    color: yellow !important;\n  {% elif is_state('sensor.days_until_cleaners', 'Today') %}\n    color: #00FF00 !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\nha-card.type-button {\n  padding: 0;\n  height: 80px;\n}\n"
+                      },
+                      "entity": "sensor.days_until_cleaners",
+                      "icon": "mdi:broom",
+                      "show_state": true,
+                      "show_icon": true,
+                      "icon_height": "30px",
+                      "show_name": false,
+                      "tap_action": {
+                        "action": "none"
+                      },
+                      "hold_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "card_mod": {
+                        "style": "ha-state-icon {\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.trash', 'Tomorrow') %} \n    font-size: 14px !important;\n  {% else %}\n    font-size: 24px !important;\n  {% endif %}\n  {% if is_state('sensor.trash', 'Tomorrow') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.trash', 'Today') and \n     is_state('input_boolean.trash_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\nha-card.type-button {\n  padding: 0;\n  height: 80px;\n}\n"
+                      },
                       "tap_action": {
                         "action": "call-service",
-                        "service": "input_select.select_option",
+                        "service": "input_boolean.toggle",
                         "service_data": {
-                          "entity_id": "input_select.bedroom_channel",
-                          "option": "TBS"
+                          "entity_id": "input_boolean.trash_is_out"
                         }
                       },
-                      "name": "TBS",
-                      "icon": "mdi:alpha-t"
+                      "entity": "sensor.trash",
+                      "show_state": true,
+                      "show_icon": true,
+                      "icon_height": "30px",
+                      "show_name": false
                     },
                     {
                       "type": "button",
+                      "card_mod": {
+                        "style": "ha-state-icon {\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% endif %}\n}\n.state {\n  padding-top: 0px;\n  {% if is_state('sensor.recycle', 'Tomorrow') %} \n    font-size: 14px !important;\n  {% else %}\n    font-size: 24px !important;\n  {% endif %}\n  {% if is_state('sensor.recycle', 'Tomorrow') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: yellow !important;\n  {% elif is_state('sensor.recycle', 'Today') and \n     is_state('input_boolean.recycle_is_out', 'off') %}\n    color: red !important;\n  {% else %}\n    color: var(--primary-text-color) !important;\n  {% endif %}\n}\nha-card.type-button {\n  padding: 0;\n  height: 80px;\n}\n"
+                      },
                       "tap_action": {
                         "action": "call-service",
-                        "service": "input_select.select_option",
+                        "service": "input_boolean.toggle",
                         "service_data": {
-                          "entity_id": "input_select.bedroom_channel",
-                          "option": "Nickelodeon"
+                          "entity_id": "input_boolean.recycle_is_out"
                         }
                       },
-                      "icon": "mdi:svg",
-                      "name": "Nick"
-                    }
-                  ]
-                },
-                {
-                  "type": "grid",
-                  "columns": 4,
-                  "square": false,
-                  "cards": [
-                    {
-                      "type": "button",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "entity": "script.tv_bedroom_input_tivo",
-                      "name": "Tivo"
-                    },
-                    {
-                      "type": "button",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "entity": "script.tv_bedroom_input_roku",
-                      "name": "Roku"
-                    },
-                    {
-                      "type": "button",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "entity": "script.tv_bedroom_input_chromecast",
-                      "name": "Chromecast"
-                    },
-                    {
-                      "type": "button",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "entity": "script.tv_bedroom_input_cameras",
-                      "name": "Cameras"
+                      "entity": "sensor.recycle",
+                      "show_state": true,
+                      "show_icon": true,
+                      "icon_height": "30px",
+                      "show_name": false
                     }
                   ]
                 },
@@ -437,7 +472,7 @@
                       "icon": "mdi:thermostat",
                       "attribute": "current_temperature",
                       "card_mod": {
-                        "style": ".name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
+                        "style": ".name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\nha-card.type-entity {\n  padding: 0;\n  height: 80px;\n}\n"
                       }
                     },
                     {
@@ -446,7 +481,7 @@
                       "icon": "mdi:thermostat",
                       "name": "SP",
                       "card_mod": {
-                        "style": ".value {\n  font-size: 20px !important;\n}\n.name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\n"
+                        "style": ".value {\n  font-size: 20px !important;\n}\n.name, .value, .measurement, .icon {\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  color: orange !important;\n  {% endif %}\n  {% if state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  color: dodgerblue !important;\n  {% endif %}\n}\nha-card.type-entity {\n  padding: 0;\n  height: 80px;\n}\n"
                       }
                     },
                     {
@@ -458,7 +493,10 @@
                         "target": {}
                       },
                       "entity": "script.home_thermostat_down",
-                      "name": "Cooler"
+                      "name": "Cooler",
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
                     },
                     {
                       "type": "button",
@@ -469,7 +507,10 @@
                         "target": {}
                       },
                       "entity": "script.home_thermostat_up",
-                      "name": "Warmer"
+                      "name": "Warmer",
+                      "card_mod": {
+                        "style": "ha-card.type-button {\n  height: 80px;\n  padding: 0;\n}\n"
+                      }
                     }
                   ]
                 }
@@ -1590,7 +1631,7 @@
                     {
                       "type": "entities",
                       "card_mod": {
-                        "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}yellow{% elif is_state('sensor.days_until_cleaners', 'Today') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-ping-color: {% if states('binary_sensor.earth') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-web-color: {% if states('binary_sensor.earth_nginx_php_working') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                        "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}yellow{% elif is_state('sensor.days_until_cleaners', 'Today') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-ping-color: {% if states('binary_sensor.earth') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-web-color: {% if states('binary_sensor.earth_nginx_php_working') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                       },
                       "entities": [
                         {
@@ -1986,6 +2027,23 @@
                               "tap_action": {
                                 "action": "navigate",
                                 "navigation_path": "/mbr-panel/unavailable-entities"
+                              }
+                            },
+                            {
+                              "entity": "sensor.ood_wyze_entities",
+                              "name": "Wyze",
+                              "styles": {
+                                "color": "var(--wyze-color)"
+                              },
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "/mobile-dashboard/wyze"
+                              },
+                              "double_tap_action": {
+                                "action": "more-info"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
                               }
                             },
                             {

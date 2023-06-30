@@ -2,9 +2,9 @@
     unique_id: unavailable_entities
     name: Unavailable Entities
     icon: mdi:cloud-question
-    state: "{{ states | rejectattr('entity_id','match','^(number..*_plug_overload_protection|(binary_sensor|light|sensor|select|switch).(home_cloud_ceiling|home_hours_of_sun_.*|home_precipitation|home_pressure_tendency|home_realfeel_.*|home_thunderstorm_probability_.*|home_uv_index.*|home_wind.*|.*_plug_consumer_connected|.*_effect|.*_power_on_behavior|bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.google_pixel_watch|camera.garage_door_cam|update..*_bulb|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['tts', 'stt', 'update', 'button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    state: "{{ states | rejectattr('entity_id','match','^(number..*_plug_overload_protection|(binary_sensor|light|sensor|select|switch).(db_size|home_condition_(day|night)_.*|home_air_quality_.*|home_cloud_ceiling|home_hours_of_sun_.*|home_precipitation|home_pressure_tendency|home_realfeel_.*|home_thunderstorm_probability_.*|home_uv_index.*|home_wind.*|.*_plug_consumer_connected|.*_effect|.*_power_on_behavior|bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_supports_find_remote|.*_roku_(tv_)?active_app(_id)?|.*_roku_headphones_connected|.*_roku_supports_airplay|.*_roku_supports_ethernet|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.google_pixel_watch|camera.garage_door_cam|update..*_bulb|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['tts', 'stt', 'update', 'button', 'number', 'remote', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
     attributes:
-      entity_list: "{{ states | rejectattr('entity_id','match','^(number..*_plug_overload_protection|(binary_sensor|light|sensor|select|switch).(home_cloud_ceiling|home_hours_of_sun_.*|home_precipitation|home_pressure_tendency|home_realfeel_.*|home_thunderstorm_probability_.*|home_uv_index.*|home_wind.*|.*_plug_consumer_connected|.*_effect|.*_power_on_behavior|bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_(tv_)?active_app(_id)?|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.google_pixel_watch|camera.garage_door_cam|update..*_bulb|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['tts', 'stt', 'update', 'button', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
+      entity_list: "{{ states | rejectattr('entity_id','match','^(number..*_plug_overload_protection|(binary_sensor|light|sensor|select|switch).(db_size|home_condition_(day|night)_.*|home_air_quality_.*|home_cloud_ceiling|home_hours_of_sun_.*|home_precipitation|home_pressure_tendency|home_realfeel_.*|home_thunderstorm_probability_.*|home_uv_index.*|home_wind.*|.*_plug_consumer_connected|.*_effect|.*_power_on_behavior|bedroom_tv_remote_status|garage_door_status|god_damn_tv_remote_status|office_tv_remote_status|unavailable_entities|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_.*|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|mike_desk_lamp_button|octoprint_.*|office_heater_plug.*|outdoor_(plug|strip).*|.*_roku_supports_find_remote|.*_roku_(tv_)?active_app(_id)?|.*_roku_headphones_connected|.*_roku_supports_airplay|.*_roku_supports_ethernet|speedtest_.*|withings_(?!in_bed).*)|update.frigate_server|group.outside_xmas|weather.home_2|device_tracker.google_pixel_watch|camera.garage_door_cam|update..*_bulb|device_tracker.kukui(_[0-9]+)?)$') | rejectattr('domain','in',['tts', 'stt', 'update', 'button', 'number', 'remote', 'media_player']) | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
       ha_count: true
 
 - sensor:
@@ -300,7 +300,7 @@
     attributes:
       entity_list: |
         {% set ns = namespace(entities = []) -%}
-        {% for entity in states | selectattr('entity_id', 'match', '^(binary_)?sensor\..*_(button_click|contact|occupancy|multisensor_temperature|plug_power|usb_router_last_seen|water_leak_sensor_water_leak)$') | selectattr('attributes.linkquality', 'defined') | map(attribute='entity_id') | list -%}
+        {% for entity in states | selectattr('entity_id', 'match', '^(light|(binary_)?sensor)\..*_(bulb|button_click|contact|occupancy|multisensor_temperature|plug_power|usb_router_last_seen|water_leak_sensor_water_leak)$') | selectattr('attributes.linkquality', 'defined') | map(attribute='entity_id') | list -%}
           {% set ns.entities = ns.entities + [{"entity_id": entity,
             "friendly_name": state_attr(entity, 'friendly_name'),
             "timediff": (utcnow().strftime('%s') | int(0) - as_timestamp(state_attr(entity, 'last_seen'), 0) | int(0)) }] -%}
@@ -328,8 +328,14 @@
       {% if state_attr('sensor.wyze_entities', 'entity_list') -%}
         {% set ns = namespace(count=0) -%}
         {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | default([]) -%}
-          {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_seconds') | int(0) -%}
-            {% set ns.count = ns.count + 1 -%}
+          {% if entity['entity_id'][-5:] == "_bulb" -%}
+            {% if entity['timediff'] | int(0) > 60 * 60 * 24 -%}
+              {% set ns.count = ns.count + 1 -%}
+            {% endif -%}
+          {% else %}
+            {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_seconds') | int(0) -%}
+              {% set ns.count = ns.count + 1 -%}
+            {% endif -%}
           {% endif -%}
         {% endfor -%}
         {{ ns.count }}
@@ -342,8 +348,14 @@
       entity_list: >
         {% if state_attr('sensor.wyze_entities', 'entity_list') -%}
           {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | sort(attribute='timediff', reverse=true) -%}
-            {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_seconds') | int(0) -%}
-              {{ entity['friendly_name'] }} ({{ entity['timediff'] }}),
+            {% if entity['entity_id'][-5:] == "_bulb" -%}
+              {% if entity['timediff'] | int(0) > 60 * 60 * 24 -%}
+                {{ entity['friendly_name'] }} ({{ entity['timediff'] }}),
+              {% endif -%}
+            {% else %}
+              {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_seconds') | int(0) -%}
+                {{ entity['friendly_name'] }} ({{ entity['timediff'] }}),
+              {% endif -%}
             {% endif -%}
           {% endfor -%}
         {% else -%}
@@ -1197,4 +1209,26 @@
     name: Office Shelf Motion Sensor timediff Wyze
     state: "{{ utcnow().strftime('%s') | int(0) - as_timestamp(state_attr('binary_sensor.wyzesense_778e716f', 'timestamp'), 0) }}"
     unit_of_measurement: "Seconds"
+
+- sensor:
+    unique_id: holly_is_in_bed
+    name: Holly Is In Bed
+    icon: mdi:bed
+    state: >
+      {% if states("binary_sensor.holly_bed_sensor_contact") != "on" %}
+      In Bed
+      {% else %}
+      Not In Bed
+      {% endif %}
+
+- sensor:
+    unique_id: mike_is_in_bed
+    name: Mike Is In Bed
+    icon: mdi:bed
+    state: >
+      {% if states("binary_sensor.mike_bed_sensor_contact") != "on" %}
+      In Bed
+      {% else %}
+      Not In Bed
+      {% endif %}
 

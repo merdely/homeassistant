@@ -399,6 +399,8 @@
       - switch.mars_plug
       - switch.metis_plug
       - switch.office_tv_plug
+      - switch.tarvos_plug
+      - switch.ymir_plug
   mode: single
 - id: '1603391662402'
   alias: Security - 40 Armed - Disarm Security System in the morning when someone
@@ -4468,4 +4470,31 @@
       entity_id:
       - light.kitchen_table_light
       - light.foyer_light
+  mode: single
+- id: '1688076582161'
+  alias: Lighting - Sync Bulb Status
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.dresser_lamp
+    - light.far_black_lamp
+    - light.near_black_lamp
+    - light.white_lamp
+    - light.god_damn_light
+    - light.front_porch_light
+    - light.holly_nightstand_lamp
+    to: 'off'
+  condition: []
+  action:
+  - service: system_log.write
+    data:
+      level: error
+      message: Turning off {{ trigger.entity_id | replace('_lamp', '_bulb') | replace('_light',
+        '_bulb') }}
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: '{{ trigger.entity_id | replace(''_lamp'', ''_bulb'') | replace(''_light'',
+        ''_bulb'') }}'
   mode: single

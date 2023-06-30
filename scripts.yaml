@@ -1704,3 +1704,38 @@ power_cycle_closet_switch:
       - switch.closet_switch_plug
   mode: single
   icon: mdi:sync
+zigbee_bulbs_keepalive:
+  alias: Zigbee Bulbs Keepalive
+  sequence:
+  - service: mqtt.publish
+    data:
+      qos: '0'
+      topic: zigbee2mqtt/bridge/request/permit_join
+      payload: '{"value": true, "time": 30}'
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id:
+      - light.dresser_lamp
+      - light.white_lamp
+      - light.near_black_lamp
+      - light.far_black_lamp
+      - light.front_porch_light
+      - light.god_damn_light
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.dresser_lamp
+      - light.white_lamp
+      - light.near_black_lamp
+      - light.far_black_lamp
+      - light.front_porch_light
+      - light.god_damn_light
+  mode: single
+  icon: mdi:zigbee

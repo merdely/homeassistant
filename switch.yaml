@@ -37,7 +37,7 @@
       friendly_name: "Bedroom TV"
       icon_template: mdi:television
       value_template: >-
-        {% if states('binary_sensor.bedroom_tv_ping') != 'on' %}
+        {% if states('binary_sensor.bedroom_tv_wifi_ping') != 'on' and states('binary_sensor.bedroom_tv_wired_ping') != 'on' %}
           off
         {% else %}
           on
@@ -50,7 +50,10 @@
         - delay: '2'
         - service: homeassistant.update_entity
           target:
-            entity_id: binary_sensor.bedroom_tv_ping
+            entity_id: binary_sensor.bedroom_tv_wifi_ping
+        - service: homeassistant.update_entity
+          target:
+            entity_id: binary_sensor.bedroom_tv_wired_ping
       turn_off:
         - service: media_player.select_source
           entity_id: media_player.bedroom_roku
