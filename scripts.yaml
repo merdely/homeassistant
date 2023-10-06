@@ -1,14 +1,14 @@
 announcement_ha_app_test_announcement:
   alias: Announcement - HA App - Test Announcement
   sequence:
-  - service: notify.mobile_app_pixel_7_pro
-    data:
-      message: The dryer is still running
-      title: Laundry
   - service: notify.mobile_app_pixel_3
     data:
       title: Laundry
       message: The dryer is still running
+  - service: notify.signal_mike
+    data:
+      message: The dryer is still running
+      title: Laundry
   mode: single
 announcement_nightly_security:
   alias: Announcement - Nightly Security
@@ -170,7 +170,7 @@ security_message_open_security_devices:
 security_message_list_all_security_devices_and_their_state:
   alias: Security - Message - List all security devices and their state
   sequence:
-  - service: notify.mobile_app_pixel_7_pro
+  - service: notify.signal_mike
     data:
       message: "{%- for entity_id in states.group.security_devices.attributes.entity_id
         %}\n  {%- set domain, device = entity_id.split('.') -%}\n  {{ state_attr(entity_id,\"friendly_name\")
@@ -179,7 +179,7 @@ security_message_list_all_security_devices_and_their_state:
 security_message_list_all_security_devices_and_their_state_dup:
   alias: Security - Message - List all security devices and their state (Duplicate)
   sequence:
-  - service: notify.mobile_app_pixel_7_pro
+  - service: notify.signal_mike
     data:
       message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
         -%} {%- for entity_id in states.group.security_devices.attributes.entity_id
@@ -320,15 +320,6 @@ tv_bedroom_input_shed_camera:
     entity_id: input_select.bedroom_input
   mode: single
   icon: mdi:cctv
-tv_bedroom_input_tivo:
-  alias: TV - Bedroom - Input - Tivo
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Tivo
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: mdi:television-play
 tv_bedroom_input_roku:
   alias: TV - Bedroom - Input - Roku
   sequence:
@@ -423,24 +414,6 @@ tv_bedroom_sleep_cancel:
         delay 5; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E016E9","DataLSB":"0x07076897","Repeat":0}
   mode: single
   icon: mdi:sleep-off
-tv_bedroom_tivo_pause:
-  alias: TV - Bedroom - Tivo - Pause
-  sequence:
-  - service: shell_command.tivo_button
-    data:
-      tv_device: tivo-bedroom
-      tivo_button: PAUSE
-  mode: single
-  icon: mdi:pause
-tv_bedroom_tivo_replay:
-  alias: TV - Bedroom - Tivo - Replay
-  sequence:
-  - service: shell_command.tivo_button
-    data:
-      tv_device: tivo-bedroom
-      tivo_button: REPLAY
-  mode: single
-  icon: mdi:replay
 tv_bedroom_volume_down:
   alias: TV - Bedroom - Volume Down
   sequence:
@@ -465,15 +438,6 @@ tv_bedroom_volume_up:
         delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0}
   mode: single
   icon: mdi:volume-plus
-tv_god_damn_input_tivo:
-  alias: TV - God Damn - Input - Tivo
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Tivo
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: mdi:television-play
 tv_god_damn_input_roku:
   alias: TV - God Damn - Input - Roku
   sequence:
@@ -608,24 +572,6 @@ tv_god_damn_soundbar_input:
       payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x4B0D","DataLSB":"0xD2B0","Repeat":0}
   mode: single
   icon: mdi:surround-sound
-tv_god_damn_tivo_pause:
-  alias: TV - God Damn - Tivo - Pause
-  sequence:
-  - service: shell_command.tivo_button
-    data:
-      tv_device: tivo-familyroom
-      tivo_button: PAUSE
-  mode: single
-  icon: mdi:pause
-tv_god_damn_tivo_replay:
-  alias: TV - God Damn - Tivo - Replay
-  sequence:
-  - service: shell_command.tivo_button
-    data:
-      tv_device: tivo-familyroom
-      tivo_button: REPLAY
-  mode: single
-  icon: mdi:replay
 tv_god_damn_volume_down:
   alias: TV - God Damn - Volume Down
   sequence:
@@ -650,15 +596,6 @@ tv_god_damn_volume_up:
         delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0}
   mode: single
   icon: mdi:volume-plus
-tv_living_room_input_tivo:
-  alias: TV - Living Room - Input - Tivo
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Tivo
-    entity_id: input_select.living_room_input
-  mode: single
-  icon: mdi:television-play
 tv_living_room_input_roku:
   alias: TV - Living Room - Input Roku
   sequence:
@@ -759,24 +696,6 @@ tv_living_room_roku_stop:
       entity_id: media_player.living_room_roku_tv
   mode: single
   icon: mdi:stop
-tv_living_room_tivo_pause:
-  alias: TV - Living Room - Tivo - Pause
-  sequence:
-  - service: shell_command.tivo_button
-    data:
-      tv_device: tivo-livingroom
-      tivo_button: PAUSE
-  mode: single
-  icon: mdi:pause
-tv_living_room_tivo_replay:
-  alias: TV - Living Room - Tivo - Replay
-  sequence:
-  - service: shell_command.tivo_button
-    data:
-      tv_device: tivo-livingroom
-      tivo_button: REPLAY
-  mode: single
-  icon: mdi:replay
 tv_living_room_volume_down:
   alias: TV - Living Room - Volume Down
   sequence:
@@ -846,15 +765,6 @@ tv_office_input_chimney_camera:
     entity_id: input_select.office_input
   mode: single
   icon: mdi:cctv
-tv_office_input_tivo:
-  alias: TV - Office - Input - Tivo
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Tivo
-    entity_id: input_select.office_input
-  mode: single
-  icon: mdi:television-play
 tv_office_input_roku:
   alias: TV - Office - Input - Roku
   sequence:
@@ -909,24 +819,6 @@ tv_office_roku_stop:
     entity_id: media_player.office_roku
   mode: single
   icon: mdi:stop
-tv_office_tivo_pause:
-  alias: TV - Office - Tivo - Pause
-  sequence:
-  - service: shell_command.tivo_button
-    data:
-      tv_device: tivo-office
-      tivo_button: PAUSE
-  mode: single
-  icon: mdi:pause
-tv_office_tivo_replay:
-  alias: TV - Office - Tivo - Replay
-  sequence:
-  - service: shell_command.tivo_button
-    data:
-      tv_device: tivo-office
-      tivo_button: REPLAY
-  mode: single
-  icon: mdi:replay
 tv_office_volume_down:
   alias: TV - Office - Volume Down
   sequence:
@@ -998,33 +890,13 @@ function_tv_change_input:
       example: '"tivo", "roku", "chromecast", "bluray", "playstation", or "wii"'
   variables:
     remotes:
-      bedroom: bedroom_tv
       god_damn: god_damn_tv
-      living_room: living_room_tv
-      office: office_tv
     tvs:
-      bedroom:
-        tivo: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF609F","DataLSB":"0x02FD06F9","Repeat":0}
-        roku: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF50AF","DataLSB":"0x02FD0AF5","Repeat":0}
-        chromecast: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF708F","DataLSB":"0x02FD0EF1","Repeat":0}
-        bluray: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF906F","DataLSB":"0x02FD09F6","Repeat":0}
       god_damn:
-        tivo: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF609F","DataLSB":"0x02FD06F9","Repeat":0}
-        roku: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF50AF","DataLSB":"0x02FD0AF5","Repeat":0}
-        chromecast: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF708F","DataLSB":"0x02FD0EF1","Repeat":0}
-        playstation: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF906F","DataLSB":"0x02FD09F6","Repeat":0}
-        wii: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BFB04F","DataLSB":"0x02FD0DF2","Repeat":0}
-      living_room:
-        tivo: irsend {"Protocol":"NEC","Bits":32,"Data":"0xFF609F","DataLSB":"0xFF06F9","Repeat":0}
-        roku: irsend {"Protocol":"NEC","Bits":32,"Data":"0xFF50AF","DataLSB":"0xFF0AF5","Repeat":0}
-        chromecast: irsend {"Protocol":"NEC","Bits":32,"Data":"0xFF708F","DataLSB":"0xFF0EF1","Repeat":0}
-      office:
-        tivo: irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33718E","DataLSB":"0x33CC8E71","Repeat":0};
-          Delay 10; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33A15E","DataLSB":"0x33CC857A","Repeat":0};
-          Delay 10; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC3319E6","DataLSB":"0x33CC9867","Repeat":0}
-        roku: irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33718E","DataLSB":"0x33CC8E71","Repeat":0};
-          Delay 10; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33619E","DataLSB":"0x33CC8679","Repeat":0};
-          Delay 10; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC3319E6","DataLSB":"0x33CC9867","Repeat":0}
+        roku: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF609F","DataLSB":"0x02FD06F9","Repeat":0}
+        chromecast: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF50AF","DataLSB":"0x02FD0AF5","Repeat":0}
+        playstation: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF708F","DataLSB":"0x02FD0EF1","Repeat":0}
+        wii: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF906F","DataLSB":"0x02FD09F6","Repeat":0}
 function_speakers_prep:
   alias: Function - Speakers - Prep
   fields:
@@ -1108,10 +980,10 @@ scene_good_night:
           entity_id: light.office_fan_light
           state: 'off'
         - condition: state
-          entity_id: binary_sensor.withings_in_bed_holly_e
+          entity_id: binary_sensor.withings_holly_in_bed
           state: 'off'
         - condition: state
-          entity_id: binary_sensor.withings_in_bed_michael_e
+          entity_id: binary_sensor.withings_mike_in_bed
           state: 'off'
       sequence:
       - service: homeassistant.turn_on
@@ -1148,10 +1020,10 @@ scene_good_night:
   - condition: and
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_holly_e
+      entity_id: binary_sensor.withings_holly_in_bed
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_michael_e
+      entity_id: binary_sensor.withings_mike_in_bed
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -1160,10 +1032,11 @@ scene_good_night:
     target:
       entity_id: switch.bedroom_tv
     data: {}
-  - service: input_select.select_option
+  - service: shell_command.play_plex_on_roku
     data:
-      option: Nickelodeon
-    entity_id: input_select.bedroom_channel
+      roku: bedroom
+      tvshow: Friends
+    alias: Start Friends
   mode: single
   icon: mdi:weather-night
 scene_leaving_home:
@@ -1184,9 +1057,9 @@ scene_leaving_home:
       - light.near_black_lamp
       - light.white_lamp
       - switch.living_room_tv
-      - switch.mantle_lights
       - light.dining_room_overhead_light
       - light.deck_lights
+    data: {}
   mode: single
   icon: mdi:exit-run
 scene_movie_time:
@@ -1321,11 +1194,11 @@ fix_in_bed_sensors:
   sequence:
   - service: python_script.set_state
     data:
-      entity_id: binary_sensor.withings_in_bed_holly_e
+      entity_id: binary_sensor.withings_holly_in_bed
       state: '{{ states(''input_boolean.holly_is_in_bed'') }}'
   - service: python_script.set_state
     data:
-      entity_id: binary_sensor.withings_in_bed_michael_e
+      entity_id: binary_sensor.withings_mike_in_bed
       state: '{{ states(''input_boolean.mike_is_in_bed'') }}'
   mode: single
   icon: mdi:bed
@@ -1707,35 +1580,55 @@ power_cycle_closet_switch:
 zigbee_bulbs_keepalive:
   alias: Zigbee Bulbs Keepalive
   sequence:
+  - service: input_text.set_value
+    data:
+      value: ''
+    target:
+      entity_id: input_text.zigbee_bulbs_script_list
   - service: mqtt.publish
     data:
       qos: '0'
       topic: zigbee2mqtt/bridge/request/permit_join
       payload: '{"value": true, "time": 30}'
-  - service: homeassistant.turn_on
-    data: {}
-    target:
-      entity_id:
+  - repeat:
+      for_each:
       - light.dresser_lamp
       - light.white_lamp
       - light.near_black_lamp
       - light.far_black_lamp
       - light.front_porch_light
       - light.god_damn_light
+      sequence:
+      - if:
+        - condition: template
+          value_template: '{{ is_state(repeat.item, ''off'') }}'
+        then:
+        - service: input_text.set_value
+          data:
+            value: '{{ states(''input_text.zigbee_bulbs_script_list'') }},{{ repeat.item
+              }}'
+          target:
+            entity_id: input_text.zigbee_bulbs_script_list
+        - service: homeassistant.turn_on
+          target:
+            entity_id: '{{ repeat.item }}'
   - delay:
       hours: 0
       minutes: 0
       seconds: 30
       milliseconds: 0
-  - service: homeassistant.turn_off
-    data: {}
-    target:
-      entity_id:
-      - light.dresser_lamp
-      - light.white_lamp
-      - light.near_black_lamp
-      - light.far_black_lamp
-      - light.front_porch_light
-      - light.god_damn_light
+  - repeat:
+      for_each: '{{ states("input_text.zigbee_bulbs_script_list")[1:].split(",") }}'
+      sequence:
+      - service: homeassistant.turn_off
+        target:
+          entity_id: '{{ repeat.item }}'
   mode: single
   icon: mdi:zigbee
+restart_octoprint:
+  alias: Restart Octoprint
+  sequence:
+  - service: shell_command.restart_octoprint
+    data: {}
+  mode: single
+  icon: mdi:restart

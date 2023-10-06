@@ -24,7 +24,7 @@
                     {
                       "type": "entities",
                       "card_mod": {
-                        "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  border: solid 1px grey;\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-withings-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-withings-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --holly-bed-color: {% if states('binary_sensor.holly_bed_sensor_contact') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.mike_bed_sensor_contact') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}yellow{% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                        "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  border: solid 1px grey;\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-withings-bed-color: {% if states('binary_sensor.withings_holly_in_bed') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-withings-bed-color: {% if states('binary_sensor.withings_mike_in_bed') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --holly-bed-color: {% if states('binary_sensor.holly_bed_sensor_contact') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.mike_bed_sensor_contact') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}yellow{% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                       },
                       "entities": [
                         {
@@ -46,30 +46,7 @@
                         },
                         {
                           "entity": "person.holly_erdely",
-                          "name": "Bed Presence Sensor",
-                          "icon": "mdi:bed",
-                          "type": "custom:multiple-entity-row",
-                          "entities": [
-                            {
-                              "entity": "binary_sensor.withings_in_bed_holly_e",
-                              "name": "Holly",
-                              "styles": {
-                                "color": "var(--holly-withings-bed-color)"
-                              }
-                            },
-                            {
-                              "entity": "binary_sensor.withings_in_bed_michael_e",
-                              "name": "Mike",
-                              "styles": {
-                                "color": "var(--mike-withings-bed-color)"
-                              }
-                            }
-                          ],
-                          "show_state": false
-                        },
-                        {
-                          "entity": "person.holly_erdely",
-                          "name": "Bed Presence Sensor",
+                          "name": "Bed Presence",
                           "icon": "mdi:bed",
                           "type": "custom:multiple-entity-row",
                           "entities": [
@@ -81,10 +58,24 @@
                               }
                             },
                             {
+                              "entity": "binary_sensor.withings_holly_in_bed",
+                              "name": "H Wth",
+                              "styles": {
+                                "color": "var(--holly-withings-bed-color)"
+                              }
+                            },
+                            {
                               "entity": "binary_sensor.mike_bed_sensor_contact",
                               "name": "Mike",
                               "styles": {
                                 "color": "var(--mike-bed-color)"
+                              }
+                            },
+                            {
+                              "entity": "binary_sensor.withings_mike_in_bed",
+                              "name": "M Wth",
+                              "styles": {
+                                "color": "var(--mike-withings-bed-color)"
                               }
                             }
                           ],
@@ -1203,7 +1194,7 @@
                       },
                       {
                         "type": "grid",
-                        "columns": 6,
+                        "columns": 3,
                         "square": false,
                         "cards": [
                           {
@@ -1285,7 +1276,7 @@
                       },
                       {
                         "type": "grid",
-                        "columns": 3,
+                        "columns": 2,
                         "square": false,
                         "cards": [
                           {
@@ -1294,7 +1285,8 @@
                               "action": "toggle"
                             },
                             "entity": "light.office_fan_light",
-                            "name": "Fan Light"
+                            "name": "Fan Light",
+                            "icon_height": "40px"
                           },
                           {
                             "type": "button",
@@ -1302,15 +1294,8 @@
                               "action": "toggle"
                             },
                             "entity": "fan.office_fan",
-                            "name": "Fan"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "switch.mike_desk_lamp",
-                            "name": "Mike Desk"
+                            "name": "Fan",
+                            "icon_height": "40px"
                           }
                         ]
                       }
@@ -1352,7 +1337,7 @@
                             },
                             "entity": "light.hall_bath_light",
                             "name": "Light",
-                            "icon_height": "50px"
+                            "icon_height": "40px"
                           },
                           {
                             "type": "button",
@@ -1362,7 +1347,7 @@
                             "entity": "switch.hall_bath_fan",
                             "name": "Fan",
                             "icon": "mdi:fan",
-                            "icon_height": "50px"
+                            "icon_height": "40px"
                           }
                         ]
                       }
@@ -1388,7 +1373,7 @@
                               "action": "toggle"
                             },
                             "entity": "light.guest_room_light",
-                            "icon_height": "50px"
+                            "icon_height": "40px"
                           },
                           {
                             "type": "button",
@@ -1396,7 +1381,7 @@
                               "action": "toggle"
                             },
                             "entity": "light.hallway_light",
-                            "icon_height": "50px"
+                            "icon_height": "40px"
                           }
                         ]
                       }
@@ -2256,9 +2241,6 @@
                             "entity": "binary_sensor.garage_door_sensor_contact"
                           },
                           {
-                            "entity": "binary_sensor.garage_door_cam_status"
-                          },
-                          {
                             "entity": "cover.garage_door"
                           },
                           {
@@ -2392,7 +2374,7 @@
                     "cards": [
                       {
                         "type": "grid",
-                        "columns": 3,
+                        "columns": 4,
                         "square": false,
                         "cards": [
                           {
@@ -2432,17 +2414,6 @@
                             "type": "button",
                             "tap_action": {
                               "action": "call-service",
-                              "service": "script.scene_night_night"
-                            },
-                            "entity": "script.scene_night_night",
-                            "name": "Night Night",
-                            "icon": "mdi:moon-waning-crescent",
-                            "show_name": false
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
                               "service": "script.scene_leaving_home"
                             },
                             "entity": "script.scene_leaving_home",
@@ -2460,6 +2431,47 @@
                             "name": "Movie Time",
                             "icon": "mdi:movie",
                             "show_name": false
+                          },
+                          {
+                            "type": "button",
+                            "entity": "light.dresser_bulb",
+                            "icon": "mdi:zigbee",
+                            "name": "Zigbee Bulbs",
+                            "show_name": false,
+                            "tap_action": {
+                              "action": "call-service",
+                              "service": "script.zigbee_bulbs_keepalive"
+                            }
+                          },
+                          {
+                            "type": "button",
+                            "entity": "cover.garage_door",
+                            "name": "Garage Closed",
+                            "icon": "mdi:garage",
+                            "show_name": false,
+                            "tap_action": {
+                              "action": "call-service",
+                              "service": "python_script.set_state",
+                              "service_data": {
+                                "entity_id": "cover.garage_door",
+                                "state": "closed"
+                              }
+                            }
+                          },
+                          {
+                            "type": "button",
+                            "entity": "cover.garage_door",
+                            "name": "Garage Open",
+                            "icon": "mdi:garage-open",
+                            "show_name": false,
+                            "tap_action": {
+                              "action": "call-service",
+                              "service": "python_script.set_state",
+                              "service_data": {
+                                "entity_id": "cover.garage_door",
+                                "state": "open"
+                              }
+                            }
                           }
                         ]
                       },
@@ -2471,7 +2483,7 @@
                           {
                             "type": "entities",
                             "card_mod": {
-                              "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_in_bed_holly_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_in_bed_michael_e') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-ping-color: {% if states('binary_sensor.earth') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-web-color: {% if states('binary_sensor.earth_nginx_php_working') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --ha-ver-color: {% if is_state('binary_sensor.updater', 'on') %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                              "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}yellow{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}yellow{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}yellow{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}yellow{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.withings_holly_in_bed') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.withings_mike_in_bed') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-ping-color: {% if states('binary_sensor.earth') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --earth-web-color: {% if states('binary_sensor.earth_nginx_php_working') == 'off' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --ha-ver-color: {% if is_state('binary_sensor.updater', 'on') %}yellow{% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
                             },
                             "entities": [
                               {
@@ -2567,6 +2579,35 @@
                                   {
                                     "entity": "input_boolean.recycle_is_out",
                                     "name": "Recycle",
+                                    "toggle": true
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "custom:multiple-entity-row",
+                                "entity": "sun.sun",
+                                "icon": "mdi:power-plug",
+                                "name": "Plugs",
+                                "show_state": false,
+                                "entities": [
+                                  {
+                                    "entity": "switch.ymir_plug",
+                                    "name": "Ymir",
+                                    "toggle": true
+                                  },
+                                  {
+                                    "entity": "switch.tarvos_plug",
+                                    "name": "Tarvos",
+                                    "toggle": true
+                                  },
+                                  {
+                                    "entity": "switch.garage_cam_plug",
+                                    "name": "GarCam",
+                                    "toggle": true
+                                  },
+                                  {
+                                    "entity": "switch.petcam_plug",
+                                    "name": "PetCam",
                                     "toggle": true
                                   }
                                 ]
@@ -3011,7 +3052,7 @@
                     "cards": [
                       {
                         "type": "grid",
-                        "columns": 4,
+                        "columns": 2,
                         "square": false,
                         "cards": [
                           {
@@ -3030,80 +3071,8 @@
                             "tap_action": {
                               "action": "toggle"
                             },
-                            "entity": "script.tv_bedroom_input_tivo",
-                            "name": "Tivo"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "script.tv_bedroom_input_roku",
-                            "name": "Roku"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
                             "entity": "script.tv_bedroom_mute",
                             "name": "Mute"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.bedroom_channel",
-                                "option": "Nickelodeon"
-                              }
-                            },
-                            "name": "Nick",
-                            "show_name": false,
-                            "icon": "mdi:svg"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.bedroom_channel",
-                                "option": "The Tennis Channel"
-                              }
-                            },
-                            "icon": "mdi:tennis",
-                            "show_name": false,
-                            "name": "Tennis Channel"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.bedroom_plex_show",
-                                "option": "The Big Bang Theory"
-                              }
-                            },
-                            "name": "BBT",
-                            "show_name": false,
-                            "icon": "mdi:atom"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.bedroom_plex_show",
-                                "option": "Friends"
-                              }
-                            },
-                            "name": "Friends",
-                            "icon": "mdi:account-group",
-                            "show_name": false
                           }
                         ]
                       }
@@ -3120,221 +3089,7 @@
                     "cards": [
                       {
                         "type": "grid",
-                        "columns": 4,
-                        "square": false,
-                        "cards": [
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "hold_action": {
-                              "action": "navigate",
-                              "navigation_path": "/mobile-office-tv/home"
-                            },
-                            "entity": "switch.office_tv"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "script.tv_office_input_tivo",
-                            "name": "Tivo"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "script.tv_office_input_roku",
-                            "name": "Roku"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "script.tv_office_mute",
-                            "name": "Mute"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.office_channel",
-                                "option": "The Tennis Channel"
-                              }
-                            },
-                            "icon": "mdi:tennis",
-                            "show_name": false,
-                            "name": "Tennis Channel"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.office_channel",
-                                "option": "TBS"
-                              }
-                            },
-                            "name": "TBS"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.office_plex_show",
-                                "option": "The Big Bang Theory"
-                              }
-                            },
-                            "name": "BBT",
-                            "show_name": false,
-                            "icon": "mdi:atom"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.office_plex_show",
-                                "option": "Friends"
-                              }
-                            },
-                            "name": "Friends",
-                            "show_name": false,
-                            "icon": "mdi:account-group"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "custom:mod-card",
-                  "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
-                  "card": {
-                    "type": "grid",
-                    "columns": 1,
-                    "square": false,
-                    "cards": [
-                      {
-                        "type": "grid",
-                        "columns": 4,
-                        "square": false,
-                        "cards": [
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "hold_action": {
-                              "action": "navigate",
-                              "navigation_path": "/mobile-living-room-tv/home"
-                            },
-                            "entity": "switch.living_room_tv"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "script.tv_living_room_input_tivo",
-                            "name": "Tivo"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "script.tv_living_room_input_roku",
-                            "name": "Roku"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "script.tv_living_room_mute",
-                            "name": "Mute"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.living_room_channel",
-                                "option": "The Tennis Channel"
-                              }
-                            },
-                            "icon": "mdi:tennis",
-                            "show_name": false,
-                            "name": "Tennis Channel"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.living_room_channel",
-                                "option": "TBS"
-                              }
-                            },
-                            "name": "TBS"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.living_room_plex_show",
-                                "option": "The Big Bang Theory"
-                              }
-                            },
-                            "name": "BBT",
-                            "show_name": false,
-                            "icon": "mdi:atom"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.living_room_plex_show",
-                                "option": "Friends"
-                              }
-                            },
-                            "name": "Friends",
-                            "show_name": false,
-                            "icon": "mdi:account-group"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "custom:mod-card",
-                  "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
-                  "card": {
-                    "type": "grid",
-                    "columns": 1,
-                    "square": false,
-                    "cards": [
-                      {
-                        "type": "grid",
-                        "columns": 4,
+                        "columns": 2,
                         "square": false,
                         "cards": [
                           {
@@ -3353,78 +3108,82 @@
                             "tap_action": {
                               "action": "toggle"
                             },
-                            "entity": "script.tv_god_damn_input_tivo",
-                            "name": "Tivo"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "entity": "script.tv_god_damn_input_roku",
-                            "name": "Roku"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
                             "entity": "script.tv_god_damn_mute",
                             "name": "Mute"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:mod-card",
+                  "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                  "card": {
+                    "type": "grid",
+                    "columns": 1,
+                    "square": false,
+                    "cards": [
+                      {
+                        "type": "grid",
+                        "columns": 2,
+                        "square": false,
+                        "cards": [
+                          {
+                            "type": "button",
+                            "tap_action": {
+                              "action": "toggle"
+                            },
+                            "hold_action": {
+                              "action": "navigate",
+                              "navigation_path": "/mobile-office-tv/home"
+                            },
+                            "entity": "switch.office_tv"
                           },
                           {
                             "type": "button",
                             "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.god_damn_channel",
-                                "option": "The Tennis Channel"
-                              }
+                              "action": "toggle"
                             },
-                            "icon": "mdi:tennis",
-                            "show_name": false,
-                            "name": "Tennis Channel"
+                            "entity": "script.tv_office_mute",
+                            "name": "Mute"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:mod-card",
+                  "style": "ha-card {\n  padding: 4px;\n  border: solid 1px grey;\n}\n",
+                  "card": {
+                    "type": "grid",
+                    "columns": 1,
+                    "square": false,
+                    "cards": [
+                      {
+                        "type": "grid",
+                        "columns": 2,
+                        "square": false,
+                        "cards": [
+                          {
+                            "type": "button",
+                            "tap_action": {
+                              "action": "toggle"
+                            },
+                            "hold_action": {
+                              "action": "navigate",
+                              "navigation_path": "/mobile-living-room-tv/home"
+                            },
+                            "entity": "switch.living_room_tv"
                           },
                           {
                             "type": "button",
                             "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.god_damn_channel",
-                                "option": "TBS"
-                              }
+                              "action": "toggle"
                             },
-                            "name": "TBS"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.god_damn_plex_show",
-                                "option": "The Big Bang Theory"
-                              }
-                            },
-                            "name": "BBT",
-                            "show_name": false,
-                            "icon": "mdi:atom"
-                          },
-                          {
-                            "type": "button",
-                            "tap_action": {
-                              "action": "call-service",
-                              "service": "input_select.select_option",
-                              "service_data": {
-                                "entity_id": "input_select.god_damn_plex_show",
-                                "option": "Friends"
-                              }
-                            },
-                            "name": "Friends",
-                            "show_name": false,
-                            "icon": "mdi:account-group"
+                            "entity": "script.tv_living_room_mute",
+                            "name": "Mute"
                           }
                         ]
                       }

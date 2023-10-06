@@ -124,10 +124,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_holly_e
+      entity_id: binary_sensor.withings_holly_in_bed
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_michael_e
+      entity_id: binary_sensor.withings_mike_in_bed
       state: 'off'
     - condition: state
       entity_id: light.hallway_light
@@ -294,10 +294,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_holly_e
+      entity_id: binary_sensor.withings_holly_in_bed
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_michael_e
+      entity_id: binary_sensor.withings_mike_in_bed
       state: 'off'
   action:
   - service: homeassistant.turn_on
@@ -408,7 +408,7 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.withings_in_bed_holly_e
+    entity_id: binary_sensor.withings_holly_in_bed
     from: 'on'
     to: 'off'
     for:
@@ -416,7 +416,7 @@
       minutes: 0
       seconds: 5
   - platform: state
-    entity_id: binary_sensor.withings_in_bed_michael_e
+    entity_id: binary_sensor.withings_mike_in_bed
     from: 'on'
     to: 'off'
     for:
@@ -446,7 +446,10 @@
   - platform: numeric_state
     entity_id: sensor.laundry_room_outlet_energy_power
     above: '2'
-    for: 00:05:00
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
   condition:
   - condition: state
     entity_id: input_boolean.laundry_room_washer_running
@@ -479,10 +482,10 @@
     - condition: and
       conditions:
       - condition: state
-        entity_id: binary_sensor.withings_in_bed_holly_e
+        entity_id: binary_sensor.withings_holly_in_bed
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.withings_in_bed_michael_e
+        entity_id: binary_sensor.withings_mike_in_bed
         state: 'off'
     then:
     - service: tts.cloud_say
@@ -663,10 +666,10 @@
     - condition: and
       conditions:
       - condition: state
-        entity_id: binary_sensor.withings_in_bed_holly_e
+        entity_id: binary_sensor.withings_holly_in_bed
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.withings_in_bed_michael_e
+        entity_id: binary_sensor.withings_mike_in_bed
         state: 'off'
     then:
     - service: tts.cloud_say
@@ -1232,274 +1235,6 @@
         entity_id: media_player.security_speakers
         message: Mike is at {{ states("person.michael_erdely") }}
   mode: single
-- id: '1607108298703'
-  alias: TV - Office - Change Channel
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.office_channel
-    from: Select Channel
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.office_tv
-  - choose:
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.office_tv_plug_power
-        below: '45'
-      sequence:
-      - repeat:
-          until:
-          - condition: numeric_state
-            entity_id: sensor.office_tv_plug_power
-            above: '45'
-          sequence:
-          - service: system_log.write
-            data:
-              message: office tv waiting 1s waiting for power on
-          - delay: '1'
-      - service: system_log.write
-        data:
-          message: office tv waiting 4s after power on
-      - delay: '4'
-    default: []
-  - service: shell_command.tivo_setch
-    data:
-      tv_device: tivo-office
-      channel: '{{ states(''input_select.office_channel'') }}'
-  - service: script.function_tv_change_input
-    data:
-      tv: office
-      input: tivo
-  - service: input_select.select_option
-    data:
-      option: Select Channel
-    entity_id: input_select.office_channel
-  mode: single
-- id: '1607110802992'
-  alias: TV - Office - Change Input
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.office_input
-    from: Select Input
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.office_tv
-  - choose:
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.office_tv_plug_power
-        below: '45'
-      sequence:
-      - repeat:
-          until:
-          - condition: numeric_state
-            entity_id: sensor.office_tv_plug_power
-            above: '45'
-          sequence:
-          - service: system_log.write
-            data:
-              message: office tv waiting 1s waiting for power on
-          - delay: '1'
-      - service: system_log.write
-        data:
-          message: office tv waiting 4s after power on
-      - delay: '4'
-    default: []
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: input_select.office_input
-        state: Tivo
-      sequence:
-      - service: script.function_tv_change_input
-        data:
-          tv: office
-          input: tivo
-    default:
-    - service: script.function_tv_change_input
-      data:
-        tv: office
-        input: roku
-    - choose:
-      - conditions:
-        - condition: state
-          entity_id: input_select.office_input
-          state: Cameras
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: office
-            camera: split
-      - conditions:
-        - condition: state
-          entity_id: input_select.office_input
-          state: Front Door Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: office
-            camera: front_door
-      - conditions:
-        - condition: state
-          entity_id: input_select.office_input
-          state: Garage Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: office
-            camera: garage
-      - conditions:
-        - condition: state
-          entity_id: input_select.office_input
-          state: Chimney Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: office
-            camera: chimney
-      - conditions:
-        - condition: state
-          entity_id: input_select.office_input
-          state: Shed Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: office
-            camera: shed
-      default: []
-  - service: input_select.select_option
-    data:
-      option: Select Input
-    entity_id: input_select.office_input
-  mode: single
-- id: '1607116148848'
-  alias: TV - Bedroom - Change Channel
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.bedroom_channel
-    from: Select Channel
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.bedroom_tv
-  - service: shell_command.tivo_setch
-    data:
-      tv_device: tivo-bedroom
-      channel: '{{ states(''input_select.bedroom_channel'') }}'
-  - service: script.function_tv_change_input
-    data:
-      tv: bedroom
-      input: tivo
-  - service: input_select.select_option
-    data:
-      option: Select Channel
-    entity_id: input_select.bedroom_channel
-  mode: single
-- id: '1607116571938'
-  alias: TV - Bedroom - Change Input
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.bedroom_input
-    from: Select Input
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.bedroom_tv
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: input_select.bedroom_input
-        state: Tivo
-      sequence:
-      - service: script.function_tv_change_input
-        data:
-          tv: bedroom
-          input: tivo
-    - conditions:
-      - condition: state
-        entity_id: input_select.bedroom_input
-        state: Chromecast
-      sequence:
-      - service: script.function_tv_change_input
-        data:
-          tv: bedroom
-          input: chromecast
-    - conditions:
-      - condition: state
-        entity_id: input_select.bedroom_input
-        state: BluRay
-      sequence:
-      - service: script.function_tv_change_input
-        data:
-          tv: bedroom
-          input: bluray
-    default:
-    - service: script.function_tv_change_input
-      data:
-        tv: bedroom
-        input: roku
-    - choose:
-      - conditions:
-        - condition: state
-          entity_id: input_select.bedroom_input
-          state: Cameras
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: bedroom
-            camera: split
-      - conditions:
-        - condition: state
-          entity_id: input_select.bedroom_input
-          state: Front Door Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: bedroom
-            camera: front_door
-      - conditions:
-        - condition: state
-          entity_id: input_select.bedroom_input
-          state: Garage Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: bedroom
-            camera: garage
-      - conditions:
-        - condition: state
-          entity_id: input_select.bedroom_input
-          state: Chimney Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: bedroom
-            camera: chimney
-      - conditions:
-        - condition: state
-          entity_id: input_select.bedroom_input
-          state: Shed Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: bedroom
-            camera: shed
-      default: []
-  - service: input_select.select_option
-    data:
-      option: Select Input
-    entity_id: input_select.bedroom_input
-  mode: single
 - id: '1607118334187'
   alias: TV - Family Room - Change Input
   description: ''
@@ -1605,136 +1340,6 @@
     data:
       option: Select Input
     entity_id: input_select.god_damn_input
-  mode: single
-- id: '1607118422801'
-  alias: TV - Family Room - Change Channel
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.god_damn_channel
-    from: Select Channel
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.god_damn_tv
-  - service: shell_command.tivo_setch
-    data:
-      tv_device: tivo-familyroom
-      channel: '{{ states(''input_select.god_damn_channel'') }}'
-  - service: script.function_tv_change_input
-    data:
-      tv: god_damn
-      input: tivo
-  - service: input_select.select_option
-    data:
-      option: Select Channel
-    entity_id: input_select.god_damn_channel
-  mode: single
-- id: '1607118972808'
-  alias: TV - Living Room - Change Input
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.living_room_input
-    from: Select Input
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.living_room_tv
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: input_select.living_room_input
-        state: Tivo
-      sequence:
-      - service: rest_command.roku_rest_command
-        data:
-          roku_ip: 192.168.27.52
-          roku_app_id: tvinput.hdmi1
-    default:
-    - service: media_player.select_source
-      target:
-        entity_id: media_player.living_room_roku_tv
-      data:
-        source: Home
-    - choose:
-      - conditions:
-        - condition: state
-          entity_id: input_select.living_room_input
-          state: Cameras
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: living_room
-            camera: split
-      - conditions:
-        - condition: state
-          entity_id: input_select.living_room_input
-          state: Front Door Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: living_room
-            camera: front_door
-      - conditions:
-        - condition: state
-          entity_id: input_select.living_room_input
-          state: Garage Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: living_room
-            camera: garage
-      - conditions:
-        - condition: state
-          entity_id: input_select.living_room_input
-          state: Chimney Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: living_room
-            camera: chimney
-      - conditions:
-        - condition: state
-          entity_id: input_select.living_room_input
-          state: Shed Camera
-        sequence:
-        - service: script.function_tv_roku_choose_camera
-          data:
-            roku: living_room
-            camera: shed
-      default: []
-  - service: input_select.select_option
-    data:
-      option: Select Input
-    entity_id: input_select.living_room_input
-  mode: single
-- id: '1607119082409'
-  alias: TV - Living Room - Change Channel
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.living_room_channel
-    from: Select Channel
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.living_room_tv
-  - service: script.function_tv_change_input
-    data:
-      tv: living_room
-      input: tivo
-  - service: shell_command.tivo_setch
-    data:
-      tv_device: tivo-living-room
-      channel: '{{ states(''input_select.living_room_channel'') }}'
-  - service: input_select.select_option
-    data:
-      option: Select Channel
-    entity_id: input_select.living_room_channel
   mode: single
 - id: '1607188975863'
   alias: TV - Office - Change Roku/Plex Show
@@ -2047,9 +1652,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: switch.office_tv
+    entity_id:
+    - switch.office_tv
     from: 'on'
     to: 'off'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
   condition:
   - condition: not
     conditions:
@@ -2057,38 +1667,61 @@
       entity_id: sensor.office_tv_plug_power
       state: unavailable
   action:
-  - service: media_player.media_stop
-    data: {}
-    entity_id: media_player.plex_plex_for_roku_office_roku
+  - service: media_player.select_source
+    data:
+      source: Home
+    target:
+      entity_id: media_player.office_roku
   mode: single
 - id: '1607196620269'
   alias: TV - Bedroom - Power Off
   description: ''
   trigger:
   - platform: state
-    entity_id: switch.bedroom_tv
+    entity_id:
+    - switch.bedroom_tv
     from: 'on'
     to: 'off'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
   condition: []
   action:
-  - service: media_player.media_stop
-    data: {}
-    entity_id: media_player.plex_plex_for_roku_bedroom_roku
+  - service: remote.send_command
+    data:
+      num_repeats: 8
+      delay_secs: 2
+      hold_secs: 0
+      command: replay
+    target:
+      entity_id: remote.bedroom_roku
+  - service: media_player.select_source
+    data:
+      source: Home
+    target:
+      entity_id: media_player.bedroom_roku
   mode: single
 - id: '1607196736782'
   alias: TV - Family Room - Power Off
   description: ''
   trigger:
   - platform: state
-    entity_id: switch.god_damn_tv
+    entity_id:
+    - switch.god_damn_tv
     from: 'on'
     to: 'off'
-    for: 0:00:03
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
   condition: []
   action:
-  - service: media_player.media_stop
-    data: {}
-    entity_id: media_player.plex_plex_for_roku_god_damn_roku
+  - service: media_player.select_source
+    data:
+      source: Home
+    target:
+      entity_id: media_player.god_damn_roku
   mode: single
 - id: '1607208301956'
   alias: TV - Living Room - Change Roku/Plex Show
@@ -2238,7 +1871,7 @@
       - service: script.computer_mercury_unlock
         data: {}
     default:
-    - service: notify.mobile_app_pixel_7_pro
+    - service: notify.signal_mike
       data:
         message: Someone scanned at Mike's Desk
     - service: system_log.write
@@ -2261,8 +1894,12 @@
     tag_id: 421d7d13-d4de-429c-bb85-7f2e6adf98cf
   - platform: tag
     tag_id: 5cc6779c-7fcf-46b0-baa5-90f0daf05073
+    enabled: false
   - platform: tag
     tag_id: 5819cd71-c1a6-4059-ad5d-db702981c169
+    enabled: false
+  - platform: tag
+    tag_id: 6e424437-9d8b-432b-867b-312846143e18
   condition: []
   action:
   - choose:
@@ -2320,7 +1957,7 @@
       494e4399-01f7-4ad4-91e4-940b1377cf60: Garage
       3eb9caa6-d3ed-4532-a368-8b9fd2a659a5: Front Door
       421d7d13-d4de-429c-bb85-7f2e6adf98cf: Mike Car
-      5819cd71-c1a6-4059-ad5d-db702981c169: Holly Car
+      6e424437-9d8b-432b-867b-312846143e18: Holly Car
     users:
       80ad218b0cf54379b5ee622fbb721c6b: Mike
       3109b2f6d085440f92db502bc4e30a3b: Holly
@@ -2713,28 +2350,6 @@
     target:
       entity_id: switch.mantle_lights
   mode: single
-- id: '1613520122707'
-  alias: TV - Living Room - HDMI Input Toggle Tivo Remote
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: tele/living_room_tv_remote/RESULT
-  condition:
-  - condition: template
-    value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "nec_like"
-      }}'
-  - condition: template
-    value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32 }}'
-  - condition: template
-    value_template: '{{ trigger.payload_json.IrReceived.Data == "0xA10C2C03" }}'
-  - condition: template
-    value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x853034C0" }}'
-  action:
-  - service: mqtt.publish
-    data:
-      payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0xFF00FF","DataLSB":"0xFF00FF","Repeat":0}
-      topic: cmnd/living_room_tv_remote/backlog
-  mode: single
 - id: '1614981790208'
   alias: Notifications - Mailbox Notify
   description: ''
@@ -2806,7 +2421,6 @@
       hours: 0
       minutes: 5
       seconds: 0
-      milliseconds: 0
   condition: []
   action:
   - service: mqtt.publish
@@ -2823,6 +2437,11 @@
         "friendly_name") }}", "state": 0}'
       retain: true
       qos: 0
+    enabled: false
+  - service: python_script.set_state
+    data:
+      entity_id: binary_sensor.wyzesense_778e4038
+      state: 'off'
   mode: single
 - id: '1615594192596'
   alias: Thermostat - Turn on AC
@@ -2915,10 +2534,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_holly_e
+      entity_id: binary_sensor.withings_holly_in_bed
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_michael_e
+      entity_id: binary_sensor.withings_mike_in_bed
       state: 'off'
     - condition: state
       entity_id: light.hallway_light
@@ -3131,10 +2750,10 @@
     entity_id: sensor.bedroom_motion_sensor_illuminance_lux
     below: '16'
   - condition: state
-    entity_id: binary_sensor.withings_in_bed_holly_e
+    entity_id: binary_sensor.withings_holly_in_bed
     state: 'off'
   - condition: state
-    entity_id: binary_sensor.withings_in_bed_michael_e
+    entity_id: binary_sensor.withings_mike_in_bed
     state: 'off'
   - condition: time
     after: 06:00:00
@@ -3178,7 +2797,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_holly_e
+      entity_id: binary_sensor.withings_holly_in_bed
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -3187,7 +2806,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_michael_e
+      entity_id: binary_sensor.withings_mike_in_bed
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -3196,6 +2815,9 @@
   - condition: state
     entity_id: switch.master_bath_fan
     state: 'off'
+  - condition: state
+    entity_id: input_boolean.master_bath_fan_auto
+    state: 'on'
   action:
   - service: homeassistant.turn_on
     target:
@@ -3236,10 +2858,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_holly_e
+      entity_id: binary_sensor.withings_holly_in_bed
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_michael_e
+      entity_id: binary_sensor.withings_mike_in_bed
       state: 'off'
   action:
   - service: mqtt.publish
@@ -3349,26 +2971,29 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.withings_in_bed_holly_e
+    entity_id:
+    - binary_sensor.withings_holly_in_bed
   condition: []
   action:
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.withings_in_bed_holly_e
+        entity_id: binary_sensor.withings_holly_in_bed
         state: 'on'
       sequence:
       - service: input_boolean.turn_on
         target:
           entity_id: input_boolean.holly_is_in_bed
+        data: {}
     - conditions:
       - condition: state
-        entity_id: binary_sensor.withings_in_bed_holly_e
+        entity_id: binary_sensor.withings_holly_in_bed
         state: 'off'
       sequence:
       - service: input_boolean.turn_off
         target:
           entity_id: input_boolean.holly_is_in_bed
+        data: {}
     default: []
   mode: single
 - id: '1635775250461'
@@ -3376,26 +3001,28 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.withings_in_bed_michael_e
+    entity_id: binary_sensor.withings_mike_in_bed
   condition: []
   action:
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.withings_in_bed_michael_e
+        entity_id: binary_sensor.withings_mike_in_bed
         state: 'on'
       sequence:
       - service: input_boolean.turn_on
         target:
           entity_id: input_boolean.mike_is_in_bed
+        data: {}
     - conditions:
       - condition: state
-        entity_id: binary_sensor.withings_in_bed_michael_e
+        entity_id: binary_sensor.withings_mike_in_bed
         state: 'off'
       sequence:
       - service: input_boolean.turn_off
         target:
           entity_id: input_boolean.mike_is_in_bed
+        data: {}
     default: []
   mode: single
 - id: '1637383119311'
@@ -4064,44 +3691,6 @@
       alias: Email Mike
       enabled: false
   mode: single
-- id: '1660352175401'
-  alias: TV - Living Room - Turn On Tivo with TV
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - media_player.living_room_roku_tv
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 0
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    data: {}
-    target:
-      entity_id: switch.living_room_tivo_plug
-  mode: single
-- id: '1660352213868'
-  alias: TV - Living Room - Turn Off Tivo with TV
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - remote.living_room_roku_tv
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    to: 'off'
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    data: {}
-    target:
-      entity_id: switch.living_room_tivo_plug
-  mode: single
 - id: '1670901378517'
   alias: Lighting - Turn Den Lights Off
   description: Turn Den Lights Off when turning off Laundry Room Lights
@@ -4219,7 +3808,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_holly_e
+      entity_id: binary_sensor.withings_holly_in_bed
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -4228,7 +3817,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_in_bed_michael_e
+      entity_id: binary_sensor.withings_mike_in_bed
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -4237,6 +3826,9 @@
   - condition: state
     entity_id: switch.hall_bath_fan
     state: 'off'
+  - condition: state
+    entity_id: input_boolean.hall_bath_fan_auto
+    state: 'on'
   action:
   - service: homeassistant.turn_on
     target:
@@ -4341,7 +3933,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.withings_in_bed_holly_e
+    - binary_sensor.withings_holly_in_bed
     to: 'on'
   condition: []
   action:
@@ -4364,7 +3956,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.withings_in_bed_holly_e
+    - binary_sensor.withings_holly_in_bed
     to: 'off'
   condition: []
   action:
@@ -4481,7 +4073,6 @@
     - light.far_black_lamp
     - light.near_black_lamp
     - light.white_lamp
-    - light.god_damn_light
     - light.front_porch_light
     - light.holly_nightstand_lamp
     to: 'off'
@@ -4497,4 +4088,10 @@
     target:
       entity_id: '{{ trigger.entity_id | replace(''_lamp'', ''_bulb'') | replace(''_light'',
         ''_bulb'') }}'
-  mode: single
+  - service: python_script.set_state
+    data:
+      entity_id: '{{ trigger.entity_id | replace(''_lamp'', ''_bulb'') | replace(''_light'',
+        ''_bulb'') }}'
+      state: 'off'
+  mode: parallel
+  max: 10

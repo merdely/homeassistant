@@ -1,13 +1,12 @@
 clean_alarm_state: /config/bin/clean_alarm_state
 fix_mailbox: /config/bin/fix_mailbox.py
 install_apk: /config/bin/install_apk {{ command }} {{ package }}
+play_plex_on_roku: /config/bin/play_plex_on_roku "{{ roku }}" "{{ tvshow }}"
+restart_octoprint: /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in restart_octoprint
 rm_newshows_flag: rm -f /config/.newtvshowfile
 rotate_ha_logs: /config/bin/rotate_ha_logs
 save_homeassistant_log: /config/bin/save_homeassistant_log
 send_frigate_email: /config/bin/send_frigate_email.py "{{ detected_object }}" "{{ camera }}" "{{ eventid }}"
 ssh_command: /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant {{ server }} {{ command }}
-tivo_button: /config/bin/tivo_button {{ tv_device }}.erdely.in {{ tivo_button }}
-tivo_record: /config/bin/tivo_record {{ tv_device }}.erdely.in
-tivo_setch: /config/bin/tivo_setch {{ tv_device }}.erdely.in "{{ channel }}"
 update_npm_pkgs: /config/bin/update_npm.sh
 update_tv_shows: /config/bin/create_tv_list.sh

@@ -87,10 +87,6 @@
           target:
             entity_id: binary_sensor.god_damn_tv_ping
       turn_off:
-        - service: media_player.select_source
-          entity_id: media_player.god_damn_roku
-          data:
-            source: Home
         - service: mqtt.publish
           data:
             topic: cmnd/god_damn_tv_remote/backlog
@@ -114,11 +110,6 @@
           target:
             entity_id: media_player.living_room_roku_tv
       turn_off:
-        - service: media_player.select_source
-          entity_id: media_player.living_room_roku_tv
-          data:
-            source: Home
-        - delay: 1
         - service: media_player.turn_off
           target:
             entity_id: media_player.living_room_roku_tv
@@ -145,10 +136,6 @@
       turn_off:
         - condition: template
           value_template: '{{ states("sensor.office_tv_plug_power") | float(0) >= 5 }}'
-        - service: media_player.select_source
-          entity_id: media_player.office_roku
-          data:
-            source: Home
         - service: mqtt.publish
           data:
             topic: cmnd/office_tv_remote/backlog
