@@ -1,3 +1,7 @@
+get_addons:
+  url: "http://supervisor/addons"
+  method: GET
+
 roku_rest_command:
   url: "http://{{ roku_ip }}:8060/launch/{{ roku_app_id }}{{ roku_querystring }}"
   method: post

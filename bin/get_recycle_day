@@ -10,6 +10,10 @@ datecmd() {
 datetype=gnu
 date --version 2>&1 | grep -iq busybox && datetype=busybox
 default_day=Friday
+verbose=0
+if [ "$1" = "-v" ]; then
+  verbose=1
+fi
 
 get_day_num() {
   case "$1" in
@@ -38,8 +42,10 @@ secrets_file="$(readlink -f $(dirname "$0")/../secrets.yaml)"
 [ ! -f "$secrets_file" ] && echo "Error: Could not find secrets.yaml" && exit 1
 
 county_url=$(awk "\$1 == \"recycle_url:\" { s=\$2;gsub(/(^\"|\"$)/,\"\",s);print s }" $secrets_file)
+[ $verbose = 1 ] && echo county_url=$county_url
 
 county_day=$(python3 -c "import re,bs4,requests;p=requests.get('$county_url');s=bs4.BeautifulSoup(p.text,'lxml');print(s.find_all('p',class_='day')[0].string)")
+[ $verbose = 1 ] && echo county_day=$county_day
 
 case "$county_day" in
   Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)
@@ -56,8 +62,10 @@ current_year=$(date "+%Y")
 current_week_number=$(date "+%U")
 
 # Download holiday data
-holiday_data=$(curl -fs "https://www.montgomerycountymd.gov/sws/holidays/")
+#holiday_data=$(curl -fs "https://www.montgomerycountymd.gov/sws/holidays/")
+holiday_data=$(curl -fs "https://www.montgomerycountymd.gov/dep/trash-recycling/holidays.html")
 [ $? != 0 ] && echo "$0: Error: Could not download county holiday data" > /dev/stderr && echo $county_day && exit 1
+#[ $verbose = 1 ] && echo holiday_data=$holiday_data
 
 # Loop through holiday data
 for f in $(echo "$holiday_data" | grep -A1 ">$county_day<" | sed 's/&nbsp;/ /g' | awk "\$0!~/>$county_day</&&\$0!=\"--\"{s=substr(\$0,index(\$0,\">\")+1);s=substr(s,1,index(s,\"<\")-1);gsub(/ \(no change\)/, \"\", s);print s}")
@@ -69,6 +77,7 @@ do
   this_week_number=$(datecmd -d "$f" "+%U")
   [ $? != 0 ] && echo "$0: Warning: Cannot get week number for '$f'" > /dev/stderr && continue
 
+  [ $verbose = 1 ] && echo "current_year=$current_year; this_year=$this_year; current_week_number=$current_week_number; this_week_number=$this_week_number; this_week_day=$(datecmd -d "$f", "+%u")"
   [ $current_year = $this_year ] && [ $current_week_number = $this_week_number ] && this_week_day=$(datecmd -d "$f" "+%u")
 done
 

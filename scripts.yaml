@@ -26,10 +26,10 @@ announcement_nightly_security:
         - condition: not
           conditions:
           - condition: device
-            device_id: 364064affa8b11ea8e40690830637cf6
-            domain: cover
-            entity_id: cover.garage_door
-            type: is_closed
+            type: is_off
+            device_id: 4063a0557ed26b25b779f2cfc024d04a
+            entity_id: e69f018e5d60aa7d19638f5df91de52f
+            domain: switch
         - condition: state
           entity_id: binary_sensor.shed_gate_contact
           state: 'on'
@@ -94,61 +94,24 @@ computer_mercury_unlock:
 home_mute_everything:
   alias: Home - Mute Everything
   sequence:
-  - service: script.tv_bedroom_mute
-    data: {}
-  - service: script.tv_god_damn_mute
-    data: {}
-  - service: script.tv_living_room_mute
-    data: {}
-  - service: script.tv_office_mute
-    data: {}
-  - service: media_player.volume_mute
-    data: {}
-    entity_id: media_player.all_speakers, media_player.bedroom_display, media_player.downstairs_speakers,
-      media_player.even_the_tv, media_player.living_room_speaker, media_player.god_damn_speaker,
-      media_player.kitchen_speaker, media_player.garage_speaker, media_player.mikes_desk_speaker,
-      media_player.office_mini, media_player.office_speakers, media_player.upstairs_speakers
+  - data: {}
+    action: script.tv_bedroom_mute
+  - data: {}
+    action: script.tv_god_damn_mute
+  - data: {}
+    action: script.tv_living_room_mute
+  - data: {}
+    action: script.tv_office_mute
+  - data:
+      is_volume_muted: false
+    action: media_player.volume_mute
+    target:
+      entity_id: media_player.all_speakers, media_player.bedroom_speaker, media_player.downstairs_speakers,
+        media_player.living_room_speaker, media_player.god_damn_speaker, media_player.kitchen_speaker,
+        media_player.garage_speaker, media_player.mike_s_desk_speaker, media_player.office_speaker,
+        media_player.office_speakers, media_player.upstairs_speakers
   mode: single
   icon: mdi:volume-mute
-homeassistant_restart:
-  alias: HomeAssistant - Restart
-  sequence:
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: binary_sensor.home_assistant_configuration_check
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.home_assistant_configuration_check
-        state: 'on'
-      sequence:
-      - service: system_log.write
-        data:
-          message: Configuration has an error; not restarting Home Assistant
-          level: error
-    default:
-    - service: system_log.write
-      data:
-        message: Configuration is valid; restarting Home Assistant
-        level: warning
-    - service: homeassistant.restart
-      data: {}
-  mode: single
-  icon: mdi:restart
-scene_bedroom_tv_goodnight:
-  alias: Scene - Bedroom - TV Goodnight
-  sequence:
-  - condition: time
-    after: '10:00:00'
-    before: '23:59:00'
-  - condition: state
-    entity_id: switch.bedroom_tv
-    state: 'off'
-  - service: input_select.select_option
-    data:
-      option: Nickelodeon
-    entity_id: input_select.bedroom_channel
-  mode: single
 security_message_open_security_devices:
   alias: Security -  Message - Open Security Devices
   sequence:
@@ -218,20 +181,6 @@ testing_speaker_annoucement_3:
 
         '
       entity_id: media_player.all_speakers
-  mode: single
-testing_write_warning_to_log:
-  alias: Testing - Write Warning to Log
-  sequence:
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: binary_sensor.home_assistant_configuration_check
-  - condition: state
-    entity_id: binary_sensor.home_assistant_configuration_check
-    state: 'on'
-  - service: system_log.write
-    data:
-      message: Config is good
-      level: warning
   mode: single
 testing_speaker_announcement:
   alias: Testing - Speaker Announcement
@@ -662,28 +611,28 @@ tv_living_room_mute:
 tv_living_room_roku_ok:
   alias: TV - Living Room - Roku - OK
   sequence:
-  - service: remote.send_command
-    data:
+  - data:
       command: select
-    entity_id: remote.living_room_roku
+    entity_id: remote.living_room_roku_tv
+    action: remote.send_command
   mode: single
   icon: file:roku
 tv_living_room_roku_pause:
   alias: TV - Living Room - Roku - Pause
   sequence:
-  - service: media_player.media_play_pause
-    data: {}
-    entity_id: media_player.living_room_roku
+  - data: {}
+    entity_id: media_player.living_room_roku_tv
+    action: media_player.media_play_pause
   mode: single
   icon: file:roku
 tv_living_room_roku_replay:
   alias: TV - Living Room - Roku - Replay
   sequence:
-  - service: remote.send_command
-    data:
-      entity_id: remote.living_room_roku
+  - data:
+      entity_id: remote.living_room_roku_tv
       command:
       - replay
+    action: remote.send_command
   mode: single
   icon: file:roku
 tv_living_room_roku_stop:
@@ -786,37 +735,37 @@ tv_office_mute:
 tv_office_roku_ok:
   alias: TV - Office - Roku - OK
   sequence:
-  - service: remote.send_command
-    data:
+  - data:
       command: select
-    entity_id: remote.office_roku
+    entity_id: remote.office_roku_tv
+    action: remote.send_command
   mode: single
   icon: file:roku
 tv_office_roku_pause:
   alias: TV - Office - Roku - Pause
   sequence:
-  - service: media_player.media_play_pause
-    data: {}
-    entity_id: media_player.office_roku
+  - data: {}
+    entity_id: media_player.office_roku_tv
+    action: media_player.media_play_pause
   mode: single
   icon: file:roku
 tv_office_roku_replay:
   alias: TV - Office - Roku - Replay
   sequence:
-  - service: remote.send_command
-    data:
-      entity_id: remote.office_roku
+  - data:
+      entity_id: remote.office_roku_tv
       command:
       - replay
+    action: remote.send_command
   mode: single
   icon: file:roku
 tv_office_roku_stop:
   alias: TV - Office - Roku - Stop
   sequence:
-  - service: media_player.select_source
-    data:
+  - data:
       source: Home
-    entity_id: media_player.office_roku
+    entity_id: media_player.office_roku_tv
+    action: media_player.select_source
   mode: single
   icon: mdi:stop
 tv_office_volume_down:
@@ -935,19 +884,32 @@ function_speakers_restore:
 home_thermostat_down:
   alias: Home - Thermostat - Down
   sequence:
-  - service: system_log.write
-    data:
+  - data:
       message: Lowering thermostat from {{ state_attr('climate.thermostat', 'target_temp_high')
         }}/{{ state_attr('climate.thermostat', 'target_temp_low') }} to {{ state_attr('climate.thermostat',
         'target_temp_high') | float(0) | round - 1.0 }}/{{ state_attr('climate.thermostat',
         'target_temp_low') | float(0) | round - 1.0 }}
       level: warning
-  - service: climate.set_temperature
-    data:
+    action: system_log.write
+    enabled: false
+  - data:
       target_temp_high: '{{ state_attr(''climate.thermostat'', ''target_temp_high'')
         | float(0) | round - 1.0 }}'
       target_temp_low: '{{ state_attr(''climate.thermostat'', ''target_temp_low'')
         | float(0) | round - 1.0 }}'
+    target:
+      entity_id: climate.thermostat
+    action: climate.set_temperature
+    enabled: false
+  - data:
+      message: Lowering thermostat from {{ state_attr('climate.thermostat', 'temperature')
+        }} to {{ state_attr('climate.thermostat', 'temperature') - 1 }}
+      level: warning
+    action: system_log.write
+  - action: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: '{{ state_attr(''climate.thermostat'', ''temperature'') - 1 }}'
     target:
       entity_id: climate.thermostat
   mode: single
@@ -960,7 +922,6 @@ home_thermostat_down:
       entity_id:
       - light.office_fan_light
       - fan.office_fan
-      - switch.mike_desk_lamp
   mode: single
   icon: mdi:tools
 scene_good_night:
@@ -980,31 +941,32 @@ scene_good_night:
           entity_id: light.office_fan_light
           state: 'off'
         - condition: state
-          entity_id: binary_sensor.withings_holly_in_bed
+          entity_id: binary_sensor.bed_sensor_holly
           state: 'off'
         - condition: state
-          entity_id: binary_sensor.withings_mike_in_bed
+          entity_id: binary_sensor.bed_sensor_mike
           state: 'off'
       sequence:
-      - service: homeassistant.turn_on
-        target:
+      - target:
           entity_id: light.hallway_light
         data: {}
+        action: homeassistant.turn_on
     default: []
-  - service: alarm_control_panel.alarm_arm_home
-    data: {}
+  - data: {}
     target:
       entity_id: alarm_control_panel.home_alarm
-  - service: button.press
+    action: alarm_control_panel.alarm_arm_home
+  - action: button.press
+    metadata: {}
     data: {}
     target:
-      entity_id: button.front_door_wake
-  - service: lock.lock
+      entity_id: button.front_door_zwave_ping
+  - action: lock.lock
+    metadata: {}
     data: {}
     target:
-      entity_id: lock.front_door
-  - service: homeassistant.turn_off
-    target:
+      entity_id: lock.front_door_zwave
+  - target:
       entity_id:
       - switch.downstairs
       - switch.middle_level
@@ -1014,29 +976,40 @@ scene_good_night:
       - switch.mantle_lights
       - light.deck_lights
     data: {}
-  - service: cover.close_cover
-    data: {}
+    action: homeassistant.turn_off
+  - data: {}
     entity_id: cover.garage_door
+    action: cover.close_cover
   - condition: and
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_holly_in_bed
+      entity_id: binary_sensor.bed_sensor_holly
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_mike_in_bed
+      entity_id: binary_sensor.bed_sensor_mike
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
       state: 'off'
-  - service: homeassistant.turn_on
-    target:
+  - target:
       entity_id: switch.bedroom_tv
     data: {}
-  - service: shell_command.play_plex_on_roku
-    data:
+    action: homeassistant.turn_on
+  - data:
       roku: bedroom
       tvshow: Friends
     alias: Start Friends
+    action: shell_command.play_plex_on_roku
+  - data: {}
+    target:
+      entity_id: button.front_door_wake
+    action: button.press
+    continue_on_error: true
+  - data: {}
+    target:
+      entity_id: lock.front_door
+    action: lock.lock
+    continue_on_error: true
   mode: single
   icon: mdi:weather-night
 scene_leaving_home:
@@ -1122,25 +1095,39 @@ tv_all_off:
   mode: single
   icon: mdi:television
 home_thermostat_up:
-  alias: Home - Thermostat - up
+  alias: Home - Thermostat - Up
   sequence:
-  - service: system_log.write
-    data:
+  - data:
       message: Raising thermostat from {{ state_attr('climate.thermostat', 'target_temp_high')
         }}/{{ state_attr('climate.thermostat', 'target_temp_low') }} to {{ state_attr('climate.thermostat',
         'target_temp_high') | float(0) | round + 1.0 }}/{{ state_attr('climate.thermostat',
         'target_temp_low') | float(0) | round + 1.0 }}
       level: warning
-  - service: climate.set_temperature
-    data:
+    action: system_log.write
+    enabled: false
+  - data:
       target_temp_high: '{{ state_attr(''climate.thermostat'', ''target_temp_high'')
         | float(0) | round + 1.0 }}'
       target_temp_low: '{{ state_attr(''climate.thermostat'', ''target_temp_low'')
         | float(0) | round + 1.0 }}'
     target:
       entity_id: climate.thermostat
+    action: climate.set_temperature
+    enabled: false
+  - data:
+      message: Raising thermostat from {{ state_attr('climate.thermostat', 'temperature')
+        }} to {{ state_attr('climate.thermostat', 'temperature') + 1 }}
+      level: warning
+    action: system_log.write
+  - action: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: '{{ state_attr("climate.thermostat", "temperature") + 1 }}'
+    target:
+      entity_id: climate.thermostat
   mode: single
   icon: mdi:thermometer-plus
+  description: ''
 function_camera_reset:
   alias: Function - Camera Reset
   sequence:
@@ -1194,11 +1181,11 @@ fix_in_bed_sensors:
   sequence:
   - service: python_script.set_state
     data:
-      entity_id: binary_sensor.withings_holly_in_bed
+      entity_id: binary_sensor.bed_sensor_holly
       state: '{{ states(''input_boolean.holly_is_in_bed'') }}'
   - service: python_script.set_state
     data:
-      entity_id: binary_sensor.withings_mike_in_bed
+      entity_id: binary_sensor.bed_sensor_mike
       state: '{{ states(''input_boolean.mike_is_in_bed'') }}'
   mode: single
   icon: mdi:bed
@@ -1422,30 +1409,30 @@ lighting_bedroom_sexy_time:
   alias: Lighting - Bedroom - Sexy Time
   sequence:
   - parallel:
-    - service: light.turn_on
-      data:
+    - data:
         color_name: violet
         brightness_pct: 24
       target:
         entity_id:
-        - light.holly_dresser_bulb
+        - light.holly_nightstand_bulb
         - light.dresser_lamp
-    - service: homeassistant.turn_off
-      data: {}
+      action: light.turn_on
+    - data: {}
       target:
         entity_id: light.bedroom_fan_light
+      action: homeassistant.turn_off
   mode: single
 lighting_bedroom_normal:
   alias: Lighting - Bedroom - Normal
   sequence:
-  - service: light.turn_on
-    data:
+  - data:
       color_temp: 311
       brightness_pct: 86
     target:
       entity_id:
-      - light.holly_dresser_bulb
+      - light.holly_nightstand_bulb
       - light.dresser_lamp
+    action: light.turn_on
   mode: single
 testing_signal_security:
   alias: Testing - Signal Security
@@ -1560,21 +1547,21 @@ locking_front_door_toggle_duplicate:
 power_cycle_closet_switch:
   alias: Power Cycle Closet Switch
   sequence:
-  - service: homeassistant.turn_off
-    data: {}
+  - data: {}
     target:
       entity_id:
-      - switch.closet_switch_plug
+      - switch.mikrotik_plug
+    action: homeassistant.turn_off
   - delay:
       hours: 0
       minutes: 0
       seconds: 10
       milliseconds: 0
-  - service: homeassistant.turn_on
-    data: {}
+  - data: {}
     target:
       entity_id:
-      - switch.closet_switch_plug
+      - switch.mikrotik_plug
+    action: homeassistant.turn_on
   mode: single
   icon: mdi:sync
 zigbee_bulbs_keepalive:
@@ -1593,15 +1580,19 @@ zigbee_bulbs_keepalive:
   - repeat:
       for_each:
       - light.dresser_lamp
-      - light.white_lamp
       - light.near_black_lamp
-      - light.far_black_lamp
       - light.front_porch_light
       - light.god_damn_light
       sequence:
       - if:
         - condition: template
           value_template: '{{ is_state(repeat.item, ''off'') }}'
+          alias: Bulb is off
+        - alias: Bulb has been out of date for more than 12 hours
+          condition: template
+          value_template: '{{ (as_timestamp(now()) - as_timestamp(state_attr(repeat.item
+            | regex_replace("_(lamp|light)$", "_bulb"), ''last_seen''))) > 60 * 60
+            * 13 }}'
         then:
         - service: input_text.set_value
           data:
@@ -1611,18 +1602,39 @@ zigbee_bulbs_keepalive:
             entity_id: input_text.zigbee_bulbs_script_list
         - service: homeassistant.turn_on
           target:
+            entity_id:
+            - '{{ repeat.item }}'
+            - '{% for ent in state_attr(repeat.item, "entity_id") %}{% if ent[-5:]
+              != "_bulb" %}{{ ent }}{% endif %}{% endfor %}'
+        - service: system_log.write
+          data:
+            level: error
+            message: '{{ repeat.item }} fixed (turned on {{ repeat.item }} and {%
+              for ent in state_attr(repeat.item, "entity_id") %}{% if ent[-5:] !=
+              "_bulb" %}{{ ent }}{% endif %}{% endfor %})'
+      - service: system_log.write
+        data:
+          level: error
+          message: '{{repeat.item}}: {% for ent in state_attr(repeat.item, "entity_id")
+            %}{% if ent[-5:] != "_bulb" %}{{ ent }}{% endif %}{% endfor %}'
+        enabled: false
+  - if:
+    - condition: template
+      value_template: '{{ states("input_text.zigbee_bulbs_script_list") | length >
+        0 }}'
+    then:
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 30
+        milliseconds: 0
+    - repeat:
+        for_each: '{{ states("input_text.zigbee_bulbs_script_list")[1:].split(",")
+          }}'
+        sequence:
+        - service: homeassistant.turn_off
+          target:
             entity_id: '{{ repeat.item }}'
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 30
-      milliseconds: 0
-  - repeat:
-      for_each: '{{ states("input_text.zigbee_bulbs_script_list")[1:].split(",") }}'
-      sequence:
-      - service: homeassistant.turn_off
-        target:
-          entity_id: '{{ repeat.item }}'
   mode: single
   icon: mdi:zigbee
 restart_octoprint:
@@ -1632,3 +1644,106 @@ restart_octoprint:
     data: {}
   mode: single
   icon: mdi:restart
+test_action_notification_to_pixel_9_pro:
+  alias: Test Action Notification to Pixel 9 Pro
+  sequence:
+  - data:
+      message: Trash collection is tomorrow and Trash is not out!
+      data:
+        actions:
+        - action: TRASH_IS_OUT
+          title: Trash Is Already Out
+    action: notify.mobile_app_pixel_9_pro
+  description: ''
+backup_full_on_nfs:
+  alias: Backup - Full on NFS
+  sequence:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'Starting backup: {{ name | default(now().strftime("Full Backup %Y-%m-%d
+        %H:%M:%S %a.tar")) }}'
+  - data:
+      name: '{{ name | default(now().strftime("Full Backup %Y-%m-%d %H:%M:%S %a.tar"))
+        }}'
+      compressed: true
+      homeassistant_exclude_database: true
+      password: entb94qj##q$P@QXDhupA^w755e5Uc$Q
+    action: hassio.backup_full
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'Backup complete: {{ name | default(now().strftime("Full Backup %Y-%m-%d
+        %H:%M:%S %a.tar")) }}'
+  mode: single
+  icon: mdi:backup-restore
+  fields:
+    name:
+      description: Name of the Full Backup to run
+      example: Backup before upgrade
+  description: ''
+backup_partial_on_nfs:
+  alias: Backup - Partial on NFS
+  sequence:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'Starting partial backup: {{ name | default(now().strftime("Partial
+        Backup %Y-%m-%d %H:%M:%S %a.tar")) }}'
+  - data:
+      name: '{{ name | default(now().strftime("Partial Backup %Y-%m-%d %H:%M:%S %a.tar"))
+        }}'
+      compressed: true
+      homeassistant_exclude_database: true
+      folders: '{{ folder_list | default(''homeassistant,share,ssl''.split('','')|list)
+        }}'
+      addons: '{{ addons | default(state_attr(''sensor.installed_add_ons'', ''list'').split('','')|list)
+        }}'
+      password: entb94qj##q$P@QXDhupA^w755e5Uc$Q
+    action: hassio.backup_partial
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'Partial backup complete: {{ name | default(now().strftime("Partial
+        Backup %Y-%m-%d %H:%M:%S %a.tar")) }}'
+  mode: single
+  icon: mdi:backup-restore
+  fields:
+    name:
+      description: Name of the SSH Backup to run
+      example: Backup of SSH before upgrade
+    addons:
+      description: List of slugs to back up (leave blank to back up all addons)
+      example: '- a0d7b954_ssh - core_mosquitto - a0d7b954_bitwarden - a0d7b954_unifi'
+    folders:
+      description: List of folders to back up
+      example: homeassistant,share,ssl,media
+  description: ''
+test_script:
+  alias: test script
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ name in do_unlock }}'
+    then:
+    - action: light.toggle
+      metadata: {}
+      data: {}
+      target:
+        entity_id: light.laundry_room_light
+  variables:
+    do_unlock:
+      Garage: 1
+      Front Door: 1
+      Mike Car: 1
+      Holly Car: 1
+      Holly Tundra: 1
+  description: ''
+  fields:
+    name:
+      description: A Name
+      example: Mike Car

@@ -1,329 +1,568 @@
 {
-    "version": 1,
-    "key": "lovelace.web_links",
-    "data": {
-        "config": {
-            "views": [
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.web_links",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Web Links",
+          "icon": "mdi:home",
+          "badges": [],
+          "cards": [],
+          "type": "sections",
+          "max_columns": 2,
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
                 {
-                    "title": "Home Stuff",
-                    "path": "home-stuff",
-                    "icon": "mdi:home",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "grid",
-                            "cards": [
-                                {
-                                    "type": "markdown",
-                                    "content": "# Home Stuff"
-                                },
-                                {
-                                    "type": "grid",
-                                    "cards": [
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/bitwarden.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://bitwarden.erdely.in"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/camera-dashboard.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://cameras.erdely.in"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/google_assistant.svg",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://erdely.in/home_automation.html"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://erdely.in/ip"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            },
-                                            "image": "/local/images/ip-address-home.png"
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/ip-address.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://erde.ly/ip"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/grafana.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://grafana.erdely.in"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/yourls.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://erde.ly/yadmin/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/password-generator.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://erdely.in/pwgen.php"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/tv-remote.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://erdely.in/tvremote"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/media-files1.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://erdely.in/~mike/media/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        }
-                                    ],
-                                    "columns": 5,
-                                    "square": false
-                                }
-                            ],
-                            "columns": 1,
-                            "square": false
-                        },
-                        {
-                            "type": "grid",
-                            "cards": [
-                                {
-                                    "type": "markdown",
-                                    "content": "# Management Stuff"
-                                },
-                                {
-                                    "type": "grid",
-                                    "cards": [
-                                        {
-                                            "type": "picture",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://mars.erdely.in"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            },
-                                            "image": "/local/images/pfsense.png"
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/unifi.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://unifi.erdely.in:8443/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/nginx_proxy_manager.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://npm.erdely.in"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/chronograf.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://influxdb.erde.ly/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/nagios.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://nagios.erdely.in/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/nagios-mobile1.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://nagios.erdely.in/mobile/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/tasmota.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://tasmobackup.erdely.in/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "https://ha.erdely.in:38123/local/images/subversion.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://svn.erdely.in"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/fully_kiosk_browser.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://fkb.erdely.in"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/fully_kiosk_browser_mbr.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://fkbmbr.erdely.in:2323/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/zigbee2mqtt.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://z2m.erdely.in"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/assistant-relay.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://assistant-relay.erdely.in/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/tautulli.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://tautulli.erdely.in/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://erdely.in/~mike/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            },
-                                            "image": "/local/images/mal-reynolds.jpg"
-                                        },
-                                        {
-                                            "type": "picture",
-                                            "image": "/local/images/software-repository.png",
-                                            "tap_action": {
-                                                "action": "url",
-                                                "url_path": "https://repo.erdely.in/"
-                                            },
-                                            "hold_action": {
-                                                "action": "none"
-                                            }
-                                        }
-                                    ],
-                                    "columns": 5,
-                                    "square": true
-                                }
-                            ],
-                            "columns": 1,
-                            "square": false
-                        }
-                    ]
+                  "type": "markdown",
+                  "content": "# Home Stuff"
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/bitwarden.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://bitwarden.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/cameras.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://cameras.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/google_assistant.svg",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://erdely.in/home_automation.html"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/tautulli.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://tautulli.erdely.in/"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/media-files1.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://erdely.in/~mike/media/"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/qbittorrent.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://qbt.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/jackett.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://jackett.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/librewolf.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://media-browser.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/yts.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://yts.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/sonarr.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://sonarr.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/radarr.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://radarr.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/lidarr.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://lidarr.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/readarr.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://readarr.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/mylar.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://mylar.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/bazarr.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://bazarr.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
                 }
-            ]
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "markdown",
+                  "content": "# Management Stuff"
+                },
+                {
+                  "type": "picture",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://mars.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "image": "/local/images/opnsense.png",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://mars.erdely.in:8443"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "image": "/local/images/adguard.png",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/unifi.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://unifi.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/nginx_proxy_manager.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://npm.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/nagios.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://nagios.erdely.in/"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/nagios-mobile1.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://nagios.erdely.in/mobile/"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "https://ha.erdely.in:38123/local/images/subversion.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://svn.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/fully_kiosk_browser.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://fkb.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/fully_kiosk_browser_mbr.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://fkbmbr.erdely.in:2323/"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/slzb.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://slzb.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/zigbee2mqtt.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://z2m.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/zwave.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://zwave.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/ratgdo.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://ratgdo.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/yourls.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://erde.ly/yadmin/"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/dns.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://api.luadns.com"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "markdown",
+                  "content": "# Tools"
+                },
+                {
+                  "type": "picture",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://calibre.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "image": "/local/images/calibre.png",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://erdely.in/ip"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "image": "/local/images/ip-address-home.png",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/ip-address.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://erde.ly/ip"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/password-generator.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://erdely.in/pwgen.php"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "picture",
+                  "image": "/local/images/speedtest.png",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "https://speedtest.erdely.in"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": "auto"
+                  }
+                }
+              ]
+            }
+          ]
         }
+      ]
     }
+  }
 }

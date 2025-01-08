@@ -1,18 +1,19 @@
 - id: '1600366629972'
   alias: Lighting - Family Room Lights Off
   description: ''
-  trigger:
-  - platform: state
-    entity_id: light.god_damn_light
+  triggers:
+  - entity_id: light.god_damn_light
     to: 'off'
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    target:
+    trigger: state
+  conditions: []
+  actions:
+  - target:
       entity_id:
       - switch.fireplace_light
-      - switch.fr_light
       - switch.three_headed_lamp
+      - light.god_damn_light
+    action: homeassistant.turn_off
+    data: {}
   mode: single
 - id: '1600528857994'
   alias: Lighting - Outside - Garage Arrival at Night
@@ -35,63 +36,87 @@
 - id: '1600528964920'
   alias: Lighting - Sunset Lights On
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
+  triggers:
+  - event: sunset
     offset: -00:15:00
-  condition:
+    trigger: sun
+  conditions:
   - condition: template
     value_template: '{{ as_timestamp(states("sensor.date_time_iso"), 0) | timestamp_custom("%m-%d",
       True, "Unavailable")  != "10-31" }}'
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.outside_christmas_lights
-        state: 'on'
-      sequence:
-      - service: homeassistant.turn_on
-        target:
-          entity_id:
-          - switch.outside_xmas
-          - light.front_porch_light
-        data: {}
-      - service: scene.turn_on
-        data: {}
-        target:
-          entity_id: scene.front_porch_christmas
-      - service: scene.turn_on
-        target:
-          entity_id: scene.back_porch_christmas
-        metadata: {}
-    default:
-    - service: homeassistant.turn_on
+  actions:
+  - alias: If LR Near Black Blub hasn't been seen in 12 hours, turn it on
+    if:
+    - condition: template
+      value_template: '{{ (as_timestamp(now()) - as_timestamp(state_attr(''light.near_black_bulb'',
+        ''last_seen''))) > (60 * 60 * 24 / 2) }}'
+    then:
+    - data:
+        qos: '0'
+        topic: zigbee2mqtt/bridge/request/permit_join
+        payload: '{"value": true, "time": 30}'
+      alias: Enable Zigbee2MQTT Permit Join for 30 seconds
+      action: mqtt.publish
+    - metadata: {}
+      data: {}
       target:
+        entity_id: light.near_black_lamp
+      action: light.turn_on
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.automatic_living_room_light
+      action: homeassistant.turn_on
+    enabled: false
+  - if:
+    - condition: state
+      entity_id: binary_sensor.outside_christmas_lights
+      state: 'on'
+    then:
+    - target:
+        entity_id:
+        - switch.outside_xmas
+        - light.front_porch_light
+      data: {}
+      action: homeassistant.turn_on
+    - data: {}
+      target:
+        entity_id: scene.front_porch_christmas
+      action: scene.turn_on
+    - target:
+        entity_id: scene.back_porch_christmas
+      metadata: {}
+      action: scene.turn_on
+      data: {}
+    else:
+    - target:
         entity_id:
         - light.front_porch_light
         - light.outside_garage_lights
       data: {}
-    - service: scene.turn_on
-      data: {}
+      action: homeassistant.turn_on
+    - data: {}
       target:
         entity_id: scene.front_porch_normal
-  - choose:
-    - conditions:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: group.holly_mike
-          state: home
-      sequence:
-      - service: homeassistant.turn_on
-        target:
-          entity_id: light.kitchen_table_light
-        data: {}
-    default: []
-  - service: homeassistant.turn_on
-    target:
+      action: scene.turn_on
+    alias: Turn on Outside Lights and/or Outside Christmas Lights
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: group.holly_mike
+        state: home
+    then:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: light.kitchen_table_light
+      action: light.turn_on
+    alias: Turn on Kitchen Table Light if Holly & Mike are not home
+  - target:
       entity_id: switch.dining_room_christmas_lights
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1600529040720'
   alias: Lighting - Sunset Lights Off at Night
@@ -108,6 +133,8 @@
       - light.outside_garage_lights
       - switch.outside_xmas
       - switch.dining_room_christmas_lights
+      - light.near_black_lamp
+    data: {}
   mode: single
 - id: '1602628290703'
   alias: Lighting - Laundry Room - Motion Light On
@@ -124,10 +151,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_holly_in_bed
+      entity_id: binary_sensor.bed_sensor_holly
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_mike_in_bed
+      entity_id: binary_sensor.bed_sensor_mike
       state: 'off'
     - condition: state
       entity_id: light.hallway_light
@@ -244,37 +271,42 @@
 - id: '1602952724393'
   alias: Notifications - 0 - Water Leak Detected - Water Heater
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.water_heater_water_leak_sensor
+  triggers:
+  - entity_id:
+    - binary_sensor.water_heater_water_leak_sensor_water_leak
     to: 'on'
-    for: 00:01:00
-  condition: []
-  action:
-  - service: script.function_speakers_prep
-    data:
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       speaker: all_speakers
       entity_id: media_player.all_speakers
-  - service: media_player.play_media
-    data:
+    action: script.function_speakers_prep
+  - data:
       media_content_id: /local/sounds/water_leak.mp3
       media_content_type: music
     target:
       entity_id: media_player.all_speakers
-  - service: notify.signal_security
-    data:
+    action: media_player.play_media
+  - data:
       message: Water leak detected on {{ trigger.to_state.name }}
-  - service: script.function_speakers_restore
-    data:
+    action: notify.signal_security
+  - data:
       speaker: all_speakers
       entity_id: media_player.all_speakers
-  - service: mqtt.publish
-    data:
+    action: script.function_speakers_restore
+  - data:
       topic: cmnd/siren/backlog
       payload: TuyaSend4 102,15; TuyaSend2 103,10
-  - service: homeassistant.turn_on
-    target:
+    action: mqtt.publish
+  - target:
       entity_id: switch.siren
+    action: homeassistant.turn_on
+    data: {}
   mode: single
 - id: '1603064762451'
   alias: Lighting - Office - Motion Light On
@@ -294,10 +326,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_holly_in_bed
+      entity_id: binary_sensor.bed_sensor_holly
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_mike_in_bed
+      entity_id: binary_sensor.bed_sensor_mike
       state: 'off'
   action:
   - service: homeassistant.turn_on
@@ -349,29 +381,28 @@
 - id: '1603148838343'
   alias: 00 - Home Assistant - Startup
   description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: shell_command.rm_newshows_flag
-    data: {}
-  - service: shell_command.install_apk
-    data_template:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data: {}
+    action: shell_command.rm_newshows_flag
+  - data_template:
       command: convert
       package: imagemagick
+    action: shell_command.install_apk
   - delay:
       hours: 0
       minutes: 0
       seconds: 30
       milliseconds: 0
-  - service: script.fix_in_bed_sensors
-    data: {}
-  - service: script.0000000mwe
-    data: {}
+  - data: {}
+    action: script.fix_in_bed_sensors
+  - data: {}
     enabled: true
-  - service: homeassistant.update_entity
-    data: {}
+    action: script.0000000mwe
+  - data: {}
     target:
       entity_id:
       - sensor.opnsense_package_versions
@@ -381,26 +412,18 @@
       - light.kitchen_overhead_light
       - light.hallway_light
       - sensor.unavailable_entities
-  - service: homeassistant.turn_on
-    data: {}
+    action: homeassistant.update_entity
+  - data: {}
+    target:
+      label_id: startup
+    action: homeassistant.turn_on
+  - data: {}
     target:
       entity_id:
-      - switch.chimney_cam_plug
       - switch.carpo_plug
-      - switch.carme_plug
-      - switch.backyard_cam_plug
-      - switch.earth_plug
-      - switch.elara_plug
-      - switch.garage_cam_plug
-      - switch.garage_netgear_plug
-      - switch.garagedoorcam_plug
-      - switch.jupiter_plug
-      - switch.kitchen_refrigerator_plug
-      - switch.mars_plug
-      - switch.metis_plug
-      - switch.office_tv_plug
-      - switch.tarvos_plug
       - switch.ymir_plug
+    enabled: false
+    action: homeassistant.turn_on
   mode: single
 - id: '1603391662402'
   alias: Security - 40 Armed - Disarm Security System in the morning when someone
@@ -408,7 +431,7 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.withings_holly_in_bed
+    entity_id: binary_sensor.bed_sensor_holly
     from: 'on'
     to: 'off'
     for:
@@ -416,7 +439,7 @@
       minutes: 0
       seconds: 5
   - platform: state
-    entity_id: binary_sensor.withings_mike_in_bed
+    entity_id: binary_sensor.bed_sensor_mike
     from: 'on'
     to: 'off'
     for:
@@ -425,10 +448,11 @@
       seconds: 5
   condition:
   - condition: time
-    after: input_datetime.automatic_security_disarm
-    before: '21:00:00'
+    before: input_datetime.automatic_security_disarm
+    after: '22:00:00'
   action:
   - service: script.security_disarm_system
+    data: {}
   - condition: state
     entity_id: binary_sensor.christmas_tree_available
     state: 'on'
@@ -438,6 +462,7 @@
   - service: homeassistant.turn_on
     target:
       entity_id: switch.christmas_tree
+    data: {}
   mode: single
 - id: '1603407121485'
   alias: Notifications - Laundry Room Washer Started
@@ -482,10 +507,10 @@
     - condition: and
       conditions:
       - condition: state
-        entity_id: binary_sensor.withings_holly_in_bed
+        entity_id: binary_sensor.bed_sensor_holly
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.withings_mike_in_bed
+        entity_id: binary_sensor.bed_sensor_mike
         state: 'off'
     then:
     - service: tts.cloud_say
@@ -496,31 +521,43 @@
 - id: '1604378332593'
   alias: Security - 90 Triggered - Alert of Always Monitored Door Open (Always)
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.shed_door_contact, binary_sensor.shed_gate_contact, binary_sensor.chimney_gate_contact
-    for: 00:00:01
+  triggers:
+  - entity_id:
+    - binary_sensor.shed_door_contact
+    - binary_sensor.shed_gate_contact
+    - binary_sensor.chimney_gate_contact
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
     from: 'off'
     to: 'on'
-  - platform: state
-    entity_id: binary_sensor.shed_door_contact, binary_sensor.shed_gate_contact, binary_sensor.chimney_gate_contact
-    for: 00:00:01
+    trigger: state
+  - entity_id:
+    - binary_sensor.shed_door_contact
+    - binary_sensor.shed_gate_contact
+    - binary_sensor.chimney_gate_contact
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
     from: 'on'
     to: 'off'
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: input_boolean.gate_notifications
     state: 'on'
-  action:
-  - service: notify.signal_security
-    data:
+  actions:
+  - data:
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
-  - service: tts.cloud_say
-    data:
+    action: notify.signal_security
+  - data:
       entity_id: media_player.security_speakers
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if     trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
+    action: tts.cloud_say
   mode: single
 - id: '1604420272678'
   alias: Security - 20 Disarmed - Security System Disarmed
@@ -666,10 +703,10 @@
     - condition: and
       conditions:
       - condition: state
-        entity_id: binary_sensor.withings_holly_in_bed
+        entity_id: binary_sensor.bed_sensor_holly
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.withings_mike_in_bed
+        entity_id: binary_sensor.bed_sensor_mike
         state: 'off'
     then:
     - service: tts.cloud_say
@@ -866,6 +903,8 @@
         {{ today_at(states("input_datetime.ignore_bedroom_slider")) }} ; disarm =
         {{ today_at(states("input_datetime.automatic_security_disarm")) }}
     enabled: false
+  trace:
+    stored_traces: 50
   mode: single
 - id: '1606776219305'
   alias: Security - 40 Armed - Set Control Panel to Alarm Panel
@@ -905,7 +944,9 @@
     entity_id: alarm_control_panel.home_alarm
   condition: []
   action:
-  - service: notify.alarm_state_file
+  - service: notify.send_message
+    target:
+      entity_id: notify.alarm_state_file
     data:
       message: '{{ states(''alarm_control_panel.home_alarm'') }}'
   mode: single
@@ -1088,51 +1129,18 @@
       option: Select Screen
     entity_id: input_select.control_panel
   mode: single
-- id: '1607035299850'
-  alias: Lighting - Office - Mike Bench Light Power Back On
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.mike_bench_lamp
-    to: 'off'
-    for: 00:00:05
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.mike_bench_lamp
-  mode: single
 - id: '1607035454754'
   alias: Lighting - Office - Mike Desk Lamp Toggle
   description: ''
   trigger:
-  - platform: device
-    domain: tasmota
-    device_id: 5e4b4538179e98100fb71b5c84da9ec2
-    type: button_short_press
-    subtype: switch_1
-    discovery_id: 483FDA596B28_switch_1_TOGGLE
+  - platform: mqtt
+    topic: stat/mike_desk_lamp_button/POWER
   condition: []
   action:
-  - service: homeassistant.toggle
-    data: {}
-    entity_id: switch.mike_desk_lamp
-  mode: single
-- id: '1607035511482'
-  alias: Lighting - Office - Mike Bench Light Off
-  description: ''
-  trigger:
-  - platform: device
-    domain: tasmota
-    device_id: 5e4b4538179e98100fb71b5c84da9ec2
-    type: button_long_press
-    subtype: switch_1
-    discovery_id: 483FDA596B28_switch_1_HOLD
-  condition: []
-  action:
-  - service: homeassistant.turn_off
+  - data: {}
+    action: homeassistant.toggle
     target:
-      entity_id: switch.mike_bench_lamp
+      device_id: 1434b5d8800ec4d9099a4c3d4bf336f7
   mode: single
 - id: '1607035951583'
   alias: Lighting - Living Room Lights Off
@@ -1344,141 +1352,116 @@
 - id: '1607188975863'
   alias: TV - Office - Change Roku/Plex Show
   description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.office_plex_show
-  condition:
+  triggers:
+  - entity_id: input_select.office_plex_show
+    trigger: state
+  conditions:
   - condition: not
     conditions:
     - condition: state
       entity_id: input_select.office_plex_show
       state: Select Show
-  action:
-  - service: homeassistant.turn_on
-    target:
+  actions:
+  - target:
       entity_id: switch.office_tv
-  - service: homeassistant.update_entity
+    action: homeassistant.turn_on
     data: {}
-    entity_id: sensor.office_tv_next_episode
-  - choose:
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.office_tv_plug_power
-        below: '45'
-      sequence:
-      - repeat:
-          until:
-          - condition: numeric_state
-            entity_id: sensor.office_tv_plug_power
-            above: '45'
-          sequence:
-          - service: system_log.write
-            data:
-              message: office tv waiting 1s waiting for power on
-          - delay:
-              hours: 0
-              minutes: 0
-              seconds: 1
-              milliseconds: 0
-      - service: system_log.write
-        data:
-          message: office tv waiting 4s after power on
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 4
-          milliseconds: 0
-    default: []
-  - service: script.function_tv_change_input
-    data:
+  - data:
+      entity_id:
+      - sensor.office_tv_next_episode
+    action: homeassistant.update_entity
+  - data:
       tv: office
       input: roku
+    action: script.function_tv_change_input
   - choose:
     - conditions:
       - condition: not
         conditions:
         - condition: state
-          entity_id: media_player.office_roku
+          entity_id: media_player.office_roku_tv
           attribute: app_name
           state: Plex - Stream for Free
       sequence:
-      - service: media_player.select_source
-        data:
+      - data:
           source: 13535
-        entity_id: media_player.office_roku
+        entity_id: media_player.office_roku_tv
+        action: media_player.select_source
     default: []
   - repeat:
       until:
       - condition: template
-        value_template: '{{ states(''media_player.plex_plex_for_roku_office_roku'')
+        value_template: '{{ states(''media_player.plex_holly_plex_for_roku_office_roku_tv'')
           in [''idle'', ''playing'', ''paused'', ''stopped'' ] }}'
       sequence:
-      - service: system_log.write
-        data:
-          message: 'state of office roku plex client: {{ states(''media_player.plex_plex_for_roku_office_roku'')
-            }} and Office Roku is currently on: {{ state_attr(''media_player.office_roku'',
+      - data:
+          message: 'state of office roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_office_roku_tv'')
+            }} and Office Roku is currently on: {{ state_attr(''media_player.office_roku_tv'',
             ''app_name'') }}'
           level: warning
+        action: system_log.write
       - delay:
           hours: 0
           minutes: 0
           seconds: 1
           milliseconds: 0
-      - service: button.press
-        data: {}
+      - data: {}
         target:
           entity_id: button.scan_clients_plex
-  - service: system_log.write
-    data:
-      message: 'state of office roku plex client: {{ states(''media_player.plex_plex_for_roku_office_roku'')
+        action: button.press
+  - data:
+      message: 'state of office roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_office_roku_tv'')
         }}'
       level: info
-  - service: system_log.write
-    data:
+    action: system_log.write
+  - data:
       message: waiting 1 seconds
       level: info
+    action: system_log.write
   - delay:
       hours: 0
       minutes: 0
       seconds: 1
       milliseconds: 0
-  - service: system_log.write
-    data:
+  - data:
       message: starting {{ states('sensor.office_tv_next_episode') }}
       level: info
-  - service: media_player.play_media
-    data:
+    action: system_log.write
+  - data:
       media_content_id: '{{ states(''sensor.office_tv_next_episode'') }}'
       media_content_type: episode
-    entity_id: media_player.plex_plex_for_roku_office_roku
-  - service: input_select.select_option
-    data:
+    entity_id: media_player.plex_holly_plex_for_roku_office_roku_tv
+    action: media_player.play_media
+  - data:
       option: Select Show
     entity_id: input_select.office_plex_show
-  - service: system_log.write
-    data:
+    action: input_select.select_option
+  - data:
       message: office tv plex show automation done
       level: error
+    action: system_log.write
   mode: single
 - id: '1607192213578'
   alias: TV - Bedroom - Change Roku/Plex Show
   description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.bedroom_plex_show
+  triggers:
+  - entity_id: input_select.bedroom_plex_show
     from: Select Show
-  condition: []
-  action:
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: sensor.bedroom_tv_next_episode
-  - service: homeassistant.turn_on
-    target:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
+      entity_id:
+      - sensor.bedroom_tv_next_episode
+    action: homeassistant.update_entity
+  - target:
       entity_id: switch.bedroom_tv
-  - service: script.function_tv_change_input
-    data:
+    action: homeassistant.turn_on
+    data: {}
+  - data:
       tv: bedroom
       input: roku
+    action: script.function_tv_change_input
   - choose:
     - conditions:
       - condition: not
@@ -1488,110 +1471,111 @@
           attribute: app_id
           state: '13535'
       sequence:
-      - service: media_player.select_source
-        data:
+      - data:
           source: '13535'
         target:
           entity_id: media_player.bedroom_roku
+        action: media_player.select_source
     default: []
   - repeat:
       until:
       - condition: or
         conditions:
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_bedroom_roku
+          entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
           state: idle
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_bedroom_roku
+          entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
           state: playing
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_bedroom_roku
+          entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
           state: paused
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_bedroom_roku
+          entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
           state: stopped
       sequence:
-      - service: system_log.write
-        data:
-          message: 'state of bedroom roku plex client: {{ states(''media_player.plex_plex_for_roku_bedroom_roku'')
+      - data:
+          message: 'state of bedroom roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_bedroom_roku'')
             }}'
           level: info
-      - service: button.press
-        data: {}
+        action: system_log.write
+      - data: {}
         target:
           entity_id: button.scan_clients_plex
+        action: button.press
       - delay: '1'
-  - service: system_log.write
-    data:
-      message: 'state of bedroom roku plex client: {{ states(''media_player.plex_plex_for_roku_bedroom_roku'')
+  - data:
+      message: 'state of bedroom roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_bedroom_roku'')
         }}'
       level: info
-  - service: system_log.write
-    data:
+    action: system_log.write
+  - data:
       message: waiting 4 seconds
       level: info
+    action: system_log.write
   - delay: '4'
-  - service: system_log.write
-    data:
+  - data:
       message: starting {{ states('sensor.bedroom_tv_next_episode') }}
       level: info
-  - service: media_player.play_media
-    data:
+    action: system_log.write
+  - data:
       media_content_id: '{{ states(''sensor.bedroom_tv_next_episode'') }}'
       media_content_type: episode
-    entity_id: media_player.plex_plex_for_roku_bedroom_roku
-  - service: input_select.select_option
-    data:
+    entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
+    action: media_player.play_media
+  - data:
       option: Select Show
     entity_id: input_select.bedroom_plex_show
+    action: input_select.select_option
   mode: single
 - id: '1607195248442'
   alias: TV - Family Room - Change Roku/Plex Show
   description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.god_damn_plex_show
+  triggers:
+  - entity_id: input_select.god_damn_plex_show
     from: Select Show
-  condition: []
-  action:
-  - service: script.function_tv_change_input
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       tv: god_damn
       input: roku
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: sensor.god_damn_tv_next_episode
-  - service: homeassistant.turn_on
-    target:
+    action: script.function_tv_change_input
+  - data:
+      entity_id:
+      - sensor.god_damn_tv_next_episode
+    action: homeassistant.update_entity
+  - target:
       entity_id: switch.god_damn_tv
     data: {}
-  - service: system_log.write
-    data:
+    action: homeassistant.turn_on
+  - data:
       message: 'God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
         ''app_name'') }}'
       level: warning
+    action: system_log.write
   - repeat:
       until:
       - condition: or
         conditions:
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_god_damn_roku
+          entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
           state: idle
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_god_damn_roku
+          entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
           state: playing
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_god_damn_roku
+          entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
           state: paused
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_god_damn_roku
+          entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
           state: stopped
       sequence:
-      - service: system_log.write
-        data:
-          message: 'state of god_damn roku plex client: {{ states(''media_player.plex_plex_for_roku_god_damn_roku'')
+      - data:
+          message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
             }}'
           level: warning
+        action: system_log.write
       - choose:
         - conditions:
           - condition: not
@@ -1608,51 +1592,50 @@
                 attribute: app_name
                 state: Plex - Stream for Free
               sequence:
-              - service: media_player.select_source
-                data:
+              - data:
                   source: Plex - Stream for Free
                 entity_id: media_player.god_damn_roku
+                action: media_player.select_source
               - delay: '4'
-              - service: system_log.write
-                data:
+              - data:
                   message: 'God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
                     ''app_name'') }}'
                   level: warning
-      - service: button.press
-        data: {}
+                action: system_log.write
+      - data: {}
         target:
           entity_id: button.scan_clients_plex
+        action: button.press
       - delay: '1'
-  - service: system_log.write
-    data:
-      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_plex_for_roku_god_damn_roku'')
+  - data:
+      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
         }}'
       level: warning
-  - service: system_log.write
-    data:
+    action: system_log.write
+  - data:
       message: waiting 1 second
       level: warning
+    action: system_log.write
   - delay: '1'
-  - service: system_log.write
-    data:
+  - data:
       message: starting {{ states('sensor.god_damn_tv_next_episode') }}
       level: warning
-  - service: media_player.play_media
-    data:
+    action: system_log.write
+  - data:
       media_content_id: '{{ states(''sensor.god_damn_tv_next_episode'') }}'
       media_content_type: episode
-    entity_id: media_player.plex_plex_for_roku_god_damn_roku
-  - service: input_select.select_option
-    data:
+    entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
+    action: media_player.play_media
+  - data:
       option: Select Show
     entity_id: input_select.god_damn_plex_show
+    action: input_select.select_option
   mode: single
 - id: '1607196597834'
   alias: TV - Office - Power Off
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - switch.office_tv
     from: 'on'
     to: 'off'
@@ -1660,18 +1643,13 @@
       hours: 0
       minutes: 2
       seconds: 0
-  condition:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: sensor.office_tv_plug_power
-      state: unavailable
-  action:
-  - service: media_player.select_source
-    data:
+    trigger: state
+  actions:
+  - data:
       source: Home
     target:
-      entity_id: media_player.office_roku
+      entity_id: media_player.office_roku_tv
+    action: media_player.select_source
   mode: single
 - id: '1607196620269'
   alias: TV - Bedroom - Power Off
@@ -1726,88 +1704,89 @@
 - id: '1607208301956'
   alias: TV - Living Room - Change Roku/Plex Show
   description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.living_room_plex_show
+  triggers:
+  - entity_id: input_select.living_room_plex_show
     from: Select Show
-  condition: []
-  action:
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: sensor.living_room_tv_next_episode
-  - service: homeassistant.turn_on
-    target:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
+      entity_id:
+      - sensor.living_room_tv_next_episode
+    action: homeassistant.update_entity
+  - target:
       entity_id: switch.living_room_tv
     data: {}
-  - service: script.function_tv_change_input
-    data:
+    action: homeassistant.turn_on
+  - data:
       tv: living_room
       input: roku
+    action: script.function_tv_change_input
   - choose:
     - conditions:
       - condition: not
         conditions:
         - condition: state
-          entity_id: media_player.living_room_roku
+          entity_id: media_player.living_room_roku_tv
           attribute: app_id
           state: '13535'
       sequence:
-      - service: media_player.select_source
-        data:
+      - data:
           source: '13535'
         target:
-          entity_id: media_player.living_room_roku
+          entity_id: media_player.living_room_roku_tv
+        action: media_player.select_source
     default: []
   - repeat:
       until:
       - condition: or
         conditions:
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_living_room_roku
+          entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
           state: idle
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_living_room_roku
+          entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
           state: playing
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_living_room_roku
+          entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
           state: paused
         - condition: state
-          entity_id: media_player.plex_plex_for_roku_living_room_roku
+          entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
           state: stopped
       sequence:
-      - service: system_log.write
-        data:
-          message: 'state of living room roku plex client: {{ states(''media_player.plex_plex_for_roku_living_room_roku'')
+      - data:
+          message: 'state of living room roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_living_room_roku_tv'')
             }}'
           level: info
-      - service: button.press
-        data: {}
+        action: system_log.write
+      - data: {}
         target:
           entity_id: button.scan_clients_plex
+        action: button.press
       - delay: '1'
-  - service: system_log.write
-    data:
-      message: 'state of living room roku plex client: {{ states(''media_player.plex_plex_for_roku_living_room_roku'')
+  - data:
+      message: 'state of living room roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_living_room_roku_tv'')
         }}'
       level: info
-  - service: system_log.write
-    data:
+    action: system_log.write
+  - data:
       message: waiting 4 seconds
       level: info
+    action: system_log.write
   - delay: '4'
-  - service: system_log.write
-    data:
+  - data:
       message: starting {{ states('sensor.living_room_tv_next_episode') }}
       level: info
-  - service: media_player.play_media
-    data:
+    action: system_log.write
+  - data:
       media_content_id: '{{ states(''sensor.living_room_tv_next_episode'') }}'
       media_content_type: episode
-    entity_id: media_player.plex_plex_for_roku_living_room_roku
-  - service: input_select.select_option
-    data:
+    entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
+    action: media_player.play_media
+  - data:
       option: Select Show
     entity_id: input_select.living_room_plex_show
+    action: input_select.select_option
   mode: single
 - id: '1607717328639'
   alias: Lighting - Automatic Lights When We Come Home
@@ -1829,6 +1808,7 @@
       - service: homeassistant.turn_on
         target:
           entity_id: switch.mantle_lights
+        data: {}
     default: []
   - condition: state
     entity_id: binary_sensor.christmas_tree_available
@@ -1838,7 +1818,10 @@
     state: 'on'
   - service: homeassistant.turn_on
     target:
-      entity_id: switch.christmas_tree
+      entity_id:
+      - switch.christmas_tree
+      - light.deck_lights
+    data: {}
   mode: single
 - id: '1608699279426'
   alias: Tag - Mike Desk - Unlock Mercury
@@ -1881,83 +1864,96 @@
         level: error
   mode: single
 - id: '1608701107067'
-  alias: Tag - Foyer/Garage - Disarm Security System
-  description: ''
-  trigger:
-  - platform: tag
-    tag_id: 741a22c8-f682-4319-8d86-eeaa31516012
-  - platform: tag
-    tag_id: 494e4399-01f7-4ad4-91e4-940b1377cf60
-  - platform: tag
-    tag_id: 3eb9caa6-d3ed-4532-a368-8b9fd2a659a5
-  - platform: tag
-    tag_id: 421d7d13-d4de-429c-bb85-7f2e6adf98cf
-  - platform: tag
-    tag_id: 5cc6779c-7fcf-46b0-baa5-90f0daf05073
-    enabled: false
-  - platform: tag
-    tag_id: 5819cd71-c1a6-4059-ad5d-db702981c169
-    enabled: false
-  - platform: tag
-    tag_id: 6e424437-9d8b-432b-867b-312846143e18
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: template
-          value_template: '{{ users[trigger.event.context.user_id] == ''Mike'' }}'
-        - condition: template
-          value_template: '{{ users[trigger.event.context.user_id] == ''Holly'' }}'
-      sequence:
-      - if:
-        - condition: or
-          conditions:
-          - condition: template
-            value_template: '{{ tags[trigger.event.data.tag_id] == ''Garage'' }}'
-          - condition: template
-            value_template: '{{ tags[trigger.event.data.tag_id] == ''Front Door''
-              }}'
-          - condition: template
-            value_template: '{{ tags[trigger.event.data.tag_id] == ''Holly Car'' }}'
-          - condition: template
-            value_template: '{{ tags[trigger.event.data.tag_id] == ''Mike Car'' }}'
-          alias: Unlock Door if Garage, Front Door, or a Car Tag
-        then:
-        - service: button.press
-          data: {}
-          target:
-            entity_id: button.front_door_wake
-        - service: lock.unlock
-          data: {}
-          target:
-            entity_id: lock.front_door
-      - service: script.security_disarm_system
-        data: {}
-      - service: system_log.write
-        data:
-          message: '{{ users[trigger.event.context.user_id] }} scanned at the {{ tags[trigger.event.data.tag_id]
-            }} tag to Disarm the Security System'
-          level: warning
-    default:
-    - service: notify.signal_security
-      data:
-        message: 'Warning: Someone scanned the {{ tags[trigger.event.data.tag_id]
-          }} tag  (user_id: {{ trigger.event.context.user_id }})'
-    - service: system_log.write
-      data:
-        message: 'Someone scanned the {{ tags[trigger.event.data.tag_id] }} tag  (user_id:
-          {{ trigger.event.context.user_id }})'
-        level: error
+  alias: Tag - Disarm Security System and Unlock Front Door
+  description: If the tag scanned is used by Mike or Holly and is at one of the designated
+    places
+  triggers:
+  - trigger: event
+    event_type: tag_scanned
+    alias: A tag is scanned
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.event.data.tag_id in tags }}'
+    alias: Tag is in the tags list
+  - alias: User is Mike or Holly
+    condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ users[trigger.event.context.user_id] == ''Mike'' }}'
+      alias: User is Mike
+    - condition: template
+      value_template: '{{ users[trigger.event.context.user_id] == ''Holly'' }}'
+      alias: User is Holly
+  actions:
+  - data: {}
+    action: script.security_disarm_system
+    alias: Disarm Alarm
+  - data:
+      message: '{{ users[trigger.event.context.user_id] }} scanned at the {{ tags[trigger.event.data.tag_id]
+        }} tag to Disarm the Security System'
+      level: warning
+    action: system_log.write
+    alias: Log Alarm Disarmed
+  - alias: Unlock Door if Tag in Do Unlock list
+    if:
+    - alias: Tag in the Do Unlock list
+      condition: template
+      value_template: '{{ tags[trigger.event.data.tag_id] in do_unlock }}'
+    then:
+    - action: button.press
+      metadata: {}
+      data: {}
+      target:
+        entity_id: button.front_door_zwave_ping
+    - action: lock.unlock
+      metadata: {}
+      data: {}
+      target:
+        entity_id: lock.front_door_zwave
+    - data:
+        message: '{{ users[trigger.event.context.user_id] }} scanned at the {{ tags[trigger.event.data.tag_id]
+          }} tag to Unlock Front Door (Zwave)'
+        level: warning
+      action: system_log.write
+      alias: Log Door Unlocked (Zwave)
+    - action: button.press
+      metadata: {}
+      data: {}
+      target:
+        entity_id: button.front_door_zwave_ping
+    - data: {}
+      target:
+        entity_id: button.front_door_wake
+      action: button.press
+      continue_on_error: true
+    - data: {}
+      target:
+        entity_id: lock.front_door
+      action: lock.unlock
+      continue_on_error: true
+    - data:
+        message: '{{ users[trigger.event.context.user_id] }} scanned at the {{ tags[trigger.event.data.tag_id]
+          }} tag to Unlock Front Door (August)'
+        level: warning
+      action: system_log.write
+      alias: Log Door Unlocked (August)
   mode: single
   variables:
+    do_unlock:
+      Garage: 1
+      Front Door: 1
+      Mailbox: 1
+      Mike S5: 1
+      Holly Santa Fe: 1
+      Holly Tundra: 1
     tags:
       741a22c8-f682-4319-8d86-eeaa31516012: Foyer
       494e4399-01f7-4ad4-91e4-940b1377cf60: Garage
       3eb9caa6-d3ed-4532-a368-8b9fd2a659a5: Front Door
-      421d7d13-d4de-429c-bb85-7f2e6adf98cf: Mike Car
-      6e424437-9d8b-432b-867b-312846143e18: Holly Car
+      2aa97775-6bd0-4786-a767-058b393b35d5: Mailbox
+      0cb8568f-8feb-4f09-9422-e960f7890ed7: Mike S5
+      b4cde339-fb97-4619-9d7d-a8663a418753: Holly Santa Fe
+      85e387a4-90b1-4241-afe2-f5303bfb2aa1: Holly Tundra
     users:
       80ad218b0cf54379b5ee622fbb721c6b: Mike
       3109b2f6d085440f92db502bc4e30a3b: Holly
@@ -2022,28 +2018,28 @@
 - id: '1609607242283'
   alias: 21 - Home Assistant - Nightly Tasks
   description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.home_assistant_nightly_tasks
-  condition: []
-  action:
-  - service: system_log.write
-    data:
+  triggers:
+  - at: input_datetime.home_assistant_nightly_tasks
+    trigger: time
+  conditions: []
+  actions:
+  - data:
       message: Starting Nightly Tasks
       level: warning
-  - service: shell_command.clean_alarm_state
-    data: {}
-  - service: shell_command.rotate_ha_logs
-    data: {}
+    action: system_log.write
+  - data: {}
+    action: shell_command.clean_alarm_state
+  - data: {}
+    action: shell_command.rotate_ha_logs
   - choose:
     - conditions:
       - condition: template
         value_template: '{{ now().weekday() == (states(''sensor.recycle_weekday'')
           | int(0) + 1) % 7 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
+      - data: {}
         entity_id: input_boolean.recycle_is_out
+        action: input_boolean.turn_off
     default: []
   - choose:
     - conditions:
@@ -2052,42 +2048,42 @@
           | int(0) + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
           | int(0) + 1) % 7 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
+      - data: {}
         entity_id: input_boolean.trash_is_out
+        action: input_boolean.turn_off
     default: []
-  - service: homeassistant.update_entity
-    target:
+  - target:
       entity_id: binary_sensor.new_npm_ssl_cert_available
     data: {}
+    action: homeassistant.update_entity
   - choose:
     - conditions:
       - condition: state
         entity_id: binary_sensor.new_npm_ssl_cert_available
         state: 'on'
       sequence:
-      - service: hassio.addon_restart
-        data:
+      - data:
           addon: a0d7b954_nginxproxymanager
+        action: hassio.addon_restart
     default: []
-  - service: shell_command.update_tv_shows
-    data: {}
-  - service: homeassistant.update_entity
-    target:
+  - data: {}
+    action: shell_command.update_tv_shows
+  - target:
       entity_id: binary_sensor.new_tv_show_list_ready
     data: {}
-  - service: hassio.addon_restart
-    data:
+    action: homeassistant.update_entity
+  - data:
       addon: core_letsencrypt
+    action: hassio.addon_restart
   - delay:
       hours: 0
       minutes: 2
       seconds: 0
       milliseconds: 0
-  - service: homeassistant.update_entity
-    target:
+  - target:
       entity_id: binary_sensor.new_ssl_cert_available
     data: {}
+    action: homeassistant.update_entity
   - choose:
     - conditions:
       - condition: or
@@ -2099,30 +2095,27 @@
           entity_id: binary_sensor.new_ssl_cert_available
           state: 'on'
       sequence:
-      - service: system_log.write
-        data:
+      - data:
           message: 'Nightly Tasks: Restarting Home Assistant'
           level: warning
-      - service: script.homeassistant_restart
+        action: system_log.write
+      - action: homeassistant.restart
         data: {}
     default: []
-  - service: homeassistant.toggle
-    data: {}
-    target:
-      entity_id: sensor.living_room_zigbee_router_plug_power
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 3
-      milliseconds: 0
-  - service: homeassistant.toggle
-    data: {}
-    target:
-      entity_id: sensor.living_room_zigbee_router_plug_power
-  - service: system_log.write
-    data:
+  - data:
       message: Finishing Nightly Tasks
       level: warning
+    action: system_log.write
+  - metadata: {}
+    data:
+      type: daily
+    target:
+      entity_id: weather.home
+    response_variable: daily_forecast
+    action: weather.get_forecasts
+  - action: script.backup_partial_on_nfs
+    data: {}
+    enabled: false
   mode: single
 - id: '1610231390167'
   alias: Notifications - Nobody Home - Alarm Disarmed
@@ -2235,28 +2228,30 @@
 - id: '1612041755835'
   alias: TV - Family Room - Change Roku/Plex Show (Testing)
   description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.god_damn_plex_show
+  triggers:
+  - entity_id: input_select.god_damn_plex_show
     from: Select Show
-  condition: []
-  action:
-  - service: script.function_tv_change_input
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       tv: god_damn
       input: roku
-  - service: homeassistant.update_entity
-    data: {}
-    entity_id: sensor.god_damn_tv_next_episode
-  - service: homeassistant.turn_on
-    target:
+    action: script.function_tv_change_input
+  - data:
+      entity_id:
+      - sensor.god_damn_tv_next_episode
+    action: homeassistant.update_entity
+  - target:
       entity_id: switch.god_damn_tv
-  - service: system_log.write
-    data:
-      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_plex_for_roku_god_damn_roku'')
+    action: homeassistant.turn_on
+    data: {}
+  - data:
+      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
         }} and God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
         ''app_name'') }}'
       level: warning
+    action: system_log.write
   - choose:
     - conditions:
       - condition: not
@@ -2266,65 +2261,65 @@
           attribute: app_name
           state: Plex - Stream for Free
       sequence:
-      - service: media_player.select_source
-        data:
+      - data:
           source: '13535'
         target:
           entity_id: media_player.god_damn_roku
+        action: media_player.select_source
     default: []
   - repeat:
       until:
       - condition: template
-        value_template: '{{ states(''media_player.plex_plex_for_roku_god_damn_roku'')
+        value_template: '{{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
           in [''idle'', ''playing'', ''paused'', ''stopped'' ] }}'
       sequence:
-      - service: system_log.write
-        data:
-          message: 'state of god_damn roku plex client: {{ states(''media_player.plex_plex_for_roku_god_damn_roku'')
+      - data:
+          message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
             }} and God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
             ''app_name'') }}'
           level: warning
+        action: system_log.write
       - delay:
           hours: 0
           minutes: 0
           seconds: 1
           milliseconds: 0
-      - service: button.press
-        data: {}
+      - data: {}
         target:
           entity_id: button.scan_clients_plex
-  - service: system_log.write
-    data:
-      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_plex_for_roku_god_damn_roku'')
+        action: button.press
+  - data:
+      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
         }} and God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
         ''app_name'') }}'
       level: warning
-  - service: system_log.write
-    data:
+    action: system_log.write
+  - data:
       message: waiting 1 second
       level: warning
+    action: system_log.write
   - delay:
       hours: 0
       minutes: 0
       seconds: 1
       milliseconds: 0
-  - service: system_log.write
-    data:
+  - data:
       message: starting {{ states('sensor.god_damn_tv_next_episode') }}
       level: warning
-  - service: media_player.play_media
-    data:
+    action: system_log.write
+  - data:
       media_content_id: '{{ states(''sensor.god_damn_tv_next_episode'') }}'
       media_content_type: episode
-    entity_id: media_player.plex_plex_for_roku_god_damn_roku
-  - service: input_select.select_option
-    data:
+    entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
+    action: media_player.play_media
+  - data:
       option: Select Show
     entity_id: input_select.god_damn_plex_show
-  - service: system_log.write
-    data:
+    action: input_select.select_option
+  - data:
       message: god damn tv plex show automation done
       level: error
+    action: system_log.write
   mode: single
 - id: '1613160102079'
   alias: Lighting - Mantle Lights On
@@ -2353,38 +2348,39 @@
 - id: '1614981790208'
   alias: Notifications - Mailbox Notify
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.wyzesense_778e4038
+  triggers:
+  - entity_id:
+    - binary_sensor.mailbox_sensor
     to: 'on'
-  condition: []
-  action:
+    trigger: state
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: state
         entity_id: input_boolean.mail_delivered
         state: 'off'
       sequence:
-      - service: homeassistant.turn_on
-        target:
+      - target:
           entity_id: input_boolean.mail_delivered
         data: {}
-      - service: notify.signal_security
-        data:
+        action: homeassistant.turn_on
+      - data:
           message: The mail's here, the mail's here!  Woo-hoo!
-      - service: notify.notify
-        data:
+        action: notify.signal_security
+      - data:
           message: The mail's here, the mail's here!  Woo-hoo!
           title: The mail has been delivered
           data:
             actions:
             - action: RESET_MAILBOX
               title: Reset Mail Delivery Notification
+        action: notify.notify
     default:
-    - service: homeassistant.turn_off
-      target:
+    - target:
         entity_id: input_boolean.mail_delivered
       data: {}
+      action: homeassistant.turn_off
     - choose:
       - conditions:
         - condition: not
@@ -2393,9 +2389,9 @@
             entity_id: person.holly_erdely
             state: home
         sequence:
-        - service: notify.signal_security
-          data:
+        - data:
             message: Somebody retrieved the mail
+          action: notify.signal_security
       default: []
     - choose:
       - conditions:
@@ -2405,43 +2401,29 @@
             entity_id: person.michael_erdely
             state: home
         sequence:
-        - service: notify.signal_mike
-          data:
+        - data:
             message: Somebody retrieved the mail
+          action: notify.signal_mike
       default: []
   mode: single
 - id: '1615411227750'
   alias: Mailbox State Reset
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.wyzesense_778e4038
+  triggers:
+  - entity_id:
+    - binary_sensor.mailbox_sensor
     to: 'on'
     for:
       hours: 0
       minutes: 5
       seconds: 0
-  condition: []
-  action:
-  - service: mqtt.publish
-    data:
-      topic: wyzesense2mqtt/778E4038
-      payload: '{"event": "{{ state_attr("binary_sensor.wyzesense_778e4038", "event")
-        }}", "available": true, "mac": "{{ state_attr("binary_sensor.wyzesense_778e4038",
-        "mac") }}", "device_class": "{{ state_attr("binary_sensor.wyzesense_778e4038",
-        "device_class") }}", "last_seen": {{ state_attr("binary_sensor.wyzesense_778e4038",
-        "last_seen") }}, "last_seen_iso": "{{ state_attr("binary_sensor.wyzesense_778e4038",
-        "last_seen_iso") }}", "signal_strength": {{ state_attr("binary_sensor.wyzesense_778e4038",
-        "signal_strength") }}, "battery": {{ state_attr("binary_sensor.wyzesense_778e4038",
-        "battery") }}, "name": "{{ state_attr("binary_sensor.wyzesense_778e4038",
-        "friendly_name") }}", "state": 0}'
-      retain: true
-      qos: 0
-    enabled: false
-  - service: python_script.set_state
-    data:
-      entity_id: binary_sensor.wyzesense_778e4038
+    trigger: state
+  conditions: []
+  actions:
+  - data:
+      entity_id: binary_sensor.wyzesense_77ca81b4
       state: 'off'
+    action: python_script.set_state
   mode: single
 - id: '1615594192596'
   alias: Thermostat - Turn on AC
@@ -2534,10 +2516,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_holly_in_bed
+      entity_id: binary_sensor.bed_sensor_holly
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_mike_in_bed
+      entity_id: binary_sensor.bed_sensor_mike
       state: 'off'
     - condition: state
       entity_id: light.hallway_light
@@ -2596,9 +2578,19 @@
     topic: cmnd/far_black_lamp/power1
   condition: []
   action:
-  - service: homeassistant.toggle
-    target:
-      entity_id: light.far_black_lamp
+  - if:
+    - condition: template
+      value_template: '{{ trigger.payload.lower() == "on" }}'
+    then:
+    - service: homeassistant.turn_on
+      target:
+        entity_id: light.far_black_lamp
+      data: {}
+    else:
+    - service: homeassistant.turn_off
+      target:
+        entity_id: light.far_black_lamp
+      data: {}
   mode: single
 - id: '1622222404078'
   alias: 20 - Home Assistant - Bedtime Tasks
@@ -2612,54 +2604,53 @@
     data:
       message: Starting Bedtime Tasks
       level: warning
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: alarm_control_panel.home_alarm
-        state: disarmed
-      sequence:
-      - service: notify.notify
+  - if:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: disarmed
+    then:
+    - service: notify.notify
+      data:
+        message: The Alarm is not armed.
         data:
-          message: The Alarm is not armed.
-          data:
-            actions:
-            - action: ARM_HOME
-              title: Arm Alarm (Home)
-            - action: RUN_GOODNIGHT
-              title: Good Night
-          title: Security Alert
-    default: []
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: template
-          value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_1")
-            and states("input_boolean.trash_is_out") == "off" }}'
-        - condition: template
-          value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_2")
-            and states("input_boolean.trash_is_out") == "off" }}'
-      sequence:
-      - service: notify.notify
-        data:
-          message: Trash collection is tomorrow and Trash is not out!
-          data:
-            actions:
-            - action: TRASH_IS_OUT
-              title: Trash Is Already Out
-    - conditions:
+          actions:
+          - action: ARM_HOME
+            title: Arm Alarm (Home)
+          - action: RUN_GOODNIGHT
+            title: Good Night
+        title: Security Alert
+    alias: Send Arm Alarm Notification
+  - if:
+    - condition: or
+      conditions:
       - condition: template
-        value_template: '{{ states("sensor.weekday_tomorrow") == states("sensor.moco_recycle_day")
-          and states("input_boolean.recycle_is_out") == "off" }}'
-      sequence:
-      - service: notify.notify
+        value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_1")
+          and states("input_boolean.trash_is_out") == "off" }}'
+      - condition: template
+        value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_2")
+          and states("input_boolean.trash_is_out") == "off" }}'
+    then:
+    - service: notify.notify
+      data:
+        message: Trash collection is tomorrow and Trash is not out!
         data:
-          message: Recycling collection is tomorrow and Recycle is not out!
-          data:
-            actions:
-            - action: RECYCLE_IS_OUT
-              title: Recycling Is Already Out
-    default: []
+          actions:
+          - action: TRASH_IS_OUT
+            title: Trash Is Already Out
+    alias: Send Trash Notification if necessary
+  - if:
+    - condition: template
+      value_template: '{{ states("sensor.weekday_tomorrow") == states("sensor.moco_recycle_day")
+        and states("input_boolean.recycle_is_out") == "off" }}'
+    then:
+    - service: notify.notify
+      data:
+        message: Recycling collection is tomorrow and Recycle is not out!
+        data:
+          actions:
+          - action: RECYCLE_IS_OUT
+            title: Recycling Is Already Out
+    alias: Send Recycle Notification if necessary
   - service: system_log.write
     data:
       message: Finishing Bedtime Tasks
@@ -2686,10 +2677,10 @@
 - id: '1631118685373'
   alias: Notifications - Frigate - Front Door Cam 2
   description: ''
-  trigger:
-  - platform: mqtt
-    topic: frigate/events
-  condition:
+  triggers:
+  - topic: frigate/events
+    trigger: mqtt
+  conditions:
   - condition: or
     conditions:
     - condition: template
@@ -2703,42 +2694,61 @@
     - condition: template
       value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
         }}'
-  - condition: template
-    value_template: '{{ trigger.payload_json["after"]["camera"] == "Front_Door_2"
-      }}'
-  action:
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["camera"] == "Front_Door_2"
+        }}'
+    - condition: template
+      value_template: '{{ trigger.payload_json["after"]["camera"] == "Garage_Door"
+        }}'
+      enabled: false
+  actions:
   - delay:
       hours: 0
       minutes: 0
       seconds: 3
       milliseconds: 0
-  - service: script.function_frigate_send_email
-    data:
+  - data:
       object: '{{ trigger.payload_json["after"]["label"] }}'
       camera: '{{ trigger.payload_json["after"]["camera"] }}'
       eventid: '{{ trigger.payload_json["after"]["id"] }}'
     enabled: false
-  - service: python_script.send_frigate_email
-    data:
+    action: script.function_frigate_send_email
+  - data:
       detected_object: '{{ trigger.payload_json["after"]["label"] }}'
       camera: '{{ trigger.payload_json["after"]["camera"] }}'
       eventid: '{{ trigger.payload_json["after"]["id"] }}'
     enabled: false
-  - service: shell_command.send_frigate_email
-    data:
+    action: python_script.send_frigate_email
+  - data:
       detected_object: '{{ trigger.payload_json["after"]["label"] }}'
       camera: '{{ trigger.payload_json["after"]["camera"] }}'
       eventid: '{{ trigger.payload_json["after"]["id"] }}'
+    action: shell_command.send_frigate_email
+    response_variable: command_response
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'stderr: {{ command_response[''stderr''] }}'
+    enabled: false
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'stdout: {{ command_response[''stdout''] }}'
+    enabled: false
   mode: single
   max: 10
 - id: '1632758469302'
   alias: Lighting - Bedroom - Motion Light On
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.bedroom_motion_sensor_occupancy
+  triggers:
+  - entity_id: binary_sensor.bedroom_motion_sensor_occupancy
     to: 'on'
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: light.dresser_lamp
     state: 'off'
@@ -2747,13 +2757,13 @@
     entity_id: switch.bedroom_tv
     state: 'off'
   - condition: numeric_state
-    entity_id: sensor.bedroom_motion_sensor_illuminance_lux
+    entity_id: sensor.bedroom_motion_sensor_illuminance
     below: '16'
   - condition: state
-    entity_id: binary_sensor.withings_holly_in_bed
+    entity_id: binary_sensor.bed_sensor_holly
     state: 'off'
   - condition: state
-    entity_id: binary_sensor.withings_mike_in_bed
+    entity_id: binary_sensor.bed_sensor_mike
     state: 'off'
   - condition: time
     after: 06:00:00
@@ -2766,17 +2776,20 @@
     - thu
     - fri
     - sat
-  action:
-  - service: mqtt.publish
-    data:
+  - condition: state
+    entity_id: input_boolean.bedroom_motion_enabled
+    state: 'on'
+  actions:
+  - data:
       topic: cmnd/dresser_lamp/backlog
       payload: rule2 off; Delay 40; rule2 on
       qos: 0
       retain: false
-  - service: homeassistant.turn_on
-    target:
+    action: mqtt.publish
+  - target:
       entity_id: light.dresser_lamp
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1632841431902'
   alias: Fan - Master Bath Humidity - Fan On
@@ -2797,7 +2810,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_holly_in_bed
+      entity_id: binary_sensor.bed_sensor_holly
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -2806,7 +2819,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_mike_in_bed
+      entity_id: binary_sensor.bed_sensor_mike
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -2843,35 +2856,35 @@
 - id: '1633300929464'
   alias: Lighting - Powder Room - Motion Light On
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.powder_room_motion_sensor_occupancy
+  triggers:
+  - entity_id: binary_sensor.powder_room_motion_sensor_occupancy
     to: 'on'
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: light.powder_room_light
     state: 'off'
     for: 00:01:00
   - condition: numeric_state
-    entity_id: sensor.powder_room_motion_sensor_illuminance_lux
-    below: '65'
+    entity_id: sensor.powder_room_motion_sensor_illuminance
+    below: 70
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_holly_in_bed
+      entity_id: binary_sensor.bed_sensor_holly
       state: 'off'
     - condition: state
-      entity_id: binary_sensor.withings_mike_in_bed
+      entity_id: binary_sensor.bed_sensor_mike
       state: 'off'
-  action:
-  - service: mqtt.publish
-    data:
+  actions:
+  - data:
       topic: cmnd/powder_room_light/backlog
       payload: SetOption73 1; Delay 30; SetOption73 0
-  - service: homeassistant.turn_on
-    target:
+    action: mqtt.publish
+  - target:
       entity_id: light.powder_room_light
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1634428046004'
   alias: OctoPrint - Turn on Camera
@@ -2918,23 +2931,6 @@
     target:
       entity_id: switch.octoprint_light_plug
   mode: single
-- id: '1634856825935'
-  alias: Lighting - Office - Mike Bench Lamp Toggle
-  description: ''
-  trigger:
-  - platform: device
-    domain: tasmota
-    device_id: 5e4b4538179e98100fb71b5c84da9ec2
-    type: button_long_press
-    subtype: switch_1
-    discovery_id: 483FDA596B28_switch_1_HOLD
-  condition: []
-  action:
-  - service: homeassistant.toggle
-    data: {}
-    target:
-      entity_id: switch.mike_bench_lamp
-  mode: single
 - id: '1635180091668'
   alias: Controls - Power On Ender3 Screen with Ender 3
   description: ''
@@ -2972,13 +2968,13 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.withings_holly_in_bed
+    - binary_sensor.bed_sensor_holly
   condition: []
   action:
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.withings_holly_in_bed
+        entity_id: binary_sensor.bed_sensor_holly
         state: 'on'
       sequence:
       - service: input_boolean.turn_on
@@ -2987,7 +2983,7 @@
         data: {}
     - conditions:
       - condition: state
-        entity_id: binary_sensor.withings_holly_in_bed
+        entity_id: binary_sensor.bed_sensor_holly
         state: 'off'
       sequence:
       - service: input_boolean.turn_off
@@ -3001,13 +2997,13 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.withings_mike_in_bed
+    entity_id: binary_sensor.bed_sensor_mike
   condition: []
   action:
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.withings_mike_in_bed
+        entity_id: binary_sensor.bed_sensor_mike
         state: 'on'
       sequence:
       - service: input_boolean.turn_on
@@ -3016,7 +3012,7 @@
         data: {}
     - conditions:
       - condition: state
-        entity_id: binary_sensor.withings_mike_in_bed
+        entity_id: binary_sensor.bed_sensor_mike
         state: 'off'
       sequence:
       - service: input_boolean.turn_off
@@ -3122,161 +3118,171 @@
 - id: '1638997594019'
   alias: Monitor Earth / Home Assistant Entities
   description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.software_update_available
+  triggers:
+  - entity_id: sensor.software_update_available
     for:
       hours: 0
       minutes: 0
       seconds: 30
-  - platform: state
-    entity_id: input_text.test_monitor_helper
+    trigger: state
+  - entity_id: input_text.test_monitor_helper
     for:
       hours: 0
       minutes: 0
       seconds: 30
-  - platform: state
-    entity_id: binary_sensor.earth
+    trigger: state
+  - entity_id: binary_sensor.earth
     for:
       hours: 0
       minutes: 5
       seconds: 0
     from: 'off'
-  - platform: state
-    entity_id: binary_sensor.earth
+    trigger: state
+  - entity_id: binary_sensor.earth
     for:
       hours: 0
       minutes: 3
       seconds: 0
     from: 'on'
-  - platform: state
-    entity_id: binary_sensor.earth_nginx_php_working
+    trigger: state
+  - entity_id: binary_sensor.earth_nginx_php_working
     for:
       hours: 0
       minutes: 5
       seconds: 0
-  - platform: state
-    entity_id: binary_sensor.nginx_proxy_manager_working
+    trigger: state
+  - entity_id: binary_sensor.nginx_proxy_manager_working
     for:
       hours: 0
       minutes: 5
       seconds: 0
-  - platform: numeric_state
-    entity_id: sensor.unavailable_entities
+    trigger: state
+  - entity_id: sensor.unavailable_entities
     above: '0'
     for:
       hours: 0
       minutes: 20
       seconds: 30
-  - platform: numeric_state
-    entity_id: sensor.unavailable_entities
+    trigger: numeric_state
+  - entity_id: sensor.unavailable_entities
     for:
       hours: 0
       minutes: 0
       seconds: 30
     below: '1'
-  - platform: state
-    entity_id: binary_sensor.bitwarden_add_on_running
+    trigger: numeric_state
+  - entity_id: binary_sensor.bitwarden_add_on_running
     for:
       hours: 0
       minutes: 0
       seconds: 30
-  - platform: state
-    entity_id: binary_sensor.frigate_add_on_running
+    trigger: state
+  - entity_id: binary_sensor.frigate_add_on_running
     for:
       hours: 0
       minutes: 0
       seconds: 30
-  - platform: state
-    entity_id: binary_sensor.google_backup_add_on_running
+    trigger: state
+  - entity_id: binary_sensor.google_backup_add_on_running
     for:
       hours: 0
       minutes: 0
       seconds: 30
-  - platform: state
-    entity_id: binary_sensor.mariadb_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - platform: state
-    entity_id: binary_sensor.mqtt_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - platform: state
-    entity_id: binary_sensor.nginxproxymgr_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - platform: state
-    entity_id: binary_sensor.signal_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - platform: state
-    entity_id: binary_sensor.ssh_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - platform: state
-    entity_id: binary_sensor.tasmobackup_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - platform: state
-    entity_id: binary_sensor.unifi_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - platform: state
-    entity_id: binary_sensor.wireguard_add_on_running
+    trigger: state
+  - entity_id: binary_sensor.mariadb_add_on_running
     for:
       hours: 0
       minutes: 0
       seconds: 30
     enabled: false
-  - platform: state
-    entity_id: binary_sensor.zigbee2mqtt_add_on_running
+    trigger: state
+  - entity_id: binary_sensor.mqtt_add_on_running
     for:
       hours: 0
       minutes: 0
       seconds: 30
-  - platform: numeric_state
-    entity_id: sensor.ood_zigbee_entities
+    trigger: state
+  - entity_id: binary_sensor.nginxproxymgr_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    trigger: state
+  - entity_id: binary_sensor.signal_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    trigger: state
+  - entity_id: binary_sensor.ssh_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    trigger: state
+  - entity_id: binary_sensor.tasmobackup_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    enabled: false
+    trigger: state
+  - entity_id: binary_sensor.unifi_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    trigger: state
+  - entity_id: binary_sensor.wireguard_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    enabled: false
+    trigger: state
+  - entity_id: binary_sensor.zigbee2mqtt_add_on_running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    trigger: state
+  - entity_id: sensor.ood_zigbee_entities
     above: '0'
     for:
       hours: 0
       minutes: 0
       seconds: 30
-  - platform: numeric_state
-    entity_id: sensor.ood_zigbee_entities
+    trigger: numeric_state
+  - entity_id: sensor.ood_zigbee_entities
     for:
       hours: 0
       minutes: 0
       seconds: 30
     below: '1'
-  - platform: numeric_state
-    entity_id: sensor.ood_wyze_entities
+    trigger: numeric_state
+  - entity_id: sensor.ood_wyze_entities
     above: '0'
     for:
       hours: 0
       minutes: 0
       seconds: 30
-  - platform: numeric_state
-    entity_id: sensor.ood_wyze_entities
+    trigger: numeric_state
+  - entity_id: sensor.ood_wyze_entities
     for:
       hours: 0
       minutes: 0
       seconds: 30
     below: '1'
-  condition:
+    trigger: numeric_state
+  - trigger: numeric_state
+    entity_id:
+    - sensor.tasmota_devices
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    below: 1
+  conditions:
   - condition: template
     value_template: '{{ trigger.to_state.state != trigger.from_state.state }}'
   - condition: time
@@ -3291,15 +3297,14 @@
     - mon
     - sun
     alias: Don't fire between 2 & 2:30 AM (nightly maintenance)
-  action:
+  actions:
   - choose:
     - conditions:
       - condition: template
         value_template: '{{ trigger.to_state.state | int(-1) > 0 or trigger.to_state.state
           | string == "off" }}'
       sequence:
-      - service: notify.gmail_to_mike
-        data:
+      - data:
           message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
             }}
 
@@ -3313,10 +3318,11 @@
             '
           title: '** PROBLEM Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
             }} is {{ states(trigger.entity_id) }} **'
-      - service: homeassistant.turn_on
-        target:
+        action: notify.gmail_to_mike
+      - target:
           entity_id: '{{ "input_boolean." + trigger.entity_id.split(".")[1] + "_triggered"
             }}'
+        action: homeassistant.turn_on
     - conditions:
       - condition: template
         value_template: '{{ trigger.to_state.state | int(-1) == 0 or trigger.to_state.state
@@ -3325,21 +3331,20 @@
       - condition: template
         value_template: '{{ states("input_boolean." + trigger.entity_id.split(".")[1]
           + "_triggered") == "on" }}'
-      - service: notify.gmail_to_mike
-        data:
+      - data:
           message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
             }}
 
             '
           title: '** RECOVERY Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
             }} is {{ states(trigger.entity_id) }} **'
-      - service: homeassistant.turn_off
-        target:
+        action: notify.gmail_to_mike
+      - target:
           entity_id: '{{ "input_boolean." + trigger.entity_id.split(".")[1] + "_triggered"
             }}'
+        action: homeassistant.turn_off
     default:
-    - service: notify.gmail_to_mike
-      data:
+    - data:
         message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
           }}
 
@@ -3353,6 +3358,7 @@
           '
         title: '** UNKNOWN Issue Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
           }} is {{ states(trigger.entity_id) }} **'
+      action: notify.gmail_to_mike
   mode: single
 - id: '1641590686089'
   alias: Actionable Notifications - RESET_MAILBOX
@@ -3584,113 +3590,6 @@
       title: MariaDB/NPM Restarted
       message: The MariaDB and Nginx Proxy Manager Add-Ons were restarted.
   mode: single
-- id: '1656031673970'
-  alias: Notifications - Refrigerator Plug Turned Off
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - switch.kitchen_refrigerator_plug
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 10
-  condition: []
-  action:
-  - service: notify.notify
-    data:
-      message: The Refrigerator Plug is Off! You should turn it back on immediately!
-      title: The Refrigerator Plug is Off!!!
-      data:
-        actions:
-        - action: TURN_ON_FRIDGE
-          title: Turn On Fridge
-  mode: single
-- id: '1656031837820'
-  alias: Actionable Notifications - TURN_ON_FRIDGE
-  description: ''
-  trigger:
-  - platform: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: TURN_ON_FRIDGE
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    data: {}
-    target:
-      entity_id: switch.kitchen_refrigerator_plug
-  - service: notify.notify
-    data:
-      message: The Refrigerator Plug was turned on by Actionable Notification
-      title: Fridge turned back on
-  mode: single
-- id: '1657398934743'
-  alias: Fix WyzeCam/GarageDoorCam
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.wyzecam_status
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  condition: []
-  action:
-  - service: shell_command.ssh_command
-    data:
-      server: root@wyzecam.erdely.in
-      command: /opt/restart_rtsp.sh
-    enabled: false
-    alias: Restart v4l2rtspserver
-  - if:
-    - condition: state
-      entity_id: binary_sensor.wyzecam
-      state: 'off'
-    then:
-    - service: homeassistant.turn_off
-      data: {}
-      target:
-        entity_id: switch.garagedoorcam_plug
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 3
-        milliseconds: 0
-    - service: homeassistant.turn_on
-      data: {}
-      target:
-        entity_id: switch.garagedoorcam_plug
-    - service: system_log.write
-      data:
-        level: error
-        message: WyzeCam Plug Reset
-    - service: notify.gmail_to_mike
-      data:
-        message: WyzeCam Plug Reset
-        title: WyzeCam Plug Reset
-      alias: Email Mike
-      enabled: false
-    else:
-    - service: shell_command.ssh_command
-      data:
-        server: root@wyzecam.erdely.in
-        command: reboot
-      alias: Reboot via SSH
-    - service: system_log.write
-      data:
-        level: error
-        message: WyzeCam Rebooted via SSH
-    - service: notify.gmail_to_mike
-      data:
-        message: WyzeCam rebooted via SSH
-        title: WyzeCam rebooted via SSH
-      alias: Email Mike
-      enabled: false
-  mode: single
 - id: '1670901378517'
   alias: Lighting - Turn Den Lights Off
   description: Turn Den Lights Off when turning off Laundry Room Lights
@@ -3808,7 +3707,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_holly_in_bed
+      entity_id: binary_sensor.bed_sensor_holly
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -3817,7 +3716,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.withings_mike_in_bed
+      entity_id: binary_sensor.bed_sensor_mike
       state: 'off'
     - condition: state
       entity_id: switch.bedroom_tv
@@ -3933,7 +3832,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.withings_holly_in_bed
+    - binary_sensor.bed_sensor_holly
     to: 'on'
   condition: []
   action:
@@ -3956,7 +3855,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.withings_holly_in_bed
+    - binary_sensor.bed_sensor_holly
     to: 'off'
   condition: []
   action:
@@ -3976,12 +3875,12 @@
 - id: '1673482501074'
   alias: Security - Lock Front Door when Arming
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - binary_sensor.front_door_contact
     to: 'off'
-  condition:
+    trigger: state
+  conditions:
   - condition: or
     conditions:
     - condition: state
@@ -3993,15 +3892,27 @@
     - condition: state
       entity_id: alarm_control_panel.home_alarm
       state: armed_home
-  action:
-  - service: button.press
+  actions:
+  - action: button.press
+    metadata: {}
     data: {}
+    target:
+      entity_id: button.front_door_zwave_ping
+  - action: lock.lock
+    metadata: {}
+    data: {}
+    target:
+      entity_id: lock.front_door_zwave
+  - data: {}
     target:
       entity_id: button.front_door_wake
-  - service: lock.lock
-    data: {}
+    action: button.press
+    continue_on_error: true
+  - data: {}
     target:
       entity_id: lock.front_door
+    action: lock.lock
+    continue_on_error: true
   mode: single
 - id: '1679241143151'
   alias: Lighting - Turn on Nighttime Stairway/Hallway Lights
@@ -4066,32 +3977,274 @@
 - id: '1688076582161'
   alias: Lighting - Sync Bulb Status
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - light.dresser_lamp
-    - light.far_black_lamp
-    - light.near_black_lamp
+    - light.dresser_switch
     - light.white_lamp
+    - light.white_switch
     - light.front_porch_light
+    - light.front_porch_switch
     - light.holly_nightstand_lamp
     to: 'off'
-  condition: []
-  action:
-  - service: system_log.write
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       level: error
       message: Turning off {{ trigger.entity_id | replace('_lamp', '_bulb') | replace('_light',
         '_bulb') }}
-  - service: homeassistant.turn_off
-    data: {}
+    action: system_log.write
+  - data: {}
     target:
       entity_id: '{{ trigger.entity_id | replace(''_lamp'', ''_bulb'') | replace(''_light'',
         ''_bulb'') }}'
-  - service: python_script.set_state
-    data:
+    action: homeassistant.turn_off
+  - data:
       entity_id: '{{ trigger.entity_id | replace(''_lamp'', ''_bulb'') | replace(''_light'',
         ''_bulb'') }}'
       state: 'off'
+    action: python_script.set_state
   mode: parallel
   max: 10
+- id: '1704658454909'
+  alias: 'Lighting: Toggle Garage Door Light'
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: cmnd/garage_door_light/power1
+    payload: toggle
+    id: Garage Door Light
+  - platform: mqtt
+    topic: cmnd/far_black_lamp/power1
+    payload: toggle
+    id: Far Black Lamp
+  - platform: mqtt
+    topic: cmnd/white_lamp/power1
+    payload: toggle
+    id: White Lamp
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Garage Door Light
+      sequence:
+      - service: light.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.garage_door_light
+    - conditions:
+      - condition: trigger
+        id:
+        - Far Black Lamp
+      sequence:
+      - service: light.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.far_black_lamp
+    - conditions:
+      - condition: trigger
+        id:
+        - White Lamp
+      sequence:
+      - service: light.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.white_lamp
+  mode: single
+- id: '1705879584394'
+  alias: Lighting - Living Room - Ensure switches stay on for bulbs
+  description: ''
+  triggers:
+  - entity_id:
+    - light.white_switch
+    from: 'on'
+    id: living_room_plug
+    trigger: state
+  conditions: []
+  actions:
+  - metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - light.white_switch
+    action: homeassistant.turn_on
+  mode: single
+- id: '1712846768542'
+  alias: Disable Automatic Living Room Light Turn Off If Used
+  description: If someone goes into the living room and or uses anything in the living
+    room, disable the automatic turning off of the living room light
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.living_room_roku_tv
+    - light.near_black_lamp
+    - light.white_lamp
+    - light.far_black_lamp
+  - platform: state
+    entity_id:
+    - binary_sensor.living_room_motion_sensor_occupancy
+    attribute: occupancy
+    enabled: true
+  condition:
+  - condition: state
+    entity_id: input_boolean.automatic_living_room_light
+    state: 'on'
+  action:
+  - metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.automatic_living_room_light
+    action: homeassistant.turn_off
+  mode: single
+- id: '1712846900243'
+  alias: Turn off Near Living Room Lamp After Sunset
+  description: Unless some action forced it to stay on
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 00:15:00
+  condition:
+  - condition: state
+    entity_id: input_boolean.automatic_living_room_light
+    state: 'on'
+    enabled: true
+  action:
+  - metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.automatic_living_room_light
+      - light.near_black_lamp
+    action: homeassistant.turn_off
+  mode: single
+- id: '1720882109923'
+  alias: Lighting - Living Room - White Lamp
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: cmnd/white_lamp/power1
+  condition: []
+  action:
+  - if:
+    - condition: template
+      value_template: '{{ trigger.payload.lower() == "on" }}'
+    then:
+    - service: homeassistant.turn_on
+      target:
+        entity_id: light.white_lamp
+      data: {}
+    else:
+    - service: homeassistant.turn_off
+      target:
+        entity_id: light.white_lamp
+      data: {}
+  mode: single
+- id: '1729313854999'
+  alias: Turn off bedroom humidifier at 50%
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - sensor.bedroom_multisensor_humidity
+    above: 50
+  - trigger: time
+    at: 02:00:00
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: 7f05037a5480d7fd07c1125fc56de5ac
+  mode: single
+- id: '1732810938168'
+  alias: Set the Living Room Light Color
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: 9c4ccdfcbf10af6efb740977f9d26dc5
+    entity_id: b2ab9dca1252a199caa62b825db421c3
+    domain: light
+    trigger: device
+    id: scene.living_room_white_bulb_normal
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: '{{ trigger.id }}'
+    alias: Set Bulb Color
+  mode: single
+- id: '1733516669453'
+  alias: Turn on Bedroom Humidifier at 6 and 8
+  description: ''
+  triggers:
+  - trigger: time
+    at: '18:00:00'
+  - trigger: time
+    at: '20:00:00'
+  conditions:
+  - condition: device
+    type: is_off
+    device_id: 7f05037a5480d7fd07c1125fc56de5ac
+    entity_id: 5177d1c8537d6240a5dc68aaee3ff43f
+    domain: switch
+  - condition: numeric_state
+    entity_id: sensor.bedroom_multisensor_humidity
+    attribute: humidity
+    below: 50
+  actions:
+  - type: turn_on
+    device_id: 7f05037a5480d7fd07c1125fc56de5ac
+    entity_id: 5177d1c8537d6240a5dc68aaee3ff43f
+    domain: switch
+  mode: single
+- id: '1735499752877'
+  alias: Turn off Office Humidifier at 50%
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - sensor.office_humidity
+    above: 50
+  - trigger: time
+    at: 02:00:00
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.mike_desk_strip_plug_4_humidifier
+  mode: single
+- id: '1735518229397'
+  alias: Lock front door when out of sync
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - lock.front_door
+    to: locked
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  conditions: []
+  actions:
+  - action: button.press
+    metadata: {}
+    data: {}
+    target:
+      entity_id: button.front_door_zwave_ping
+  - action: lock.lock
+    metadata: {}
+    data: {}
+    target:
+      entity_id: lock.front_door_zwave
+  mode: single

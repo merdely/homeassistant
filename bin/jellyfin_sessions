@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+
+import json
+import os
+import re
+import requests
+import sys
+import pprint
+
+secrets = os.path.dirname(os.path.dirname(os.path.realpath(sys.argv[0]))) + '/secrets.yaml'
+with open(secrets, 'r') as file:
+    for line in file.readlines():
+        m = re.search(r'^jellyfin_url:\s+(.*)$', line)
+        if m:
+            jellyfin_url = m.group(1)
+        m = re.search(r'^jellyfin_apikey:\s+(.*)$', line)
+        if m:
+            jellyfin_apikey = m.group(1)
+file.close()
+
+if 'jellyfin_url' not in globals() or 'jellyfin_apikey' not in globals():
+    print("Error: Could not load secrets")
+    sys.exit(1)
+
+proxies = None
+headers = {
+    'Content-Type': 'application/json',
+    'Authorization': f'MediaBrowser Token={jellyfin_apikey}'
+    }
+
+response = requests.get(f"{jellyfin_url}/Sessions", headers=headers, proxies=proxies)
+data = response.json()
+sessions = {}
+count = 0
+for session in data:
+    if "NowPlayingItem" in session.keys():
+        count = count + 1
+        if "SeriesName" in session["NowPlayingItem"].keys():
+            season = session['NowPlayingItem']['SeasonName'].replace("Season ", "")
+            episode = session['NowPlayingItem']['IndexNumber']
+            sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['SeriesName']} - s{season:02}e{episode:02} - {session['NowPlayingItem']['Name']}" }
+        elif "AlbumArtist" in session["NowPlayingItem"].keys():
+            sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['AlbumArtist']} - {session['NowPlayingItem']['Album']} - {session['NowPlayingItem']['Name']}" }
+        else:
+            sessions = sessions | { f"{session['UserName']} - {session['Client']}":  session["NowPlayingItem"]["Name"] }
+
+print(json.dumps({ 'count': count, 'sessions': sessions }))

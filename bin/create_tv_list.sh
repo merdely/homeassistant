@@ -38,8 +38,9 @@ newshows=$(mktemp /tmp/newshows.XXXXXXXXXXXXXXXXXXXXXXXXXXXX)
 if [ x$force = x1 ] || ! cmp -s $showfile $newshows || ! test -e $showfile; then
   cp $newshows $showfile.new
   mv $showfile.new $showfile
-  chgrp 1013 $showfile
-  chmod 660 $showfile
+  #chgrp 1013 $showfile
+  chown mike:mike $showfile
+  chmod 644 $showfile
   touch $hapath/.newtvshowfile
 fi
 

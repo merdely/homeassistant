@@ -1,0 +1,12 @@
+#!/bin/sh
+
+[ -z "$SUPERVISOR_TOKEN" ] && echo "Error: No \$SUPERVISOR_TOKEN" && exit 1
+
+list=$(curl -s -X GET -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/addons |\
+	jq -r '.data.addons | map(.slug) | join(",")')
+count=$(echo $list | sed 's/,/\n/g' | wc -l)
+
+cat <<EOF
+{ "count": "$count", "list": "$list" }
+EOF
+

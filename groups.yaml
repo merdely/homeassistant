@@ -100,7 +100,7 @@ doors_windows:
     - binary_sensor.back_door_contact
     - binary_sensor.bedroom_slider_contact
     - binary_sensor.dining_room_slider_contact
-    - binary_sensor.family_room_slider_contact
+    - binary_sensor.god_damn_slider_contact
     - binary_sensor.living_room_slider_contact
     - binary_sensor.den_window_contact
     - binary_sensor.powder_room_window_contact
@@ -111,7 +111,6 @@ motion_sensors:
     - binary_sensor.bedroom_motion_sensor_occupancy
     - binary_sensor.den_motion_sensor_occupancy
     - binary_sensor.god_damn_motion_sensor_occupancy
-    - binary_sensor.hall_bath_room_motion_sensor_occupancy
     - binary_sensor.laundry_room_motion_sensor_occupancy
     - binary_sensor.living_room_motion_sensor_occupancy
     - binary_sensor.office_door_motion_sensor_occupancy
@@ -122,7 +121,6 @@ up_motion_sensors:
   name: Upstairs Motion Sensors
   entities:
     - binary_sensor.bedroom_motion_sensor_occupancy
-    - binary_sensor.hall_bath_room_motion_sensor_occupancy
     - binary_sensor.living_room_motion_sensor_occupancy
     - binary_sensor.office_door_motion_sensor_occupancy
     - binary_sensor.wyzesense_778e716f  # Office Shelf Motion Sensor
@@ -140,9 +138,12 @@ up_water_leak:
   entities:
     - binary_sensor.master_bath_water_leak_sensor_water_leak
     - binary_sensor.hall_bath_water_leak_sensor_water_leak
+    - binary_sensor.hall_bath_sink_water_leak_sensor_water_leak
     - binary_sensor.dining_room_water_leak_sensor_water_leak
     - binary_sensor.kitchen_water_leak_sensor_water_leak
     - binary_sensor.living_room_water_leak_sensor_water_leak
+    - binary_sensor.dining_room_refrigerator_water_leak_sensor_water_leak
+    - binary_sensor.kitchen_refrigerator_water_leak_sensor_water_leak
 
 down_water_leak:
   name: Downstairs Water Leak
@@ -158,6 +159,7 @@ water_leak:
   entities:
     - binary_sensor.master_bath_water_leak_sensor_water_leak
     - binary_sensor.hall_bath_water_leak_sensor_water_leak
+    - binary_sensor.hall_bath_sink_water_leak_sensor_water_leak
     - binary_sensor.dining_room_water_leak_sensor_water_leak
     - binary_sensor.kitchen_water_leak_sensor_water_leak
     - binary_sensor.living_room_water_leak_sensor_water_leak
@@ -166,4 +168,6 @@ water_leak:
     - binary_sensor.powder_room_water_leak_sensor_water_leak
     - binary_sensor.washer_water_leak_sensor_water_leak
     - binary_sensor.water_heater_water_leak_sensor_water_leak
+    - binary_sensor.dining_room_refrigerator_water_leak_sensor_water_leak
+    - binary_sensor.kitchen_refrigerator_water_leak_sensor_water_leak
 

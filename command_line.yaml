@@ -1,3 +1,10 @@
+- sensor:
+    name: Installed Add-ons
+    command: "/config/bin/get_addons"
+    value_template: "{{ value_json.count }}"
+    json_attributes:
+      - list
+
 - binary_sensor:
     name: WyzeCam Status
     command: "/config/bin/check_wyzecam"
@@ -20,7 +27,8 @@
 
 - binary_sensor:
     name: OctoPrint Camera Status
-    command: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+      #command: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+    command: '/bin/echo "Camera is off"'
     payload_on: 'Camera is streaming'
     payload_off: 'Camera is off'
 
@@ -109,13 +117,13 @@
     payload_on: 'on'
     payload_off: 'off'
 
-- binary_sensor:
-    name: Garage Door Cam Status
-    device_class: garage_door
-    command: '/config/bin/get_garage_door_state'
-    payload_on: 'on'
-    payload_off: 'off'
-    scan_interval: 15
+#- binary_sensor:
+#    name: Garage Door Cam Status
+#    device_class: garage_door
+#    command: '/config/bin/get_garage_door_state'
+#    payload_on: 'on'
+#    payload_off: 'off'
+#    scan_interval: 15
 
 - binary_sensor:
     name: New SSL Cert Available
@@ -178,16 +186,31 @@
     scan_interval: 14400  # 4 hours
 
 - sensor:
-    name: Dynamic DNS
-    command: "/config/bin/update_ip.sh"
+    name: OpnSense Core ABI Version Latest
+    command: >
+      curl -s "https://opnsense.org/download/" | awk -F"'" '/data-version\s*=\s*/{print $2}'
+    scan_interval: 3600
+      # curl -s "https://opnsense.org/download/" | awk -F'"' '/var version\s+=/{print $2}'
+
+- sensor:
+    name: Jellyfin Sessions
+    command: "/config/bin/jellyfin_sessions"
     json_attributes:
-      - public_ip
-      - dns_record
-      - dynamic_hostname
-      - status
-      - updated_at
-    value_template: "{{ value_json.public_ip }}"
-    scan_interval: 900  # 15 minutes
+      - sessions
+    value_template: "{{ value_json.count }}"
+
+#- sensor:
+#    name: Dynamic DNS
+#    command: "/config/bin/update_ip.sh"
+#    json_attributes:
+#      - public_ip
+#      - dns_record
+#      - dynamic_hostname
+#      - status
+#      - updated_at
+#    value_template: "{{ value_json.public_ip }}"
+#    scan_interval: 900  # 15 minutes
+#    command_timeout: 30 # seconds
 
 - sensor:
     name: YAML LOC
@@ -227,9 +250,12 @@
 - switch:
     unique_id: octoprint_camera
     name: OctoPrint Camera
-    command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in start_camera'
-    command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in stop_camera'
-    command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+      #command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in start_camera'
+    command_on: '/bin/true'
+      #command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in stop_camera'
+    command_off: '/bin/true'
+      #command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+    command_state: '/bin/echo "Camera is off"'
     value_template: '{{ value == "Camera is streaming" }}'
 
 - switch:
@@ -247,8 +273,8 @@
 - switch:
     unique_id: venus_screensaver
     name: Venus Screensaver
-    command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock'
+    command_on: '/bin/ping -c2 venus.erdely.in > /dev/null && /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock || /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus-wired.erdely.in screensaver_lock'
     command_off: '/bin/true'
-    command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_status'
+    command_state: '/bin/ping -c2 venus.erdely.in > /dev/null && /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_status || /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus-wired.erdely.in screensaver_status'
     value_template: '{{ value == "Screensaver is running" }}'
 

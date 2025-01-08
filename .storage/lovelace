@@ -1,86 +1,87 @@
 {
-    "version": 1,
-    "key": "lovelace",
-    "data": {
-        "config": {
-            "title": "Default Dashboard",
-            "views": [
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace",
+  "data": {
+    "config": {
+      "title": "Default Dashboard",
+      "views": [
+        {
+          "title": " Overview",
+          "icon": "",
+          "badges": [],
+          "cards": [],
+          "type": "sections",
+          "max_columns": 1,
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
                 {
-                    "title": " ",
-                    "path": "default_view",
-                    "icon": "",
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "grid",
-                            "columns": 1,
-                            "square": false,
-                            "cards": [
-                                {
-                                    "type": "button",
-                                    "tap_action": {
-                                        "action": "navigate",
-                                        "navigation_path": "/desktop-dashboard/home"
-                                    },
-                                    "entity": "weather.home",
-                                    "name": "Desktop Dashboard",
-                                    "hold_action": {
-                                        "action": "none"
-                                    },
-                                    "icon": "mdi:home",
-                                    "icon_height": "60px"
-                                },
-                                {
-                                    "type": "button",
-                                    "tap_action": {
-                                        "action": "navigate",
-                                        "navigation_path": "/mobile-dashboard/home"
-                                    },
-                                    "entity": "weather.home",
-                                    "name": "Mobile Dashboard",
-                                    "hold_action": {
-                                        "action": "none"
-                                    },
-                                    "icon": "mdi:cellphone",
-                                    "icon_height": "60px"
-                                },
-                                {
-                                    "type": "button",
-                                    "tap_action": {
-                                        "action": "navigate",
-                                        "navigation_path": "/control-panel/home"
-                                    },
-                                    "entity": "weather.home",
-                                    "name": "Control Panel",
-                                    "hold_action": {
-                                        "action": "none"
-                                    },
-                                    "icon": "mdi:tablet-dashboard",
-                                    "icon_height": "60px"
-                                },
-                                {
-                                    "type": "button",
-                                    "tap_action": {
-                                        "action": "navigate",
-                                        "navigation_path": "/mbr-panel/home"
-                                    },
-                                    "entity": "weather.home",
-                                    "name": "MBR Panel",
-                                    "hold_action": {
-                                        "action": "none"
-                                    },
-                                    "icon": "mdi:cellphone-text",
-                                    "icon_height": "60px"
-                                },
-                                {
-                                    "type": "markdown",
-                                    "content": "Change the default dashboard on this device:\n1. Click your name at the bottom-left of the application (you may have to expand the side-menu).\n1. Find \"Dashboard\" and change from \"default\" to the dashboard you want to see when the Home Assistant applicatoin starts.\n1. Long press/click \"Home Assistant\" at the top-left of the application in the side menu.  Drag the dashboard you selected to the top of the list.\n1. Click the X next to each Dashboard you do not want to see on this device.\n1. Click Done at the top-left."
-                                }
-                            ]
-                        }
-                    ]
+                  "type": "button",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/desktop-dashboard/home"
+                  },
+                  "entity": "weather.home",
+                  "name": "Desktop Dashboard",
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "icon": "mdi:home",
+                  "icon_height": "60px"
+                },
+                {
+                  "type": "button",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/mobile-dashboard/home"
+                  },
+                  "entity": "weather.home",
+                  "name": "Mobile Dashboard",
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "icon": "mdi:cellphone",
+                  "icon_height": "60px"
+                },
+                {
+                  "type": "button",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel/home"
+                  },
+                  "entity": "weather.home",
+                  "name": "Control Panel",
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "icon": "mdi:tablet-dashboard",
+                  "icon_height": "60px"
+                },
+                {
+                  "type": "button",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/mbr-panel/home"
+                  },
+                  "entity": "weather.home",
+                  "name": "MBR Panel",
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "icon": "mdi:cellphone-text",
+                  "icon_height": "60px"
+                },
+                {
+                  "type": "markdown",
+                  "content": "Change the default dashboard on this device:\n1. Click your name at the bottom-left of the application (you may have to expand the side-menu).\n1. Find \"Dashboard\" and change from \"default\" to the dashboard you want to see when the Home Assistant applicatoin starts.\n1. Long press/click \"Home Assistant\" at the top-left of the application in the side menu.  Drag the dashboard you selected to the top of the list.\n1. Click the X next to each Dashboard you do not want to see on this device.\n1. Click Done at the top-left."
                 }
-            ]
+              ]
+            }
+          ]
         }
+      ]
     }
+  }
 }

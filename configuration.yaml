@@ -44,13 +44,15 @@ my:
 notify: !include notify.yaml
 #octoprint: !include octoprint.yaml
 panel_custom: !include panel_custom.yaml
-panel_iframe: !include panel_iframe.yaml
+#panel_iframe: !include panel_iframe.yaml
 person:
 python_script:
 recorder: !include recorder.yaml
 rest_command: !include rest_command.yaml
 scene: !include scenes.yaml
-script: !include_dir_merge_named scripts
+#script: !include_dir_merge_named scripts
+script: !include scripts.yaml
+script secret: !include scripts/scripts_with_secrets.yaml
 sensor: !include sensor.yaml
 shell_command: !include shell_command.yaml
 # siren: !include siren.yaml

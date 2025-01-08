@@ -3,7 +3,7 @@
 from datetime import datetime
 from email.message import EmailMessage
 from email.utils import make_msgid
-import imghdr
+from PIL import Image
 import os
 import re
 import smtplib
@@ -77,17 +77,19 @@ Images from {camtitle} Camera</p>
 
 with open(image, "rb") as img:
     image_data = img.read()
-    image_type = imghdr.what(img.name)
+with Image.open(image) as pilimg:
+    image_type = pilimg.format.lower()
 message.add_attachment(image_data, maintype="image", subtype=image_type, filename=os.path.basename(img.name))
 img.close()
 
 # Attach any newer images too
 for file in os.listdir(os.path.dirname(image)):
-    if re.search("^" + camera + "-.*\.jpg", file):
+    if re.search("^" + camera + r"-.*\.jpg", file):
         if os.path.getmtime(os.path.dirname(image) + "/" + file) > os.path.getmtime(image):
             with open(os.path.dirname(image) + "/" + file, "rb") as img:
                 image_data = img.read()
-                image_type = imghdr.what(img.name)
+            with Image.open(os.path.dirname(image) + "/" + file) as pilimg:
+                image_type = pilimg.format.lower()
             message.add_attachment(image_data, maintype="image", subtype=image_type, filename=os.path.basename(img.name))
             img.close()
 
@@ -98,6 +100,7 @@ for file in os.listdir(os.path.dirname(image)):
 #    message.get_payload()[1].add_related(img.read(), 'image', 'jpeg', cid=figure_id)
 
 with smtplib.SMTP_SSL(smtp_server, port) as smtp:
+    smtp.connect(smtp_server, port)
     smtp.login(relay_username, relay_password)
     smtp.send_message(message)
 

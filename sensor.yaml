@@ -1,22 +1,24 @@
-- platform: systemmonitor
-  resources:
-    - type: disk_use_percent
-      arg: /config
-    - type: throughput_network_in
-      arg: enp2s0
-    - type: throughput_network_out
-      arg: enp2s0
-    - type: network_in
-      arg: enp2s0
-    - type: network_out
-      arg: enp2s0
-    - type: memory_use_percent
-    - type: processor_use
+#- platform: systemmonitor
+#  resources:
+#    - type: disk_use_percent
+#      arg: /config
+#    - type: throughput_network_in
+#      arg: enp2s0
+#    - type: throughput_network_out
+#      arg: enp2s0
+#    - type: network_in
+#      arg: enp2s0
+#    - type: network_out
+#      arg: enp2s0
+#    - type: memory_use_percent
+#    - type: processor_use
 
 - platform: rest
   name: FKB Control Panel
   resource: !secret fkb_deviceinfo
   value_template: "{{ value_json.batteryLevel }}"
+  icon: mdi:battery
+  unit_of_measurement: "%"
   json_attributes:
     - deviceId
     - deviceName
@@ -79,6 +81,8 @@
   name: FKBMBR Control Panel
   resource: !secret fkbmbr_deviceinfo
   value_template: "{{ value_json.batteryLevel }}"
+  icon: mdi:battery
+  unit_of_measurement: "%"
   json_attributes:
     - deviceId
     - deviceName
@@ -146,7 +150,6 @@
     - "date_time_iso"
     - "time_date"
     - "time_utc"
-    - "beat"
 
 # - platform: sql
 #   db_url: !secret mysql_uri
