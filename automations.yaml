@@ -9,8 +9,8 @@
   actions:
   - target:
       entity_id:
-      - switch.fireplace_light
-      - switch.three_headed_lamp
+      - light.fireplace_light
+      - light.three_headed_lamp
       - light.god_damn_light
     action: homeassistant.turn_off
     data: {}
@@ -114,7 +114,7 @@
       action: light.turn_on
     alias: Turn on Kitchen Table Light if Holly & Mike are not home
   - target:
-      entity_id: switch.dining_room_christmas_lights
+      entity_id: light.dining_room_christmas_lights
     data: {}
     action: homeassistant.turn_on
   mode: single
@@ -132,7 +132,7 @@
       - light.front_porch_light
       - light.outside_garage_lights
       - switch.outside_xmas
-      - switch.dining_room_christmas_lights
+      - light.dining_room_christmas_lights
       - light.near_black_lamp
     data: {}
   mode: single
@@ -224,7 +224,7 @@
   action:
   - service: homeassistant.toggle
     data: {}
-    entity_id: switch.shed_lamp
+    entity_id: light.shed_lamp
   mode: single
 - id: '1602887078304'
   alias: Lighting - Shed - Flood Light Toggle
@@ -245,7 +245,7 @@
   action:
   - service: homeassistant.toggle
     data: {}
-    entity_id: switch.flood_light
+    entity_id: light.flood_light
   mode: single
 - id: '1602887137225'
   alias: Lighting - Shed - Shed/Flood Light Toggle
@@ -266,7 +266,7 @@
   action:
   - service: switch.toggle
     data: {}
-    entity_id: switch.flood_light, switch.shed_lamp
+    entity_id: light.flood_light, light.shed_lamp
   mode: single
 - id: '1602952724393'
   alias: Notifications - 0 - Water Leak Detected - Water Heater
@@ -1803,7 +1803,7 @@
       before: input_datetime.mantle_lights_off
     then:
     - target:
-        entity_id: switch.mantle_lights
+        entity_id: light.mantle_lights
       data: {}
       action: homeassistant.turn_on
   - condition: state
@@ -2323,7 +2323,7 @@
   action:
   - service: homeassistant.turn_on
     target:
-      entity_id: switch.mantle_lights
+      entity_id: light.mantle_lights
   mode: single
 - id: '1613160122811'
   alias: Lighting - Mantle Lights Off
@@ -2335,7 +2335,7 @@
   action:
   - service: homeassistant.turn_off
     target:
-      entity_id: switch.mantle_lights
+      entity_id: light.mantle_lights
   mode: single
 - id: '1614981790208'
   alias: Notifications - Mailbox Notify
@@ -2607,14 +2607,15 @@
         title: Security Alert
       action: notify.notify
     alias: Send Arm Alarm Notification
-  - if:
+  - alias: Send Trash Notification if necessary
+    if:
     - condition: or
       conditions:
       - condition: template
-        value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_1")
+        value_template: '{{ (now() + timedelta(days=1)).strftime("%A") == states("input_select.trash_day_1")
           and states("input_boolean.trash_is_out") == "off" }}'
       - condition: template
-        value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_2")
+        value_template: '{{ (now() + timedelta(days=1)).strftime("%A") == states("input_select.trash_day_2")
           and states("input_boolean.trash_is_out") == "off" }}'
     then:
     - data:
@@ -2624,12 +2625,11 @@
           - action: TRASH_IS_OUT
             title: Trash Is Already Out
       action: notify.notify
-    alias: Send Trash Notification if necessary
   - alias: Send Recycle Notification if necessary
     if:
     - condition: template
       value_template: '{{ state_attr("sensor.moco_recycle_day", "recycle_days") |
-        int(7) and states("input_boolean.recycle_is_out") == "off" }}'
+        int(7) < 1 and states("input_boolean.recycle_is_out") == "off" }}'
     then:
     - data:
         message: Recycling collection is tomorrow and Recycle is not out!
@@ -3626,7 +3626,7 @@
   - service: homeassistant.turn_on
     data: {}
     target:
-      entity_id: switch.shed_lamp
+      entity_id: light.shed_lamp
   mode: single
 - id: '1671062103330'
   alias: Lighting - Shed Lamp Auto Off
@@ -3645,7 +3645,7 @@
   - service: homeassistant.turn_off
     data: {}
     target:
-      entity_id: switch.shed_lamp
+      entity_id: light.shed_lamp
   mode: single
 - id: '1671213044073'
   alias: Reset Crappy Christmas Lights
