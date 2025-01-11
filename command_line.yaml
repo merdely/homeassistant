@@ -216,11 +216,35 @@
     name: YAML LOC
     command: "find /config/ -name '*.yaml' | xargs cat | wc -l"
 
+#- sensor:
+#    name: MoCo Recycle Day
+#    command: bin/get_recycle_day
+#    # Request every 8 hours
+#    scan_interval: 28800
+
 - sensor:
     name: MoCo Recycle Day
-    command: bin/get_recycle_day
+    command: bin/get_recycle_day.py
     # Request every 8 hours
     scan_interval: 28800
+    value_template: "{{ value_json.recycle_day }}"
+    json_attributes:
+      - recycle_day
+      - default_day
+      - moco_day
+      - holiday_day
+      - exception_day
+      - recycle_day_num
+      - recycle_date
+      - recycle_days
+      - days_string
+      - is_holiday
+      - has_exception
+      - address
+      - moco_address
+      - moco_code
+      - holidays_code
+      - exception_code
 
 - sensor:
     name: Fully Kiosk Browser Version Latest

@@ -610,57 +610,57 @@
 - id: '1604422951001'
   alias: Security - 90 Triggered - Start Siren
   description: ''
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
+  triggers:
+  - entity_id: alarm_control_panel.home_alarm
     to: triggered
-  condition: []
-  action:
-  - service: script.security_message_open_security_devices
-    data: {}
-  - choose:
-    - conditions:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: sensor.fully_kiosk_browser
-          attribute: currentPageUrl
-          state: https://ha.erdely.in:38123/control-panel/security
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-    default: []
-  - service: script.function_speakers_prep
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data: {}
+    action: script.security_message_open_security_devices
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.fully_kiosk_browser
+        attribute: currentPageUrl
+        state: https://ha.erdely.in:38123/control-panel/security
+    then:
+    - action: rest_command.fkb_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+    alias: Redirect to Security Panel if not already there
+  - data:
       speaker: all_speakers
-  - service: notify.signal_security
-    data:
+    action: script.function_speakers_prep
+  - data:
       message: '{{ states(''input_text.security_message'') }}
 
         '
-  - service: media_player.play_media
-    data:
+    action: notify.signal_security
+  - data:
       media_content_id: /local/sounds/security_trigger.mp3
       media_content_type: music
     target:
       entity_id: media_player.all_speakers
-  - service: script.function_speakers_restore
-    data:
+    action: media_player.play_media
+  - data:
       speaker: all_speakers
+    action: script.function_speakers_restore
   - repeat:
       while:
       - condition: state
         entity_id: alarm_control_panel.home_alarm
         state: triggered
       sequence:
-      - service: mqtt.publish
-        data:
+      - data:
           topic: cmnd/siren/backlog
           payload: TuyaSend4 102,14; TuyaSend2 103,59
-      - service: homeassistant.turn_on
-        target:
+        action: mqtt.publish
+      - target:
           entity_id: switch.siren
+        action: homeassistant.turn_on
+        data: {}
       - delay: '60'
   mode: single
 - id: '1604856519122'
@@ -1160,15 +1160,15 @@
 - id: '1607093471372'
   alias: Notifications - Presence - Holly
   description: ''
-  trigger:
-  - platform: state
-    entity_id: person.holly_erdely
+  triggers:
+  - entity_id: person.holly_erdely
     from: not_home
     for: 00:01:00
-  - platform: state
-    entity_id: person.holly_erdely
+    trigger: state
+  - entity_id: person.holly_erdely
     to: not_home
-  condition:
+    trigger: state
+  conditions:
   - condition: time
     after: input_datetime.holly_presence_notifications_on
     before: input_datetime.holly_presence_notifications_off
@@ -1178,45 +1178,44 @@
   - condition: state
     entity_id: input_boolean.announce_holly_presence
     state: 'on'
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: person.holly_erdely
-        state: not_home
-      sequence:
-      - service: tts.cloud_say
-        data:
-          entity_id: media_player.security_speakers
-          message: Holly has left {{ trigger.from_state.state }}
-      - service: notify.gmail_to_mike
-        data:
-          message: Holly has left {{ trigger.from_state.state }}
-          title: Holly has left {{ trigger.from_state.state }}
-        enabled: false
-    default:
-    - service: tts.cloud_say
-      data:
+  actions:
+  - if:
+    - condition: state
+      entity_id: person.holly_erdely
+      state: not_home
+    then:
+    - data:
+        entity_id: media_player.security_speakers
+        message: Holly has left {{ trigger.from_state.state }}
+      action: tts.cloud_say
+    - data:
+        message: Holly has left {{ trigger.from_state.state }}
+        title: Holly has left {{ trigger.from_state.state }}
+      enabled: false
+      action: notify.gmail_to_mike
+    else:
+    - data:
         entity_id: media_player.security_speakers
         message: Holly is at {{ states('person.holly_erdely') }}
-    - service: notify.gmail_to_mike
-      data:
+      action: tts.cloud_say
+    - data:
         title: Holly is at {{ states('person.holly_erdely') }}
         message: Holly is at {{ states('person.holly_erdely') }}
       enabled: false
+      action: notify.gmail_to_mike
   mode: single
 - id: '1607095172887'
   alias: Notifications - Presence - Mike
   description: ''
-  trigger:
-  - platform: state
-    entity_id: person.michael_erdely
+  triggers:
+  - entity_id: person.michael_erdely
     from: not_home
     for: 00:01:00
-  - platform: state
-    entity_id: person.michael_erdely
+    trigger: state
+  - entity_id: person.michael_erdely
     to: not_home
-  condition:
+    trigger: state
+  conditions:
   - condition: time
     after: input_datetime.mike_presence_notifications_on
     before: input_datetime.mike_presence_notifications_off
@@ -1226,22 +1225,21 @@
   - condition: state
     entity_id: input_boolean.announce_mike_presence
     state: 'on'
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: person.michael_erdely
-        state: not_home
-      sequence:
-      - service: tts.cloud_say
-        data:
-          entity_id: media_player.security_speakers
-          message: Mike has left {{ trigger.from_state.state }}
-    default:
-    - service: tts.cloud_say
-      data:
+  actions:
+  - if:
+    - condition: state
+      entity_id: person.michael_erdely
+      state: not_home
+    then:
+    - data:
+        entity_id: media_player.security_speakers
+        message: Mike has left {{ trigger.from_state.state }}
+      action: tts.cloud_say
+    else:
+    - data:
         entity_id: media_player.security_speakers
         message: Mike is at {{ states("person.michael_erdely") }}
+      action: tts.cloud_say
   mode: single
 - id: '1607118334187'
   alias: TV - Family Room - Change Input
@@ -1791,77 +1789,75 @@
 - id: '1607717328639'
   alias: Lighting - Automatic Lights When We Come Home
   description: ''
-  trigger:
-  - platform: state
-    entity_id: group.holly_mike
+  triggers:
+  - entity_id: group.holly_mike
     from: not_home
     to: home
     for: 00:00:30
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: time
-        after: input_datetime.mantle_lights_on
-        before: input_datetime.mantle_lights_off
-      sequence:
-      - service: homeassistant.turn_on
-        target:
-          entity_id: switch.mantle_lights
-        data: {}
-    default: []
+    trigger: state
+  conditions: []
+  actions:
+  - if:
+    - condition: time
+      after: input_datetime.mantle_lights_on
+      before: input_datetime.mantle_lights_off
+    then:
+    - target:
+        entity_id: switch.mantle_lights
+      data: {}
+      action: homeassistant.turn_on
   - condition: state
     entity_id: binary_sensor.christmas_tree_available
     state: 'on'
   - condition: state
     entity_id: input_boolean.christmas_tree_is_up
     state: 'on'
-  - service: homeassistant.turn_on
-    target:
+  - target:
       entity_id:
       - switch.christmas_tree
       - light.deck_lights
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1608699279426'
   alias: Tag - Mike Desk - Unlock Mercury
   description: ''
-  trigger:
-  - platform: tag
-    tag_id: 5a9e7a04-bf20-4e49-95db-e599b1335a56
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.event.context.user_id == ''80ad218b0cf54379b5ee622fbb721c6b''
-          }}'
-      sequence:
-      - service: homeassistant.update_entity
-        data: {}
-        entity_id: switch.mercury_screensaver
-      - service: system_log.write
-        data:
-          message: Mike scanned at Mike's Desk
-          level: warning
-      - condition: state
-        entity_id: switch.mercury_screensaver
-        state: 'on'
-      - service: system_log.write
-        data:
-          message: Unlocking mercury for Mike
-          level: warning
-      - service: script.computer_mercury_unlock
-        data: {}
-    default:
-    - service: notify.signal_mike
-      data:
+  triggers:
+  - tag_id: 5a9e7a04-bf20-4e49-95db-e599b1335a56
+    trigger: tag
+  conditions: []
+  actions:
+  - if:
+    - condition: template
+      value_template: '{{ trigger.event.context.user_id == ''80ad218b0cf54379b5ee622fbb721c6b''
+        }}'
+    then:
+    - data:
+        entity_id:
+        - switch.mercury_screensaver
+      action: homeassistant.update_entity
+    - data:
+        message: Mike scanned at Mike's Desk
+        level: warning
+      action: system_log.write
+    - condition: state
+      entity_id: switch.mercury_screensaver
+      state: 'on'
+    - data:
+        message: Unlocking mercury for Mike
+        level: warning
+      action: system_log.write
+    - data: {}
+      action: script.computer_mercury_unlock
+    else:
+    - data:
         message: Someone scanned at Mike's Desk
-    - service: system_log.write
-      data:
+      action: notify.signal_mike
+    - data:
         message: Someone (not Mike) scanned at Mike's Desk ({{ trigger.event.context.user_id
           }})
         level: error
+      action: system_log.write
   mode: single
 - id: '1608701107067'
   alias: Tag - Disarm Security System and Unlock Front Door
@@ -2031,41 +2027,39 @@
     action: shell_command.clean_alarm_state
   - data: {}
     action: shell_command.rotate_ha_logs
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ now().weekday() == (states(''sensor.recycle_weekday'')
-          | int(0) + 1) % 7 }}'
-      sequence:
-      - data: {}
+  - if:
+    - condition: template
+      value_template: '{{ now().weekday() == (state_attr(''sensor.moco_recycle_day'',
+        ''recycle_day_num'') | int(0) + 1) % 7 }}'
+    then:
+    - action: input_boolean.turn_off
+      target:
         entity_id: input_boolean.recycle_is_out
-        action: input_boolean.turn_off
-    default: []
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1_number'')
-          | int(0) + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
-          | int(0) + 1) % 7 }}'
-      sequence:
-      - data: {}
+      data: {}
+    alias: Reset Recycle Is Out if day after Recycle Day
+  - if:
+    - condition: template
+      value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1_number'')
+        | int(0) + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
+        | int(0) + 1) % 7 }}'
+    then:
+    - action: input_boolean.turn_off
+      target:
         entity_id: input_boolean.trash_is_out
-        action: input_boolean.turn_off
-    default: []
+      data: {}
+    alias: Reset Trash is Out if day after Trash Day
   - target:
       entity_id: binary_sensor.new_npm_ssl_cert_available
     data: {}
     action: homeassistant.update_entity
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.new_npm_ssl_cert_available
-        state: 'on'
-      sequence:
-      - data:
-          addon: a0d7b954_nginxproxymanager
-        action: hassio.addon_restart
-    default: []
+  - if:
+    - condition: state
+      entity_id: binary_sensor.new_npm_ssl_cert_available
+      state: 'on'
+    then:
+    - data:
+        addon: a0d7b954_nginxproxymanager
+      action: hassio.addon_restart
   - data: {}
     action: shell_command.update_tv_shows
   - target:
@@ -2084,24 +2078,22 @@
       entity_id: binary_sensor.new_ssl_cert_available
     data: {}
     action: homeassistant.update_entity
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: binary_sensor.new_tv_show_list_ready
-          state: 'on'
-        - condition: state
-          entity_id: binary_sensor.new_ssl_cert_available
-          state: 'on'
-      sequence:
-      - data:
-          message: 'Nightly Tasks: Restarting Home Assistant'
-          level: warning
-        action: system_log.write
-      - action: homeassistant.restart
-        data: {}
-    default: []
+  - if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.new_tv_show_list_ready
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.new_ssl_cert_available
+        state: 'on'
+    then:
+    - data:
+        message: 'Nightly Tasks: Restarting Home Assistant'
+        level: warning
+      action: system_log.write
+    - action: homeassistant.restart
+      data: {}
   - data:
       message: Finishing Nightly Tasks
       level: warning
@@ -2355,56 +2347,51 @@
     trigger: state
   conditions: []
   actions:
-  - choose:
-    - conditions:
-      - condition: state
+  - if:
+    - condition: state
+      entity_id: input_boolean.mail_delivered
+      state: 'off'
+    then:
+    - target:
         entity_id: input_boolean.mail_delivered
-        state: 'off'
-      sequence:
-      - target:
-          entity_id: input_boolean.mail_delivered
-        data: {}
-        action: homeassistant.turn_on
-      - data:
-          message: The mail's here, the mail's here!  Woo-hoo!
-        action: notify.signal_security
-      - data:
-          message: The mail's here, the mail's here!  Woo-hoo!
-          title: The mail has been delivered
-          data:
-            actions:
-            - action: RESET_MAILBOX
-              title: Reset Mail Delivery Notification
-        action: notify.notify
-    default:
+      data: {}
+      action: homeassistant.turn_on
+    - data:
+        message: The mail's here, the mail's here!  Woo-hoo!
+      action: notify.signal_security
+    - data:
+        message: The mail's here, the mail's here!  Woo-hoo!
+        title: The mail has been delivered
+        data:
+          actions:
+          - action: RESET_MAILBOX
+            title: Reset Mail Delivery Notification
+      action: notify.notify
+    else:
     - target:
         entity_id: input_boolean.mail_delivered
       data: {}
       action: homeassistant.turn_off
-    - choose:
-      - conditions:
-        - condition: not
-          conditions:
-          - condition: state
-            entity_id: person.holly_erdely
-            state: home
-        sequence:
-        - data:
-            message: Somebody retrieved the mail
-          action: notify.signal_security
-      default: []
-    - choose:
-      - conditions:
-        - condition: not
-          conditions:
-          - condition: state
-            entity_id: person.michael_erdely
-            state: home
-        sequence:
-        - data:
-            message: Somebody retrieved the mail
-          action: notify.signal_mike
-      default: []
+    - if:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: person.holly_erdely
+          state: home
+      then:
+      - data:
+          message: Somebody retrieved the mail
+        action: notify.signal_security
+    - if:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: person.michael_erdely
+          state: home
+      then:
+      - data:
+          message: Somebody retrieved the mail
+        action: notify.signal_mike
   mode: single
 - id: '1615411227750'
   alias: Mailbox State Reset
@@ -2595,22 +2582,21 @@
 - id: '1622222404078'
   alias: 20 - Home Assistant - Bedtime Tasks
   description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.home_assistant_bedtime_tasks
-  condition: []
-  action:
-  - service: system_log.write
-    data:
+  triggers:
+  - at: input_datetime.home_assistant_bedtime_tasks
+    trigger: time
+  conditions: []
+  actions:
+  - data:
       message: Starting Bedtime Tasks
       level: warning
+    action: system_log.write
   - if:
     - condition: state
       entity_id: alarm_control_panel.home_alarm
       state: disarmed
     then:
-    - service: notify.notify
-      data:
+    - data:
         message: The Alarm is not armed.
         data:
           actions:
@@ -2619,6 +2605,7 @@
           - action: RUN_GOODNIGHT
             title: Good Night
         title: Security Alert
+      action: notify.notify
     alias: Send Arm Alarm Notification
   - if:
     - condition: or
@@ -2630,31 +2617,31 @@
         value_template: '{{ states("sensor.weekday_tomorrow") == states("input_select.trash_day_2")
           and states("input_boolean.trash_is_out") == "off" }}'
     then:
-    - service: notify.notify
-      data:
+    - data:
         message: Trash collection is tomorrow and Trash is not out!
         data:
           actions:
           - action: TRASH_IS_OUT
             title: Trash Is Already Out
+      action: notify.notify
     alias: Send Trash Notification if necessary
-  - if:
+  - alias: Send Recycle Notification if necessary
+    if:
     - condition: template
-      value_template: '{{ states("sensor.weekday_tomorrow") == states("sensor.moco_recycle_day")
-        and states("input_boolean.recycle_is_out") == "off" }}'
+      value_template: '{{ state_attr("sensor.moco_recycle_day", "recycle_days") |
+        int(7) and states("input_boolean.recycle_is_out") == "off" }}'
     then:
-    - service: notify.notify
-      data:
+    - data:
         message: Recycling collection is tomorrow and Recycle is not out!
         data:
           actions:
           - action: RECYCLE_IS_OUT
             title: Recycling Is Already Out
-    alias: Send Recycle Notification if necessary
-  - service: system_log.write
-    data:
+      action: notify.notify
+  - data:
       message: Finishing Bedtime Tasks
       level: warning
+    action: system_log.write
   mode: single
 - id: '1629490638700'
   alias: TV - Family Room - Change Input (family_room_input)
@@ -3189,6 +3176,7 @@
       minutes: 0
       seconds: 30
     trigger: state
+    enabled: false
   - entity_id: binary_sensor.mariadb_add_on_running
     for:
       hours: 0
@@ -4247,4 +4235,64 @@
     data: {}
     target:
       entity_id: lock.front_door_zwave
+  mode: single
+- id: '1736480446013'
+  alias: Refresh Tasmota Devices Sensor
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - sensor.tasmota_devices
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    below: 1
+  conditions: []
+  actions:
+  - action: homeassistant.update_entity
+    metadata: {}
+    data:
+      entity_id:
+      - sensor.tasmota_devices
+  mode: single
+- id: '1736483323342'
+  alias: Reset Furnace If 4 Degrees of Target (Heat)
+  description: ''
+  triggers:
+  - trigger: template
+    value_template: '{{ state_attr("climate.thermostat", "current_temperature") +
+      3 < state_attr("climate.thermostat", "temperature") }}'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    alias: When the Thermstat Temperature is more than 3 degress less than the Thermostat
+      Target
+  conditions:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: climate.thermostat
+      attribute: hvac_action
+      state: heating
+    alias: Heat is not currently running
+  - condition: state
+    entity_id: climate.thermostat
+    state: heat
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.furnace_switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.furnace_switch
   mode: single

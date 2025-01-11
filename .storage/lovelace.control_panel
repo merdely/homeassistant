@@ -66,8 +66,8 @@
                         },
                         {
                           "type": "custom:button-card",
-                          "entity": "sensor.recycle",
-                          "name": "[[[ return entity.state ]]]",
+                          "entity": "sensor.moco_recycle_day",
+                          "name": "[[[ return entity.attributes.days_string ]]]",
                           "tap_action": {
                             "action": "call-service",
                             "service": "input_boolean.toggle",
@@ -78,7 +78,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.state == \"Today\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"red\";\n    else if (entity.state == \"Tomorrow\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                                "color": "[[[ if (entity.attributes.days_string == \"Today\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"red\";\n    else if (entity.attributes.days_string == \"Tomorrow\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
                               }
                             ]
                           }
@@ -150,7 +150,7 @@
                             {
                               "type": "custom:html-template-card",
                               "ignore_line_breaks": true,
-                              "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_plex.attributes.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>P</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>J</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
+                              "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_plex.attributes.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>P</td><td>{{ client | regex_replace('(_+)? - .*$', '') | replace('reed530','Tracy') | replace('ebfab', 'EricB') | replace('humber952','Christina') | replace('Atheo37','Alex/Marce') | replace('ahuldtgren','Andrea') | replace('jhuldtgren', 'Johan') | replace('stuckonu5', 'Madsen') | replace('simpliop','DavidG') }}</td><td> {{ value }}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>J</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
                             }
                           ],
                           "state_color": true,
@@ -678,6 +678,91 @@
                         {
                           "type": "custom:bubble-card",
                           "card_type": "pop-up",
+                          "hash": "#downstairs-lights",
+                          "button_type": "switch",
+                          "entity": "switch.downstairs"
+                        },
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "separator"
+                        },
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "button_type": "switch",
+                          "entity": "switch.family_room"
+                        },
+                        {
+                          "square": false,
+                          "type": "grid",
+                          "columns": 2,
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.god_damn_light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.fireplace_light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.three_headed_lamp"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.mantle_lights"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.christmas_tree"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "separator"
+                        },
+                        {
+                          "square": false,
+                          "type": "grid",
+                          "columns": 2,
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.laundry_room_light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.furnace_switch"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.den_overhead_light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.powder_room_light"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "vertical-stack",
+                      "cards": [
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "pop-up",
                           "hash": "#middle-lights",
                           "button_type": "switch",
                           "entity": "switch.middle_level"
@@ -804,86 +889,6 @@
                             {
                               "type": "custom:button-card",
                               "color_type": "blank-card"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "vertical-stack",
-                      "cards": [
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "pop-up",
-                          "hash": "#downstairs-lights",
-                          "button_type": "switch",
-                          "entity": "switch.downstairs"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.family_room"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.god_damn_light"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.fireplace_light"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.three_headed_lamp"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.mantle_lights"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.christmas_tree"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.laundry_room_light"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.den_overhead_light"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.powder_room_light"
                             }
                           ]
                         }
@@ -1780,9 +1785,6 @@
                     },
                     {
                       "type": "entities",
-                      "card_mod": {
-                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}yellow{% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}yellow{% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --wyzecam-color: {% if states('binary_sensor.wyzecam_status') != 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if is_state('sensor.recycle', 'Tomorrow') and is_state('input_boolean.recycle_is_out', 'off') %}yellow{% elif is_state('sensor.recycle', 'Today') and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}yellow{% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
-                      },
                       "entities": [
                         {
                           "entity": "person.holly_erdely",
@@ -1988,7 +1990,7 @@
                         },
                         {
                           "type": "custom:multiple-entity-row",
-                          "entity": "sensor.recycle",
+                          "entity": "sensor.moco_recycle_day",
                           "name": "Schedule",
                           "icon": "mdi:calendar",
                           "entities": [
@@ -2013,7 +2015,8 @@
                               }
                             },
                             {
-                              "entity": "sensor.recycle",
+                              "entity": "sensor.moco_recycle_day",
+                              "attribute": "days_string",
                               "name": "Recycle",
                               "styles": {
                                 "color": "var(--recycle-color)"
@@ -2232,7 +2235,10 @@
                             }
                           ]
                         }
-                      ]
+                      ],
+                      "card_mod": {
+                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}yellow{% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}yellow{% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --wyzecam-color: {% if states('binary_sensor.wyzecam_status') != 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}yellow{% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}yellow{% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}yellow{% else %}var(--primary-text-color){% endif %};\n}\n"
+                      }
                     }
                   ]
                 }
