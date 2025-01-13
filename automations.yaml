@@ -1348,317 +1348,43 @@
     entity_id: input_select.god_damn_input
   mode: single
 - id: '1607188975863'
-  alias: TV - Office - Change Roku/Plex Show
+  alias: TV - Change Roku Plex Show
   description: ''
   triggers:
-  - entity_id: input_select.office_plex_show
+  - entity_id:
+    - input_select.office_plex_show
+    - input_select.bedroom_plex_show
+    - input_select.living_room_plex_show
+    - input_select.god_damn_plex_show
     trigger: state
   conditions:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: input_select.office_plex_show
-      state: Select Show
+  - condition: template
+    value_template: '{{ states(trigger.entity_id) != ''Select Show'' }}'
   actions:
-  - target:
-      entity_id: switch.office_tv
-    action: homeassistant.turn_on
-    data: {}
   - data:
-      entity_id:
-      - sensor.office_tv_next_episode
-    action: homeassistant.update_entity
-    enabled: false
-  - data:
-      tv: office
-      input: roku
-    action: script.function_tv_change_input
-    enabled: false
-  - alias: Set Roku to Plex, if necessary
-    if:
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: media_player.office_roku_tv
-        attribute: app_name
-        state: Plex - Stream for Free
-      alias: If App is NOT Plex
-    then:
-    - data:
-        source: 13535
-      entity_id: media_player.office_roku_tv
-      action: media_player.select_source
-      alias: Set Roku to Plex
-    enabled: false
-  - repeat:
-      until:
-      - condition: template
-        value_template: '{{ states(''media_player.plex_holly_plex_for_roku_office_roku_tv'')
-          in [''idle'', ''playing'', ''paused'', ''stopped'' ] }}'
-      sequence:
-      - data:
-          message: 'state of office roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_office_roku_tv'')
-            }} and Office Roku is currently on: {{ state_attr(''media_player.office_roku_tv'',
-            ''app_name'') }}'
-          level: warning
-        action: system_log.write
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 1
-          milliseconds: 0
-      - data: {}
-        target:
-          entity_id: button.scan_clients_plex
-        action: button.press
-    enabled: false
-  - data:
-      message: 'state of office roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_office_roku_tv'')
-        }}'
-      level: info
-    action: system_log.write
-    enabled: false
-  - data:
-      message: waiting 1 seconds
-      level: info
-    action: system_log.write
-    enabled: false
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-    enabled: false
-  - data:
-      message: starting {{ states('sensor.office_tv_next_episode') }}
-      level: info
-    action: system_log.write
-    enabled: false
-  - data:
-      media_content_id: '{{ states(''sensor.office_tv_next_episode'') }}'
-      media_content_type: episode
-    entity_id: media_player.plex_holly_plex_for_roku_office_roku_tv
-    action: media_player.play_media
-    enabled: false
-  - data:
-      message: office tv plex show automation done
+      message: Starting "{{ states(trigger.entity_id) }}" on {{ trigger.entity_id
+        | regex_findall_index(find='input_select\.(.*)_plex_show', index=0, ignorecase=False)
+        | replace('_', '-') | title }} Roku triggered by {{ trigger.entity_id }}
       level: error
     action: system_log.write
-    enabled: false
+    enabled: true
+  - target:
+      entity_id: switch.{{ trigger.entity_id | regex_findall_index(find='input_select\.(.*)_plex_show',
+        index=0, ignorecase=False) }}_tv
+    action: homeassistant.turn_on
+    data: {}
   - action: shell_command.play_plex_on_roku
     alias: Play show on Plex on Roku
     data:
-      roku: office
-      tvshow: '{{ states("input_select.office_plex_show") }}'
+      roku: '{{ trigger.entity_id | regex_findall_index(find=''input_select\.(.*)_plex_show'',
+        index=0, ignorecase=False) | replace(''_'', ''-'') }}'
+      tvshow: '{{ states(trigger.entity_id) }}'
+    response_variable: response
   - data:
       option: Select Show
-    entity_id: input_select.office_plex_show
+      entity_id: '{{ trigger.entity_id }}'
     action: input_select.select_option
     enabled: true
-  mode: single
-- id: '1607192213578'
-  alias: TV - Bedroom - Change Roku/Plex Show
-  description: ''
-  triggers:
-  - entity_id: input_select.bedroom_plex_show
-    from: Select Show
-    trigger: state
-  conditions: []
-  actions:
-  - data:
-      entity_id:
-      - sensor.bedroom_tv_next_episode
-    action: homeassistant.update_entity
-    enabled: false
-  - target:
-      entity_id: switch.bedroom_tv
-    action: homeassistant.turn_on
-    data: {}
-  - data:
-      tv: bedroom
-      input: roku
-    action: script.function_tv_change_input
-    enabled: false
-  - choose:
-    - conditions:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: media_player.bedroom_roku
-          attribute: app_id
-          state: '13535'
-      sequence:
-      - data:
-          source: '13535'
-        target:
-          entity_id: media_player.bedroom_roku
-        action: media_player.select_source
-    default: []
-    enabled: false
-  - repeat:
-      until:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
-          state: idle
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
-          state: playing
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
-          state: paused
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
-          state: stopped
-      sequence:
-      - data:
-          message: 'state of bedroom roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_bedroom_roku'')
-            }}'
-          level: info
-        action: system_log.write
-      - data: {}
-        target:
-          entity_id: button.scan_clients_plex
-        action: button.press
-      - delay: '1'
-    enabled: false
-  - data:
-      message: 'state of bedroom roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_bedroom_roku'')
-        }}'
-      level: info
-    action: system_log.write
-    enabled: false
-  - data:
-      message: waiting 4 seconds
-      level: info
-    action: system_log.write
-    enabled: false
-  - delay: '4'
-    enabled: false
-  - data:
-      message: starting {{ states('sensor.bedroom_tv_next_episode') }}
-      level: info
-    action: system_log.write
-    enabled: false
-  - data:
-      media_content_id: '{{ states(''sensor.bedroom_tv_next_episode'') }}'
-      media_content_type: episode
-    entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
-    action: media_player.play_media
-    enabled: false
-  - action: shell_command.play_plex_on_roku
-    alias: Play show on Plex on Roku
-    data:
-      roku: bedroom
-      tvshow: '{{ states("input_select.bedroom_plex_show") }}'
-  - data:
-      option: Select Show
-    entity_id: input_select.bedroom_plex_show
-    action: input_select.select_option
-  mode: single
-- id: '1607195248442'
-  alias: TV - Family Room - Change Roku/Plex Show
-  description: ''
-  triggers:
-  - entity_id: input_select.god_damn_plex_show
-    from: Select Show
-    trigger: state
-  conditions: []
-  actions:
-  - data:
-      tv: god_damn
-      input: roku
-    action: script.function_tv_change_input
-  - data:
-      entity_id:
-      - sensor.god_damn_tv_next_episode
-    action: homeassistant.update_entity
-  - target:
-      entity_id: switch.god_damn_tv
-    data: {}
-    action: homeassistant.turn_on
-  - data:
-      message: 'God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
-        ''app_name'') }}'
-      level: warning
-    action: system_log.write
-  - repeat:
-      until:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
-          state: idle
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
-          state: playing
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
-          state: paused
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
-          state: stopped
-      sequence:
-      - data:
-          message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
-            }}'
-          level: warning
-        action: system_log.write
-      - choose:
-        - conditions:
-          - condition: not
-            conditions:
-            - condition: state
-              entity_id: media_player.god_damn_roku
-              attribute: app_name
-              state: Plex - Stream for Free
-          sequence:
-          - repeat:
-              until:
-              - condition: state
-                entity_id: media_player.god_damn_roku
-                attribute: app_name
-                state: Plex - Stream for Free
-              sequence:
-              - data:
-                  source: Plex - Stream for Free
-                entity_id: media_player.god_damn_roku
-                action: media_player.select_source
-              - delay: '4'
-              - data:
-                  message: 'God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
-                    ''app_name'') }}'
-                  level: warning
-                action: system_log.write
-      - data: {}
-        target:
-          entity_id: button.scan_clients_plex
-        action: button.press
-      - delay: '1'
-  - data:
-      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
-        }}'
-      level: warning
-    action: system_log.write
-  - data:
-      message: waiting 1 second
-      level: warning
-    action: system_log.write
-  - delay: '1'
-  - data:
-      message: starting {{ states('sensor.god_damn_tv_next_episode') }}
-      level: warning
-    action: system_log.write
-  - data:
-      media_content_id: '{{ states(''sensor.god_damn_tv_next_episode'') }}'
-      media_content_type: episode
-    entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
-    action: media_player.play_media
-  - data:
-      option: Select Show
-    entity_id: input_select.god_damn_plex_show
-    action: input_select.select_option
   mode: single
 - id: '1607196597834'
   alias: TV - Office - Power Off
@@ -1729,107 +1455,6 @@
       source: Home
     target:
       entity_id: media_player.god_damn_roku
-  mode: single
-- id: '1607208301956'
-  alias: TV - Living Room - Change Roku/Plex Show
-  description: ''
-  triggers:
-  - entity_id: input_select.living_room_plex_show
-    from: Select Show
-    trigger: state
-  conditions: []
-  actions:
-  - data:
-      entity_id:
-      - sensor.living_room_tv_next_episode
-    action: homeassistant.update_entity
-    enabled: false
-  - target:
-      entity_id: switch.living_room_tv
-    data: {}
-    action: homeassistant.turn_on
-  - data:
-      tv: living_room
-      input: roku
-    action: script.function_tv_change_input
-    enabled: false
-  - choose:
-    - conditions:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: media_player.living_room_roku_tv
-          attribute: app_id
-          state: '13535'
-      sequence:
-      - data:
-          source: '13535'
-        target:
-          entity_id: media_player.living_room_roku_tv
-        action: media_player.select_source
-    default: []
-    enabled: false
-  - repeat:
-      until:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
-          state: idle
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
-          state: playing
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
-          state: paused
-        - condition: state
-          entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
-          state: stopped
-      sequence:
-      - data:
-          message: 'state of living room roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_living_room_roku_tv'')
-            }}'
-          level: info
-        action: system_log.write
-      - data: {}
-        target:
-          entity_id: button.scan_clients_plex
-        action: button.press
-      - delay: '1'
-    enabled: false
-  - data:
-      message: 'state of living room roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_living_room_roku_tv'')
-        }}'
-      level: info
-    action: system_log.write
-    enabled: false
-  - data:
-      message: waiting 4 seconds
-      level: info
-    action: system_log.write
-    enabled: false
-  - delay: '4'
-    enabled: false
-  - data:
-      message: starting {{ states('sensor.living_room_tv_next_episode') }}
-      level: info
-    action: system_log.write
-    enabled: false
-  - data:
-      media_content_id: '{{ states(''sensor.living_room_tv_next_episode'') }}'
-      media_content_type: episode
-    entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
-    action: media_player.play_media
-    enabled: false
-  - action: shell_command.play_plex_on_roku
-    alias: Play show on Plex on Roku
-    data:
-      roku: living-room
-      tvshow: '{{ states("input_select.living_room_plex_show") }}'
-  - data:
-      option: Select Show
-    entity_id: input_select.living_room_plex_show
-    action: input_select.select_option
   mode: single
 - id: '1607717328639'
   alias: Lighting - Automatic Lights When We Come Home
@@ -2262,117 +1887,6 @@
       message: 'sony soundbar received: {{ trigger.payload_json.IrReceived }}'
       level: warning
   mode: single
-- id: '1612041755835'
-  alias: TV - Family Room - Change Roku/Plex Show (Testing)
-  description: ''
-  triggers:
-  - entity_id: input_select.god_damn_plex_show
-    from: Select Show
-    trigger: state
-  conditions: []
-  actions:
-  - data:
-      tv: god_damn
-      input: roku
-    action: script.function_tv_change_input
-  - data:
-      entity_id:
-      - sensor.god_damn_tv_next_episode
-    action: homeassistant.update_entity
-    enabled: false
-  - target:
-      entity_id: switch.god_damn_tv
-    action: homeassistant.turn_on
-    data: {}
-  - data:
-      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
-        }} and God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
-        ''app_name'') }}'
-      level: warning
-    action: system_log.write
-    enabled: false
-  - choose:
-    - conditions:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: media_player.god_damn_roku
-          attribute: app_name
-          state: Plex - Stream for Free
-      sequence:
-      - data:
-          source: '13535'
-        target:
-          entity_id: media_player.god_damn_roku
-        action: media_player.select_source
-    default: []
-    enabled: false
-  - repeat:
-      until:
-      - condition: template
-        value_template: '{{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
-          in [''idle'', ''playing'', ''paused'', ''stopped'' ] }}'
-      sequence:
-      - data:
-          message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
-            }} and God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
-            ''app_name'') }}'
-          level: warning
-        action: system_log.write
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 1
-          milliseconds: 0
-      - data: {}
-        target:
-          entity_id: button.scan_clients_plex
-        action: button.press
-    enabled: false
-  - data:
-      message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
-        }} and God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
-        ''app_name'') }}'
-      level: warning
-    action: system_log.write
-    enabled: false
-  - data:
-      message: waiting 1 second
-      level: warning
-    action: system_log.write
-    enabled: false
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-    enabled: false
-  - data:
-      message: starting {{ states('sensor.god_damn_tv_next_episode') }}
-      level: warning
-    action: system_log.write
-    enabled: false
-  - data:
-      media_content_id: '{{ states(''sensor.god_damn_tv_next_episode'') }}'
-      media_content_type: episode
-    entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
-    action: media_player.play_media
-    enabled: false
-  - action: shell_command.play_plex_on_roku
-    alias: Play show on Plex on Roku
-    data:
-      roku: god-damn
-      tvshow: '{{ states("input_select.god_damn_plex_show") }}'
-  - data:
-      option: Select Show
-    entity_id: input_select.god_damn_plex_show
-    action: input_select.select_option
-  - data:
-      message: god damn tv plex show automation done
-      level: error
-    action: system_log.write
-    enabled: false
-  mode: single
 - id: '1613160102079'
   alias: Lighting - Mantle Lights On
   description: ''
@@ -2454,7 +1968,7 @@
         action: notify.signal_mike
   mode: single
 - id: '1615411227750'
-  alias: Mailbox State Reset
+  alias: Home Assistant - Mailbox State Reset
   description: ''
   triggers:
   - entity_id:
@@ -3147,23 +2661,8 @@
       message: The oven is on and nobody is home
       title: Security Alert
   mode: single
-- id: '1638330062399'
-  alias: 50 - Home Assistant - Fix Unavailable Entities Count
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.unavailable_entities
-    attribute: entity_list
-    to: None
-  condition: []
-  action:
-  - service: python_script.set_state
-    data:
-      entity_id: sensor.unavailable_entities
-      state: 0
-  mode: single
 - id: '1638997594019'
-  alias: Monitor Earth / Home Assistant Entities
+  alias: Home Assistant - Monitor Earth / HA Entities
   description: ''
   triggers:
   - entity_id: sensor.software_update_available
@@ -3452,25 +2951,25 @@
       entity_id: input_boolean.recycle_is_out
   mode: single
 - id: '1644094351525'
-  alias: Turn Off Office Heater After Set Amount of Time
+  alias: Heater - Turn Off Office Heater After Set Amount of Time
   description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ states("switch.office_heater_plug") == "on" }}'
+  triggers:
+  - value_template: '{{ states("switch.office_heater_plug") == "on" }}'
     for:
       minutes: '{{ states(''input_number.office_heater_auto_off'') | int(30) }}'
-  - platform: template
-    value_template: "{{ states(\"sensor.office_multisensor_temperature\") | float(0)
+    trigger: template
+  - value_template: "{{ states(\"sensor.office_multisensor_temperature\") | float(0)
       >=\n  states(\"input_number.office_heater_auto_off_temperature\") | float(71.0)
       }}\n"
     for:
       minutes: 1
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    data: {}
+    trigger: template
+  conditions: []
+  actions:
+  - data: {}
     target:
       entity_id: switch.office_heater_plug
+    action: homeassistant.turn_off
   mode: single
 - id: '1644246652989'
   alias: Notifications - Fridge Door Open
@@ -3540,76 +3039,49 @@
       entity_id: switch.christmas_tree
     data: {}
   mode: single
-- id: '1645564166244'
-  alias: 000-RF Bridge Test
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: tele/rf_bridge/RESULT
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.RfReceived.Data == "C13B02" }}'
-      sequence:
-      - service: homeassistant.toggle
-        data: {}
-        target:
-          entity_id: light.hallway_light
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.RfReceived.Data == "C13B01" }}'
-      sequence:
-      - service: homeassistant.toggle
-        data: {}
-        target:
-          entity_id: light.guest_room_light
-    default: []
-  mode: single
 - id: '1650048811718'
-  alias: Fix 3-way Lights
+  alias: Lighting - Fix 3-way Lights
   description: ''
-  trigger:
-  - platform: state
-    entity_id: light.hallway_light
+  triggers:
+  - entity_id: light.hallway_light
     to: unknown
     for:
       hours: 0
       minutes: 2
       seconds: 0
-  - platform: state
-    entity_id: light.god_damn_switch
+    trigger: state
+  - entity_id: light.god_damn_switch
     to: unknown
     for:
       hours: 0
       minutes: 2
       seconds: 0
-  - platform: state
-    entity_id: light.kitchen_overhead_light
+    trigger: state
+  - entity_id: light.kitchen_overhead_light
     to: unknown
     for:
       hours: 0
       minutes: 2
       seconds: 0
-  condition: []
-  action:
-  - service: script.0000000mwe
-    data: {}
+    trigger: state
+  conditions: []
+  actions:
+  - data: {}
+    action: script.0000000mwe
   mode: single
 - id: '1650211137772'
-  alias: Fix MariaDB/Nginx Proxy Manager
+  alias: Home Assistant - Fix Nginx Proxy Manager
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - binary_sensor.nginx_proxy_manager_working
     for:
       hours: 0
       minutes: 2
       seconds: 0
     to: 'off'
-  condition:
+    trigger: state
+  conditions:
   - condition: time
     after: 02:30:00
     before: 01:59:00
@@ -3621,22 +3093,14 @@
     - thu
     - fri
     - sat
-  action:
-  - service: hassio.addon_restart
-    data:
-      addon: core_mariadb
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 30
-      milliseconds: 0
-  - service: hassio.addon_restart
-    data:
+  actions:
+  - data:
       addon: a0d7b954_nginxproxymanager
-  - service: notify.gmail_to_mike
-    data:
+    action: hassio.addon_restart
+  - data:
       title: MariaDB/NPM Restarted
-      message: The MariaDB and Nginx Proxy Manager Add-Ons were restarted.
+      message: The Nginx Proxy Manager Add-Ons were restarted.
+    action: notify.gmail_to_mike
   mode: single
 - id: '1670901378517'
   alias: Lighting - Turn Den Lights Off
@@ -3708,33 +3172,33 @@
       entity_id: light.shed_lamp
   mode: single
 - id: '1671213044073'
-  alias: Reset Crappy Christmas Lights
+  alias: Lighting - Reset Crappy Christmas Lights
   description: The timer on the green tree lights sucks and automatically turns off
     after 6 hours.  So twice during the time we want them on, turn them off and then
     back on again.
-  trigger:
-  - platform: time
-    at: '21:30:00'
-  - platform: time
-    at: 01:00:00
-  condition:
+  triggers:
+  - at: '21:30:00'
+    trigger: time
+  - at: 01:00:00
+    trigger: time
+  conditions:
   - condition: state
     entity_id: binary_sensor.outside_christmas_lights
     state: 'on'
-  action:
-  - service: homeassistant.turn_off
-    data: {}
+  actions:
+  - data: {}
     target:
       entity_id: switch.outdoor_strip_p2
+    action: homeassistant.turn_off
   - delay:
       hours: 0
       minutes: 0
       seconds: 5
       milliseconds: 0
-  - service: homeassistant.turn_on
-    data: {}
+  - data: {}
     target:
       entity_id: switch.outdoor_strip_p2
+    action: homeassistant.turn_on
   mode: single
 - id: '1671217553135'
   alias: Fan - Hall Bath Humidity - Fan On
@@ -4056,54 +3520,54 @@
   mode: parallel
   max: 10
 - id: '1704658454909'
-  alias: 'Lighting: Toggle Garage Door Light'
+  alias: Lighting - Toggle Garage Door Light
   description: ''
-  trigger:
-  - platform: mqtt
-    topic: cmnd/garage_door_light/power1
+  triggers:
+  - topic: cmnd/garage_door_light/power1
     payload: toggle
     id: Garage Door Light
-  - platform: mqtt
-    topic: cmnd/far_black_lamp/power1
+    trigger: mqtt
+  - topic: cmnd/far_black_lamp/power1
     payload: toggle
     id: Far Black Lamp
-  - platform: mqtt
-    topic: cmnd/white_lamp/power1
+    trigger: mqtt
+  - topic: cmnd/white_lamp/power1
     payload: toggle
     id: White Lamp
-  condition: []
-  action:
+    trigger: mqtt
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: trigger
         id:
         - Garage Door Light
       sequence:
-      - service: light.toggle
-        metadata: {}
+      - metadata: {}
         data: {}
         target:
           entity_id: light.garage_door_light
+        action: light.toggle
     - conditions:
       - condition: trigger
         id:
         - Far Black Lamp
       sequence:
-      - service: light.toggle
-        metadata: {}
+      - metadata: {}
         data: {}
         target:
           entity_id: light.far_black_lamp
+        action: light.toggle
     - conditions:
       - condition: trigger
         id:
         - White Lamp
       sequence:
-      - service: light.toggle
-        metadata: {}
+      - metadata: {}
         data: {}
         target:
           entity_id: light.white_lamp
+        action: light.toggle
   mode: single
 - id: '1705879584394'
   alias: Lighting - Living Room - Ensure switches stay on for bulbs
@@ -4124,26 +3588,26 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1712846768542'
-  alias: Disable Automatic Living Room Light Turn Off If Used
+  alias: Lighting - Disable Automatic Living Room Light Turn Off If Used
   description: If someone goes into the living room and or uses anything in the living
     room, disable the automatic turning off of the living room light
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - media_player.living_room_roku_tv
     - light.near_black_lamp
     - light.white_lamp
     - light.far_black_lamp
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - binary_sensor.living_room_motion_sensor_occupancy
     attribute: occupancy
     enabled: true
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: input_boolean.automatic_living_room_light
     state: 'on'
-  action:
+  actions:
   - metadata: {}
     data: {}
     target:
@@ -4151,18 +3615,18 @@
     action: homeassistant.turn_off
   mode: single
 - id: '1712846900243'
-  alias: Turn off Near Living Room Lamp After Sunset
+  alias: Lighting - Turn off Near Living Room Lamp After Sunset
   description: Unless some action forced it to stay on
-  trigger:
-  - platform: sun
-    event: sunset
+  triggers:
+  - event: sunset
     offset: 00:15:00
-  condition:
+    trigger: sun
+  conditions:
   - condition: state
     entity_id: input_boolean.automatic_living_room_light
     state: 'on'
     enabled: true
-  action:
+  actions:
   - metadata: {}
     data: {}
     target:
@@ -4194,7 +3658,7 @@
       data: {}
   mode: single
 - id: '1729313854999'
-  alias: Turn off bedroom humidifier at 50%
+  alias: Humidifier - Turn off bedroom humidifier at 50%
   description: ''
   triggers:
   - trigger: numeric_state
@@ -4212,7 +3676,7 @@
       device_id: 7f05037a5480d7fd07c1125fc56de5ac
   mode: single
 - id: '1732810938168'
-  alias: Set the Living Room Light Color
+  alias: Lighting - Set the Living Room Light Color
   description: ''
   triggers:
   - type: turned_on
@@ -4230,9 +3694,11 @@
     alias: Set Bulb Color
   mode: single
 - id: '1733516669453'
-  alias: Turn on Bedroom Humidifier at 6 and 8
+  alias: Humidifier - Turn on Bedroom Humidifier at 6 and 8
   description: ''
   triggers:
+  - trigger: time
+    at: '16:00:00'
   - trigger: time
     at: '18:00:00'
   - trigger: time
@@ -4254,7 +3720,7 @@
     domain: switch
   mode: single
 - id: '1735499752877'
-  alias: Turn off Office Humidifier at 50%
+  alias: Humidifier - Turn off Office Humidifier at 50%
   description: ''
   triggers:
   - trigger: numeric_state
@@ -4272,7 +3738,7 @@
       entity_id: switch.mike_desk_strip_plug_4_humidifier
   mode: single
 - id: '1735518229397'
-  alias: Lock front door when out of sync
+  alias: Home Assistant - Lock front door when out of sync
   description: ''
   triggers:
   - trigger: state
@@ -4296,28 +3762,8 @@
     target:
       entity_id: lock.front_door_zwave
   mode: single
-- id: '1736480446013'
-  alias: Refresh Tasmota Devices Sensor
-  description: ''
-  triggers:
-  - trigger: numeric_state
-    entity_id:
-    - sensor.tasmota_devices
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    below: 1
-  conditions: []
-  actions:
-  - action: homeassistant.update_entity
-    metadata: {}
-    data:
-      entity_id:
-      - sensor.tasmota_devices
-  mode: single
 - id: '1736483323342'
-  alias: Reset Furnace If 4 Degrees of Target (Heat)
+  alias: Thermostat - Reset Furnace If 4 Degrees of Target (Heat)
   description: ''
   triggers:
   - trigger: template
@@ -4355,4 +3801,28 @@
     data: {}
     target:
       entity_id: switch.furnace_switch
+  mode: single
+- id: '1736744742720'
+  alias: Assist - Play title on roku TV
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Play {title} on the {roku} TV
+    - Play {title} on {roku} TV
+    - Play {title} on {roku} Roku
+  conditions: []
+  actions:
+  - target:
+      entity_id: switch.{{ trigger.slots.roku | lower }}_tv
+    action: homeassistant.turn_on
+    data: {}
+  - action: shell_command.play_plex_on_roku
+    alias: Play show on Plex on Roku
+    data:
+      roku: '{{ trigger.slots.roku | lower }}'
+      tvshow: '{{ trigger.slots.title }}'
+    response_variable: response
+  - set_conversation_response: Playing "{{ trigger.slots.title }}" on the {{ trigger.slots.roku
+      }} TV
   mode: single

@@ -1,140 +1,182 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
-check_prereqs() {
-  which $1 > /dev/null 2>&1
-  if [ $? != 0 ]; then
-    echo "Error: '$1' is required for this program"
-    exit 1
-  fi
+# https://github.com/pkkid/python-plexapi?tab=readme-ov-file#usage-examples
+
+from lxml import etree, html
+from plexapi.myplex import MyPlexAccount
+from plexapi.server import PlexServer
+import configparser
+import os
+import re
+import requests
+import socket
+import sys
+import time
+
+sleeptime = 5
+rcfile = '~/.plexapi_rc'
+rokuname = {
+  "bedroom": "Bedroom Roku",
+  "office": "Office Roku TV",
+  "living-room": "Living Room Roku TV",
+  "god-damn": "God Damn Roku",
 }
 
-check_prereqs dig
-check_prereqs curl
-check_prereqs ping
+def get_command_line_args():
+    if len(sys.argv) < 3:
+        print(f'Usage: {sys.argv[0]} roku movie_or_show_title')
+        print(f'          Rokus:    "bedroom", "office", "living-room", "god-damn"/"family-room"')
+        print(f'          examples:')
+        print(f'                    {sys.argv[0]} office Friends')
+        print(f'                    {sys.argv[0]} bedroom "Die Hard"')
+        quit()
+    else:
+        roku = sys.argv[1]
+        if roku == "family-room":
+            roku = "god-damn"
+        if roku not in [ "bedroom", "office", "living-room", "god-damn" ]:
+            print(f"Error: Invalid roku ({roku})")
+            quit()
+        title = sys.argv[2]
+        return (roku, title)
 
-admin_token=zjhJFE4Ev1HQp1xVj81N
-user_token=kUYzEUnf4a-ifoNZQ9w3
-plex_prot=https
-plex_server=plex.erdely.in
-plex_port=32400
+def get_configuration():
+    # Home Assistant Configuration
+    secrets = os.path.dirname(os.path.dirname(os.path.realpath(sys.argv[0]))) + '/secrets.yaml'
+    if os.path.exists(secrets):
+        plex_url = plex_token = myplex_token = None
+        with open(secrets, 'r') as file:
+            for line in file.readlines():
+                m = re.search(r"^play_plex_(url|token|mytoken): '?([^']+)'?$", line)
+                if m and m.group(1) == 'url':
+                    plex_url = m.group(2).strip()
+                elif m and m.group(1) == 'token':
+                    plex_token = m.group(2).strip()
+                elif m and m.group(1) == 'mytoken':
+                    myplex_token = m.group(2).strip()
+        if not plex_url or not plex_token or not myplex_token:
+            print("Could not find plex_url, plex_token, and/or myplex_token) in secrets.yaml")
+            quit()
+        else:
+            return (plex_url, plex_token, myplex_token)
+    else:
+        global rcfile
+        conf_file = configparser.ConfigParser()
+        try:
+            conf_file.read_file(open(os.path.expanduser(rcfile)))
+        except FileNotFoundError as err:
+            print(err)
+            sys.exit()
 
-rokuport=${rokuport:=8060}
+        try:
+            plex_url = conf_file.get('plexapi', 'url')
+            plex_token = conf_file.get('plexapi', 'token')
+            myplex_token = conf_file.get('plexapi', 'myplex_token')
+            return (plex_url, plex_token, myplex_token)
+        except configparser.NoSectionError as err:
+            print(err)
+            quit()
+        except configparser.NoOptionError as err:
+            print(err)
+            quit()
+        except configparser.MissingSectionHeaderError as err:
+            print('Not a valid config file.')
+            print('Example:')
+            print('    [plexapi]')
+            print('    url: http://localhost:32400')
+            print('    token: MYTOKEN')
+            print('    myplex_token: MYPLEX_TOKEN')
+            quit()
 
-declare -A clientid=()
-clientid[roku-bedroom.erdely.in]=7ebd1750040e78ba5cda8494e65fcd42
-clientid[roku-office.erdely.in]=4bcec4bd2db5a14d2a45c255082fcfef
-clientid[roku-living-room.erdely.in]=ed0405ae97d60d909aba20599ae5a187
-clientid[roku-god-damn.erdely.in]=d666057fd996ebd612b624acb52dd5e2
+def roku_get_plex_appid(roku):
+    try:
+        response = requests.get(f"http://{socket.gethostbyname(f'roku-{roku}.erdely.in')}:8060/query/apps")
+    except:
+        print("Error: Could not connect to the Roku {roku}")
+        quit()
 
-declare -A rokuname=()
-rokuname[roku-bedroom.erdely.in]="Bedroom Roku"
-rokuname[roku-office.erdely.in]="Office Roku TV"
-rokuname[roku-living-room.erdely.in]="Living Room Roku TV"
-rokuname[roku-god-damn.erdely.in]="God Damn Roku"
+    xml = response.content
+    root = etree.fromstring(xml)
+    try:
+        app = root.xpath("//app[contains(text(), 'Plex')]")
+        return app[0].get("id")
+    except:
+        print(f"Error: Plex app not found on Roku {roku}")
+        quit()
 
-testmode=0
-debug=0
-if [ "$1" = "-h" ] || [ -z "$2" ]; then
-  echo "usage: $0 [-h] [-t] [-d] roku show"
-  echo "Roku List:"
-  echo "  - [roku-]bedroom[.erdely.in]"
-  echo "  - [roku-]office[.erdely.in]"
-  echo "  - [roku-]living-room[.erdely.in]"
-  echo "  - [roku-]god-damn[.erdely.in]"
-  exit
-fi
-[ "$1" = "-d" ] && shift && debug=1
-[ "$1" = "-t" ] && shift && testmode=1
-[ "$1" = "-d" ] && shift && debug=1
+def roku_launch_plex(roku, app_id):
+    global sleeptime
+    try:
+        requests.post(f"http://{socket.gethostbyname(f'roku-{roku}.erdely.in')}:8060/launch/{app_id}")
+    except:
+        print(f"Error: Could not launch Plex app on Roku {roku}")
+        quit()
 
-roku=$(echo $1 | sed -r 's/^(roku-)?/roku-/;s/(\.erdely\.in)?$/.erdely.in/')
-rokuip=$(dig +short $roku)
-rokuslug=${roku%%.*}
-show=$2
-show_encoded=$(echo $show | sed "s/ /%20/g;s/\&/%26/g;s/'/\&#39;/g")
+    active_app = 0
+    while active_app != app_id:
+        try:
+            response = requests.get(f"http://{socket.gethostbyname(f'roku-{roku}.erdely.in')}:8060/query/active-app")
+        except:
+            print(f"Error: Could not connect to the Roku {roku}")
+            quit()
 
-ping -c 2 $rokuip > /dev/null 2>&1
-if [ $? != 0 ]; then
-  echo "Error: ${roku%%.*} ($rokuip) is down"
-  exit 1
-fi
+        xml = response.content
+        root = etree.fromstring(xml)
+        try:
+            app = root.xpath("//app[contains(text(), 'Plex')]")
+            active_app = app[0].get("id")
+        except:
+            print(f"Error: Plex app not found on Roku {roku}")
+            quit()
 
-# Determine Plex app on Roku
-plexappid=$(curl -s http://$rokuip:$rokuport/query/apps|awk -F '"' '/>Plex/{print $2}')
+    time.sleep(sleeptime)
 
-# Determine machine ID for Plex
-plexid=$(curl -s -G -d "X-Plex-Token=$admin_token" "$plex_prot://$plex_server:$plex_port/" | awk "/<MediaContainer .*machineIdentifier/{for (i=1;i<NF;i++) {if(\$i~/^machineIdentifier=/)print gensub(/\"\$/,\"\",1,gensub(/^.*=\"/,\"\",1,\$i))};exit}")
+def connect_to_plex(plex_url, plex_token, myplex_token):
+    try:
+        plex = PlexServer(plex_url, plex_token)
+    except:
+        print(f"Error: Could not connect to plex server {plex_url}")
+        quit()
 
-# Determine client ID for Roku on Plex
-clientid=$(curl -s -G -d "X-Plex-Token=$admin_token" "$plex_prot://$plex_server:$plex_port/devices" | awk "/<Device .*name=\"${rokuname[$roku]}\"/{for (i=1;i<NF;i++) {if(\$i~/^clientIdentifier=/)print gensub(/\"\$/,\"\",1,gensub(/^.*=\"/,\"\",1,\$i))};exit}")
+    try:
+        account = MyPlexAccount(token=myplex_token)
+    except:
+        print(f"Error: Could not connect to Plex Account")
+        quit()
+    return (plex, account)
 
-# Determine TV Shows library ID
-libraryid=$(curl -s -G -d "X-Plex-Token=$admin_token" "$plex_prot://$plex_server:$plex_port/library/sections" | awk '/<Directory .*title="TV Shows"/{for (i=1;i<NF;i++) {if($i~/^key=/)print gensub(/"$/,"",1,gensub(/^.*="/,"",1,$i))};exit}')
 
-# Determine TV Show ID
-showid=$(curl -s -G -d "X-Plex-Token=$user_token" "$plex_prot://$plex_server:$plex_port/library/sections/$libraryid/all?title=$show_encoded" | awk "/<Directory .*title=/{for (i=1;i<NF;i++) {if(\$i~/ratingKey=/)print gensub(/\"\$/,\"\",1,gensub(/^.*=\"/,\"\",1,\$i))};exit}")
+def main():
+    roku, title = get_command_line_args()
+    plex_url, plex_token, myplex_token = get_configuration()
+    appid = roku_get_plex_appid(roku)
+    roku_launch_plex(roku, appid)
+    plex, account = connect_to_plex(plex_url, plex_token, myplex_token)
 
-# Determine OnDeck ID for Show (if it exists)
-ondeck=1
-nextepisode=$(curl -s -G -d "X-Plex-Token=$user_token" "$plex_prot://$plex_server:$plex_port/library/onDeck" | awk "/<Video .*grandparentTitle=\"$show\"/{for (i=1;i<NF;i++) {if(\$i~/key=/)print gensub(/\"\$/,\"\",1,gensub(/^.*=\"/,\"\",1,\$i))};exit}")
+    media = None
+    library = "TV Shows"
+    try:
+        media = plex.library.section(library).get(title)
+    except:
+        pass
 
-# If show is not OnDeck, get Season 1, Episode 1
-if [ -z "$nextepisode" ]; then
-  ondeck=0
-  season1=$(curl -s -G -d "X-Plex-Token=$user_token" "$plex_prot://$plex_server:$plex_port/library/metadata/$showid/children" | awk "/<Directory .*parentKey=\"\/library\/metadata\/$showid\"/{for (i=1;i<NF;i++) {if(\$0~/index=\"1\"/&&\$i~/ratingKey=/)print gensub(/\"\$/,\"\",1,gensub(/^.*=\"/,\"\",1,\$i))};exit}")
-  nextepisode=$(curl -s -G -d "X-Plex-Token=$user_token" "$plex_prot://$plex_server:$plex_port/library/metadata/$season1/children" | awk "/<Video .*parentRatingKey=\"$season1\"/{for (i=1;i<NF;i++) {if(\$0~/index=\"1\"/&&\$i~/ratingKey=/)print \"/library/metadata/\" gensub(/\"\$/,\"\",1,gensub(/^.*=\"/,\"\",1,\$i))};exit}")
-fi
+    if not media:
+        library = "Movies"
+        try:
+            media = plex.library.section(library).get(title)
+        except:
+            pass
 
-if [ -n "$debug" ] || [ $debug = 1 ]; then
-  echo roku=$roku
-  echo rokuip=$rokuip
-  echo rokuslug=$rokuslug
-  echo plexid=$plexid
-  echo show=$show
-  echo show_encoded=$show_encoded
-  echo plexappid=$plexappid
-  echo clientid[$roku]=${clientid[$roku]}
-  echo clientid=$clientid
-  echo libraryid=$libraryid
-  echo showid=$showid
-  echo ondeck=$ondeck
-  echo nextepisode=$nextepisode
-fi
+    if not media:
+        print("Error: Could not determine library for {title}")
+        quit()
 
-if [ -z "$libraryid" ]; then
-  echo "Error: Could not determine library for TV Shows"
-  exit 1
-fi
+    device = account.device(rokuname[roku])
+    client = device.connect()
+    if library == "TV Shows":
+        client.playMedia(media.onDeck())
+    else:
+        client.playMedia(media)
 
-if [ -z "$showid" ]; then
-  echo "Error: Could not determine showid for '$show'"
-  exit 1
-fi
-
-if [ -z "$nextepisode" ]; then
-  echo "Error: Could not determine next episode for '$show'"
-  exit 1
-fi
-
-# Open Plex app on Roku
-curl -s -d '' http://$rokuip:$rokuport/launch/$plexappid
-
-# Give the Plex app a few seconds to start
-[ $debug = 1 ] && echo "Sleeping 5 seconds"
-sleep 5
-
-# Add show to PlayQueues on Plex
-output=$(curl -s -G -X POST -H "X-Plex-Token: $admin_token" -H "X-Plex-Client-Identifier: $rokuslug" -d "type=video" -d "shuffle=0" -d "repeat=0" -d "continuous=1" -d "own=1" -d "uri=server://$plexid/com.plexapp.plugins.library${nextepisode}" "$plex_prot://$plex_server:$plex_port/playQueues")
-# [ $debug = 1 ] && echo output=$output
-
-playqueueid=$(echo $output | awk "/<MediaContainer .*playQueueID=/{for (i=1;i<NF;i++) {if(\$i~/^playQueueID=/)print gensub(/\"\$/,\"\",1,gensub(/^.*=\"/,\"\",1,\$i))}}")
-[ $debug = 1 ] && echo playqueueid=$playqueueid
-playqueueselectedmetadataitemid=$(echo $output | awk "/<MediaContainer .*playQueueSelectedMetadataItemID=/{for (i=1;i<NF;i++) {if(\$i~/^playQueueSelectedMetadataItemID=/)print gensub(/\"\$/,\"\",1,gensub(/^.*=\"/,\"\",1,\$i))}}")
-[ $debug = 1 ] && echo playqueueselectedmetadataitemid=$playqueueselectedmetadataitemid
-
-# Play the Queue
-if [ $testmode = 0 ]; then
-  playoutput=$(curl -s -G -H "X-Plex-Client-Identifier: $rokuslug" -H "X-Plex-Target-Client-Identifier: $clientid" -d "protocol=$plex_prot" -d "address=$plex_server" -d "port=52400" -d "containerKey=/playQueues/$playqueueid" -d "key=/library/metadata/$playqueueselectedmetadataitemid" -d "offset=0" -d "commandID=1" -d "type=video" -d "machineIdentifier=$plexid" -d "token=$user_token" "http://$rokuip:8324/player/playback/playMedia")
-  [ $debug = 1 ] && echo playoutput=$playoutput
-fi
-
+if __name__ == '__main__':
+    main()
