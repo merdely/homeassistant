@@ -95,9 +95,24 @@ def next_weekday(weekday):
 
     return next_date.strftime("%Y-%m-%d")  # Format the date as YYYY-MM-DD
 
+def get_last_weekday(weekday):
+    today = datetime.today()
+    target_weekday = weekday_mapping[weekday]
+    days_since_target = (today.weekday() - target_weekday) % 7
+    last_weekday = today - timedelta(days=days_since_target)
+    return last_weekday.strftime("%Y-%m-%d")
+
+def date_passed(input_date):
+    input_date_obj = datetime.strptime(input_date, "%Y-%m-%d").date()
+    # Get today's date
+    today = datetime.today().date()
+    # Return whether the input date is in the past
+    return input_date_obj < today
+
 def days_between(date_str):
     # Define today's date
     today = datetime.strptime("2025-01-10", "%Y-%m-%d")  # Replace with `datetime.today()` for dynamic today
+    today = datetime.today()
 
     # Convert the input date string to a datetime object
     input_date = datetime.strptime(date_str, "%Y-%m-%d")
@@ -105,9 +120,9 @@ def days_between(date_str):
     # Calculate the difference in days
     delta = (input_date - today).days
 
-    return delta
+    return delta + 1
 
-def get_recycle_day(default_day, street_number, street_name, street_type):
+def get_moco_recycle_day(default_day, street_number, street_name, street_type):
     global collection_day_url
     #params2 = {
     #        "__EVENTTARGET": "",
@@ -158,8 +173,18 @@ def get_recycle_day(default_day, street_number, street_name, street_type):
         #print(f"Warning: Could not get recycle day ({response.status_code})")
         return (default_day, moco_address, response.status_code)
 
-def get_exception(pickup_day):
+def get_exception(pickup_day, date = None):
     global holiday_url
+    if date:
+        mon1 = datetime.strptime(date, "%Y-%m-%d").strftime("%b")
+        mon2 = datetime.strptime(date, "%Y-%m-%d").strftime("%B")
+        day1 = datetime.strptime(date, "%Y-%m-%d").strftime("%d")
+        day2 = datetime.strptime(date, "%Y-%m-%d").strftime("%e").strip()
+    else:
+        mon1 = datetime.today().strftime("%b")
+        mon2 = datetime.today().strftime("%B")
+        day1 = datetime.today().strftime("%d")
+        day2 = datetime.today().strftime("%e").strip()
     response = requests.get(holiday_url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
@@ -173,11 +198,11 @@ def get_exception(pickup_day):
                     alert_response = requests.get(match.group(1))
                     if alert_response.status_code == 200:
                         alert_soup = BeautifulSoup(alert_response.text, "html.parser")
-                        paragraphs = alert_soup.find_all('p') #, string='this week') #re.compile('this', re.IGNORECASE))
+                        paragraphs = alert_soup.find_all('p')                  #, string='this week') #re.compile('this', re.IGNORECASE))
                         for paragraph in paragraphs:
-                            match = re.search(r'this week', paragraph.text)
+                            match = re.search(rf"(?:this week|(?:{mon1}|{mon2})\s+(?:{day1}|{day2}))", paragraph.text)
                             if match:
-                                #match = re.search(rf'{pickup_day}.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))', paragraph.text)
+                                # match = re.search(rf'{pickup_day}.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))', paragraph.text)
                                 match = re.search(r'%s.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))' % pickup_day, paragraph.text, re.IGNORECASE)
                                 if match:
                                     match2 = re.match(r"\w+, \w+ \d{1,2}", match.group(1), re.IGNORECASE)
@@ -220,68 +245,95 @@ def get_holidays():
         #print(f"count={count}, found={found}")
         return (holidays, response.status_code)
 
-def holiday_slide(pickup_day):
+def holiday_slide(pickup_day, date = None):
     day = pickup_day
     change = False
+    if date:
+        try:
+            woy = datetime.strptime(date, "%Y-%m-%d").isocalendar()[1]
+        except:
+            woy = datetime.today().isocalendar()[1]
+    else:
+        woy = datetime.today().isocalendar()[1]
+    #woy = woy - 1
     holidays, holidays_code = get_holidays()
     for holiday in holidays:
-        if holidays[holiday]["woy"] == datetime.now().isocalendar()[1]:
+        if holidays[holiday]["woy"] == woy:
             day = add_days(pickup_day, 1)
             change = True
             break
     return (day, change, holidays_code)
 
-# Run code here
-recycle_day = default_day
-recycle_date = next_weekday(recycle_day)
-recycle_days = days_between(recycle_date)
-if debug:
-    print(f"Default day is {recycle_day}")
-    print(f"Default date is {recycle_date} ({recycle_days})")
-    print()
+def get_starting_recycle_day():
+    recycle_day = default_day
+    recycle_date = next_weekday(recycle_day)
+    recycle_days = days_between(recycle_date)
+    if debug:
+        print(f"Default day is {recycle_day}")
+        print(f"Default date is {recycle_date} ({recycle_days})")
+        print()
 
-moco_day, moco_address, moco_code = get_recycle_day(default_day, street_number, street_name, street_type)
-recycle_day = moco_day
-recycle_date = next_weekday(recycle_day)
-recycle_days = days_between(recycle_date)
-if debug:
-    print(f"Recycle day is {recycle_day}")
-    print(f"Recycle date is {recycle_date} ({recycle_days})")
-    print()
+    moco_day, moco_address, moco_code = get_moco_recycle_day(default_day, street_number, street_name, street_type)
+    recycle_day = moco_day
+    recycle_date = next_weekday(recycle_day)
+    recycle_days = days_between(recycle_date)
+    if debug:
+        print(f"Recycle day is {recycle_day}")
+        print(f"Recycle date is {recycle_date} ({recycle_days})")
+        print()
 
-holiday_day, is_holiday, holidays_code = holiday_slide(recycle_day)
-recycle_day = holiday_day
-recycle_date = next_weekday(recycle_day)
-recycle_days = days_between(recycle_date)
-if debug:
-    print(f"Holiday adjusted day is {recycle_day}")
-    print(f"Holiday adjusted date is {recycle_date} ({recycle_days})")
-    print()
+    return (recycle_day, recycle_date, recycle_days)
 
-recycle_date, has_exception, exception_code = get_exception(recycle_day)
-recycle_day = get_weekday(recycle_date)
-recycle_days = days_between(recycle_date)
-if debug:
-    print(f"Exception adjusted day is {recycle_day}")
-    print(f"Exception adjusted day is {recycle_date} ({recycle_days})")
+def get_recycle_day(date = None):
+    global debug, default_day, street_number, street_name, street_type
 
-    print()
+    if not date:
+        date = datetime.today().strftime("%Y-%m-%d")
 
-print(json.dumps({
-    "default_day": default_day,
-    "moco_day": moco_day,
-    "holiday_day": holiday_day,
-    "exception_day": recycle_day,
-    "recycle_day": recycle_day,
-    "recycle_day_num": get_weekday_num(recycle_date),
-    "recycle_date": recycle_date,
-    "recycle_days": recycle_days,
-    "days_string": days_string(recycle_days),
-    "is_holiday": is_holiday,
-    "has_exception": has_exception,
-    "address": f"{street_number} {street_name} {street_type.title()}",
-    "moco_address": moco_address,
-    "moco_code": moco_code,
-    "holidays_code": holidays_code,
-    "exception_code": exception_code,
-    }))
+    recycle_day, recycle_date, recycle_days = get_starting_recycle_day()
+    moco_day = recycle_day
+
+    holiday_day, is_holiday, holidays_code = holiday_slide(recycle_day, date)
+    recycle_day = holiday_day
+    recycle_date = next_weekday(recycle_day)
+    recycle_days = days_between(recycle_date)
+    if debug:
+        print(f"Holiday adjusted day is {recycle_day}")
+        print(f"Holiday adjusted date is {recycle_date} ({recycle_days})")
+        print()
+
+    recycle_date, has_exception, exception_code = get_exception(recycle_day, date)
+    recycle_day = get_weekday(recycle_date)
+    recycle_days = days_between(recycle_date)
+    if debug:
+        print(f"Exception adjusted day is {recycle_day}")
+        print(f"Exception adjusted day is {recycle_date} ({recycle_days})")
+
+        print()
+
+    return {
+        "default_day": default_day,
+        "moco_day": moco_day,
+        "holiday_day": holiday_day,
+        "exception_day": recycle_day,
+        "recycle_day": recycle_day,
+        "recycle_day_num": get_weekday_num(recycle_date),
+        "recycle_date": recycle_date,
+        "recycle_days": recycle_days,
+        "days_string": days_string(recycle_days),
+        "is_holiday": is_holiday,
+        "has_exception": has_exception,
+        "address": f"{street_number} {street_name} {street_type.title()}",
+        "moco_address": moco_address,
+        "moco_code": moco_code,
+        "holidays_code": holidays_code,
+        "exception_code": exception_code,
+        }
+
+recycle_day, _, _ = get_starting_recycle_day()
+last_week_date = get_last_weekday(recycle_day)
+last_week = get_recycle_day(last_week_date)
+if date_passed(last_week['recycle_date']) == False:
+    print(json.dumps(last_week))
+else:
+    print(json.dumps(get_recycle_day()))

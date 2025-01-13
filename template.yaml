@@ -6,7 +6,7 @@
       {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
            's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
            '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-           'media_player\.(?:plex|playstation)[\w]{1,40}|' +
+           '(remote|media_player)\.(?:plex|playstation|firefox|chrom)[\w]{0,40}|' +
            'button\.(?:un)?ignore_all_issues|' +
            '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
            'device_tracker\.pixel_watch_3|' +
@@ -18,7 +18,7 @@
         {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
              's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
              '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-             'media_player\.(?:plex|playstation)[\w]{1,40}|' +
+             '(remote|media_player)\.(?:plex|playstation|firefox|chrom)[\w]{0,40}|' +
              'button\.(?:un)?ignore_all_issues|' +
              '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
              'device_tracker\.pixel_watch_3|' +

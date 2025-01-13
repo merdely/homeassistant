@@ -1368,24 +1368,28 @@
       entity_id:
       - sensor.office_tv_next_episode
     action: homeassistant.update_entity
+    enabled: false
   - data:
       tv: office
       input: roku
     action: script.function_tv_change_input
-  - choose:
-    - conditions:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: media_player.office_roku_tv
-          attribute: app_name
-          state: Plex - Stream for Free
-      sequence:
-      - data:
-          source: 13535
+    enabled: false
+  - alias: Set Roku to Plex, if necessary
+    if:
+    - condition: not
+      conditions:
+      - condition: state
         entity_id: media_player.office_roku_tv
-        action: media_player.select_source
-    default: []
+        attribute: app_name
+        state: Plex - Stream for Free
+      alias: If App is NOT Plex
+    then:
+    - data:
+        source: 13535
+      entity_id: media_player.office_roku_tv
+      action: media_player.select_source
+      alias: Set Roku to Plex
+    enabled: false
   - repeat:
       until:
       - condition: template
@@ -1407,37 +1411,50 @@
         target:
           entity_id: button.scan_clients_plex
         action: button.press
+    enabled: false
   - data:
       message: 'state of office roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_office_roku_tv'')
         }}'
       level: info
     action: system_log.write
+    enabled: false
   - data:
       message: waiting 1 seconds
       level: info
     action: system_log.write
+    enabled: false
   - delay:
       hours: 0
       minutes: 0
       seconds: 1
       milliseconds: 0
+    enabled: false
   - data:
       message: starting {{ states('sensor.office_tv_next_episode') }}
       level: info
     action: system_log.write
+    enabled: false
   - data:
       media_content_id: '{{ states(''sensor.office_tv_next_episode'') }}'
       media_content_type: episode
     entity_id: media_player.plex_holly_plex_for_roku_office_roku_tv
     action: media_player.play_media
-  - data:
-      option: Select Show
-    entity_id: input_select.office_plex_show
-    action: input_select.select_option
+    enabled: false
   - data:
       message: office tv plex show automation done
       level: error
     action: system_log.write
+    enabled: false
+  - action: shell_command.play_plex_on_roku
+    alias: Play show on Plex on Roku
+    data:
+      roku: office
+      tvshow: '{{ states("input_select.office_plex_show") }}'
+  - data:
+      option: Select Show
+    entity_id: input_select.office_plex_show
+    action: input_select.select_option
+    enabled: true
   mode: single
 - id: '1607192213578'
   alias: TV - Bedroom - Change Roku/Plex Show
@@ -1452,6 +1469,7 @@
       entity_id:
       - sensor.bedroom_tv_next_episode
     action: homeassistant.update_entity
+    enabled: false
   - target:
       entity_id: switch.bedroom_tv
     action: homeassistant.turn_on
@@ -1460,6 +1478,7 @@
       tv: bedroom
       input: roku
     action: script.function_tv_change_input
+    enabled: false
   - choose:
     - conditions:
       - condition: not
@@ -1475,6 +1494,7 @@
           entity_id: media_player.bedroom_roku
         action: media_player.select_source
     default: []
+    enabled: false
   - repeat:
       until:
       - condition: or
@@ -1502,25 +1522,36 @@
           entity_id: button.scan_clients_plex
         action: button.press
       - delay: '1'
+    enabled: false
   - data:
       message: 'state of bedroom roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_bedroom_roku'')
         }}'
       level: info
     action: system_log.write
+    enabled: false
   - data:
       message: waiting 4 seconds
       level: info
     action: system_log.write
+    enabled: false
   - delay: '4'
+    enabled: false
   - data:
       message: starting {{ states('sensor.bedroom_tv_next_episode') }}
       level: info
     action: system_log.write
+    enabled: false
   - data:
       media_content_id: '{{ states(''sensor.bedroom_tv_next_episode'') }}'
       media_content_type: episode
     entity_id: media_player.plex_holly_plex_for_roku_bedroom_roku
     action: media_player.play_media
+    enabled: false
+  - action: shell_command.play_plex_on_roku
+    alias: Play show on Plex on Roku
+    data:
+      roku: bedroom
+      tvshow: '{{ states("input_select.bedroom_plex_show") }}'
   - data:
       option: Select Show
     entity_id: input_select.bedroom_plex_show
@@ -1712,6 +1743,7 @@
       entity_id:
       - sensor.living_room_tv_next_episode
     action: homeassistant.update_entity
+    enabled: false
   - target:
       entity_id: switch.living_room_tv
     data: {}
@@ -1720,6 +1752,7 @@
       tv: living_room
       input: roku
     action: script.function_tv_change_input
+    enabled: false
   - choose:
     - conditions:
       - condition: not
@@ -1735,6 +1768,7 @@
           entity_id: media_player.living_room_roku_tv
         action: media_player.select_source
     default: []
+    enabled: false
   - repeat:
       until:
       - condition: or
@@ -1762,25 +1796,36 @@
           entity_id: button.scan_clients_plex
         action: button.press
       - delay: '1'
+    enabled: false
   - data:
       message: 'state of living room roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_living_room_roku_tv'')
         }}'
       level: info
     action: system_log.write
+    enabled: false
   - data:
       message: waiting 4 seconds
       level: info
     action: system_log.write
+    enabled: false
   - delay: '4'
+    enabled: false
   - data:
       message: starting {{ states('sensor.living_room_tv_next_episode') }}
       level: info
     action: system_log.write
+    enabled: false
   - data:
       media_content_id: '{{ states(''sensor.living_room_tv_next_episode'') }}'
       media_content_type: episode
     entity_id: media_player.plex_holly_plex_for_roku_living_room_roku_tv
     action: media_player.play_media
+    enabled: false
+  - action: shell_command.play_plex_on_roku
+    alias: Play show on Plex on Roku
+    data:
+      roku: living-room
+      tvshow: '{{ states("input_select.living_room_plex_show") }}'
   - data:
       option: Select Show
     entity_id: input_select.living_room_plex_show
@@ -2234,6 +2279,7 @@
       entity_id:
       - sensor.god_damn_tv_next_episode
     action: homeassistant.update_entity
+    enabled: false
   - target:
       entity_id: switch.god_damn_tv
     action: homeassistant.turn_on
@@ -2244,6 +2290,7 @@
         ''app_name'') }}'
       level: warning
     action: system_log.write
+    enabled: false
   - choose:
     - conditions:
       - condition: not
@@ -2259,6 +2306,7 @@
           entity_id: media_player.god_damn_roku
         action: media_player.select_source
     default: []
+    enabled: false
   - repeat:
       until:
       - condition: template
@@ -2280,30 +2328,41 @@
         target:
           entity_id: button.scan_clients_plex
         action: button.press
+    enabled: false
   - data:
       message: 'state of god_damn roku plex client: {{ states(''media_player.plex_holly_plex_for_roku_god_damn_roku'')
         }} and God Damn Roku is currently on: {{ state_attr(''media_player.god_damn_roku'',
         ''app_name'') }}'
       level: warning
     action: system_log.write
+    enabled: false
   - data:
       message: waiting 1 second
       level: warning
     action: system_log.write
+    enabled: false
   - delay:
       hours: 0
       minutes: 0
       seconds: 1
       milliseconds: 0
+    enabled: false
   - data:
       message: starting {{ states('sensor.god_damn_tv_next_episode') }}
       level: warning
     action: system_log.write
+    enabled: false
   - data:
       media_content_id: '{{ states(''sensor.god_damn_tv_next_episode'') }}'
       media_content_type: episode
     entity_id: media_player.plex_holly_plex_for_roku_god_damn_roku
     action: media_player.play_media
+    enabled: false
+  - action: shell_command.play_plex_on_roku
+    alias: Play show on Plex on Roku
+    data:
+      roku: god-damn
+      tvshow: '{{ states("input_select.god_damn_plex_show") }}'
   - data:
       option: Select Show
     entity_id: input_select.god_damn_plex_show
@@ -2312,6 +2371,7 @@
       message: god damn tv plex show automation done
       level: error
     action: system_log.write
+    enabled: false
   mode: single
 - id: '1613160102079'
   alias: Lighting - Mantle Lights On

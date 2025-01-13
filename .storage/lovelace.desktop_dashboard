@@ -1398,48 +1398,9 @@
                   }
                 },
                 {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "entity": "binary_sensor.master_bath_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.hall_bath_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.hall_bath_sink_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.living_room_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.dining_room_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.dining_room_refrigerator_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.kitchen_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.kitchen_refrigerator_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.god_damn_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.powder_room_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.den_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.washer_water_leak_sensor_water_leak"
-                    },
-                    {
-                      "entity": "binary_sensor.water_heater_water_leak_sensor_water_leak"
-                    }
-                  ]
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  ha-icon.off {\n    color: var(--paper-item-icon-color);\n  }\n  td.off {\n    color: var(--primary-text-color);\n  }\n  ha-icon.on, td.on {\n    color: var(--state-active-color);\n  }\n</style> <h2>Water Leak Sensors</h2> <table> {% for entity in states | selectattr('attributes.device_class', 'equalto', 'moisture') | sort(attribute='entity_id') -%} <tr> <td ><ha-icon class={{ entity.state }} icon=\"{{ entity.attributes.icon if 'icon' in entity.attributes else 'mdi:water'}}\"></ha-icon></td> <td class={{ entity.state }}>{{ entity.attributes.friendly_name }}</td> <td class={{ entity.state }}>{{ \"Dry\" if entity.state == \"off\" else \"Wet\" }}</td> </tr> {% endfor -%} </table>"
                 }
               ]
             },
@@ -1953,28 +1914,13 @@
                       ]
                     },
                     {
-                      "type": "custom:multiple-entity-row",
-                      "entity": "input_select.god_damn_input",
-                      "name": "Input/Channel/Show",
-                      "show_state": false,
-                      "entities": [
-                        {
-                          "entity": "input_select.god_damn_input",
-                          "name": false,
-                          "icon": "mdi:video-input-component"
-                        },
-                        {
-                          "entity": "input_select.god_damn_plex_show",
-                          "name": false,
-                          "icon": "mdi:plex"
-                        }
-                      ]
-                    },
-                    {
-                      "entity": "media_player.god_damn_chromecast"
-                    },
-                    {
                       "entity": "media_player.god_damn_roku"
+                    },
+                    {
+                      "entity": "input_select.god_damn_input"
+                    },
+                    {
+                      "entity": "input_select.god_damn_plex_show"
                     },
                     {
                       "entity": "script.tv_god_damn_roku_stop",
@@ -2006,20 +1952,10 @@
                       ]
                     },
                     {
-                      "type": "custom:multiple-entity-row",
-                      "entity": "input_select.god_damn_input",
-                      "name": "Input/Channel/Show",
-                      "show_state": false,
-                      "entities": [
-                        {
-                          "entity": "input_select.bedroom_plex_show",
-                          "name": false,
-                          "icon": "mdi:plex"
-                        }
-                      ]
+                      "entity": "media_player.bedroom_roku"
                     },
                     {
-                      "entity": "media_player.bedroom_roku"
+                      "entity": "input_select.bedroom_plex_show"
                     },
                     {
                       "entity": "script.tv_bedroom_roku_stop",
@@ -2041,17 +1977,10 @@
                       "entity": "media_player.office_roku_tv"
                     },
                     {
-                      "type": "custom:multiple-entity-row",
-                      "entity": "input_select.office_input",
-                      "name": "Input/Channel/Show",
-                      "show_state": false,
-                      "entities": [
-                        {
-                          "entity": "input_select.office_plex_show",
-                          "name": false,
-                          "icon": "mdi:plex"
-                        }
-                      ]
+                      "entity": "input_select.office_plex_show"
+                    },
+                    {
+                      "entity": "script.tv_office_roku_stop"
                     }
                   ],
                   "show_header_toggle": false,
@@ -2061,42 +1990,10 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "type": "custom:multiple-entity-row",
-                      "entity": "switch.living_room_tv",
-                      "show_state": false,
-                      "state_color": true,
-                      "entities": [
-                        {
-                          "entity": "sensor.living_room_tv_plug_power",
-                          "name": "Power"
-                        },
-                        {
-                          "entity": "switch.living_room_tv",
-                          "name": "TV",
-                          "toggle": true
-                        },
-                        {
-                          "entity": "switch.living_room_tv_plug",
-                          "name": "Plug",
-                          "toggle": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "custom:multiple-entity-row",
-                      "entity": "input_select.god_damn_input",
-                      "name": "Input/Channel/Show",
-                      "show_state": false,
-                      "entities": [
-                        {
-                          "entity": "input_select.living_room_plex_show",
-                          "name": false,
-                          "icon": "mdi:plex"
-                        }
-                      ]
-                    },
-                    {
                       "entity": "media_player.living_room_roku_tv"
+                    },
+                    {
+                      "entity": "input_select.living_room_plex_show"
                     },
                     {
                       "entity": "script.tv_living_room_roku_stop",
@@ -2219,11 +2116,12 @@
                 {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  .topborder {\n    border-top: 2px solid white;\n  }\n</style> <h2>Software</h2>\n<table> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th> </tr>\n\n{% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr> <td><font color=\"{{'#44739e' if states(software|replace('_latest','')) == states(software) else 'var(--state-active-color)'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'var(--state-active-color)'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'var(--state-active-color)'}}\">{{ states(software|replace('_latest','')) }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software|replace('_latest','')) == states(software) else 'var(--state-active-color)'}}\">{{ states(software) }}</font></td> </tr> {% endfor -%}\n<tr><td><font color=\"{{'#44739e' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'var(--state-active-color)'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}' /></font> </td> <td><font style=\"color:{{'var(--primary-text-color)' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'var(--state-active-color)'}}\">OPNsense</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'var(--state-active-color)'}}\">{{ states('sensor.opnsense_versions') }}</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'var(--state-active-color)'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</font></td></tr> {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr><td><font color=\"{{'#44739e' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'var(--state-active-color)'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}' /></font> </td> <td><font style=\"color:{{'var(--primary-text-color)' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'var(--state-active-color)'}}\">OPN {{ plugin }}</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'var(--state-active-color)'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'var(--state-active-color)'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</font></td></tr> {% endfor -%} {% for ap in state_attr('sensor.unifi_ap_versions', 'data') | sort(attribute=\"name\") -%} <tr><td><font color=\"{{'#44739e' if ap['version'] == ap['version_available'] else 'var(--state-active-color)'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}' /></font> </td> <td><font style=\"color:{{'var(--primary-text-color)' if ap['version'] == ap['version_available'] else 'var(--state-active-color)'}}\">Unifi {{ ap['name'] | replace('wap-','') | title }} AP</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if ap['version'] == ap['version_available'] else 'var(--state-active-color)'}}\">{{ ap['version'] }}</font></td> <td align=\"right\"><font style=\"color:{{'var(--primary-text-color)' if ap['version'] == ap['version_available'] else 'var(--state-active-color)'}}\">{{ ap['version_available'] }}</font></td></tr> {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td><font color=\"orange\"><ha-icon icon='mdi:alert-circle'></ha-icon></font></td><td colspan=\"3\"><font color=\"orange\">Error: Could not load Unifi Data</font></td></tr>{% endif %}</table>"
+                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  .topborder {\n    border-top: 2px solid white;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--paper-item-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <h2>Software</h2>\n<table> <tr> <th></th> <th align=\"left\">Name</th> <th align=\"right\">Installed</th> <th align=\"right\">Available</th> </tr> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr><td class=\"{{'off-icon' if states(software|replace('_latest','')) == states(software) else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></td> <td class=\"left {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software|replace('_latest','')) }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software) }}</td> </tr>{% endfor -%}\n<tr><td class=\"{{'off-icon' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}' /></td> <td class=\"left {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">OPNsense</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ states('sensor.opnsense_versions') }}</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</td></tr>\n{% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr> <td class=\"{{'off-icon' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}' /></td> <td class=\"left {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">OPN {{ plugin }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</td> </tr>{% endfor -%}\n{% for ap in state_attr('sensor.unifi_ap_versions', 'data') | sort(attribute=\"name\") -%} <tr> <td class=\"{{'off-icon' if ap['version'] == ap['version_available'] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}' /></td> <td class=\"left {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">Unifi {{ ap['name'] | replace('wap-','') | title }} AP</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version_available'] }}</td></tr> {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td class=warning><ha-icon icon='mdi:alert-circle'></ha-icon></td> <td colspan=\"3\" class=warning>Error: Could not load Unifi Data</td></tr> {% endif %} </table>"
                 },
                 {
-                  "type": "markdown",
-                  "content": "## Other Info\n<table width=\"100%\"><tr> <th></th> <th align=\"left\">Name</th> <th align=\"right\">Status</th> </tr><tr><td><font color=\"{{'#44739e' if states('sensor.unavailable_entities') | int(0) == 0 else 'var(--state-active-color)'}}\"><ha-icon icon='mdi:cloud-question'></font></td><td>{{ '<font color=\"var(--state-active-color)\">' if states('sensor.unavailable_entities') | int(0) != 0 }}Unavailable Entities</font></td> <td align=\"right\">{{'<font color=\"var(--state-active-color)\">' if states('sensor.unavailable_entities') | int(0) != 0 }}{{ states('sensor.unavailable_entities') }} unavailable entities</font></td></tr>\n<tr><td><font color=\"{{'#44739e' if states('sensor.plex_plex') | int(0) == 0 else 'var(--state-active-color)' }}\"><ha-icon icon='mdi:plex'></font></td><td>{{ '<font color=\"var(--state-active-color)\">' if states('sensor.plex_plex') | int(0) != 0 }}Plex Status</font></td> <td align=\"right\">{{ '<font color=\"var(--state-active-color)\">' if states('sensor.plex_plex') | int(0) != 0 }}{{ states('sensor.plex_plex') }} Watching</font></td></tr>\n<tr><td><font color=\"{{'#44739e' if states('sensor.jellyfin_watching') | int(0) == 0 else 'var(--state-active-color)' }}\"><ha-icon icon='mdi:television-play'></font></td><td>{{ '<font color=\"var(--state-active-color)\">' if states('sensor.jellyfin_watching') | int(0) != 0 }}Jellyfin Status</font></td> <td align=\"right\">{{ '<font color=\"var(--state-active-color)\">' if states('sensor.jellyfin_watching') | int(0) != 0 }}{{ states('sensor.jellyfin_watching') }} Watching</font></td></tr>\n<tr><td><font color=\"{{ '#44739e' if states('binary_sensor.new_tv_show_list_ready') == 'off' else 'var(--state-active-color)' }}\"><ha-icon icon='mdi:television'></font></td><td>{{ '<font color=\"var(--state-active-color)\">' if states('binary_sensor.new_tv_show_list_ready') != 'off' }}New TV Show List Ready</font></td> <td align=\"right\">{{'<font color=\"var(--state-active-color)\">' if states('binary_sensor.new_tv_show_list_ready') != 'off' }}{{ states('binary_sensor.new_tv_show_list_ready') | title }}</font></td></tr> <tr><td><font color=\"{{'#44739e' if as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) > (3600 * 24 * 7 * 2) else 'var(--state-active-color)' }}\"><ha-icon icon='mdi:shield-lock'></font></td><td>{{'<font color=\"var(--state-active-color)\">' if (as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2)) }}SSL Expiry Date</font></td><td align=\"right\">{{ '<font color=\"var(--state-active-color)\">' if (as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2)) }}{{ states('sensor.ssl_expiry_date') }}</font></td></tr> <tr><td><font color=\"{{'#44739e' if states('binary_sensor.earth') == 'on' else 'var(--state-active-color)' }}\"><ha-icon icon='mdi:{{ \"server-network\" if states('binary_sensor.earth') == 'on' else \"server-network-off\" }}'></font></td><td> {{ '<font color=\"var(--state-active-color)\">' if states('binary_sensor.earth') != 'on' }}Earth Host Status</font></td><td align=\"right\"> {{ '<font color=\"var(--state-active-color)\">' if states('binary_sensor.earth') != 'on'  }}{{ \"Up\" if states('binary_sensor.earth') == 'on' else \"Down\" }}</font></td></tr><tr><td><font color=\"{{ '#44739e' if states('binary_sensor.earth_nginx_php_working') == 'on' else 'var(--state-active-color)' }}\"><ha-icon icon='mdi:{{ \"web-check\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"web-off\"}}'></font></td><td>{{ '<font color=\"var(--state-active-color)\">' if states('binary_sensor.earth_nginx_php_working') != 'on' }}Earth Nginx/PHP Status</font></td> <td align=\"right\"> {{ '<font color=\"var(--state-active-color)>' if states('binary_sensor.earth_nginx_php_working') != 'on' }}{{ \"Up\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"Down\" }}</font></td></tr> </table>"
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  th.left, td.left {\n    text-align: left;\n  }\n  th.right, td.right {\n    text-align: right;\n  }\n  .unavailable-icon {\n    color: {{'var(--state-active-color);' if\n    states('sensor.unavailable_entities') | int(0) != 0\n    else 'var(--paper-item-icon-color)'}}\n  }\n  .unavailable-text {\n    color: {{'var(--state-active-color);' if\n    states('sensor.unavailable_entities') | int(0) != 0 }}\n  }\n  .plex-icon {\n    color: {{'var(--state-active-color);' if\n    states('sensor.plex_plex') | int(0) != 0\n    else 'var(--paper-item-icon-color)'}}\n  }\n  .plex-text {\n    color: {{'var(--state-active-color);' if\n    states('sensor.plex_plex') | int(0) != 0 }}\n  }\n  .jellyfin-icon {\n    color: {{'var(--state-active-color);' if\n    states('sensor.jellyfin_watching') | int(0) != 0\n    else 'var(--paper-item-icon-color)'}}\n  }\n  .jellyfin-text {\n    color: {{'var(--state-active-color);' if\n    states('sensor.jellyfin_watching') | int(0) != 0 }}\n  }\n  .tv-list-icon {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.new_tv_show_list_ready') == \"on\"\n    else 'var(--paper-item-icon-color)'}}\n  }\n  .tv-list-text {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.new_tv_show_list_ready') == \"on\" }}\n  }\n  .ssl-icon {\n    color: {{'var(--state-active-color);' if\n    as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2)\n    else 'var(--paper-item-icon-color)'}}\n  }\n  .ssl-text {\n    color: {{'var(--state-active-color);' if\n    as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2) }}\n  }\n  .earth-icon {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.earth') == 'off'\n    else 'var(--paper-item-icon-color)'}}\n  }\n  .earth-text {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.earth') == 'off' }}\n  }\n  .earth-www-icon {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.earth_nginx_php_working') == 'off'\n    else 'var(--paper-item-icon-color)'}}\n  }\n  .earth-www-text {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.earth_nginx_php_working') == 'off' }}\n  }\n</style> <!-- <h2>Other Info</h2> -->\n<table> <tr><th></th> <th class=\"left\">Name</th> <th class=\"right\">Status</th></tr> <tr><td class=unavailable-icon><ha-icon icon='mdi:cloud-question'></td> <td class=\"left unavailable-text\">Unavailable Entities</td> <td class=\"right unavailable-text\">{{ states('sensor.unavailable_entities') }} unavailable entities</td></tr>\n<tr><td class=plex-icon><ha-icon icon='mdi:plex'></td> <td class=\"left plex-text\">Plex Status</td> <td class=\"right plex-text\">{{ states('sensor.plex_plex') }} Watching</td></tr>\n<tr><td class=jellyfin-icon><ha-icon icon='mdi:television-play'></td> <td class=\"left jellyfin-text\">Jellyfin Status</td> <td class=\"right jellyfin-text\">{{ states('sensor.jellyfin_watching') }} Watching</td></tr>\n<tr><td class=tv-list-icon><ha-icon icon='mdi:television'></td> <td class=\"left tv-list-text\">New TV Show List Ready</td> <td class=\"right tv-list-text\">{{ states('binary_sensor.new_tv_show_list_ready') | title }}</td></tr>\n<tr><td class=ssl-icon><ha-icon icon='mdi:shield-lock'></td> <td class=\"left ssl-text\">SSL Expiry Date</td> <td class=\"right ssl-text\">{{ states('sensor.ssl_expiry_date') }}</td></tr>\n<tr><td class=earth-icon><ha-icon icon='mdi:{{ \"server-network\" if states('binary_sensor.earth') == 'on' else \"server-network-off\" }}'></td> <td class=\"left earth-text\">Earth Host Status</td> <td class=\"right earth-text\">{{ \"Up\" if states('binary_sensor.earth') == 'on' else \"Down\" }}</td></tr>\n<tr><td class=earth-www-icon><ha-icon icon='mdi:{{ \"web-check\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"web-off\"}}'></td> <td class=\"left earth-www-text\">Earth Nginx/PHP Status</font></td> <td class=\"right earth-www-text\">{{ \"Up\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"Down\" }}</td></tr> </table>"
                 }
               ]
             },
@@ -2231,11 +2129,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "## Home Assistant\n<table width=\"100%\"> <tr>\n  <th></th>\n  <th align=\"left\">Name</th>\n  <th align=\"right\">Installed</th>\n  <th align=\"right\">Available</th>\n</tr> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%}<tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'var(--state-active-color)'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'var(--state-active-color)'}}\"> {{ state_attr(software, 'title') | replace('Home Assistant', 'HA') | replace('Operating System', 'OS') }}</td><td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'var(--state-active-color)'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'var(--state-active-color)'}}\">{{ state_attr(software, 'latest_version') }}</font></td> </tr> {% endfor -%} {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.(home_assistant_(core|operating_system|supervisor)_update$|frigate_server$|wap_)') | map(attribute='entity_id') | list -%}{% if state_attr(software, 'device_class') != \"firmware\" and state_attr(software, 'title') != None %} <tr> <td><font color=\"{{'#44739e' if states(software) == 'off' else 'var(--state-active-color)'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></font> </td> <td><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'var(--state-active-color)'}}\"> {{ state_attr(software, 'title') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('UniFi Network Application', 'UniFi') | replace(' (Bitwarden)', '') | replace('Mosquitto broker', 'MQTT') | replace('Studio Code Server', 'VSCode') | replace('Signal Messenger', 'Signal') | replace('Google Drive Backup', 'Google Backup') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') | replace('Home Assistant', '') }}</td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'var(--state-active-color)'}}\">{{ state_attr(software, 'installed_version') }}</font></td> <td align=\"right\"><font style=\"color: {{'var(--primary-text-color)' if states(software) == 'off' else 'var(--state-active-color)'}}\">{{ state_attr(software, 'latest_version') }}</font></td> </tr> {% endif -%}{% endfor -%} </table>",
-                  "card_mod": {
-                    "styles": "table {\n    width: 100%;\n    border: 1px;\n}\n"
-                  }
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  .topborder {\n    border-top: 2px solid white;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--paper-item-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <h2>Home Assistant</h2>\n<table> <tr> <th></th> <th align=\"left\">Name</th> <th align=\"right\">Installed</th> <th align=\"right\">Available</th> </tr> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', 'HA') | replace('Operating System', 'OS') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-test' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endfor -%} {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.(home_assistant_(core|operating_system|supervisor)_update$|frigate_server$|wap_)') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'device_class') != \"firmware\" and state_attr(software, 'title') != None %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></td> <td class=\"left {{'off-test' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('UniFi Network Application', 'UniFi') | replace(' (Bitwarden)', '') | replace('Mosquitto broker', 'MQTT') | replace('Studio Code Server', 'VSCode') | replace('Signal Messenger', 'Signal') | replace('Google Drive Backup', 'Google Backup') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') | replace('Home Assistant', '') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endif -%} {% endfor -%} </table>"
                 },
                 {
                   "type": "gauge",
@@ -2361,31 +2257,9 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:auto-entities",
-                  "card": {
-                    "type": "entities",
-                    "title": "Counts",
-                    "card_mod": {
-                      "style": "#states > div {\n  margin: 0px 0px 0px 0px !important;\n  height: 28px;\n}\n"
-                    }
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "attributes": {
-                          "ha_count": "True"
-                        },
-                        "options": {}
-                      },
-                      {
-                        "entity_id": "sensor.yaml_loc",
-                        "options": {}
-                      }
-                    ]
-                  },
-                  "sort": {
-                    "method": "entity_id"
-                  }
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  ha-icon {\n    color: var(--paper-item-icon-color);\n  }\n</style> <table> {% for entity in (states | selectattr('attributes.ha_count', 'equalto', 'True') | list + [states.sensor.yaml_loc]) | sort(attribute='entity_id') -%} <tr> <td><ha-icon icon=\"{{ entity.attributes.icon }}\"></ha-icon></td> <td>{{ entity.attributes.friendly_name }}</td> <td>{{ entity.state }}</td> </tr> {% endfor -%} </table>"
                 },
                 {
                   "type": "entities",
@@ -2831,20 +2705,6 @@
                   },
                   "filter": {
                     "include": [
-                      {
-                        "entity_id": "sensor.hacs",
-                        "options": {
-                          "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "homeassistant.update_entity",
-                            "service_data": {},
-                            "target": {
-                              "entity_id": "this.entity_id"
-                            }
-                          }
-                        }
-                      },
                       {
                         "entity_id": "sensor.unavailable_entities",
                         "options": {
@@ -3647,6 +3507,64 @@
                 {
                   "type": "heading",
                   "heading": "New section"
+                },
+                {
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  ha-icon.off {\n    color: var(--paper-item-icon-color);\n  }\n  td.off {\n    color: var(--primary-text-color);\n  }\n  ha-icon.on, td.on {\n    color: var(--state-active-color);\n  }\n</style> <table> {% for entity in states | selectattr('attributes.device_class', 'equalto', 'moisture') | sort(attribute='entity_id') -%} <tr> <td ><ha-icon class={{ entity.state }} icon=\"{{ entity.attributes.icon if 'icon' in entity.attributes else 'mdi:water'}}\"></ha-icon></td> <td class={{ entity.state }}>{{ entity.attributes.friendly_name }}</td> <td class={{ entity.state }}>{{ entity.state }}</td> </tr> {% endfor -%} </table>"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "binary_sensor.master_bath_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.hall_bath_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.hall_bath_sink_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.living_room_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.dining_room_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.dining_room_refrigerator_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.kitchen_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.kitchen_refrigerator_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.god_damn_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.powder_room_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.den_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.washer_water_leak_sensor_water_leak"
+                    },
+                    {
+                      "entity": "binary_sensor.water_heater_water_leak_sensor_water_leak"
+                    }
+                  ]
                 }
               ]
             }

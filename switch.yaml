@@ -118,28 +118,19 @@
       friendly_name: "Office TV"
       icon_template: mdi:television
       value_template: >-
-        {% if states('sensor.office_tv_plug_power') | float(0) < 5 %}
+        {% if states('media_player.office_roku_tv') == "off" or states('media_player.office_roku_tv') == "standby" %}
           off
         {% else %}
           on
         {% endif %}
       turn_on:
-        - condition: template
-          value_template: '{{ states("sensor.office_tv_plug_power") | float(0) < 5 }}'
-        - service: homeassistant.turn_on
-          entity_id: switch.office_tv_plug
-        - delay: '2'
-        - service: mqtt.publish
-          data:
-            topic: cmnd/office_tv_remote/backlog
-            payload: 'irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33C13E","DataLSB":"0x33CC837C","Repeat":0}'
+        - service: media_player.turn_on
+          target:
+            entity_id: media_player.office_roku_tv
       turn_off:
-        - condition: template
-          value_template: '{{ states("sensor.office_tv_plug_power") | float(0) >= 5 }}'
-        - service: mqtt.publish
-          data:
-            topic: cmnd/office_tv_remote/backlog
-            payload: 'irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33C13E","DataLSB":"0x33CC837C","Repeat":0}'
+        - service: media_player.turn_off
+          target:
+            entity_id: media_player.office_roku_tv
 
     downstairs:
       friendly_name: "Downstairs"
