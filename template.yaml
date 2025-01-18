@@ -6,7 +6,7 @@
       {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
            's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
            '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-           '(remote|media_player)\.(?:plex|playstation|firefox|chrom)[\w]{0,40}|' +
+           '(remote|media_player)\.(?:plex|plex_\w{0,15}_plex_for_android_|playstation|firefox|chrom)[\w]{0,40}|' +
            'button\.(?:un)?ignore_all_issues|' +
            '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
            'device_tracker\.pixel_watch_3|' +
@@ -18,7 +18,7 @@
         {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
              's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
              '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-             '(remote|media_player)\.(?:plex|playstation|firefox|chrom)[\w]{0,40}|' +
+             '(remote|media_player)\.(?:plex|plex_\w{0,15}_plex_for_android_|playstation|firefox|chrom)[\w]{0,40}|' +
              'button\.(?:un)?ignore_all_issues|' +
              '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
              'device_tracker\.pixel_watch_3|' +
@@ -1042,4 +1042,47 @@
     icon: mdi:television-play
     state: '{{ states("sensor.plex_plex") | int(default=0) + states("sensor.jellyfin_active_clients") | int(default=0) }}'
     unit_of_measurement: "watching"
+
+- sensor:
+    unique_id: plex_watching
+    name: Plex Watching
+    icon: mdi:plex
+    state: '{{ states("sensor.plex_plex") | int(default=0) }}'
+    unit_of_measurement: "watching"
+    attributes:
+      sessions: |
+        { {% set names = {
+             'ahuldtgren': 'Andrea',
+             'anne.henderson': 'Anne',
+             'Atheo37': 'Alex/Marce',
+             'brian.7806': 'BrianG',
+             'cmilkeman': 'ChrisM',
+             'ebfab': 'EricB',
+             'erdelyt': 'TomE',
+             'heat828': 'Heather',
+             'heyitsmikey128': 'Kush',
+             'holly__': 'Holly',
+             'humber952': 'Chris/Adrian',
+             'jhuldtgren': 'Johan',
+             'justin7805': 'Justin',
+             'Kristy Arthur': 'Kristy',
+             'kristyarthur': 'Kristy',
+             'l.t.e': 'Dad',
+             'Maddie D': 'Maddie',
+             'maddied363': 'Maddie',
+             'merdely_': 'Mike',
+             'Modderno': 'MattM',
+             'nacho5631': 'ChrisH',
+             'orletsky': 'Martha',
+             'plexguest_': 'plexguest',
+             'reed530': 'Tracy',
+             'SimpliOP': 'DavidG',
+             'simpliop': 'DavidG',
+             'stuckonu5': 'Madsen',
+             }-%}
+        {% for attr in states.sensor.plex_plex.attributes -%}
+        {% if attr not in ['friendly_name', 'unit_of_measurement'] -%}
+        "{{ names[attr | regex_replace(' - .*$','')] }}": "{{ state_attr('sensor.plex_plex', attr) }}",
+        {% endif -%}
+        {% endfor -%} }
 

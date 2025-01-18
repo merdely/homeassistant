@@ -97,40 +97,71 @@
                     {
                       "type": "custom:multiple-entity-row",
                       "entity": "sensor.bedroom_multisensor_temperature",
-                      "name": "Temp",
+                      "name": false,
                       "show_state": false,
                       "entities": [
                         {
                           "entity": "sensor.bedroom_temperature",
                           "name": "BR",
-                          "unit": " "
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--bedroom-temp-color)"
+                          }
+                        },
+                        {
+                          "entity": "sensor.bedroom_humidity",
+                          "name": "BR(h)",
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--bedroom-humidity-color)"
+                          }
                         },
                         {
                           "entity": "sensor.master_bath_temperature",
                           "name": "MB",
-                          "unit": " "
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--master-bath-temp-color)"
+                          }
                         },
                         {
                           "entity": "sensor.master_bath_humidity",
                           "name": "MB(h)",
-                          "unit": " "
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--master-bath-humidity-color)"
+                          }
+                        },
+                        {
+                          "entity": "sensor.hall_bath_humidity",
+                          "name": "HB(h)",
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--hall-bath-humidity-color)"
+                          }
                         },
                         {
                           "entity": "sensor.office_temperature",
                           "name": "Ofc",
-                          "unit": " "
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--office-temp-color)"
+                          }
                         },
                         {
-                          "entity": "sensor.living_room_temperature",
-                          "name": "LR",
-                          "unit": " "
+                          "entity": "sensor.office_humidity",
+                          "name": "Ofc(h)",
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--office-humidity-color)"
+                          }
                         }
                       ]
                     },
                     {
                       "type": "custom:multiple-entity-row",
                       "entity": "sensor.god_damn_multisensor_temperature",
-                      "name": "Temp",
+                      "name": false,
                       "show_state": false,
                       "entities": [
                         {
@@ -143,24 +174,52 @@
                           "unit": " "
                         },
                         {
-                          "entity": "sensor.god_damn_temperature",
-                          "name": "Down",
-                          "unit": " "
+                          "entity": "sensor.attic_temperature",
+                          "name": "Attic",
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--attic-temp-color)"
+                          }
                         },
                         {
-                          "entity": "sensor.attic_multisensor_temperature",
-                          "name": "Attic",
-                          "unit": " "
+                          "entity": "sensor.living_room_temperature",
+                          "name": "LR",
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--living-room-temp-color)"
+                          }
+                        },
+                        {
+                          "entity": "sensor.god_damn_temperature",
+                          "name": "Down",
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--god-damn-temp-color)"
+                          }
                         },
                         {
                           "entity": "sensor.garage_temperature",
                           "name": "Garage",
-                          "unit": " "
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--garage-temp-color)"
+                          }
                         },
                         {
                           "entity": "sensor.outside_temperature",
                           "name": "Out",
-                          "unit": " "
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--outside-temp-color)"
+                          }
+                        },
+                        {
+                          "entity": "sensor.outside_humidity",
+                          "name": "Out(h)",
+                          "unit": " ",
+                          "styles": {
+                            "color": "var(--outside-humidity-color)"
+                          }
                         }
                       ]
                     },
@@ -538,12 +597,12 @@
                       "position": "right",
                       "buttons": [
                         {
-                          "entity": "button.homeassistant_reload",
-                          "icon": "mdi:lightbulb-multiple",
+                          "entity": "switch.upstairs",
+                          "icon": "mdi:stairs-up",
                           "name": false,
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#lights"
+                            "navigation_path": "#upstairs-lights"
                           },
                           "styles": {
                             "icon": {
@@ -551,6 +610,54 @@
                             }
                           }
                         },
+                        {
+                          "entity": "switch.middle_level",
+                          "icon": "mdi:format-align-middle",
+                          "name": false,
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#middle-lights"
+                          },
+                          "styles": {
+                            "icon": {
+                              "--mdc-icon-size": "45px"
+                            }
+                          }
+                        },
+                        {
+                          "entity": "switch.downstairs",
+                          "icon": "mdi:stairs-down",
+                          "name": false,
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#downstairs-lights"
+                          },
+                          "styles": {
+                            "icon": {
+                              "--mdc-icon-size": "45px"
+                            }
+                          }
+                        },
+                        {
+                          "entity": "switch.outside",
+                          "icon": "mdi:image",
+                          "name": false,
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#outside-lights"
+                          },
+                          "styles": {
+                            "icon": {
+                              "--mdc-icon-size": "45px"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
                         {
                           "entity": "button.homeassistant_reload",
                           "icon": "mdi:security",
@@ -565,40 +672,6 @@
                             }
                           }
                         },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "icon": "mdi:shield-home",
-                          "name": false,
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#sensors"
-                          },
-                          "styles": {
-                            "icon": {
-                              "--mdc-icon-size": "40px"
-                            }
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "icon": "mdi:cctv",
-                          "name": false,
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#cameras"
-                          },
-                          "styles": {
-                            "icon": {
-                              "--mdc-icon-size": "40px"
-                            }
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "custom:paper-buttons-row",
-                      "position": "right",
-                      "buttons": [
                         {
                           "entity": "button.homeassistant_reload",
                           "icon": "mdi:tools",
@@ -746,11 +819,11 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_plex.attributes.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>P</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>J</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_watching.attributes.sessions.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>＞</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>⟁</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
                     }
                   ],
                   "card_mod": {
-                    "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_active_clients') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                    "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --attic-temp-color: {% if states(\"sensor.attic_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.attic_temperature\") | int >= 90 %}orange{% endif %};\n  --bedroom-temp-color: {% if states(\"sensor.bedroom_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.bedroom_temperature\") | int >= 80 %}orange{% endif %};\n  --master-bath-temp-color: {% if states(\"sensor.master_bath_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.master_bath_temperature\") | int >= 80 %}orange{% endif %};\n  --office-temp-color: {% if states(\"sensor.office_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.office_temperature\") | int >= 80 %}orange{% endif %};\n  --living-room-temp-color: {% if states(\"sensor.living_room_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.living_room_temperature\") | int >= 80 %}orange{% endif %};\n  --god-damn-temp-color: {% if states(\"sensor.god_damn_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.god_damn_temperature\") | int >= 80 %}orange{% endif %};\n  --garage-temp-color: {% if states(\"sensor.garage_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.garage_temperature\") | int >= 90 %}orange{% endif %};\n  --outside-temp-color: {% if states(\"sensor.outside_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.outside_temperature\") | int >= 90 %}orange{% endif %};\n\n  --bedroom-humidity-color: {% if states(\"sensor.bedroom_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.bedroom_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --master-bath-humidity-color: {% if states(\"sensor.master_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.master_bath_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --hall-bath-humidity-color: {% if states(\"sensor.hall_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.hall_bath_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --office-humidity-color: {% if states(\"sensor.office_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.office_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --outside-humidity-color: {% if states(\"sensor.outside_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.outside_humidity\") | int(45) >= 50 %}orange{% endif %};\n  \n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_active_clients') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -759,45 +832,1192 @@
                     {
                       "type": "custom:bubble-card",
                       "card_type": "pop-up",
-                      "hash": "#lights",
-                      "show_header": true,
+                      "hash": "#upstairs-lights",
+                      "button_type": "switch",
                       "sub_button": [
                         {
-                          "entity": "button.homeassistant_reload",
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#lights"
+                            "navigation_path": "#upstairs-lights"
                           },
-                          "icon": "mdi:lightbulb-multiple"
+                          "icon": "mdi:stairs-up"
                         },
                         {
-                          "entity": "button.homeassistant_reload",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#middle-lights"
+                          },
+                          "icon": "mdi:format-align-middle"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#downstairs-lights"
+                          },
+                          "icon": "mdi:stairs-down"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#outside-lights"
+                          },
+                          "icon": "mdi:image"
+                        },
+                        {
                           "tap_action": {
                             "action": "navigate",
                             "navigation_path": "#bulbs"
                           },
                           "icon": "mdi:lightbulb"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#lights"
+                          },
+                          "icon": "mdi:lightbulb-multiple"
                         }
                       ],
-                      "button_type": "switch",
-                      "entity": "button.homeassistant_reload",
-                      "name": "",
-                      "show_icon": false,
+                      "show_header": true,
+                      "name": "noname",
                       "show_name": false,
-                      "tap_action": {
-                        "action": "none"
-                      },
-                      "button_action": {
-                        "tap_action": {
-                          "action": "none"
+                      "show_icon": false,
+                      "scrolling_effect": false
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        "switch.bedroom",
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.dresser_lamp",
+                              "name": "Dresser",
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.holly_nightstand_lamp",
+                              "name": "Nitestand",
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            }
+                          ]
                         },
-                        "double_tap_action": {
-                          "action": "none"
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.bedroom_fan_light",
+                              "name": "Fan Lite",
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "fan.bedroom_fan",
+                              "name": "Fan",
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              },
+                              "styles": ".bubble-icon {\n  color: ${state > 0 ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-range-fill { \n  background: var(--bubble-light-color, rgba(225, 225, 210)) !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ]
                         },
-                        "hold_action": {
-                          "action": "none"
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.bedroom_humidifier",
+                              "name": "Humidifier",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.bedroom_tv",
+                              "name": "TV",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        "switch.master_bath",
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.master_bath_light",
+                              "name": "Light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "fan.master_bath_fan",
+                              "name": "Fan",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        "switch.office",
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "name": "Desk",
+                              "icon": "",
+                              "entity": "light.mike_desk_lamp"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.mike_desk_strip_plug_4_humidifier",
+                              "name": "Humifier",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.office_fan_light",
+                              "name": "Fan Light",
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "fan.office_fan",
+                              "name": "Fan",
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              },
+                              "styles": ".bubble-icon {\n  color: ${state > 0 ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-range-fill { \n  background: var(--bubble-light-color, rgba(225, 225, 210)) !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.office_tv",
+                              "name": "TV",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.office_heater_plug",
+                              "name": "Heater",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        "switch.hall_bath",
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.hall_bath_light",
+                              "name": "Light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "fan.hall_bath_fan",
+                              "name": "Fan",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.guest_room_light",
+                              "name": "Guest Room"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.hallway_light"
+                            }
+                          ]
                         }
-                      }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#middle-lights",
+                      "button_type": "switch",
+                      "sub_button": [
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#upstairs-lights"
+                          },
+                          "icon": "mdi:stairs-up"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#middle-lights"
+                          },
+                          "icon": "mdi:format-align-middle"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#downstairs-lights"
+                          },
+                          "icon": "mdi:stairs-down"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#outside-lights"
+                          },
+                          "icon": "mdi:image"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#bulbs"
+                          },
+                          "icon": "mdi:lightbulb"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#lights"
+                          },
+                          "icon": "mdi:lightbulb-multiple"
+                        }
+                      ],
+                      "show_header": true,
+                      "name": "noname",
+                      "show_name": false,
+                      "show_icon": false,
+                      "scrolling_effect": false
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "entity": "switch.kitchen"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.kitchen_table_light",
+                              "name": "Table Light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.kitchen_overhead_light",
+                              "name": "Overhead Light",
+                              "scrolling_effect": false
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "entity": "switch.living_room"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.near_black_lamp",
+                              "name": "Near Black Lamp",
+                              "scrolling_effect": false
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.far_black_lamp",
+                              "name": "Far Black Lamp",
+                              "scrolling_effect": false
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.white_lamp",
+                              "name": "White Lamp",
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.living_room_tv",
+                              "name": "TV",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "entity": "switch.dining_room"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.dining_room_overhead_light",
+                              "name": "Dining Rm"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.dining_room_christmas_lights",
+                              "name": "Dining Rm Xmas",
+                              "scrolling_effect": false
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.foyer_light",
+                              "scrolling_effect": false
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#downstairs-lights",
+                      "button_type": "switch",
+                      "sub_button": [
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#upstairs-lights"
+                          },
+                          "icon": "mdi:stairs-up"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#middle-lights"
+                          },
+                          "icon": "mdi:format-align-middle"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#downstairs-lights"
+                          },
+                          "icon": "mdi:stairs-down"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#outside-lights"
+                          },
+                          "icon": "mdi:image"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#bulbs"
+                          },
+                          "icon": "mdi:lightbulb"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#lights"
+                          },
+                          "icon": "mdi:lightbulb-multiple"
+                        }
+                      ],
+                      "show_header": true,
+                      "name": "noname",
+                      "show_name": false,
+                      "show_icon": false,
+                      "scrolling_effect": false
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "entity": "switch.downstairs"
+                        },
+                        {
+                          "type": "section"
+                        },
+                        {
+                          "entity": "switch.family_room"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.god_damn_light",
+                              "scrolling_effect": false,
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.fireplace_light",
+                              "scrolling_effect": false
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.god_damn_tv",
+                              "scrolling_effect": false,
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.three_headed_lamp",
+                              "scrolling_effect": false
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.mantle_lights",
+                              "scrolling_effect": false
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.christmas_tree",
+                              "scrolling_effect": false,
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "section",
+                          "label": "Laundry Room"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.laundry_room_light",
+                              "scrolling_effect": false
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.furnace_switch",
+                              "scrolling_effect": false,
+                              "name": "Furnace",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "section",
+                          "label": "Den"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.den_overhead_light",
+                              "scrolling_effect": false,
+                              "name": "Den Light"
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "section",
+                          "label": "Powder Room"
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.powder_room_light",
+                              "scrolling_effect": false
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#outside-lights",
+                      "button_type": "switch",
+                      "sub_button": [
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#upstairs-lights"
+                          },
+                          "icon": "mdi:stairs-up"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#middle-lights"
+                          },
+                          "icon": "mdi:format-align-middle"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#downstairs-lights"
+                          },
+                          "icon": "mdi:stairs-down"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#outside-lights"
+                          },
+                          "icon": "mdi:image"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#bulbs"
+                          },
+                          "icon": "mdi:lightbulb"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#lights"
+                          },
+                          "icon": "mdi:lightbulb-multiple"
+                        }
+                      ],
+                      "show_header": true,
+                      "name": "noname",
+                      "show_name": false,
+                      "show_icon": false,
+                      "scrolling_effect": false
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        "switch.outside",
+                        {
+                          "type": "section"
+                        },
+                        "switch.garage",
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.bench_light",
+                              "name": "Bench Light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.far_garage_light",
+                              "name": "Far Light"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.garage_door_light",
+                              "name": "Garage Door"
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        "switch.front_yard",
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.front_porch_light",
+                              "name": "Front Porch",
+                              "button_type": "slider",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "switch.outside_xmas",
+                              "name": "Christmas",
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.outside_garage_lights",
+                              "name": "Garage"
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "section"
+                        },
+                        "switch.back_yard",
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.back_porch_light",
+                              "name": "Back Porch"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "button_type": "slider",
+                              "entity": "light.deck_lights",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.flood_light"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
+                              "entity": "light.shed_lamp"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#bulbs",
+                      "button_type": "switch",
+                      "sub_button": [
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#upstairs-lights"
+                          },
+                          "icon": "mdi:stairs-up"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#middle-lights"
+                          },
+                          "icon": "mdi:format-align-middle"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#downstairs-lights"
+                          },
+                          "icon": "mdi:stairs-down"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#outside-lights"
+                          },
+                          "icon": "mdi:image"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#bulbs"
+                          },
+                          "icon": "mdi:lightbulb"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#lights"
+                          },
+                          "icon": "mdi:lightbulb-multiple"
+                        }
+                      ],
+                      "show_header": true,
+                      "name": "noname",
+                      "show_name": false,
+                      "show_icon": false,
+                      "scrolling_effect": false
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "entity": "light.white_switch"
+                        },
+                        {
+                          "entity": "light.white_bulb"
+                        },
+                        {
+                          "entity": "light.front_porch_switch"
+                        },
+                        {
+                          "entity": "light.front_porch_bulb"
+                        },
+                        {
+                          "entity": "light.dresser_switch"
+                        },
+                        {
+                          "entity": "light.dresser_bulb"
+                        },
+                        {
+                          "entity": "light.god_damn_switch"
+                        },
+                        {
+                          "entity": "light.god_damn_bulb"
+                        },
+                        {
+                          "entity": "light.holly_nightstand_bulb"
+                        }
+                      ],
+                      "title": "Other Plugs",
+                      "show_header_toggle": false
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#lights",
+                      "button_type": "switch",
+                      "sub_button": [
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#upstairs-lights"
+                          },
+                          "icon": "mdi:stairs-up"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#middle-lights"
+                          },
+                          "icon": "mdi:format-align-middle"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#downstairs-lights"
+                          },
+                          "icon": "mdi:stairs-down"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#outside-lights"
+                          },
+                          "icon": "mdi:image"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#bulbs"
+                          },
+                          "icon": "mdi:lightbulb"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#lights"
+                          },
+                          "icon": "mdi:lightbulb-multiple"
+                        }
+                      ],
+                      "show_header": true,
+                      "name": "noname",
+                      "show_name": false,
+                      "show_icon": false,
+                      "scrolling_effect": false
                     },
                     {
                       "type": "entities",
@@ -1315,89 +2535,36 @@
                     {
                       "type": "custom:bubble-card",
                       "card_type": "pop-up",
-                      "hash": "#bulbs",
-                      "show_header": true,
+                      "hash": "#security",
+                      "button_type": "switch",
                       "sub_button": [
                         {
-                          "entity": "button.homeassistant_reload",
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#lights"
+                            "navigation_path": "#security"
                           },
-                          "icon": "mdi:lightbulb-multiple"
+                          "icon": "mdi:security"
                         },
                         {
-                          "entity": "button.homeassistant_reload",
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#bulbs"
+                            "navigation_path": "#sensors"
                           },
-                          "icon": "mdi:lightbulb"
+                          "icon": "mdi:shield-home"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#cameras"
+                          },
+                          "icon": "mdi:cctv"
                         }
                       ],
-                      "button_type": "switch",
-                      "entity": "button.homeassistant_reload",
-                      "name": "",
-                      "show_icon": false,
+                      "show_header": true,
+                      "name": "noname",
                       "show_name": false,
-                      "tap_action": {
-                        "action": "none"
-                      },
-                      "button_action": {
-                        "tap_action": {
-                          "action": "none"
-                        },
-                        "double_tap_action": {
-                          "action": "none"
-                        },
-                        "hold_action": {
-                          "action": "none"
-                        }
-                      }
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "light.white_switch"
-                        },
-                        {
-                          "entity": "light.white_bulb"
-                        },
-                        {
-                          "entity": "light.front_porch_switch"
-                        },
-                        {
-                          "entity": "light.front_porch_bulb"
-                        },
-                        {
-                          "entity": "light.dresser_switch"
-                        },
-                        {
-                          "entity": "light.dresser_bulb"
-                        },
-                        {
-                          "entity": "light.god_damn_switch"
-                        },
-                        {
-                          "entity": "light.god_damn_bulb"
-                        },
-                        {
-                          "entity": "light.holly_nightstand_bulb"
-                        }
-                      ],
-                      "title": "Other Plugs",
-                      "show_header_toggle": false
-                    }
-                  ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
-                      "hash": "#security"
+                      "show_icon": false,
+                      "scrolling_effect": false
                     },
                     {
                       "type": "tile",
@@ -1480,7 +2647,36 @@
                     {
                       "type": "custom:bubble-card",
                       "card_type": "pop-up",
-                      "hash": "#sensors"
+                      "hash": "#sensors",
+                      "button_type": "switch",
+                      "sub_button": [
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#security"
+                          },
+                          "icon": "mdi:security"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#sensors"
+                          },
+                          "icon": "mdi:shield-home"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#cameras"
+                          },
+                          "icon": "mdi:cctv"
+                        }
+                      ],
+                      "show_header": true,
+                      "name": "noname",
+                      "show_name": false,
+                      "show_icon": false,
+                      "scrolling_effect": false
                     },
                     {
                       "type": "entities",
@@ -1567,6 +2763,101 @@
                       "card_mod": {
                         "style": "ha-card {\n}\n.card-content {\n  padding-top: 0;\n  padding-bottom: 0;\n}\n#states > div {\n  margin: -10px 0px;\n}\n"
                       }
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#cameras",
+                      "button_type": "switch",
+                      "sub_button": [
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#security"
+                          },
+                          "icon": "mdi:security"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#sensors"
+                          },
+                          "icon": "mdi:shield-home"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#cameras"
+                          },
+                          "icon": "mdi:cctv"
+                        }
+                      ],
+                      "show_header": true,
+                      "name": "noname",
+                      "show_name": false,
+                      "show_icon": false,
+                      "scrolling_effect": false
+                    },
+                    {
+                      "show_state": false,
+                      "show_name": false,
+                      "camera_view": "auto",
+                      "type": "picture-entity",
+                      "entity": "camera.front_door_cam",
+                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                    },
+                    {
+                      "show_state": false,
+                      "show_name": false,
+                      "camera_view": "auto",
+                      "type": "picture-entity",
+                      "entity": "camera.front_door_cam_2",
+                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                    },
+                    {
+                      "show_state": false,
+                      "show_name": false,
+                      "camera_view": "auto",
+                      "type": "picture-entity",
+                      "entity": "camera.garage_cam",
+                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                    },
+                    {
+                      "show_state": false,
+                      "show_name": false,
+                      "camera_view": "auto",
+                      "type": "picture-entity",
+                      "entity": "camera.shed_cam",
+                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                    },
+                    {
+                      "show_state": false,
+                      "show_name": false,
+                      "camera_view": "auto",
+                      "type": "picture-entity",
+                      "entity": "camera.backyard_cam",
+                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                    },
+                    {
+                      "show_state": false,
+                      "show_name": false,
+                      "camera_view": "auto",
+                      "type": "picture-entity",
+                      "entity": "camera.chimney_cam",
+                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                    },
+                    {
+                      "show_state": false,
+                      "show_name": false,
+                      "camera_view": "auto",
+                      "type": "picture-entity",
+                      "entity": "camera.garage_door_cam",
+                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
                     }
                   ]
                 },
@@ -1747,7 +3038,7 @@
                               "layout": "icon_name",
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             },
@@ -1758,18 +3049,18 @@
                               "layout": "icon_name",
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             },
                             {
                               "entity": "switch.garage_door_cam_plug",
-                              "name": "GarageDoorCam",
+                              "name": "GrgDrCam",
                               "icon": "mdi:power-plug",
                               "layout": "icon_name",
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             },
@@ -1779,7 +3070,17 @@
                               "layout": "icon_name",
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "switch.zigbee2mqtt_bridge_permit_join",
+                              "name": "Z2M Join",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             }
@@ -1869,18 +3170,76 @@
                           }
                         },
                         {
-                          "entity": "sensor.date",
                           "type": "custom:multiple-entity-row",
+                          "entity": "binary_sensor.software_update_available",
+                          "name": false,
+                          "icon": "mdi:home-assistant",
                           "show_state": false,
                           "state_color": true,
-                          "name": "Wyze Days ! Seen",
+                          "tap_action": {
+                            "action": "none"
+                          },
                           "entities": [
                             {
+                              "entity": "binary_sensor.software_update_available",
+                              "type": "attribute",
+                              "name": "Updates",
+                              "attribute": "number",
+                              "styles": {
+                                "color": "var(--updates-color)"
+                              }
+                            },
+                            {
+                              "entity": "sensor.unavailable_entities",
+                              "name": "Unavailable",
+                              "styles": {
+                                "color": "var(--unavailable-color)"
+                              },
+                              "tap_action": {
+                                "action": "perform-action",
+                                "perform_action": "homeassistant.update_entity",
+                                "target": {},
+                                "data": {
+                                  "entity_id": [
+                                    "sensor.unavailable_entities"
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "entity": "sensor.ood_zigbee_entities",
+                              "name": "Zigbee",
+                              "styles": {
+                                "color": "var(--zigbee-color)"
+                              },
+                              "tap_action": {
+                                "action": "perform-action",
+                                "perform_action": "homeassistant.update_entity",
+                                "target": {},
+                                "data": {
+                                  "entity_id": [
+                                    "sensor.ood_zigbee_entities"
+                                  ]
+                                }
+                              }
+                            },
+                            {
                               "entity": "sensor.office_shelf_motion_sensor_days_since_seen",
-                              "name": "Office Shelf MS",
+                              "name": "Office MS",
                               "unit": false,
                               "styles": {
-                                "color": "var(--office-shelf-motion-sensor-days-color)"
+                                "color": "var(--office-shelf-motion-sensor-days-color)",
+                                "width": "50px"
+                              },
+                              "tap_action": {
+                                "action": "perform-action",
+                                "perform_action": "homeassistant.update_entity",
+                                "target": {},
+                                "data": {
+                                  "entity_id": [
+                                    "sensor.ood_wyze_entities"
+                                  ]
+                                }
                               }
                             },
                             {
@@ -1889,6 +3248,16 @@
                               "unit": false,
                               "styles": {
                                 "color": "var(--mailbox-sensor-days-color)"
+                              },
+                              "tap_action": {
+                                "action": "perform-action",
+                                "perform_action": "homeassistant.update_entity",
+                                "target": {},
+                                "data": {
+                                  "entity_id": [
+                                    "sensor.ood_wyze_entities"
+                                  ]
+                                }
                               }
                             }
                           ]
@@ -2031,72 +3400,6 @@
                     {
                       "type": "custom:bubble-card",
                       "card_type": "pop-up",
-                      "hash": "#cameras"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.front_door_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.front_door_cam_2",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.garage_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.shed_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.backyard_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.chimney_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.garage_door_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    }
-                  ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
                       "hash": "#docs"
                     },
                     {
@@ -2114,92 +3417,249 @@
                       "hash": "#tvs"
                     },
                     {
-                      "type": "custom:bubble-card",
-                      "card_type": "button",
-                      "entity": "switch.bedroom_tv",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "sub_button": [
+                      "type": "grid",
+                      "columns": 2,
+                      "square": false,
+                      "cards": [
                         {
-                          "entity": "script.tv_bedroom_mute",
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "switch.bedroom_tv",
                           "tap_action": {
                             "action": "toggle"
                           },
                           "hold_action": {
                             "action": "more-info"
+                          },
+                          "sub_button": [
+                            {
+                              "entity": "script.tv_bedroom_mute",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:sleep",
+                          "name": "Sleep",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "conversation.process",
+                            "target": {},
+                            "data": {
+                              "text": "Turn on Bedroom TV in 30 minutes"
+                            }
+                          },
+                          "hold_action": {
+                            "action": "none"
                           }
                         }
                       ]
                     },
                     {
                       "type": "custom:bubble-card",
-                      "card_type": "button",
-                      "entity": "switch.office_tv",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "sub_button": [
+                      "card_type": "media-player",
+                      "entity": "media_player.bedroom_roku"
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "select",
+                      "entity": "input_select.bedroom_plex_show"
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "separator"
+                    },
+                    {
+                      "type": "grid",
+                      "columns": 2,
+                      "square": false,
+                      "cards": [
                         {
-                          "entity": "script.tv_office_mute",
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "switch.office_tv",
                           "tap_action": {
                             "action": "toggle"
                           },
                           "hold_action": {
                             "action": "more-info"
+                          },
+                          "sub_button": [
+                            {
+                              "entity": "script.tv_office_mute",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:sleep",
+                          "name": "Sleep",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "conversation.process",
+                            "target": {},
+                            "data": {
+                              "text": "Turn on Office TV in 30 minutes"
+                            }
+                          },
+                          "hold_action": {
+                            "action": "none"
                           }
                         }
                       ]
                     },
                     {
                       "type": "custom:bubble-card",
-                      "card_type": "button",
-                      "entity": "switch.living_room_tv",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "sub_button": [
+                      "card_type": "media-player",
+                      "entity": "media_player.office_roku_tv"
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "select",
+                      "entity": "input_select.office_plex_show"
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "separator"
+                    },
+                    {
+                      "type": "grid",
+                      "columns": 2,
+                      "square": false,
+                      "cards": [
                         {
-                          "entity": "script.tv_living_room_mute",
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "switch.living_room_tv",
                           "tap_action": {
                             "action": "toggle"
                           },
                           "hold_action": {
                             "action": "more-info"
+                          },
+                          "sub_button": [
+                            {
+                              "entity": "script.tv_living_room_mute",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:sleep",
+                          "name": "Sleep",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "conversation.process",
+                            "target": {},
+                            "data": {
+                              "text": "Turn on Living Room TV in 30 minutes"
+                            }
+                          },
+                          "hold_action": {
+                            "action": "none"
                           }
                         }
                       ]
                     },
                     {
                       "type": "custom:bubble-card",
-                      "card_type": "button",
-                      "entity": "switch.god_damn_tv",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "hold_action": {
-                        "action": "more-info"
-                      },
-                      "sub_button": [
+                      "card_type": "media-player",
+                      "entity": "media_player.living_room_roku_tv"
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "select",
+                      "entity": "input_select.living_room_plex_show"
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "separator"
+                    },
+                    {
+                      "type": "grid",
+                      "columns": 2,
+                      "square": false,
+                      "cards": [
                         {
-                          "entity": "script.tv_god_damn_mute",
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "switch.god_damn_tv",
                           "tap_action": {
                             "action": "toggle"
                           },
                           "hold_action": {
                             "action": "more-info"
+                          },
+                          "sub_button": [
+                            {
+                              "entity": "script.tv_god_damn_mute",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:sleep",
+                          "name": "Sleep",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "conversation.process",
+                            "target": {},
+                            "data": {
+                              "text": "Turn on God Damn TV in 30 minutes"
+                            }
+                          },
+                          "hold_action": {
+                            "action": "none"
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "media-player",
+                      "entity": "media_player.god_damn_roku"
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "select",
+                      "entity": "input_select.god_damn_input"
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "select",
+                      "entity": "input_select.god_damn_plex_show"
                     }
                   ]
                 },
@@ -2638,8 +4098,9 @@
                       "title": "Out of Date Zigbee Devices"
                     },
                     {
-                      "type": "markdown",
-                      "content": "Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%}\n{% set ns.count = ns.count + 1 -%}\n{% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}{% endif %}* {% if entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) %}<font color=\"var(--state-active-color)\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>\n{% endfor -%}\n",
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol> {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} <li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) - 21600) and \"bulb\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
                       "title": "All Zigbee Devices"
                     }
                   ]

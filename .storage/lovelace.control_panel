@@ -7,6 +7,8 @@
       "views": [
         {
           "type": "panel",
+          "title": "Home",
+          "icon": "mdi:home",
           "path": "home",
           "cards": [
             {
@@ -111,54 +113,72 @@
                       "forecast_type": "daily"
                     },
                     {
-                      "type": "vertical-stack",
-                      "cards": [
+                      "type": "entities",
+                      "entities": [
                         {
-                          "type": "entities",
-                          "entities": [
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
                             {
-                              "type": "custom:multiple-entity-row",
                               "entity": "sensor.plex_plex",
-                              "name": "Plex & Jellyfin Streaming",
-                              "show_state": false,
-                              "state_color": true,
-                              "double_tap_action": {
-                                "action": "more-info"
+                              "layout": "icon|state",
+                              "icon": "mdi:plex",
+                              "state": "{{ states('sensor.plex_plex') | default(0) }} watching",
+                              "tap_action": {
+                                "action": "more-info",
+                                "entity": "sensor.plex_plex"
                               },
-                              "hold_action": {
-                                "action": "more-info"
-                              },
-                              "entities": [
-                                {
-                                  "entity": "sensor.plex_plex",
-                                  "name": "Plex",
-                                  "styles": {
-                                    "color": "var(--plex-color)",
-                                    "font-size": "20px"
-                                  }
-                                },
-                                {
-                                  "entity": "sensor.jellyfin_watching",
-                                  "name": "Jellyfin",
-                                  "styles": {
-                                    "color": "var(--jellyfin-color)",
-                                    "font-size": "20px"
-                                  }
+                              "styles": {
+                                "button": {
+                                  "color": "var(--plex-color)"
                                 }
-                              ]
+                              }
                             },
                             {
-                              "type": "custom:html-template-card",
-                              "ignore_line_breaks": true,
-                              "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_plex.attributes.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>P</td><td>{{ client | regex_replace('(_+)? - .*$', '') | replace('reed530','Tracy') | replace('ebfab', 'EricB') | replace('humber952','Christina') | replace('Atheo37','Alex/Marce') | replace('ahuldtgren','Andrea') | replace('jhuldtgren', 'Johan') | replace('stuckonu5', 'Madsen') | replace('simpliop','DavidG') }}</td><td> {{ value }}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>J</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
+                              "entity": "sensor.jellyfin_watching",
+                              "layout": "icon|state",
+                              "icon": "mdi:triangle-outline",
+                              "state": "{{ states('sensor.jellyfin_watching') | default(0) }} watching",
+                              "tap_action": {
+                                "action": "more-info",
+                                "entity": "sensor.jellyfin_watching"
+                              },
+                              "styles": {
+                                "button": {
+                                  "color": "var(--jellyfin-color)"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "sensor.thermostat_temperature",
+                              "layout": "icon|state",
+                              "icon": "mdi:thermostat",
+                              "state": "Set: {{ state_attr('climate.thermostat', 'temperature') }}°F ({{ states('climate.thermostat') | capitalize }} · {{ state_attr('climate.thermostat', 'current_temperature') }}°F)",
+                              "tap_action": {
+                                "action": "more-info",
+                                "entity": "climate.thermostat"
+                              },
+                              "styles": {
+                                "button": {
+                                  "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--primary-text-color){% endif %}\n"
+                                }
+                              }
                             }
                           ],
-                          "state_color": true,
                           "card_mod": {
                             "style": "ha-card {\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_active_clients') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                           }
+                        },
+                        {
+                          "type": "custom:html-template-card",
+                          "ignore_line_breaks": true,
+                          "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_watching.attributes.sessions.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>＞</td><td>{{ client | regex_replace('(_+)? - .*$', '') | replace('reed530','Tracy') | replace('ebfab', 'EricB') | replace('humber952','Christina') | replace('Atheo37','Alex/Marce') | replace('ahuldtgren','Andrea') | replace('jhuldtgren', 'Johan') | replace('stuckonu5', 'Madsen') | replace('simpliop','DavidG') }}</td><td> {{ value }}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>⟁</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
                         }
-                      ]
+                      ],
+                      "state_color": true,
+                      "card_mod": {
+                        "style": "ha-card {\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_active_clients') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                      }
                     },
                     {
                       "type": "vertical-stack",
@@ -196,28 +216,40 @@
                           "type": "sensor",
                           "entity": "sensor.attic_temperature",
                           "name": "Attic",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int >= 90 %}orange{% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.bedroom_temperature",
                           "name": "Bedroom",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int >= 80 %}orange{% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.bedroom_humidity",
                           "name": "Bedroom",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}orange{% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.master_bath_humidity",
                           "name": "Master Bath",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}orange{% endif %};\n}\n"
+                          }
                         }
                       ]
                     },
@@ -229,28 +261,40 @@
                           "type": "sensor",
                           "entity": "sensor.thermostat_temperature",
                           "name": "Thermostat",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if (state_attr(\"climate.thermostat\", \"temperature\") | int(69) - state_attr(\"climate.thermostat\", \"current_temperature\") | int(69)) | abs > 4 %}red{% elif states(\"climate.thermostat\") == \"heating\" %}var(--state-climate-heat-color){% elif states(\"climate.thermostat\") == \"cooling\" %}var(--state-climate-cool-color){% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.office_temperature",
                           "name": "Office",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int >= 80 %}orange{% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.living_room_temperature",
                           "name": "Living Room",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int >= 80 %}orange{% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.god_damn_temperature",
                           "name": "Family Room",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int >= 80 %}orange{% endif %};\n}\n"
+                          }
                         }
                       ]
                     },
@@ -262,28 +306,40 @@
                           "type": "sensor",
                           "entity": "sensor.garage_temperature",
                           "name": "Garage",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int >= 90 %}orange{% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.outside_temperature",
                           "name": "Outside",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int >= 90 %}orange{% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.outside_humidity",
                           "name": "Outside",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}orange{% endif %};\n}\n"
+                          }
                         },
                         {
                           "graph": "line",
                           "type": "sensor",
                           "entity": "sensor.fkb_control_panel",
                           "name": "Panel",
-                          "detail": 1
+                          "detail": 1,
+                          "card_mod": {
+                            "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 70 %}orange{% elif states(config.entity) | int == 100 %}green{% endif %};\n}\n"
+                          }
                         }
                       ]
                     },
@@ -488,270 +544,284 @@
                           "card_type": "pop-up",
                           "hash": "#upstairs-lights",
                           "button_type": "switch",
-                          "entity": "switch.upstairs"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.bedroom"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 3,
-                          "cards": [
+                          "sub_button": [
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.dresser_lamp",
-                              "name": "Dresser"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.holly_nightstand_lamp",
-                              "name": "Nitestand"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.bedroom_fan_light",
-                              "name": "Fan Lite"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "fan.bedroom_fan",
-                              "name": "Fan"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.bedroom_humidifier",
-                              "name": "Humidifier"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.bedroom_tv",
-                              "name": "TV"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.office"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 3,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "name": "Desk",
-                              "icon": "",
-                              "entity": "light.mike_desk_lamp"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.office_fan_light",
-                              "name": "Fan Lite",
-                              "button_type": "slider",
                               "tap_action": {
-                                "action": "toggle"
+                                "action": "navigate",
+                                "navigation_path": "#upstairs-lights"
                               },
-                              "hold_action": {
-                                "action": "more-info"
-                              }
+                              "icon": "mdi:stairs-up"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "fan.office_fan",
-                              "name": "Fan",
-                              "button_type": "slider",
                               "tap_action": {
-                                "action": "toggle"
+                                "action": "navigate",
+                                "navigation_path": "#middle-lights"
                               },
-                              "hold_action": {
-                                "action": "more-info"
-                              }
+                              "icon": "mdi:format-align-middle"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.office_tv",
-                              "name": "TV"
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#downstairs-lights"
+                              },
+                              "icon": "mdi:stairs-down"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.office_heater_plug",
-                              "name": "Heater"
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#outside-lights"
+                              },
+                              "icon": "mdi:image"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.mike_desk_strip_plug_4_humidifier",
-                              "name": "Humifier"
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#bulbs"
+                              },
+                              "icon": "mdi:lightbulb"
                             }
-                          ]
+                          ],
+                          "show_header": true,
+                          "name": "noname",
+                          "show_name": false,
+                          "show_icon": false,
+                          "scrolling_effect": false
                         },
                         {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.master_bath"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
+                          "type": "entities",
+                          "entities": [
+                            "switch.bedroom",
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.master_bath_light"
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.dresser_lamp",
+                                  "name": "Dresser",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.holly_nightstand_lamp",
+                                  "name": "Nitestand",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.bedroom_fan_light",
+                                  "name": "Fan Lite",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                }
+                              ]
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "fan.master_bath_fan"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.hall_bath"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.hall_bath_light"
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "fan.bedroom_fan",
+                                  "name": "Fan",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  },
+                                  "styles": ".bubble-icon {\n  color: ${state > 0 ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-range-fill { \n  background: var(--bubble-light-color, rgba(225, 225, 210)) !important;\n  opacity: 0.5 !important;\n}\n"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.bedroom_humidifier",
+                                  "name": "Humidifier",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.bedroom_tv",
+                                  "name": "TV",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "fan.hall_bath_fan"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
+                              "type": "section"
+                            },
+                            "switch.master_bath",
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.guest_room_light"
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.master_bath_light"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "fan.master_bath_fan",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.hallway_light"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "vertical-stack",
-                      "cards": [
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "pop-up",
-                          "hash": "#downstairs-lights",
-                          "button_type": "switch",
-                          "entity": "switch.downstairs"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.family_room"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
+                              "type": "section"
+                            },
+                            "switch.office",
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.god_damn_light"
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "name": "Desk",
+                                  "icon": "",
+                                  "entity": "light.mike_desk_lamp"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.office_fan_light",
+                                  "name": "Fan Lite",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "fan.office_fan",
+                                  "name": "Fan",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  },
+                                  "styles": ".bubble-icon {\n  color: ${state > 0 ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-range-fill { \n  background: var(--bubble-light-color, rgba(225, 225, 210)) !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.fireplace_light"
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.office_tv",
+                                  "name": "TV",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.office_heater_plug",
+                                  "name": "Heater",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.mike_desk_strip_plug_4_humidifier",
+                                  "name": "Humifier",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.three_headed_lamp"
+                              "type": "section"
+                            },
+                            "switch.hall_bath",
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.hall_bath_light"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "fan.hall_bath_fan",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.mantle_lights"
+                              "type": "section"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.christmas_tree"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.laundry_room_light"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.furnace_switch"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.den_overhead_light"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.powder_room_light"
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.guest_room_light"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.hallway_light"
+                                }
+                              ]
                             }
                           ]
                         }
@@ -765,130 +835,385 @@
                           "card_type": "pop-up",
                           "hash": "#middle-lights",
                           "button_type": "switch",
-                          "entity": "switch.middle_level"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.kitchen"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
+                          "sub_button": [
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.kitchen_table_light",
-                              "name": "Table Light"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.kitchen_overhead_light",
-                              "name": "Overhead Light"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.living_room"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.near_black_lamp",
-                              "name": "Near Black Lamp"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.far_black_lamp",
-                              "name": "Far Black Lamp"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.white_lamp",
-                              "name": "White Lamp",
-                              "button_type": "slider",
                               "tap_action": {
-                                "action": "toggle"
+                                "action": "navigate",
+                                "navigation_path": "#upstairs-lights"
                               },
-                              "hold_action": {
-                                "action": "more-info"
-                              }
+                              "icon": "mdi:stairs-up"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.living_room_tv",
-                              "name": "TV"
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#middle-lights"
+                              },
+                              "icon": "mdi:format-align-middle"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#downstairs-lights"
+                              },
+                              "icon": "mdi:stairs-down"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#outside-lights"
+                              },
+                              "icon": "mdi:image"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#bulbs"
+                              },
+                              "icon": "mdi:lightbulb"
+                            }
+                          ],
+                          "show_header": true,
+                          "name": "noname",
+                          "show_name": false,
+                          "show_icon": false,
+                          "scrolling_effect": false
+                        },
+                        {
+                          "type": "entities",
+                          "entities": [
+                            "switch.kitchen",
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.kitchen_table_light",
+                                  "name": "Table Light"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.kitchen_overhead_light",
+                                  "name": "Overhead Light"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "section"
+                            },
+                            "switch.living_room",
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.near_black_lamp",
+                                  "name": "Near Black Lamp"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.far_black_lamp",
+                                  "name": "Far Black Lamp"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.white_lamp",
+                                  "name": "White Lamp",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.living_room_tv",
+                                  "name": "TV",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "section"
+                            },
+                            "switch.dining_room",
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.dining_room_overhead_light",
+                                  "name": "Dining Rm"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.dining_room_christmas_lights",
+                                  "name": "Dining Rm Xmas"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "section"
+                            },
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:button-card",
+                                  "color_type": "blank-card"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.foyer_light",
+                                  "name": "Foyer"
+                                },
+                                {
+                                  "type": "custom:button-card",
+                                  "color_type": "blank-card"
+                                }
+                              ]
                             }
                           ]
-                        },
+                        }
+                      ]
+                    },
+                    {
+                      "type": "vertical-stack",
+                      "cards": [
                         {
                           "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
+                          "card_type": "pop-up",
+                          "hash": "#downstairs-lights",
+                          "button_type": "switch",
+                          "sub_button": [
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.dining_room_overhead_light",
-                              "name": "Dining Rm"
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#upstairs-lights"
+                              },
+                              "icon": "mdi:stairs-up"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.dining_room_christmas_lights",
-                              "name": "Dining Rm Xmas"
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#middle-lights"
+                              },
+                              "icon": "mdi:format-align-middle"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#downstairs-lights"
+                              },
+                              "icon": "mdi:stairs-down"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#outside-lights"
+                              },
+                              "icon": "mdi:image"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#bulbs"
+                              },
+                              "icon": "mdi:lightbulb"
                             }
-                          ]
+                          ],
+                          "show_header": true,
+                          "name": "noname",
+                          "show_name": false,
+                          "show_icon": false,
+                          "scrolling_effect": false
                         },
                         {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 3,
-                          "cards": [
+                          "type": "entities",
+                          "entities": [
+                            "switch.downstairs",
                             {
-                              "type": "custom:button-card",
-                              "color_type": "blank-card"
+                              "type": "section"
+                            },
+                            "switch.family_room",
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.god_damn_light",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.fireplace_light"
+                                }
+                              ]
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.foyer_light",
-                              "name": "Foyer"
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.god_damn_tv",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.three_headed_lamp"
+                                }
+                              ]
                             },
                             {
-                              "type": "custom:button-card",
-                              "color_type": "blank-card"
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.mantle_lights"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.christmas_tree",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "section",
+                              "label": "Laundry Room"
+                            },
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.laundry_room_light"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.furnace_switch",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "section",
+                              "label": "Den"
+                            },
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:button-card",
+                                  "color_type": "blank-card"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.den_overhead_light",
+                                  "name": "Den Light"
+                                },
+                                {
+                                  "type": "custom:button-card",
+                                  "color_type": "blank-card"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "section",
+                              "label": "Powder Room"
+                            },
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:button-card",
+                                  "color_type": "blank-card"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.powder_room_light",
+                                  "name": "Powder Rm"
+                                },
+                                {
+                                  "type": "custom:button-card",
+                                  "color_type": "blank-card"
+                                }
+                              ]
                             }
                           ]
                         }
@@ -902,136 +1227,261 @@
                           "card_type": "pop-up",
                           "hash": "#outside-lights",
                           "button_type": "switch",
-                          "entity": "switch.outside"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.garage"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 3,
-                          "cards": [
+                          "sub_button": [
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.bench_light",
-                              "name": "Bench Light"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.garage_door_light",
-                              "name": "Garage Door"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.far_garage_light",
-                              "name": "Far Light"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.front_yard"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 3,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.front_porch_light",
-                              "name": "Front Porch",
-                              "button_type": "slider",
                               "tap_action": {
-                                "action": "toggle"
+                                "action": "navigate",
+                                "navigation_path": "#upstairs-lights"
                               },
-                              "hold_action": {
-                                "action": "more-info"
-                              }
+                              "icon": "mdi:stairs-up"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.outside_garage_lights",
-                              "name": "Garage"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.outside_xmas",
-                              "name": "Christmas"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "separator"
-                        },
-                        {
-                          "type": "custom:bubble-card",
-                          "card_type": "button",
-                          "button_type": "switch",
-                          "entity": "switch.back_yard"
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.back_porch_light",
-                              "name": "Back Porch"
-                            },
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "button_type": "slider",
-                              "entity": "light.deck_lights",
                               "tap_action": {
-                                "action": "toggle"
+                                "action": "navigate",
+                                "navigation_path": "#middle-lights"
                               },
-                              "hold_action": {
-                                "action": "more-info"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "square": false,
-                          "type": "grid",
-                          "columns": 2,
-                          "cards": [
-                            {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.flood_light"
+                              "icon": "mdi:format-align-middle"
                             },
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "light.shed_lamp"
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#downstairs-lights"
+                              },
+                              "icon": "mdi:stairs-down"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#outside-lights"
+                              },
+                              "icon": "mdi:image"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#bulbs"
+                              },
+                              "icon": "mdi:lightbulb"
+                            }
+                          ],
+                          "show_header": true,
+                          "name": "noname",
+                          "show_name": false,
+                          "show_icon": false,
+                          "scrolling_effect": false
+                        },
+                        {
+                          "type": "entities",
+                          "entities": [
+                            "switch.outside",
+                            {
+                              "type": "section"
+                            },
+                            "switch.garage",
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.bench_light",
+                                  "name": "Bench Light"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.garage_door_light",
+                                  "name": "Garage Door"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.far_garage_light",
+                                  "name": "Far Light"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "section"
+                            },
+                            "switch.front_yard",
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.front_porch_light",
+                                  "name": "Front Porch",
+                                  "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.outside_garage_lights",
+                                  "name": "Garage"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "switch.outside_xmas",
+                                  "name": "Christmas",
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "section"
+                            },
+                            "switch.back_yard",
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.back_porch_light",
+                                  "name": "Back Porch"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "button_type": "slider",
+                                  "entity": "light.deck_lights",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "custom:stack-in-card",
+                              "mode": "horizontal",
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              },
+                              "cards": [
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.flood_light"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.shed_lamp"
+                                }
+                              ]
                             }
                           ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "vertical-stack",
+                      "cards": [
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "pop-up",
+                          "hash": "#bulbs",
+                          "button_type": "switch",
+                          "sub_button": [
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#upstairs-lights"
+                              },
+                              "icon": "mdi:stairs-up"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#middle-lights"
+                              },
+                              "icon": "mdi:format-align-middle"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#downstairs-lights"
+                              },
+                              "icon": "mdi:stairs-down"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#outside-lights"
+                              },
+                              "icon": "mdi:image"
+                            },
+                            {
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#bulbs"
+                              },
+                              "icon": "mdi:lightbulb"
+                            }
+                          ],
+                          "show_header": true,
+                          "name": "noname",
+                          "show_name": false,
+                          "show_icon": false,
+                          "scrolling_effect": false
+                        },
+                        {
+                          "type": "entities",
+                          "entities": [
+                            {
+                              "entity": "light.white_switch"
+                            },
+                            {
+                              "entity": "light.white_bulb"
+                            },
+                            {
+                              "entity": "light.front_porch_switch"
+                            },
+                            {
+                              "entity": "light.front_porch_bulb"
+                            },
+                            {
+                              "entity": "light.dresser_switch"
+                            },
+                            {
+                              "entity": "light.dresser_bulb"
+                            },
+                            {
+                              "entity": "light.god_damn_switch"
+                            },
+                            {
+                              "entity": "light.god_damn_bulb"
+                            },
+                            {
+                              "entity": "light.holly_nightstand_bulb"
+                            }
+                          ],
+                          "title": "Other Plugs",
+                          "show_header_toggle": false
                         }
                       ]
                     }
@@ -1039,9 +1489,7 @@
                 }
               ]
             }
-          ],
-          "title": "Home",
-          "icon": "mdi:home"
+          ]
         },
         {
           "type": "panel",
@@ -1724,48 +2172,6 @@
                           "icon": "mdi:cloud-refresh-variant"
                         }
                       ]
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "type": "custom:multiple-entity-row",
-                          "entity": "sensor.plex_plex",
-                          "name": "Streaming",
-                          "show_state": false,
-                          "state_color": true,
-                          "double_tap_action": {
-                            "action": "more-info"
-                          },
-                          "hold_action": {
-                            "action": "more-info"
-                          },
-                          "entities": [
-                            {
-                              "entity": "sensor.plex_plex",
-                              "name": "Plex",
-                              "styles": {
-                                "color": "var(--plex-color)"
-                              }
-                            },
-                            {
-                              "entity": "sensor.jellyfin",
-                              "name": "Jellyfin",
-                              "styles": {
-                                "color": "var(--jellyfin-color)"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:html-template-card",
-                          "ignore_line_breaks": true,
-                          "content": "<style>\n  table {\n    width: 100%;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% for client, value in states.sensor.plex_plex.attributes.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>P</td><td>{{ client }}</td><td> {{ value }}</td></tr> {% endif -%} {% endfor -%} {% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>J</td><td>{{ client }}</td><td> {{ value }}</td></tr> {% endfor -%} </table>\n"
-                        }
-                      ],
-                      "card_mod": {
-                        "style": "ha-card {\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n"
-                      }
                     }
                   ]
                 },
@@ -1833,32 +2239,58 @@
                             {
                               "entity": "sensor.bedroom_temperature",
                               "name": "BR",
-                              "unit": " "
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--bedroom-temp-color)"
+                              }
+                            },
+                            {
+                              "entity": "sensor.bedroom_humidity",
+                              "name": "BR(h)",
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--bedroom-humidity-color)"
+                              }
                             },
                             {
                               "entity": "sensor.master_bath_temperature",
                               "name": "MB",
-                              "unit": " "
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--master-bath-temp-color)"
+                              }
                             },
                             {
                               "entity": "sensor.master_bath_humidity",
                               "name": "MB(h)",
-                              "unit": " "
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--master-bath-humidity-color)"
+                              }
                             },
                             {
-                              "entity": "sensor.hall_bath_multisensor_humidity",
+                              "entity": "sensor.hall_bath_humidity",
                               "name": "HB(h)",
-                              "unit": " "
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--hall-bath-humidity-color)"
+                              }
                             },
                             {
                               "entity": "sensor.office_temperature",
                               "name": "Ofc",
-                              "unit": " "
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--office-temp-color)"
+                              }
                             },
                             {
-                              "entity": "sensor.living_room_temperature",
-                              "name": "LR",
-                              "unit": " "
+                              "entity": "sensor.office_humidity",
+                              "name": "Ofc(h)",
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--office-humidity-color)"
+                              }
                             }
                           ]
                         },
@@ -1878,24 +2310,52 @@
                               "unit": " "
                             },
                             {
-                              "entity": "sensor.god_damn_temperature",
-                              "name": "Down",
-                              "unit": " "
-                            },
-                            {
                               "entity": "sensor.attic_temperature",
                               "name": "Attic",
-                              "unit": " "
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--attic-temp-color)"
+                              }
+                            },
+                            {
+                              "entity": "sensor.living_room_temperature",
+                              "name": "LR",
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--living-room-temp-color)"
+                              }
+                            },
+                            {
+                              "entity": "sensor.god_damn_temperature",
+                              "name": "Down",
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--god-damn-temp-color)"
+                              }
                             },
                             {
                               "entity": "sensor.garage_temperature",
                               "name": "Garage",
-                              "unit": " "
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--garage-temp-color)"
+                              }
                             },
                             {
                               "entity": "sensor.outside_temperature",
                               "name": "Out",
-                              "unit": " "
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--outside-temp-color)"
+                              }
+                            },
+                            {
+                              "entity": "sensor.outside_humidity",
+                              "name": "Out(h)",
+                              "unit": " ",
+                              "styles": {
+                                "color": "var(--outside-humidity-color)"
+                              }
                             }
                           ]
                         },
@@ -2231,7 +2691,7 @@
                         }
                       ],
                       "card_mod": {
-                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyzecam-color: {% if states('binary_sensor.wyzecam_status') != 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                        "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --attic-temp-color: {% if states(\"sensor.attic_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.attic_temperature\") | int >= 90 %}orange{% endif %};\n  --bedroom-temp-color: {% if states(\"sensor.bedroom_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.bedroom_temperature\") | int >= 80 %}orange{% endif %};\n  --master-bath-temp-color: {% if states(\"sensor.master_bath_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.master_bath_temperature\") | int >= 80 %}orange{% endif %};\n  --office-temp-color: {% if states(\"sensor.office_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.office_temperature\") | int >= 80 %}orange{% endif %};\n  --living-room-temp-color: {% if states(\"sensor.living_room_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.living_room_temperature\") | int >= 80 %}orange{% endif %};\n  --god-damn-temp-color: {% if states(\"sensor.god_damn_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.god_damn_temperature\") | int >= 80 %}orange{% endif %};\n  --garage-temp-color: {% if states(\"sensor.garage_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.garage_temperature\") | int >= 90 %}orange{% endif %};\n  --outside-temp-color: {% if states(\"sensor.outside_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.outside_temperature\") | int >= 90 %}orange{% endif %};\n\n  --bedroom-humidity-color: {% if states(\"sensor.bedroom_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.bedroom_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --master-bath-humidity-color: {% if states(\"sensor.master_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.master_bath_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --hall-bath-humidity-color: {% if states(\"sensor.hall_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.hall_bath_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --office-humidity-color: {% if states(\"sensor.office_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.office_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --outside-humidity-color: {% if states(\"sensor.outside_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.outside_humidity\") | int(45) >= 50 %}orange{% endif %};\n\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyzecam-color: {% if states('binary_sensor.wyzecam_status') != 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state_pretty') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                       }
                     }
                   ]
@@ -2242,6 +2702,309 @@
           "title": "Utilities",
           "icon": "mdi:tools",
           "path": "utilities"
+        },
+        {
+          "type": "panel",
+          "cards": [
+            {
+              "square": false,
+              "type": "grid",
+              "columns": 2,
+              "cards": [
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                    },
+                    {
+                      "type": "custom:auto-entities",
+                      "card": {
+                        "type": "entities",
+                        "show_header_toggle": false,
+                        "card_mod": {
+                          "style": "#states > div {\n  margin: 0px 0px 0px 0px !important;\n  height: 30px;\n}\n"
+                        }
+                      },
+                      "filter": {
+                        "include": [
+                          {
+                            "domain": "switch",
+                            "entity_id": "*plug*",
+                            "name": "[^F-Zf-z]*"
+                          }
+                        ],
+                        "exclude": [
+                          {
+                            "entity_id": "*auto_off*"
+                          },
+                          {
+                            "entity_id": "*led_disabled_night*"
+                          },
+                          {
+                            "entity_id": "*power_outage_memory*"
+                          }
+                        ]
+                      },
+                      "sort": {
+                        "method": "name"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
+                    },
+                    {
+                      "type": "custom:auto-entities",
+                      "card": {
+                        "type": "entities",
+                        "show_header_toggle": false,
+                        "card_mod": {
+                          "style": "#states > div {\n  margin: 0px 0px 0px 0px !important;\n  height: 30px;\n}\n"
+                        }
+                      },
+                      "filter": {
+                        "include": [
+                          {
+                            "domain": "switch",
+                            "entity_id": "*plug*",
+                            "name": "[G-Kg-k]*"
+                          }
+                        ],
+                        "exclude": [
+                          {
+                            "entity_id": "*auto_off*"
+                          },
+                          {
+                            "entity_id": "*led_disabled_night*"
+                          },
+                          {
+                            "entity_id": "*power_outage_memory*"
+                          }
+                        ]
+                      },
+                      "sort": {
+                        "method": "name"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "title": "Plugs",
+          "icon": "mdi:power-plug",
+          "path": "plugs"
+        },
+        {
+          "type": "panel",
+          "cards": [
+            {
+              "square": false,
+              "type": "grid",
+              "columns": 2,
+              "cards": [
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                    },
+                    {
+                      "type": "custom:auto-entities",
+                      "card": {
+                        "type": "entities",
+                        "show_header_toggle": false,
+                        "card_mod": {
+                          "style": "#states > div {\n  margin: 0px 0px 0px 0px !important;\n  height: 30px;\n}\n"
+                        }
+                      },
+                      "filter": {
+                        "include": [
+                          {
+                            "domain": "switch",
+                            "entity_id": "*plug*",
+                            "name": "[Ll]*"
+                          }
+                        ],
+                        "exclude": [
+                          {
+                            "entity_id": "*auto_off*"
+                          },
+                          {
+                            "entity_id": "*led_disabled_night*"
+                          },
+                          {
+                            "entity_id": "*power_outage_memory*"
+                          }
+                        ]
+                      },
+                      "sort": {
+                        "method": "name"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
+                    },
+                    {
+                      "type": "custom:auto-entities",
+                      "card": {
+                        "type": "entities",
+                        "show_header_toggle": false,
+                        "card_mod": {
+                          "style": "#states > div {\n  margin: 0px 0px 0px 0px !important;\n  height: 30px;\n}\n"
+                        }
+                      },
+                      "filter": {
+                        "include": [
+                          {
+                            "domain": "switch",
+                            "entity_id": "*plug*",
+                            "name": "[Mm]*"
+                          }
+                        ],
+                        "exclude": [
+                          {
+                            "entity_id": "*auto_off*"
+                          },
+                          {
+                            "entity_id": "*led_disabled_night*"
+                          },
+                          {
+                            "entity_id": "*power_outage_memory*"
+                          }
+                        ]
+                      },
+                      "sort": {
+                        "method": "name"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "title": "Plugs2",
+          "icon": "mdi:power-plug",
+          "path": "plugs2"
+        },
+        {
+          "type": "panel",
+          "cards": [
+            {
+              "square": false,
+              "type": "grid",
+              "columns": 2,
+              "cards": [
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                    },
+                    {
+                      "type": "custom:auto-entities",
+                      "card": {
+                        "type": "entities",
+                        "show_header_toggle": false,
+                        "card_mod": {
+                          "style": "#states > div {\n  margin: 0px 0px 0px 0px !important;\n  height: 30px;\n}\n"
+                        }
+                      },
+                      "filter": {
+                        "include": [
+                          {
+                            "domain": "switch",
+                            "entity_id": "*plug*",
+                            "name": "[O-So-s]*"
+                          }
+                        ],
+                        "exclude": [
+                          {
+                            "entity_id": "*auto_off*"
+                          },
+                          {
+                            "entity_id": "*led_disabled_night*"
+                          },
+                          {
+                            "entity_id": "*power_outage_memory*"
+                          }
+                        ]
+                      },
+                      "sort": {
+                        "method": "name"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
+                    },
+                    {
+                      "type": "custom:auto-entities",
+                      "card": {
+                        "type": "entities",
+                        "show_header_toggle": false,
+                        "card_mod": {
+                          "style": "#states > div {\n  margin: 0px 0px 0px 0px !important;\n  height: 30px;\n}\n"
+                        }
+                      },
+                      "filter": {
+                        "include": [
+                          {
+                            "domain": "switch",
+                            "entity_id": "*plug*",
+                            "name": "[T-Zt-z]*"
+                          }
+                        ],
+                        "exclude": [
+                          {
+                            "entity_id": "*auto_off*"
+                          },
+                          {
+                            "entity_id": "*led_disabled_night*"
+                          },
+                          {
+                            "entity_id": "*power_outage_memory*"
+                          }
+                        ]
+                      },
+                      "sort": {
+                        "method": "name"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "title": "Plugs3",
+          "icon": "mdi:power-plug",
+          "path": "plugs3"
         },
         {
           "type": "panel",
@@ -2442,6 +3205,122 @@
           "title": "Problems",
           "icon": "mdi:help-rhombus",
           "path": "problems"
+        },
+        {
+          "type": "panel",
+          "cards": [
+            {
+              "square": false,
+              "type": "grid",
+              "columns": 2,
+              "cards": [
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "type": "custom:multiple-entity-row",
+                          "entity": "switch.bedroom_tv",
+                          "show_state": false,
+                          "state_color": true,
+                          "entities": [
+                            {
+                              "entity": "switch.bedroom_tv",
+                              "name": "TV",
+                              "toggle": true
+                            }
+                          ]
+                        },
+                        {
+                          "entity": "media_player.bedroom_roku"
+                        },
+                        {
+                          "entity": "input_select.bedroom_plex_show"
+                        }
+                      ],
+                      "show_header_toggle": false,
+                      "title": "Bedroom TV"
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "entity": "media_player.office_roku_tv"
+                        },
+                        {
+                          "entity": "input_select.office_plex_show"
+                        }
+                      ],
+                      "show_header_toggle": false,
+                      "title": "Office TV"
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "entity": "media_player.living_room_roku_tv"
+                        },
+                        {
+                          "entity": "input_select.living_room_plex_show"
+                        }
+                      ],
+                      "show_header_toggle": false,
+                      "title": "Living Room TV"
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "type": "custom:multiple-entity-row",
+                          "entity": "switch.god_damn_tv",
+                          "show_state": false,
+                          "state_color": true,
+                          "entities": [
+                            {
+                              "entity": "switch.god_damn_tv",
+                              "name": "TV",
+                              "toggle": true
+                            }
+                          ]
+                        },
+                        {
+                          "entity": "media_player.god_damn_roku"
+                        },
+                        {
+                          "entity": "input_select.god_damn_input"
+                        },
+                        {
+                          "entity": "input_select.god_damn_plex_show"
+                        }
+                      ],
+                      "show_header_toggle": false,
+                      "title": "God Damn TV"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "title": "TVs",
+          "icon": "mdi:television-box",
+          "path": "tvs"
         },
         {
           "type": "panel",

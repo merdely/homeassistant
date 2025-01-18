@@ -200,10 +200,13 @@ def get_exception(pickup_day, date = None):
                         alert_soup = BeautifulSoup(alert_response.text, "html.parser")
                         paragraphs = alert_soup.find_all('p')                  #, string='this week') #re.compile('this', re.IGNORECASE))
                         for paragraph in paragraphs:
-                            match = re.search(rf"(?:this week|(?:{mon1}|{mon2})\s+(?:{day1}|{day2}))", paragraph.text)
+                            # print(paragraph.text)
+                            # match = re.search(rf"(?:this week|(?:{mon1}|{mon2})\s+(?:{day1}|{day2}))", paragraph.text)
+                            match = re.search(r"(?:this week|(?:January|Jan|February|Feb|March|Mar|April|Apr|May|June|Jun|July|Jul|August|Aug|September|Sep|Sept|October|Oct|November|Nov|December|Dec)\s+\d{1,2})", paragraph.text, re.IGNORECASE)
                             if match:
                                 # match = re.search(rf'{pickup_day}.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))', paragraph.text)
-                                match = re.search(r'%s.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))' % pickup_day, paragraph.text, re.IGNORECASE)
+                                # match = re.search(r'%s.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))' % pickup_day, paragraph.text, re.IGNORECASE)
+                                match = re.search(r'(?:%s|(?:January|February|March|April|May|June|July|August|Sepember|October|November|December)[ ]+\d{1,2}).*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))' % pickup_day, paragraph.text, re.IGNORECASE)
                                 if match:
                                     match2 = re.match(r"\w+, \w+ \d{1,2}", match.group(1), re.IGNORECASE)
                                     if match2:

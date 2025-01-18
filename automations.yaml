@@ -68,9 +68,10 @@
         entity_id: input_boolean.automatic_living_room_light
       action: homeassistant.turn_on
     enabled: false
-  - if:
+  - alias: Turn on Outside Lights and/or Outside Christmas Lights
+    if:
     - condition: state
-      entity_id: binary_sensor.outside_christmas_lights
+      entity_id: input_boolean.christmas_lights_are_out
       state: 'on'
     then:
     - target:
@@ -99,7 +100,6 @@
       target:
         entity_id: scene.front_porch_normal
       action: scene.turn_on
-    alias: Turn on Outside Lights and/or Outside Christmas Lights
   - if:
     - condition: not
       conditions:
