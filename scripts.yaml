@@ -18,7 +18,7 @@ announcement_nightly_security:
       - condition: or
         conditions:
         - condition: state
-          entity_id: group.doors_windows
+          entity_id: binary_sensor.interior_doors_and_windows
           state: 'on'
         - condition: state
           entity_id: binary_sensor.shed_door_contact
@@ -224,78 +224,6 @@ tv_all_mute:
     data: {}
   mode: single
   icon: mdi:volume-mute
-tv_bedroom_input_cameras:
-  alias: TV - Bedroom - Input - Cameras
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Cameras
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: mdi:cctv
-tv_bedroom_input_chimney_camera:
-  alias: TV - Bedroom - Input - Chimney Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Chimney Camera
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: mdi:cctv
-tv_bedroom_input_garage_camera:
-  alias: TV - Bedroom - Input - Garage Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Garage Camera
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: mdi:cctv
-tv_bedroom_input_front_door_camera:
-  alias: TV - Bedroom - Input - Front Door Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Front Door Camera
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: mdi:cctv
-tv_bedroom_input_shed_camera:
-  alias: TV - Bedroom - Input - Shed Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Shed Camera
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: mdi:cctv
-tv_bedroom_input_roku:
-  alias: TV - Bedroom - Input - Roku
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Roku
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: file:roku
-tv_bedroom_input_bluray:
-  alias: TV - Bedroom - Input - BluRay
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: BluRay
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: mdi:disc
-tv_bedroom_input_chromecast:
-  alias: TV - Bedroom - Input - Chromecast
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Chromecast
-    entity_id: input_select.bedroom_input
-  mode: single
-  icon: mdi:cast
 tv_bedroom_mute:
   alias: TV - Bedroom - Mute
   sequence:
@@ -341,28 +269,6 @@ tv_bedroom_roku_stop:
     entity_id: media_player.bedroom_roku
   mode: single
   icon: mdi:stop
-tv_bedroom_sleep:
-  alias: TV - Bedroom - Sleep
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/bedroom_tv_remote/backlog
-      payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0C03F","DataLSB":"0x070703FC","Repeat":0};
-        delay 5; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E08679","DataLSB":"0x0707619E","Repeat":0};
-        delay 5; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E016E9","DataLSB":"0x07076897","Repeat":0}
-  mode: single
-  icon: mdi:sleep
-tv_bedroom_sleep_cancel:
-  alias: TV - Bedroom - Sleep Cancel
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/bedroom_tv_remote/backlog
-      payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0C03F","DataLSB":"0x070703FC","Repeat":0};
-        delay 5; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E006F9","DataLSB":"0x0707609F","Repeat":0};
-        delay 5; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E016E9","DataLSB":"0x07076897","Repeat":0}
-  mode: single
-  icon: mdi:sleep-off
 tv_bedroom_volume_down:
   alias: TV - Bedroom - Volume Down
   sequence:
@@ -545,60 +451,6 @@ tv_god_damn_volume_up:
         delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0}
   mode: single
   icon: mdi:volume-plus
-tv_living_room_input_roku:
-  alias: TV - Living Room - Input Roku
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Roku
-    entity_id: input_select.living_room_input
-  mode: single
-  icon: file:roku
-tv_living_room_input_cameras:
-  alias: TV - Living Room - Input - Cameras
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Cameras
-    entity_id: input_select.living_room_input
-  mode: single
-  icon: mdi:cctv
-tv_living_room_input_shed_camera:
-  alias: TV - Living Room - Input - Shed Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Shed Camera
-    entity_id: input_select.living_room_input
-  mode: single
-  icon: mdi:cctv
-tv_living_room_input_front_door_camera:
-  alias: TV - Living Room - Input - Front Door Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Front Door Camera
-    entity_id: input_select.living_room_input
-  mode: single
-  icon: mdi:cctv
-tv_living_room_input_garage_camera:
-  alias: TV - Living Room - Input - Garage Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Garage Camera
-    entity_id: input_select.living_room_input
-  mode: single
-  icon: mdi:cctv
-tv_living_room_input_chimney_camera:
-  alias: TV - Living Room - Input - Chimney Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Chimney Camera
-    entity_id: input_select.living_room_input
-  mode: single
-  icon: mdi:cctv
 tv_living_room_mute:
   alias: TV - Living Room - Mute
   sequence:
@@ -669,60 +521,6 @@ tv_living_room_volume_up:
         delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0}
   mode: single
   icon: mdi:volume-plus
-tv_office_input_cameras:
-  alias: TV - Office - Input - Cameras
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Cameras
-    entity_id: input_select.office_input
-  mode: single
-  icon: mdi:cctv
-tv_office_input_shed_camera:
-  alias: TV - Office - Input - Shed Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Shed Camera
-    entity_id: input_select.office_input
-  mode: single
-  icon: mdi:cctv
-tv_office_input_front_door_camera:
-  alias: TV - Office - Input - Front Door Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Front Door Camera
-    entity_id: input_select.office_input
-  mode: single
-  icon: mdi:cctv
-tv_office_input_garage_camera:
-  alias: TV - Office - Input - Garage Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Garage Camera
-    entity_id: input_select.office_input
-  mode: single
-  icon: mdi:cctv
-tv_office_input_chimney_camera:
-  alias: TV - Office - Input - Chimney Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Chimney Camera
-    entity_id: input_select.office_input
-  mode: single
-  icon: mdi:cctv
-tv_office_input_roku:
-  alias: TV - Office - Input - Roku
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Roku
-    entity_id: input_select.office_input
-  mode: single
-  icon: file:roku
 tv_office_mute:
   alias: TV - Office - Mute
   sequence:
@@ -1747,3 +1545,35 @@ test_script:
     name:
       description: A Name
       example: Mike Car
+tv_bedroom_sleep:
+  sequence:
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: Turn off the Bedroom TV in 30 minutes
+  alias: TV - Bedroom - Sleep
+  description: ''
+tv_office_sleep:
+  sequence:
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: Turn off the Office TV in 30 minutes
+  alias: TV - Office - Sleep
+  description: ''
+tv_living_room_sleep:
+  sequence:
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: Turn off the Living Room TV in 30 minutes
+  alias: TV - Living Room - Sleep
+  description: ''
+tv_god_damn_sleep:
+  sequence:
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: Turn off the God Damn TV in 30 minutes
+  alias: TV - God Damn - Sleep
+  description: ''

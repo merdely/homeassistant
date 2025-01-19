@@ -76,7 +76,7 @@
     then:
     - target:
         entity_id:
-        - switch.outside_xmas
+        - switch.outside_christmas_lights
         - light.front_porch_light
       data: {}
       action: homeassistant.turn_on
@@ -131,7 +131,7 @@
       entity_id:
       - light.front_porch_light
       - light.outside_garage_lights
-      - switch.outside_xmas
+      - switch.outside_christmas_lights
       - light.dining_room_christmas_lights
       - light.near_black_lamp
     data: {}
@@ -737,7 +737,7 @@
     from: disarmed
   condition:
   - condition: state
-    entity_id: group.security_devices
+    entity_id: binary_sensor.security_devices
     state: 'off'
   action:
   - service: homeassistant.turn_on
@@ -772,8 +772,8 @@
     - condition: and
       conditions:
       - condition: template
-        value_template: "{{ expand(\"group.doors_windows\") | selectattr('state',
-          'eq', 'on') |\n      list | count > 0 }}"
+        value_template: "{{ expand(\"binary_sensor.interior_doors_and_windows\") |
+          selectattr('state', 'eq', 'on') |\n      list | count > 0 }}"
       - condition: time
         before: input_datetime.automatic_security_disarm
         weekday:
@@ -788,9 +788,9 @@
     - condition: and
       conditions:
       - condition: template
-        value_template: "{{ expand(\"group.doors_windows\") | rejectattr('entity_id',
-          'eq', 'binary_sensor.bedroom_slider_contact')\n      | selectattr('state',
-          'eq', 'on') | list | count > 0 }}"
+        value_template: "{{ expand(\"binary_sensor.interior_doors_and_windows\") |
+          rejectattr('entity_id', 'eq', 'binary_sensor.bedroom_slider_contact')\n
+          \     | selectattr('state', 'eq', 'on') | list | count > 0 }}"
       - condition: time
         after: input_datetime.automatic_security_disarm
         weekday:
@@ -845,7 +845,7 @@
       command_string: cmd=setAudioVolume&level=60
   - service: input_text.set_value
     data:
-      value: "{%- set ns = namespace(count = 0) %} {%- for entity_id in states.group.doors_windows.attributes.entity_id
+      value: "{%- set ns = namespace(count = 0) %} {%- for entity_id in states.binary_sensor.interior_doors_and_windows.attributes.entity_id
         %}\n  {%- set domain, device = entity_id.split('.') %}\n  {%- if states[domain][device].state
         == 'on' -%}\n    {%- set ns.count = ns.count + 1 -%}\n    {%- if ns.count
         > 1 %} and {% endif -%}\n    {{ state_attr(entity_id,\"friendly_name\") }}\n
@@ -924,7 +924,7 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: group.doors_windows
+    entity_id: binary_sensor.interior_doors_and_windows
     to: 'on'
     for: 00:00:01
   condition:
@@ -949,185 +949,6 @@
       entity_id: notify.alarm_state_file
     data:
       message: '{{ states(''alarm_control_panel.home_alarm'') }}'
-  mode: single
-- id: '1607034242017'
-  alias: Controls - Control Panel Screen Change
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.control_panel
-    from: Select Screen
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Lights
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Lights Screen
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/home
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Alarm Panel
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Alarm Panel Screen
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Security
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Security Screen
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: TV Screen
-        - condition: state
-          entity_id: input_select.control_panel
-          state: TVs
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/downstairs
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Front Door Camera
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Front Door Cam
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Front Door
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Garage Camera
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Garage Cam
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Garage
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Chimney Camera
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Chimney Cam
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Chimney
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Shed Camera
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Shed Cam
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Shed
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Wake Up
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Screensaver Off
-        - condition: state
-          entity_id: input_select.control_panel
-          state: Stop Screensaver
-      sequence:
-      - service: rest_command.fkb_command
-        data:
-          command_string: cmd=stopScreensaver
-    default:
-    - service: rest_command.fkb_command
-      data:
-        command_string: cmd=loadStartUrl
-    - service: rest_command.fkb_command
-      data:
-        command_string: cmd=stopScreensaver
-      entity_id: input_select.control_panel
-  - service: input_select.select_option
-    data:
-      option: Select Screen
-    entity_id: input_select.control_panel
   mode: single
 - id: '1607035454754'
   alias: Lighting - Office - Mike Desk Lamp Toggle
@@ -2120,14 +1941,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: group.water_leak
+    entity_id: binary_sensor.water_leak_sensors
     to: 'on'
     for: 00:01:00
   condition: []
   action:
   - service: notify.signal_security
     data:
-      message: "Water Leak Detected by the {% for entity_id in states.group.water_leak.attributes.entity_id
+      message: "Water Leak Detected by the {% for entity_id in states.binary_sensor.water_leak_sensors.attributes.entity_id
         -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')
         }}\n{% endif -%}{% endfor -%}"
   mode: single
