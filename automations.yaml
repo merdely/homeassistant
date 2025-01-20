@@ -2525,6 +2525,11 @@
 
             Entity List: {{ state_attr(trigger.entity_id, ''entity_list'') }}
 
+            {% elif states(trigger.entity_id | regex_replace(''_count$'', '''')) %}
+
+            Entity List: {{ states(trigger.entity_id | regex_replace(''_count$'',
+            '''')) }}
+
             {% endif %}
 
             '
@@ -2564,6 +2569,11 @@
           {% if state_attr(trigger.entity_id, ''entity_list'') %}
 
           Entity List: {{ state_attr(trigger.entity_id, ''entity_list'') }}
+
+          {% elif states(trigger.entity_id | regex_replace(''_count$'', '''')) %}
+
+          Entity List: {{ states(trigger.entity_id | regex_replace(''_count$'', ''''))
+          }}
 
           {% endif %}
 
@@ -3363,26 +3373,35 @@
   description: ''
   triggers:
   - trigger: time
+    at: '12:00:00'
+  - trigger: time
+    at: '13:00:00'
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '15:00:00'
+  - trigger: time
     at: '16:00:00'
+  - trigger: time
+    at: '17:00:00'
   - trigger: time
     at: '18:00:00'
   - trigger: time
     at: '20:00:00'
   conditions:
-  - condition: device
-    type: is_off
-    device_id: 7f05037a5480d7fd07c1125fc56de5ac
-    entity_id: 5177d1c8537d6240a5dc68aaee3ff43f
-    domain: switch
+  - condition: state
+    entity_id: switch.bedroom_humidifier
+    state: 'off'
   - condition: numeric_state
     entity_id: sensor.bedroom_multisensor_humidity
     attribute: humidity
     below: 50
   actions:
-  - type: turn_on
-    device_id: 7f05037a5480d7fd07c1125fc56de5ac
-    entity_id: 5177d1c8537d6240a5dc68aaee3ff43f
-    domain: switch
+  - action: homeassistant.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.bedroom_humidifier
   mode: single
 - id: '1735499752877'
   alias: Humidifier - Turn off Office Humidifier at 50%
