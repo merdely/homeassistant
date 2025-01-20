@@ -824,10 +824,8 @@
                       },
                       "entities": [
                         {
-                          "entity": "binary_sensor.software_update_available",
-                          "type": "attribute",
+                          "entity": "sensor.software_updates_available_count",
                           "name": "Updates",
-                          "attribute": "number",
                           "styles": {
                             "color": "var(--updates-color)"
                           },
@@ -955,7 +953,7 @@
                     }
                   ],
                   "card_mod": {
-                    "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --attic-temp-color: {% if states(\"sensor.attic_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.attic_temperature\") | int >= 90 %}orange{% endif %};\n  --bedroom-temp-color: {% if states(\"sensor.bedroom_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.bedroom_temperature\") | int >= 80 %}orange{% endif %};\n  --master-bath-temp-color: {% if states(\"sensor.master_bath_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.master_bath_temperature\") | int >= 80 %}orange{% endif %};\n  --office-temp-color: {% if states(\"sensor.office_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.office_temperature\") | int >= 80 %}orange{% endif %};\n  --living-room-temp-color: {% if states(\"sensor.living_room_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.living_room_temperature\") | int >= 80 %}orange{% endif %};\n  --god-damn-temp-color: {% if states(\"sensor.god_damn_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.god_damn_temperature\") | int >= 80 %}orange{% endif %};\n  --garage-temp-color: {% if states(\"sensor.garage_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.garage_temperature\") | int >= 90 %}orange{% endif %};\n  --outside-temp-color: {% if states(\"sensor.outside_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.outside_temperature\") | int >= 90 %}orange{% endif %};\n\n  --bedroom-humidity-color: {% if states(\"sensor.bedroom_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.bedroom_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --master-bath-humidity-color: {% if states(\"sensor.master_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.master_bath_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --hall-bath-humidity-color: {% if states(\"sensor.hall_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.hall_bath_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --office-humidity-color: {% if states(\"sensor.office_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.office_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --outside-humidity-color: {% if states(\"sensor.outside_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.outside_humidity\") | int(45) >= 50 %}orange{% endif %};\n\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyzecam-color: {% if states('binary_sensor.wyzecam_status') != 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if state_attr('binary_sensor.software_update_available', 'number') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_active_clients') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-door-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n\n  --up-motion-color: {% if states('binary_sensor.upstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-motion-color: {% if states('binary_sensor.middle_level_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-motion-color: {% if states('binary_sensor.downstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --out-motion-color: {% if states('binary_sensor.outside_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-water-color: {% if states('binary_sensor.upstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-water-color: {% if states('binary_sensor.middle_level_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-water-color: {% if states('binary_sensor.downstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fridges-color: {% if states('binary_sensor.fridge_and_freezer_doors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --int-doors-windows-color: {% if states('binary_sensor.interior_doors_and_windows') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --ext-doors-gates-color: {% if states('binary_sensor.exterior_doors_and_gates') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                    "style": "ha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--primary-text-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --attic-temp-color: {% if states(\"sensor.attic_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.attic_temperature\") | int >= 90 %}orange{% endif %};\n  --bedroom-temp-color: {% if states(\"sensor.bedroom_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.bedroom_temperature\") | int >= 80 %}orange{% endif %};\n  --master-bath-temp-color: {% if states(\"sensor.master_bath_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.master_bath_temperature\") | int >= 80 %}orange{% endif %};\n  --office-temp-color: {% if states(\"sensor.office_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.office_temperature\") | int >= 80 %}orange{% endif %};\n  --living-room-temp-color: {% if states(\"sensor.living_room_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.living_room_temperature\") | int >= 80 %}orange{% endif %};\n  --god-damn-temp-color: {% if states(\"sensor.god_damn_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.god_damn_temperature\") | int >= 80 %}orange{% endif %};\n  --garage-temp-color: {% if states(\"sensor.garage_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.garage_temperature\") | int >= 90 %}orange{% endif %};\n  --outside-temp-color: {% if states(\"sensor.outside_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.outside_temperature\") | int >= 90 %}orange{% endif %};\n\n  --bedroom-humidity-color: {% if states(\"sensor.bedroom_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.bedroom_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --master-bath-humidity-color: {% if states(\"sensor.master_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.master_bath_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --hall-bath-humidity-color: {% if states(\"sensor.hall_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.hall_bath_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --office-humidity-color: {% if states(\"sensor.office_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.office_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --outside-humidity-color: {% if states(\"sensor.outside_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.outside_humidity\") | int(45) >= 50 %}orange{% endif %};\n\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyzecam-color: {% if states('binary_sensor.wyzecam_status') != 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --tv-list-color: {% if states('binary_sensor.new_tv_show_list_ready') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --plex-color: {% if states('sensor.plex_plex') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_active_clients') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-door-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n\n  --up-motion-color: {% if states('binary_sensor.upstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-motion-color: {% if states('binary_sensor.middle_level_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-motion-color: {% if states('binary_sensor.downstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --out-motion-color: {% if states('binary_sensor.outside_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-water-color: {% if states('binary_sensor.upstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-water-color: {% if states('binary_sensor.middle_level_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-water-color: {% if states('binary_sensor.downstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fridges-color: {% if states('binary_sensor.fridge_and_freezer_doors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --int-doors-windows-color: {% if states('binary_sensor.interior_doors_and_windows') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --ext-doors-gates-color: {% if states('binary_sensor.exterior_doors_and_gates') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 }
               ]
@@ -1357,7 +1355,7 @@
                       "secondary_info": "last-changed"
                     },
                     {
-                      "entity": "group.motion_sensors",
+                      "entity": "binary_sensor.motion_sensors",
                       "secondary_info": "last-changed"
                     }
                   ],
@@ -2258,10 +2256,6 @@
                             {
                               "entity": "input_boolean.nginx_proxy_manager_working_triggered",
                               "name": "NPM"
-                            },
-                            {
-                              "entity": "input_boolean.test_monitor_helper_triggered",
-                              "name": "Test"
                             }
                           ]
                         },
@@ -2353,9 +2347,6 @@
                         },
                         {
                           "entity": "input_number.ood_wyze_seconds"
-                        },
-                        {
-                          "entity": "input_text.test_monitor_helper"
                         },
                         {
                           "type": "section",
@@ -2454,20 +2445,6 @@
                                 "service_data": {
                                   "entity_id": [
                                     "sensor.unifi_ap_versions"
-                                  ]
-                                }
-                              }
-                            },
-                            {
-                              "entity": "sensor.fully_kiosk_browser_version",
-                              "name": "FKB",
-                              "icon": "mdi:briefcase-download",
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "homeassistant.update_entity",
-                                "service_data": {
-                                  "entity_id": [
-                                    "sensor.fully_kiosk_browser_version"
                                   ]
                                 }
                               }
@@ -3170,116 +3147,6 @@
           "path": "switches"
         },
         {
-          "icon": "mdi:help-rhombus",
-          "title": "Unavailable Entities",
-          "type": "sections",
-          "badges": [],
-          "cards": [],
-          "max_columns": 3,
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:auto-entities",
-                  "card": {
-                    "type": "entities",
-                    "title": "Unavailable/Unknown Sensors"
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "state": "/(unavailable|unknown)/",
-                        "domain": "/(binary_)?sensor/"
-                      }
-                    ],
-                    "exclude": [
-                      {
-                        "domain": "media_player"
-                      },
-                      {
-                        "entity_id": "/^((binary_sensor|light|sensor|switch).(.*_roku_(tv_)?active_app(_id)?|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|group.outside_xmas|device_tracker.kukui(_[0-9]+)?)$/"
-                      }
-                    ]
-                  },
-                  "sort": {
-                    "method": "friendly_name"
-                  }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:auto-entities",
-                  "card": {
-                    "type": "entities",
-                    "title": "Unavailable/Unknown Entities"
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "state": "/(unavailable|unknown)/",
-                        "name": "/^[A-Ga-g]/"
-                      }
-                    ],
-                    "exclude": [
-                      {
-                        "domain": "media_player"
-                      },
-                      {
-                        "domain": "/(binary_)?sensor/"
-                      },
-                      {
-                        "entity_id": "/^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|group.outside_xmas|device_tracker.kukui(_[0-9]+)?)$/"
-                      }
-                    ]
-                  },
-                  "sort": {
-                    "method": "friendly_name"
-                  }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:auto-entities",
-                  "card": {
-                    "type": "entities",
-                    "title": "Unavailable/Unknown Entities"
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "state": "/(unavailable|unknown)/",
-                        "name": "/^[H-Zh-z]/"
-                      }
-                    ],
-                    "exclude": [
-                      {
-                        "domain": "media_player"
-                      },
-                      {
-                        "domain": "/(binary_)?sensor/"
-                      },
-                      {
-                        "entity_id": "/^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|group.outside_xmas|device_tracker.kukui(_[0-9]+)?)$/"
-                      }
-                    ]
-                  },
-                  "sort": {
-                    "method": "friendly_name"
-                  }
-                }
-              ]
-            }
-          ],
-          "path": "unavailable-entities"
-        },
-        {
           "title": "Zigbee",
           "icon": "mdi:zigbee",
           "type": "sections",
@@ -3345,32 +3212,41 @@
           "path": "zigbee"
         },
         {
+          "icon": "mdi:help-rhombus",
+          "title": "Unavailable Entities",
           "type": "sections",
-          "max_columns": 2,
-          "title": "Test",
-          "path": "test",
+          "badges": [],
+          "cards": [],
+          "max_columns": 3,
           "sections": [
             {
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  ha-icon {\n    color: var(--paper-item-icon-color);\n  }\n</style> <table> {% for entity in (states | selectattr('attributes.ha_count', 'equalto', 'True') | list + [states.sensor.yaml_loc]) | sort(attribute='entity_id') -%} <tr> <td><ha-icon icon=\"{{ entity.attributes.icon }}\"></ha-icon></td> <td>{{ entity.attributes.friendly_name }}</td> <td>{{ entity.state }}</td> </tr> {% endfor -%} </table>"
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "tap_action": {
-                    "action": "perform-action",
-                    "perform_action": "conversation.process",
-                    "target": {},
-                    "data": {
-                      "text": "Turn off the Office TV in 30 seconds"
-                    }
+                  "type": "custom:auto-entities",
+                  "card": {
+                    "type": "entities",
+                    "title": "Unavailable/Unknown Sensors"
                   },
-                  "entity": "switch.office_tv"
+                  "filter": {
+                    "include": [
+                      {
+                        "state": "/(unavailable|unknown)/",
+                        "domain": "/(binary_)?sensor/"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "domain": "media_player"
+                      },
+                      {
+                        "entity_id": "/^((binary_sensor|light|sensor|switch).(.*_roku_(tv_)?active_app(_id)?|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
+                      }
+                    ]
+                  },
+                  "sort": {
+                    "method": "friendly_name"
+                  }
                 }
               ]
             },
@@ -3378,11 +3254,86 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  ha-icon {\n    color: var(--paper-item-icon-color);\n  }\n</style> <table> {% for entity in (states | selectattr('entity_id', 'match', 'sensor.ha_count.*') | list + [states.sensor.yaml_loc]) | sort(attribute='entity_id') -%} <tr> <td><ha-icon icon=\"{{ entity.attributes.icon }}\"></ha-icon></td> <td>{{ entity.attributes.friendly_name | replace(\"HA Count \", \"\") }}</td> <td>{{ entity.state }}</td> </tr> {% endfor -%} </table>"
+                  "type": "custom:auto-entities",
+                  "card": {
+                    "type": "entities",
+                    "title": "Unavailable/Unknown Entities"
+                  },
+                  "filter": {
+                    "include": [
+                      {
+                        "state": "/(unavailable|unknown)/",
+                        "name": "/^[A-Ga-g]/"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "domain": "media_player"
+                      },
+                      {
+                        "domain": "/(binary_)?sensor/"
+                      },
+                      {
+                        "entity_id": "/^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
+                      }
+                    ]
+                  },
+                  "sort": {
+                    "method": "friendly_name"
+                  }
                 }
               ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:auto-entities",
+                  "card": {
+                    "type": "entities",
+                    "title": "Unavailable/Unknown Entities"
+                  },
+                  "filter": {
+                    "include": [
+                      {
+                        "state": "/(unavailable|unknown)/",
+                        "name": "/^[H-Zh-z]/"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "domain": "media_player"
+                      },
+                      {
+                        "domain": "/(binary_)?sensor/"
+                      },
+                      {
+                        "entity_id": "/^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
+                      }
+                    ]
+                  },
+                  "sort": {
+                    "method": "friendly_name"
+                  }
+                }
+              ]
+            }
+          ],
+          "path": "unavailable-entities"
+        },
+        {
+          "type": "sections",
+          "max_columns": 2,
+          "title": "Test",
+          "path": "test",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": []
+            },
+            {
+              "type": "grid",
+              "cards": []
             }
           ],
           "cards": [],

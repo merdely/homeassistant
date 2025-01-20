@@ -1444,64 +1444,6 @@
     users:
       80ad218b0cf54379b5ee622fbb721c6b: Mike
       3109b2f6d085440f92db502bc4e30a3b: Holly
-- id: '1609371273449'
-  alias: Thermostat - Program
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.thermostat_evening
-  - platform: time
-    at: input_datetime.thermostat_sleep
-  - platform: time
-    at: input_datetime.thermostat_wake
-  - platform: time
-    at: input_datetime.thermostat_wake_weekend
-  - platform: state
-    entity_id: group.holly_mike
-    from: home
-    to: not_home
-  - platform: state
-    entity_id: group.holly_mike
-    from: not_home
-    to: home
-  - platform: state
-    entity_id: climate.thermostat
-    attribute: system_mode
-    to: '[3]/cool'
-  - platform: state
-    entity_id: climate.thermostat
-    attribute: system_mode
-    to: '[4]/heat'
-  condition:
-  - condition: template
-    value_template: '{{ (trigger is not defined) or (trigger is defined and trigger.entity_id
-      == "input_datetime.thermostat_wake" and is_state("binary_sensor.workday_sensor",
-      "on")) or (trigger is defined and trigger.entity_id == "input_datetime.thermostat_wake_weekend"
-      and is_state("binary_sensor.workday_sensor", "off")) or (trigger is defined
-      and trigger.entity_id != "input_datetime.thermostat_wake" and trigger.entity_id
-      != "input_datetime.thermostat_wake_weekend") }}'
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: climate.thermostat
-      state: '[0]/off'
-  action:
-  - service: system_log.write
-    data:
-      message: Running {{ states.sensor.thermostat_program.state | replace('_', '
-        ') | title }}/{{ states.group.holly_mike.state | replace('not_home', 'Away')
-        | title }} program for {{ state_attr('climate.thermostat', 'system_mode')[4:]
-        | title }}ing -- setting temperature to {{ states('input_number.thermostat_'
-        + states.sensor.thermostat_program.state + '_' + state_attr('climate.thermostat',
-        'system_mode')[4:] + '_' + states.group.holly_mike.state) }} °F
-      level: warning
-  - service: climate.set_temperature
-    data:
-      temperature: '{{ states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
-        + ''_'' + state_attr(''climate.thermostat'', ''system_mode'')[4:] + ''_''
-        + states.group.holly_mike.state) }}'
-    entity_id: climate.thermostat
-  mode: single
 - id: '1609607242283'
   alias: 21 - Home Assistant - Nightly Tasks
   description: ''
@@ -1806,72 +1748,6 @@
       entity_id: binary_sensor.wyzesense_77ca81b4
       state: 'off'
     action: python_script.set_state
-  mode: single
-- id: '1615594192596'
-  alias: Thermostat - Turn on AC
-  description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ (state_attr(''climate.thermostat'', ''current_temperature'')
-      | float(0)) >= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
-      + ''_cool_'' + states.group.holly_mike.state) | float(0)) }}'
-  condition:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: climate.thermostat
-      state: '[3]/cool'
-      attribute: system_mode
-    - condition: state
-      entity_id: climate.thermostat
-      state: '[0]/off'
-      attribute: system_mode
-  action:
-  - service: system_log.write
-    data:
-      message: Turning on AC
-      level: warning
-  - service: notify.signal_security
-    data:
-      message: Switching to AC
-  - service: climate.set_hvac_mode
-    target:
-      entity_id: climate.thermostat
-    data:
-      hvac_mode: cool
-  mode: single
-- id: '1615594635153'
-  alias: Thermostat - Turn on Heat
-  description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ (state_attr(''climate.thermostat'', ''current_temperature'')
-      | float(0)) <= (states(''input_number.thermostat_'' + states.sensor.thermostat_program.state
-      + ''_heat_'' + states.group.holly_mike.state) | float(0)) }}'
-  condition:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: climate.thermostat
-      state: '[4]/heat'
-      attribute: system_mode
-    - condition: state
-      entity_id: climate.thermostat
-      state: '[0]/off'
-      attribute: system_mode
-  action:
-  - service: system_log.write
-    data:
-      message: Turning on Heat
-      level: warning
-  - service: notify.signal_security
-    data:
-      message: Switching to Heat
-  - service: climate.set_hvac_mode
-    target:
-      entity_id: climate.thermostat
-    data:
-      hvac_mode: heat
   mode: single
 - id: '1616344353322'
   alias: 03-Save Home Assistant Logfile
@@ -2486,18 +2362,14 @@
   alias: Home Assistant - Monitor Earth / HA Entities
   description: ''
   triggers:
-  - entity_id: sensor.software_update_available
+  - entity_id:
+    - sensor.software_updates_available_count
+    above: 0
     for:
       hours: 0
       minutes: 0
       seconds: 30
-    trigger: state
-  - entity_id: input_text.test_monitor_helper
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    trigger: state
+    trigger: numeric_state
   - entity_id: binary_sensor.earth
     for:
       hours: 0
@@ -2528,8 +2400,8 @@
     above: '0'
     for:
       hours: 0
-      minutes: 20
-      seconds: 30
+      minutes: 1
+      seconds: 0
     trigger: numeric_state
   - entity_id: sensor.unavailable_entities
     for:
@@ -2549,20 +2421,6 @@
       hours: 0
       minutes: 0
       seconds: 30
-    trigger: state
-  - entity_id: binary_sensor.google_backup_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    trigger: state
-    enabled: false
-  - entity_id: binary_sensor.mariadb_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    enabled: false
     trigger: state
   - entity_id: binary_sensor.mqtt_add_on_running
     for:
@@ -2588,25 +2446,11 @@
       minutes: 0
       seconds: 30
     trigger: state
-  - entity_id: binary_sensor.tasmobackup_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    enabled: false
-    trigger: state
   - entity_id: binary_sensor.unifi_add_on_running
     for:
       hours: 0
       minutes: 0
       seconds: 30
-    trigger: state
-  - entity_id: binary_sensor.wireguard_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    enabled: false
     trigger: state
   - entity_id: binary_sensor.zigbee2mqtt_add_on_running
     for:

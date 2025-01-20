@@ -1040,36 +1040,6 @@ function_frigate_send_email:
       example: trigger.payload_json['after']['id']
   mode: single
   icon: mdi:email-fast
-fkb_reload:
-  alias: FKB - Reload
-  sequence:
-  - service: homeassistant.update_entity
-    target:
-      entity_id: sensor.fkb_control_panel
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=clearCache
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=loadUrl&url={{ state_attr('sensor.fkb_control_panel', 'currentPageUrl')
-        }}
-  mode: single
-  icon: mdi:tablet-dashboard
-fkbmbr_reload:
-  alias: FKBMBR - Reload
-  sequence:
-  - service: homeassistant.update_entity
-    target:
-      entity_id: sensor.fkbmbr_control_panel
-  - service: rest_command.fkbmbr_command
-    data:
-      command_string: cmd=clearCache
-  - service: rest_command.fkbmbr_command
-    data:
-      command_string: cmd=loadUrl&url={{ state_attr('sensor.fkbmbr_control_panel',
-        'currentPageUrl') }}
-  mode: single
-  icon: mdi:tablet-dashboard
 flash_back_porch_lights:
   sequence:
   - repeat:

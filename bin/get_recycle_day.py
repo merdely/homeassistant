@@ -204,6 +204,9 @@ def get_exception(pickup_day, date = None):
                             # match = re.search(rf"(?:this week|(?:{mon1}|{mon2})\s+(?:{day1}|{day2}))", paragraph.text)
                             match = re.search(r"(?:this week|(?:January|Jan|February|Feb|March|Mar|April|Apr|May|June|Jun|July|Jul|August|Aug|September|Sep|Sept|October|Oct|November|Nov|December|Dec)\s+\d{1,2})", paragraph.text, re.IGNORECASE)
                             if match:
+                                match = re.search(r'slide one day', paragraph.text, re.IGNORECASE)
+                                if match:
+                                    return (next_weekday(add_days(pickup_day, 1)), True, alert_response.status_code)
                                 # match = re.search(rf'{pickup_day}.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))', paragraph.text)
                                 # match = re.search(r'%s.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))' % pickup_day, paragraph.text, re.IGNORECASE)
                                 match = re.search(r'(?:%s|(?:January|February|March|April|May|June|July|August|Sepember|October|November|December)[ ]+\d{1,2}).*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))' % pickup_day, paragraph.text, re.IGNORECASE)
@@ -214,6 +217,8 @@ def get_exception(pickup_day, date = None):
                                         return (datetime.strptime(f"{match.group(1)}, {datetime.now().strftime('%Y')}", f"%A, %B %d, %Y").strftime("%F"), True, alert_response.status_code)
                                     else:
                                         return (next_weekday(match.group(1)), True, alert_response.status_code)
+                                else:
+                                    return (next_weekday(add_days(pickup_day, 1)), True, alert_response.status_code)
                     else:
                         return (next_weekday(pickup_day), False, alert_response.status_code)
     return (next_weekday(pickup_day), False, 0)
