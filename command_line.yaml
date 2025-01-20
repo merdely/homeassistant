@@ -253,22 +253,6 @@
     scan_interval: 3600
 
 - sensor:
-    name: Bedroom TV Next Episode
-    command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.bedroom_plex_show") }}"'
-
-- sensor:
-    name: God Damn TV Next Episode
-    command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.god_damn_plex_show") }}"'
-
-- sensor:
-    name: Living Room TV Next Episode
-    command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.living_room_plex_show") }}"'
-
-- sensor:
-    name: Office TV Next Episode
-    command: 'bin/plex_nextepisode -c bin/.plexapi_rc "{{ states("input_select.office_plex_show") }}"'
-
-- sensor:
     name: SSL Expiry Date
     command: "bin/get_ssl_expire.py"
 
