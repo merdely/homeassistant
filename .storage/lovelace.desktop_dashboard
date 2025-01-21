@@ -19,7 +19,15 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "switch.upstairs"
+                      "entity": "switch.upstairs",
+                      "type": "custom:multiple-entity-row",
+                      "toggle": true,
+                      "entities": [
+                        {
+                          "entity": "sensor.upstairs_lights_on",
+                          "name": "Lights On"
+                        }
+                      ]
                     },
                     {
                       "type": "custom:paper-buttons-row",
@@ -129,7 +137,15 @@
                       "type": "section"
                     },
                     {
-                      "entity": "switch.middle_level"
+                      "entity": "switch.middle_level",
+                      "type": "custom:multiple-entity-row",
+                      "toggle": true,
+                      "entities": [
+                        {
+                          "entity": "sensor.middle_level_lights_on",
+                          "name": "Lights On"
+                        }
+                      ]
                     },
                     {
                       "type": "custom:paper-buttons-row",
@@ -199,7 +215,15 @@
                       "type": "section"
                     },
                     {
-                      "entity": "switch.downstairs"
+                      "entity": "switch.downstairs",
+                      "type": "custom:multiple-entity-row",
+                      "toggle": true,
+                      "entities": [
+                        {
+                          "entity": "sensor.downstairs_lights_on",
+                          "name": "Lights On"
+                        }
+                      ]
                     },
                     {
                       "type": "custom:paper-buttons-row",
@@ -265,7 +289,15 @@
                       "type": "section"
                     },
                     {
-                      "entity": "switch.garage"
+                      "entity": "switch.garage",
+                      "type": "custom:multiple-entity-row",
+                      "toggle": true,
+                      "entities": [
+                        {
+                          "entity": "sensor.garage_lights_on",
+                          "name": "Lights On"
+                        }
+                      ]
                     },
                     {
                       "type": "custom:paper-buttons-row",
@@ -292,7 +324,15 @@
                       "type": "section"
                     },
                     {
-                      "entity": "switch.outside"
+                      "entity": "switch.outside",
+                      "type": "custom:multiple-entity-row",
+                      "toggle": true,
+                      "entities": [
+                        {
+                          "entity": "sensor.outside_lights_on",
+                          "name": "Lights On"
+                        }
+                      ]
                     },
                     {
                       "type": "custom:paper-buttons-row",
@@ -386,7 +426,7 @@
                   "entities": [
                     {
                       "entity": "person.holly_erdely",
-                      "name": "Who's Home",
+                      "name": "Status",
                       "icon": "mdi:compass-outline",
                       "type": "custom:multiple-entity-row",
                       "entities": [
@@ -397,6 +437,34 @@
                         {
                           "entity": "person.michael_erdely",
                           "name": "Mike"
+                        },
+                        {
+                          "entity": "sensor.washer_and_dryer_state",
+                          "name": "Laundry",
+                          "styles": {
+                            "color": "var(--laundry-color)"
+                          }
+                        },
+                        {
+                          "entity": "binary_sensor.oven_is_on",
+                          "name": "Oven",
+                          "styles": {
+                            "color": "var(--oven-color)"
+                          }
+                        },
+                        {
+                          "entity": "input_boolean.mail_delivered",
+                          "name": "Mail",
+                          "styles": {
+                            "color": "var(--mail-color)"
+                          },
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "input_boolean.toggle",
+                            "service_data": {
+                              "entity_id": "input_boolean.mail_delivered"
+                            }
+                          }
                         }
                       ],
                       "show_state": false
@@ -573,89 +641,6 @@
                           "name": "GargMotion",
                           "styles": {
                             "color": "var(--garage-door-motion-sensor-color)"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "custom:multiple-entity-row",
-                      "entity": "sensor.downstairs_lights_on",
-                      "name": "Lights",
-                      "show_state": false,
-                      "entities": [
-                        {
-                          "entity": "sensor.upstairs_lights_on",
-                          "name": "Up",
-                          "unit": false,
-                          "styles": {
-                            "color": "var(--upstairs-lights-color)"
-                          }
-                        },
-                        {
-                          "entity": "sensor.middle_level_lights_on",
-                          "name": "Middle",
-                          "unit": false,
-                          "styles": {
-                            "color": "var(--middle-level-lights-color)"
-                          }
-                        },
-                        {
-                          "entity": "sensor.downstairs_lights_on",
-                          "name": "Down",
-                          "unit": false,
-                          "styles": {
-                            "color": "var(--downstairs-lights-color)"
-                          }
-                        },
-                        {
-                          "entity": "sensor.garage_lights_on",
-                          "name": "Garage",
-                          "unit": false,
-                          "styles": {
-                            "color": "var(--garage-lights-color)"
-                          }
-                        },
-                        {
-                          "entity": "sensor.outside_lights_on",
-                          "name": "Out",
-                          "unit": false,
-                          "styles": {
-                            "color": "var(--outside-lights-color)"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "custom:multiple-entity-row",
-                      "entity": "sensor.washer_and_dryer_state",
-                      "name": "Status",
-                      "show_state": false,
-                      "entities": [
-                        {
-                          "entity": "sensor.washer_and_dryer_state",
-                          "name": "Laundry",
-                          "styles": {
-                            "color": "var(--laundry-color)"
-                          }
-                        },
-                        {
-                          "entity": "binary_sensor.oven_is_on",
-                          "name": "Oven",
-                          "styles": {
-                            "color": "var(--oven-color)"
-                          }
-                        },
-                        {
-                          "entity": "input_boolean.mail_delivered",
-                          "styles": {
-                            "color": "var(--mail-color)"
-                          },
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "input_boolean.toggle",
-                            "service_data": {
-                              "entity_id": "input_boolean.mail_delivered"
-                            }
                           }
                         }
                       ]
@@ -2630,64 +2615,82 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "sensor.unavailable_entities"
-                    },
-                    {
                       "type": "attribute",
                       "entity": "sensor.unavailable_entities",
                       "attribute": "entity_list",
                       "name": " ",
                       "icon": " "
-                    },
-                    {
-                      "type": "section"
-                    },
-                    {
-                      "entity": "sensor.ood_zigbee_entities"
-                    },
-                    {
-                      "type": "attribute",
-                      "entity": "sensor.ood_zigbee_entities",
-                      "attribute": "entity_list",
-                      "name": " ",
-                      "icon": " "
-                    },
-                    {
-                      "type": "section"
-                    },
-                    {
-                      "entity": "sensor.ood_wyze_entities"
-                    },
-                    {
-                      "type": "attribute",
-                      "entity": "sensor.ood_wyze_entities",
-                      "attribute": "entity_list",
-                      "name": " ",
-                      "icon": " "
                     }
-                  ]
+                  ],
+                  "title": "Unavailable Entities"
                 },
                 {
-                  "type": "custom:auto-entities",
-                  "card": {
-                    "type": "entities",
-                    "title": "Outdoor Plug/Strip",
-                    "show_header_toggle": true
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "domain": "switch",
-                        "entity_id": "*outdoor*",
-                        "options": {
-                          "secondary_info": "last-changed"
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "light.white_switch",
+                          "icon": "mdi:light-switch"
+                        },
+                        {
+                          "entity": "light.white_bulb"
                         }
-                      }
-                    ]
-                  },
-                  "sort": {
-                    "method": "name"
-                  }
+                      ]
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "light.front_porch_switch",
+                          "icon": "mdi:light-switch"
+                        },
+                        {
+                          "entity": "light.front_porch_bulb"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "light.dresser_switch",
+                          "icon": "mdi:light-switch"
+                        },
+                        {
+                          "entity": "light.dresser_bulb"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "light.god_damn_switch",
+                          "icon": "mdi:light-switch"
+                        },
+                        {
+                          "entity": "light.god_damn_bulb"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "light.holly_nightstand_bulb"
+                        }
+                      ]
+                    }
+                  ],
+                  "title": "Smart Bulbs and Switches",
+                  "show_header_toggle": false
                 }
               ]
             }
@@ -2695,111 +2698,21 @@
           "path": "utilities"
         },
         {
-          "title": "Bulbs",
-          "icon": "mdi:lightbulb",
-          "cards": [],
+          "title": "Zigbee",
+          "icon": "mdi:zigbee",
           "type": "sections",
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "entity": "light.white_switch"
-                    },
-                    {
-                      "entity": "light.white_bulb"
-                    },
-                    {
-                      "entity": "light.front_porch_switch"
-                    },
-                    {
-                      "entity": "light.front_porch_bulb"
-                    },
-                    {
-                      "entity": "light.dresser_switch"
-                    },
-                    {
-                      "entity": "light.dresser_bulb"
-                    },
-                    {
-                      "entity": "light.god_damn_switch"
-                    },
-                    {
-                      "entity": "light.god_damn_bulb"
-                    },
-                    {
-                      "entity": "light.holly_nightstand_bulb"
-                    }
-                  ],
-                  "title": "Other Plugs",
-                  "show_header_toggle": false
-                }
-              ]
-            }
-          ],
-          "max_columns": 4,
-          "path": "bulbs"
-        },
-        {
-          "title": "3D Printing",
-          "icon": "mdi:printer-3d",
           "badges": [],
           "cards": [],
-          "type": "sections",
+          "max_columns": 3,
           "sections": [
             {
               "type": "grid",
               "cards": [
                 {
-                  "type": "grid",
-                  "columns": 1,
-                  "cards": [
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "switch.ender3_plug"
-                        },
-                        {
-                          "entity": "switch.3dprinter_usb_hub"
-                        },
-                        {
-                          "entity": "switch.octoprint_light_plug"
-                        },
-                        {
-                          "entity": "switch.octoprint_camera"
-                        },
-                        {
-                          "entity": "script.restart_octoprint"
-                        },
-                        {
-                          "entity": "binary_sensor.octoprint_printing"
-                        },
-                        {
-                          "entity": "binary_sensor.octoprint_printing_error"
-                        },
-                        {
-                          "entity": "sensor.octoprint_current_state"
-                        },
-                        {
-                          "entity": "sensor.octoprint_actual_bed_temp"
-                        },
-                        {
-                          "entity": "sensor.octoprint_job_percentage"
-                        },
-                        {
-                          "entity": "sensor.octoprint_time_remaining"
-                        },
-                        {
-                          "entity": "sensor.octoprint_time_elapsed"
-                        }
-                      ]
-                    }
-                  ],
-                  "square": false
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol> {% set ns = namespace(count = 0) %} {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) - 21600) and \"bulb\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endif %} {% endfor -%} </ol>\n\n{% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}",
+                  "title": "Zigbee Devices"
                 }
               ]
             },
@@ -2807,20 +2720,47 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "grid",
-                  "columns": 1,
-                  "cards": [
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol start=  {{ (state_attr('sensor.zigbee_entities', 'count') | int(0) / 2)|int + 1}}> {% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count > state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) - 21600) and \"bulb\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endif %} {% endfor -%} </ol>\n\n{% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}",
+                  "title": "Zigbee Devices"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "entities",
+                  "entities": [
                     {
-                      "type": "picture-entity",
-                      "entity": "camera.octoprint",
-                      "camera_view": "live"
+                      "entity": "input_select.zigbee_entities_sort"
+                    },
+                    {
+                      "entity": "input_select.wyze_entities_sort"
                     }
-                  ],
-                  "square": false
+                  ]
+                },
+                {
+                  "type": "markdown",
+                  "content": "Count: {{ states('sensor.ood_zigbee_entities') }}; Threshold: {{ states('input_number.ood_zigbee_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_zigbee_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_zigbee_entities', 'entity_list') }}\n",
+                  "title": "Out of Date Zigbee Devices"
+                },
+                {
+                  "type": "markdown",
+                  "content": "Count: {{ states('sensor.ood_wyze_entities') }}; Threshold: {{ states('input_number.ood_wyze_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_wyze_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_wyze_entities', 'entity_list') }}\n",
+                  "title": "Out of Date Wyze Devices"
+                },
+                {
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}; Threshold: {{ states(\"input_number.ood_wyze_seconds\")|int(0) }} <ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list')  | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true))-%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * 0.50) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
+                  "title": "All Wyze Devices"
                 }
               ]
             }
-          ]
+          ],
+          "path": "zigbee"
         },
         {
           "title": "Batteries",
@@ -3147,69 +3087,83 @@
           "path": "switches"
         },
         {
-          "title": "Zigbee",
-          "icon": "mdi:zigbee",
-          "type": "sections",
+          "title": "3D Printing",
+          "icon": "mdi:printer-3d",
           "badges": [],
           "cards": [],
-          "max_columns": 3,
+          "type": "sections",
           "sections": [
             {
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol> {% set ns = namespace(count = 0) %} {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) - 21600) and \"bulb\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endif %} {% endfor -%} </ol>\n\n{% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}",
-                  "title": "Zigbee Devices"
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol start=  {{ (state_attr('sensor.zigbee_entities', 'count') | int(0) / 2)|int + 1}}> {% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count > state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) - 21600) and \"bulb\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endif %} {% endfor -%} </ol>\n\n{% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}",
-                  "title": "Zigbee Devices"
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "entities",
-                  "entities": [
+                  "type": "grid",
+                  "columns": 1,
+                  "cards": [
                     {
-                      "entity": "input_select.zigbee_entities_sort"
-                    },
-                    {
-                      "entity": "input_select.wyze_entities_sort"
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "entity": "switch.ender3_plug"
+                        },
+                        {
+                          "entity": "switch.3dprinter_usb_hub"
+                        },
+                        {
+                          "entity": "switch.octoprint_light_plug"
+                        },
+                        {
+                          "entity": "switch.octoprint_camera"
+                        },
+                        {
+                          "entity": "script.restart_octoprint"
+                        },
+                        {
+                          "entity": "binary_sensor.octoprint_printing"
+                        },
+                        {
+                          "entity": "binary_sensor.octoprint_printing_error"
+                        },
+                        {
+                          "entity": "sensor.octoprint_current_state"
+                        },
+                        {
+                          "entity": "sensor.octoprint_actual_bed_temp"
+                        },
+                        {
+                          "entity": "sensor.octoprint_job_percentage"
+                        },
+                        {
+                          "entity": "sensor.octoprint_time_remaining"
+                        },
+                        {
+                          "entity": "sensor.octoprint_time_elapsed"
+                        }
+                      ]
                     }
-                  ]
-                },
+                  ],
+                  "square": false
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
                 {
-                  "type": "markdown",
-                  "content": "Count: {{ states('sensor.ood_zigbee_entities') }}; Threshold: {{ states('input_number.ood_zigbee_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_zigbee_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_zigbee_entities', 'entity_list') }}\n",
-                  "title": "Out of Date Zigbee Devices"
-                },
-                {
-                  "type": "markdown",
-                  "content": "Count: {{ states('sensor.ood_wyze_entities') }}; Threshold: {{ states('input_number.ood_wyze_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_wyze_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_wyze_entities', 'entity_list') }}\n",
-                  "title": "Out of Date Wyze Devices"
-                },
-                {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}; Threshold: {{ states(\"input_number.ood_wyze_seconds\")|int(0) }} <ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list')  | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true))-%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * 0.50) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
-                  "title": "All Wyze Devices"
+                  "type": "grid",
+                  "columns": 1,
+                  "cards": [
+                    {
+                      "type": "picture-entity",
+                      "entity": "camera.octoprint",
+                      "camera_view": "live"
+                    }
+                  ],
+                  "square": false
                 }
               ]
             }
-          ],
-          "path": "zigbee"
+          ]
         },
         {
           "icon": "mdi:help-rhombus",
@@ -3240,7 +3194,7 @@
                         "domain": "media_player"
                       },
                       {
-                        "entity_id": "/^((binary_sensor|light|sensor|switch).(.*_roku_(tv_)?active_app(_id)?|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
+                        "entity_id": "/^((binary_sensor|light|sensor|switch).(.*_roku_(tv_)?active_app(_id)?|[0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
                       }
                     ]
                   },
@@ -3274,7 +3228,7 @@
                         "domain": "/(binary_)?sensor/"
                       },
                       {
-                        "entity_id": "/^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
+                        "entity_id": "/^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
                       }
                     ]
                   },
@@ -3308,7 +3262,7 @@
                         "domain": "/(binary_)?sensor/"
                       },
                       {
-                        "entity_id": "/^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|withings_(?!in_bed).*)|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
+                        "entity_id": "/^((binary_sensor|light|sensor|switch).([0-9a-f]{8}_[0-9a-f]{8}|(a9be1c3a971c8a94|kukui)_battery_health(_[0-9]+)?|ir_receiver_status|lumi_lumi_plug_maus[0-9]+|octoprint_.*|outdoor_(plug|strip).*|switch.outside_christmas_lights|device_tracker.kukui(_[0-9]+)?)$/"
                       }
                     ]
                   },
