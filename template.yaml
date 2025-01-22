@@ -7,6 +7,7 @@
            's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
            '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
            '(remote|media_player)\.(?:plex|plex_\w{0,15}_plex_for_android_|playstation|firefox|chrom)[\w]{0,40}|' +
+           'media_player\.[a-z_]{1,30}_speaker|' +
            'button\.(?:un)?ignore_all_issues|' +
            '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
            'device_tracker\.pixel_watch_3|' +
@@ -19,6 +20,7 @@
              's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
              '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
              '(remote|media_player)\.(?:plex|plex_\w{0,15}_plex_for_android_|playstation|firefox|chrom)[\w]{0,40}|' +
+             'media_player\.[a-z_]{1,30}_speaker|' +
              'button\.(?:un)?ignore_all_issues|' +
              '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
              'device_tracker\.pixel_watch_3|' +
@@ -90,16 +92,18 @@
       {% endif -%}
     attributes:
       timestamp: "{{ now().strftime('%FT%T') }}"
-      entity_list: >
+      entity_list: >-
+        {% set ns = namespace(list = "") -%}
         {% if state_attr('sensor.wyze_entities', 'entity_list') -%}
           {% for entity in state_attr('sensor.wyze_entities', 'entity_list') | default([]) | sort(attribute='timediff', reverse=true) -%}
             {% if entity['timediff'] | int(0) > states('input_number.ood_wyze_seconds') | int(0) -%}
-              {{ entity['friendly_name'] }} ({{ entity['timediff'] }}),
+              {% set ns.list = ns.list + entity['friendly_name'] + " (" + entity['timediff'] | string + "), " %}
             {% endif -%}
           {% endfor -%}
         {% else -%}
-          {{ [] }}
+          {% set ns.list = "" %}
         {% endif -%}
+        {{ ns.list | regex_replace(", $", "") }}
 
 - trigger:
     - platform: time_pattern
@@ -154,21 +158,23 @@
     attributes:
       timestamp: "{{ now().strftime('%FT%T') }}"
       entity_list: >
+        {% set ns = namespace(list = "") -%}
         {% if state_attr('sensor.zigbee_entities', 'entity_list') -%}
           {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | sort(attribute='timediff', reverse=true) -%}
             {% if entity['entity_id'][-17:] == "_bulb_linkquality" -%}
               {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_bulb_seconds') | int(0) -%}
-                {{ entity['friendly_name'] }} ({{ entity['timediff'] }}),
+                {% set ns.list = ns.list + entity['friendly_name'] + " (" + entity['timediff'] | string + "), " %}
               {% endif -%}
             {% else -%}
               {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_seconds') | int(0) -%}
-                {{ entity['friendly_name'] }} ({{ entity['timediff'] }}),
+                {% set ns.list = ns.list + entity['friendly_name'] + " (" + entity['timediff'] | string + "), " %}
               {% endif -%}
             {% endif -%}
           {% endfor -%}
         {% else -%}
-          {{ [] }}
+           {% set ns.list = "" %}
         {% endif -%}
+        {{ ns.list | regex_replace(", $", "") }}
 
 - sensor:
     unique_id: low_battery
@@ -189,7 +195,7 @@
             {% set ns.list = ns.list + state.name + ' (' + state.state + '%), ' -%}
           {% endif -%}
         {% endfor -%}
-        {{ ns.list[:-2] }}
+        {{ ns.list | regex_replace(", $", "") }}
 
 - binary_sensor:
     unique_id: mailbox_sensor

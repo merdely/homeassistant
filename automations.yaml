@@ -3245,21 +3245,32 @@
         action: light.toggle
   mode: single
 - id: '1705879584394'
-  alias: Lighting - Living Room - Ensure switches stay on for bulbs
+  alias: Lighting - Ensure switches stay on for Smart Bulbs
   description: ''
   triggers:
-  - entity_id:
+  - trigger: state
+    entity_id:
+    - light.dresser_switch
+    from: 'on'
+  - trigger: state
+    entity_id:
     - light.white_switch
     from: 'on'
-    id: living_room_plug
-    trigger: state
+  - trigger: state
+    entity_id:
+    - light.front_porch_switch
+    from: 'on'
+  - trigger: state
+    entity_id:
+    - light.god_damn_switch
+    from: 'on'
   conditions: []
   actions:
   - metadata: {}
     data: {}
     target:
       entity_id:
-      - light.white_switch
+      - '{{ trigger.entity_id }}'
     action: homeassistant.turn_on
   mode: single
 - id: '1712846768542'

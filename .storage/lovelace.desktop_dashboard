@@ -271,7 +271,10 @@
                         },
                         {
                           "entity": "switch.furnace_switch",
-                          "name": false
+                          "name": false,
+                          "tap_action": {
+                            "action": "more-info"
+                          }
                         },
                         {
                           "entity": "light.den_overhead_light",
@@ -2415,7 +2418,24 @@
                                 "service_data": {
                                   "entity_id": [
                                     "sensor.opnsense_package_versions",
-                                    "sensor.opnsense_versions"
+                                    "sensor.opnsense_versions",
+                                    "sensor.opnsense_core_abi_version",
+                                    "sensor.opnsense_core_abi_version_latest"
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "entity": "sensor.fully_kiosk_browser_version",
+                              "name": "FKB",
+                              "icon": "mdi:briefcase-download",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "homeassistant.update_entity",
+                                "service_data": {
+                                  "entity_id": [
+                                    "sensor.fully_kiosk_browser_version",
+                                    "sensor.fully_kiosk_browser_version_latest"
                                   ]
                                 }
                               }
