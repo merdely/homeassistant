@@ -6,8 +6,8 @@
       {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
            's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
            '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-           '(remote|media_player)\.(?:plex|plex_\w{0,15}_plex_for_android_|playstation|firefox|chrom)[\w]{0,40}|' +
-           'media_player\.[a-z_]{1,30}_speaker|' +
+           '(remote|media_player)\.(?:plex|plex_[\w]{0,15}_plex_for_android_|playstation|firefox|chrom)[\w]{0,40}|' +
+           'media_player\.(?:[a-z_]{1,30}_speaker|pixel_[\w]{1,20})|' +
            'button\.(?:un)?ignore_all_issues|' +
            '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
            'device_tracker\.pixel_watch_3|' +
@@ -19,8 +19,8 @@
         {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
              's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
              '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-             '(remote|media_player)\.(?:plex|plex_\w{0,15}_plex_for_android_|playstation|firefox|chrom)[\w]{0,40}|' +
-             'media_player\.[a-z_]{1,30}_speaker|' +
+             '(remote|media_player)\.(?:plex|plex_[\w]{0,15}_plex_for_android_|playstation|firefox|chrom)[\w]{0,40}|' +
+             'media_player\.(?:[a-z_]{1,30}_speaker|pixel_[\w]{1,20})|' +
              'button\.(?:un)?ignore_all_issues|' +
              '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
              'device_tracker\.pixel_watch_3|' +
