@@ -26,7 +26,7 @@
              'device_tracker\.pixel_watch_3|' +
              'button.homeassistant_re(?:load|start)|' +
              'conversation\.home_assistant' +
-             ')$') | map(attribute='entity_id') | list }}
+             ')$') | map(attribute='entity_id') | list | join(', ') }}
 
 - sensor:
     unique_id: unavailable_entities_full_list
@@ -176,6 +176,71 @@
         {% endif -%}
         {{ ns.list | regex_replace(", $", "") }}
 
+- trigger:
+    - platform: time_pattern
+      seconds: 12
+    - platform: time_pattern
+      seconds: 27
+    - platform: time_pattern
+      seconds: 42
+    - platform: time_pattern
+      seconds: 57
+    - platform: homeassistant
+      event: start
+  sensor:
+    name: Zwave Entities
+    unique_id: zwave_entities
+    icon: mdi:zwave
+    state: "{{ now().strftime('%FT%T') }}"
+    attributes:
+      entity_list: >-
+        {% set ns = namespace(entities = []) -%}
+        {% for entity in states | selectattr('entity_id', 'match', '^[\w.]{1,50}_last_seen_zwave$') | map(attribute='entity_id') | list -%}
+          {% set ns.entities = ns.entities + [{"entity_id": entity,
+            "friendly_name": device_attr(device_id(entity), 'name'),
+            "timediff": (utcnow().strftime('%s') | int(0) - as_timestamp(states(entity), 0) | int(0)) }] -%}
+        {% endfor -%}
+        {{ ns.entities | sort(attribute='timediff', reverse=true) }}
+      count: >-
+        {{ states | selectattr('entity_id', 'match', '^[\w.]{1,50}_last_seen_zwave$') | map(attribute='entity_id') | list | count }}
+
+- sensor:
+    name: OOD Zwave Entities
+    unique_id: ood_zwave_entities
+    icon: mdi:zwave
+    state: |
+      {% if state_attr('sensor.zwave_entities', 'entity_list') -%}
+        {% set ns = namespace(count=0) -%}
+        {% for entity in state_attr('sensor.zwave_entities', 'entity_list') | default([]) -%}
+          {% if entity['entity_id'][-17:] == "_bulb_linkquality" -%}
+            {% if entity['timediff'] | int(0) > states('input_number.ood_zwave_bulb_seconds') | int(0) -%}
+              {% set ns.count = ns.count + 1 -%}
+            {% endif -%}
+          {% else %}
+            {% if entity['timediff'] | int(0) > states('input_number.ood_zwave_seconds') | int(0) -%}
+              {% set ns.count = ns.count + 1 -%}
+            {% endif -%}
+          {% endif -%}
+        {% endfor -%}
+        {{ ns.count }}
+      {% else -%}
+        0
+      {% endif -%}
+    attributes:
+      timestamp: "{{ now().strftime('%FT%T') }}"
+      entity_list: >
+        {% set ns = namespace(list = "") -%}
+        {% if state_attr('sensor.zwave_entities', 'entity_list') -%}
+          {% for entity in state_attr('sensor.zwave_entities', 'entity_list') | default([]) | sort(attribute='timediff', reverse=true) -%}
+            {% if entity['timediff'] | int(0) > states('input_number.ood_zwave_seconds') | int(0) -%}
+              {% set ns.list = ns.list + entity['friendly_name'] + " (" + entity['timediff'] | string + "), " %}
+            {% endif -%}
+          {% endfor -%}
+        {% else -%}
+           {% set ns.list = "" %}
+        {% endif -%}
+        {{ ns.list | regex_replace(", $", "") }}
+
 - sensor:
     unique_id: low_battery
     name: Low Battery
@@ -267,12 +332,11 @@
              'plexguest_': 'plexguest',
              'reed530': 'Tracy',
              'SimpliOP': 'DavidG',
-             'simpliop': 'DavidG',
              'stuckonu5': 'Madsen',
              }-%}
         {% for attr in states.sensor.plex_plex.attributes -%}
         {% if attr not in ['friendly_name', 'unit_of_measurement'] -%}
-        "{{ names[attr | regex_replace(' - .*$','')] }}": "{{ state_attr('sensor.plex_plex', attr) }}",
+        "{{ names[attr | regex_replace(' - .*$','', ignorecase=True)] }}": "{{ state_attr('sensor.plex_plex', attr) }}",
         {% endif -%}
         {% endfor -%} }
 

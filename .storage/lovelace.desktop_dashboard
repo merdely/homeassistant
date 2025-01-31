@@ -201,6 +201,10 @@
                           "name": false
                         },
                         {
+                          "entity": "light.living_room_cabinet_light",
+                          "name": false
+                        },
+                        {
                           "entity": "switch.living_room_tv",
                           "name": false
                         },
@@ -890,15 +894,39 @@
                       "buttons": [
                         {
                           "entity": "switch.petcam_plug",
-                          "name": "Pet Cam"
+                          "name": "Pet Cam",
+                          "styles": {
+                            "icon": {
+                              "color": "var(--paper-item-icon-color)"
+                            },
+                            "button": {
+                              "color": "var(--primary-text-color)"
+                            }
+                          }
                         },
                         {
                           "entity": "script.scene_good_night",
-                          "name": "Good Night"
+                          "name": "Good Night",
+                          "styles": {
+                            "icon": {
+                              "color": "var(--paper-item-icon-color)"
+                            },
+                            "button": {
+                              "color": "var(--primary-text-color)"
+                            }
+                          }
                         },
                         {
                           "entity": "script.zigbee_bulbs_keepalive",
-                          "name": "Fix Zigbee Bulbs"
+                          "name": "Fix Zigbee Bulbs",
+                          "styles": {
+                            "icon": {
+                              "color": "var(--paper-item-icon-color)"
+                            },
+                            "button": {
+                              "color": "var(--primary-text-color)"
+                            }
+                          }
                         }
                       ]
                     },
@@ -1155,8 +1183,11 @@
                             "entity": "climate.thermostat"
                           },
                           "styles": {
+                            "icon": {
+                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--paper-item-icon-color){% endif %}\n"
+                            },
                             "button": {
-                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  var(--state-climate-heat-color)\n{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  var(--state-climate-cool-color)\n{% endif %}"
+                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--primary-text-color){% endif %}\n"
                             }
                           }
                         },
@@ -1420,13 +1451,16 @@
                       "entity": "input_number.office_heater_auto_off_temperature"
                     },
                     {
+                      "entity": "input_number.ood_wyze_seconds"
+                    },
+                    {
                       "entity": "input_number.ood_zigbee_seconds"
                     },
                     {
                       "entity": "input_number.ood_zigbee_bulb_seconds"
                     },
                     {
-                      "entity": "input_number.ood_wyze_seconds"
+                      "entity": "input_number.ood_zwave_seconds"
                     }
                   ],
                   "title": "Configuration Settings",
@@ -2244,6 +2278,10 @@
                             {
                               "entity": "input_boolean.nginx_proxy_manager_working_triggered",
                               "name": "NPM"
+                            },
+                            {
+                              "entity": "input_boolean.software_update_available_triggered",
+                              "name": "Software"
                             }
                           ]
                         },
@@ -2252,20 +2290,20 @@
                           "position": "right",
                           "buttons": [
                             {
-                              "entity": "input_boolean.ood_zigbee_entities_triggered",
-                              "name": "Zigbee"
-                            },
-                            {
                               "entity": "input_boolean.ood_wyze_entities_triggered",
                               "name": "Wyze"
                             },
                             {
-                              "entity": "input_boolean.unavailable_entities_triggered",
-                              "name": "Unavailable"
+                              "entity": "input_boolean.ood_zigbee_entities_triggered",
+                              "name": "Zigbee"
                             },
                             {
-                              "entity": "input_boolean.software_update_available_triggered",
-                              "name": "Software"
+                              "entity": "input_boolean.ood_zwave_entities_triggered",
+                              "name": "Zwave"
+                            },
+                            {
+                              "entity": "input_boolean.unavailable_entities_triggered",
+                              "name": "Unavailable"
                             }
                           ]
                         },
@@ -2762,20 +2800,38 @@
                   ]
                 },
                 {
-                  "type": "markdown",
-                  "content": "Count: {{ states('sensor.ood_zigbee_entities') }}; Threshold: {{ states('input_number.ood_zigbee_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_zigbee_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_zigbee_entities', 'entity_list') }}\n",
-                  "title": "Out of Date Zigbee Devices"
-                },
-                {
-                  "type": "markdown",
-                  "content": "Count: {{ states('sensor.ood_wyze_entities') }}; Threshold: {{ states('input_number.ood_wyze_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_wyze_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_wyze_entities', 'entity_list') }}\n",
-                  "title": "Out of Date Wyze Devices"
-                },
-                {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
                   "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}; Threshold: {{ states(\"input_number.ood_wyze_seconds\")|int(0) }} <ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list')  | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true))-%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * 0.50) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
                   "title": "All Wyze Devices"
+                },
+                {
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zwave_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zwave_entities') }}; Threshold: {{ states(\"input_number.ood_zwave_seconds\")|int(0) }} <ol>\n{% for entity in state_attr('sensor.zwave_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_zwave_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_zwave_seconds\")|int(0) - 2000) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
+                  "title": "Zwave Devices"
+                },
+                {
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "button.press",
+                    "target": {
+                      "entity_id": [
+                        "button.front_door_zwave_ping",
+                        "button.garage_entry_door_ping",
+                        "button.range_extender_ping"
+                      ]
+                    }
+                  },
+                  "entity": "button.front_door_zwave_ping",
+                  "name": "Ping Zwave",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 2
+                  }
                 }
               ]
             }
@@ -3211,7 +3267,7 @@
                     ]
                   },
                   "sort": {
-                    "method": "friendly_name"
+                    "method": "entity_id"
                   }
                 }
               ]
@@ -3273,7 +3329,19 @@
           "sections": [
             {
               "type": "grid",
-              "cards": []
+              "cards": [
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.office_multisensor_old_temperature"
+                    },
+                    {
+                      "entity": "sensor.office_temperature"
+                    }
+                  ]
+                }
+              ]
             },
             {
               "type": "grid",

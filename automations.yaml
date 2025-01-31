@@ -114,27 +114,30 @@
       action: light.turn_on
     alias: Turn on Kitchen Table Light if Holly & Mike are not home
   - target:
-      entity_id: light.dining_room_christmas_lights
+      entity_id:
+      - light.dining_room_christmas_lights
+      - light.living_room_cabinet_light
     data: {}
     action: homeassistant.turn_on
   mode: single
 - id: '1600529040720'
   alias: Lighting - Sunset Lights Off at Night
   description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.turn_off_sunset_lights
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    target:
+  triggers:
+  - at: input_datetime.turn_off_sunset_lights
+    trigger: time
+  conditions: []
+  actions:
+  - target:
       entity_id:
       - light.front_porch_light
       - light.outside_garage_lights
       - switch.outside_christmas_lights
       - light.dining_room_christmas_lights
       - light.near_black_lamp
+      - light.living_room_cabinet_light
     data: {}
+    action: homeassistant.turn_off
   mode: single
 - id: '1602628290703'
   alias: Lighting - Laundry Room - Motion Light On
@@ -311,72 +314,44 @@
 - id: '1603064762451'
   alias: Lighting - Office - Motion Light On
   description: ''
-  trigger:
-  - platform: state
+  triggers:
+  - entity_id: binary_sensor.wyzesense_778e716f
     to: 'on'
-    entity_id: binary_sensor.office_door_motion_sensor_occupancy
-  - platform: state
-    entity_id: binary_sensor.wyzesense_778e716f
+    trigger: state
+    enabled: true
+  - trigger: state
+    entity_id:
+    - binary_sensor.office_presence_sensor_presence
     to: 'on'
-  condition:
-  - condition: state
-    entity_id: light.office_fan_light
-    state: 'off'
-    for: 00:01:00
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: binary_sensor.bed_sensor_holly
-      state: 'off'
-    - condition: state
-      entity_id: binary_sensor.bed_sensor_mike
-      state: 'off'
-  action:
-  - service: homeassistant.turn_on
-    target:
+  conditions: []
+  actions:
+  - target:
       entity_id: light.office_fan_light
+    action: homeassistant.turn_on
+    data: {}
   mode: single
 - id: '1603115550660'
   alias: Lighting - Office - Motion Light Off
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.wyzesense_778e716f
+  triggers:
+  - entity_id: binary_sensor.wyzesense_778e716f
     to: 'off'
     for:
       hours: 2
       minutes: 0
       seconds: 0
-      milliseconds: 0
-  - platform: state
-    entity_id: binary_sensor.office_door_motion_sensor_occupancy
+    trigger: state
+    enabled: false
+  - trigger: state
+    entity_id:
+    - binary_sensor.office_presence_sensor_presence
     to: 'off'
-    for:
-      hours: 2
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  condition:
-  - condition: state
-    entity_id: binary_sensor.office_door_motion_sensor_occupancy
-    state: 'off'
-    for:
-      hours: 2
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  - condition: state
-    entity_id: binary_sensor.wyzesense_778e716f
-    state: 'off'
-    for:
-      hours: 2
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  action:
-  - service: homeassistant.turn_off
-    target:
+  conditions: []
+  actions:
+  - target:
       entity_id: light.office_fan_light
+    action: homeassistant.turn_off
+    data: {}
   mode: single
 - id: '1603148838343'
   alias: 00 - Home Assistant - Startup
@@ -583,18 +558,17 @@
 - id: '1604422426174'
   alias: Security - 90 Triggered - Alert of Exterior Doors (Away)
   description: ''
-  trigger:
-  - platform: state
-    entity_id: group.exterior_security_devices
+  triggers:
+  - entity_id: group.exterior_security_devices
     to: 'on'
     for: 00:00:01
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: alarm_control_panel.home_alarm
     state: armed_away
-  action:
-  - service: notify.signal_security
-    data:
+  actions:
+  - data:
       message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
         -%} {%- for entity_id in states.group.exterior_security_devices.attributes.entity_id
         -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state
@@ -605,7 +579,8 @@
         | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n  {%-
         if ns.count == ns.open_entities | length - 1 %} and {% endif -%}\n{%- endfor
         -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
-        %} {%- if ns.count > 0 %}open{% else %}No devices are open{% endif %}"
+        %} {%- if ns.count > 0 %} open{% else %}No devices are open{% endif %}"
+    action: notify.signal_security
   mode: single
 - id: '1604422951001'
   alias: Security - 90 Triggered - Start Siren
@@ -953,15 +928,15 @@
 - id: '1607035454754'
   alias: Lighting - Office - Mike Desk Lamp Toggle
   description: ''
-  trigger:
-  - platform: mqtt
-    topic: stat/mike_desk_lamp_button/POWER
-  condition: []
-  action:
+  triggers:
+  - topic: stat/mike_desk_lamp_button/POWER
+    trigger: mqtt
+  conditions: []
+  actions:
   - data: {}
     action: homeassistant.toggle
     target:
-      device_id: 1434b5d8800ec4d9099a4c3d4bf336f7
+      entity_id: light.mike_desk_lamp
   mode: single
 - id: '1607035951583'
   alias: Lighting - Living Room Lights Off
@@ -1460,16 +1435,17 @@
     action: shell_command.clean_alarm_state
   - data: {}
     action: shell_command.rotate_ha_logs
-  - if:
-    - condition: template
-      value_template: '{{ now().weekday() == (state_attr(''sensor.moco_recycle_day'',
-        ''recycle_day_num'') | int(0) + 1) % 7 }}'
+  - alias: Reset Recycle Is Out if day after Recycle Day
+    if:
+    - condition: numeric_state
+      entity_id: sensor.moco_recycle_day
+      attribute: recycle_days
+      above: 2
     then:
     - action: input_boolean.turn_off
       target:
         entity_id: input_boolean.recycle_is_out
       data: {}
-    alias: Reset Recycle Is Out if day after Recycle Day
   - if:
     - condition: template
       value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1_number'')
@@ -1541,6 +1517,14 @@
   - action: script.backup_partial_on_nfs
     data: {}
     enabled: false
+  - action: button.press
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - button.front_door_zwave_ping
+      - button.garage_entry_door_ping
+      - button.range_extender_ping
   mode: single
 - id: '1610231390167'
   alias: Notifications - Nobody Home - Alarm Disarmed
@@ -2396,11 +2380,12 @@
       minutes: 5
       seconds: 0
     trigger: state
-  - entity_id: sensor.unavailable_entities
+  - entity_id:
+    - sensor.unavailable_entities
     above: '0'
     for:
       hours: 0
-      minutes: 1
+      minutes: 5
       seconds: 0
     trigger: numeric_state
   - entity_id: sensor.unavailable_entities
@@ -2458,6 +2443,20 @@
       minutes: 0
       seconds: 30
     trigger: state
+  - entity_id: sensor.ood_wyze_entities
+    above: '0'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    trigger: numeric_state
+  - entity_id: sensor.ood_wyze_entities
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    below: '1'
+    trigger: numeric_state
   - entity_id: sensor.ood_zigbee_entities
     above: '0'
     for:
@@ -2472,14 +2471,14 @@
       seconds: 30
     below: '1'
     trigger: numeric_state
-  - entity_id: sensor.ood_wyze_entities
+  - entity_id: sensor.ood_zwave_entities
     above: '0'
     for:
       hours: 0
       minutes: 0
       seconds: 30
     trigger: numeric_state
-  - entity_id: sensor.ood_wyze_entities
+  - entity_id: sensor.ood_zwave_entities
     for:
       hours: 0
       minutes: 0
@@ -3442,7 +3441,7 @@
     to: locked
     for:
       hours: 0
-      minutes: 5
+      minutes: 3
       seconds: 0
   conditions: []
   actions:
@@ -3520,4 +3519,57 @@
     response_variable: response
   - set_conversation_response: Playing "{{ trigger.slots.title }}" on the {{ trigger.slots.roku
       }} TV
+  mode: single
+- id: '1737680625031'
+  alias: Turn on God Damn Switch LEDs when Bulb Turns Off
+  description: ''
+  triggers:
+  - entity_id:
+    - light.god_damn_bulb
+    trigger: state
+    from: 'on'
+  conditions: []
+  actions:
+  - data:
+      topic: cmnd/god_damn_switch/ledstate
+      payload: '1'
+    action: mqtt.publish
+  - data:
+      topic: cmnd/god_damn_switch2/ledstate
+      payload: '1'
+    action: mqtt.publish
+  mode: single
+- id: '1737680666624'
+  alias: Turn Off God Damn Switch LEDs When Bulb Turns On
+  description: ''
+  triggers:
+  - entity_id:
+    - light.god_damn_bulb
+    trigger: state
+    to: 'on'
+  conditions: []
+  actions:
+  - data:
+      topic: cmnd/god_damn_switch/ledstate
+      payload: '0'
+    action: mqtt.publish
+  - data:
+      topic: cmnd/god_damn_switch2/ledstate
+      payload: '0'
+    action: mqtt.publish
+  mode: single
+- id: '1738255798106'
+  alias: ++++Notify Mike when Office Presence Changes
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.office_presence_sensor_presence
+  conditions: []
+  actions:
+  - action: notify.signal_mike
+    metadata: {}
+    data:
+      message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} changed to
+        {{ states(trigger.entity_id) }}'
   mode: single

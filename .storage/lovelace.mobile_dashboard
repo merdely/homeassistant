@@ -759,11 +759,12 @@
                           },
                           "styles": {
                             "icon": {
-                              "--mdc-icon-size": "40px"
+                              "--mdc-icon-size": "40px",
+                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--paper-item-icon-color){% endif %}\n"
                             },
                             "button": {
                               "font-size": "18px",
-                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}\n  var(--state-climate-heat-color)\n{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}\n  var(--state-climate-cool-color)\n{% endif %}"
+                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--primary-text-color){% endif %}\n"
                             }
                           }
                         },
@@ -1375,6 +1376,38 @@
                             {
                               "type": "custom:bubble-card",
                               "card_type": "button",
+                              "entity": "light.living_room_cabinet_light",
+                              "name": "Cabinet",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              }
+                            }
+                          ],
+                          "card_mod": {
+                            "style": "ha-card {\n  border: none;\n}\n"
+                          }
+                        },
+                        {
+                          "type": "custom:stack-in-card",
+                          "mode": "horizontal",
+                          "cards": [
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
                               "entity": "switch.living_room_tv",
                               "name": "TV",
                               "tap_action": {
@@ -1384,6 +1417,17 @@
                                 "action": "more-info"
                               },
                               "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
                             }
                           ],
                           "card_mod": {
@@ -2521,6 +2565,15 @@
                               }
                             },
                             {
+                              "entity": "light.living_room_cabinet_light",
+                              "name": false,
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "35px"
+                                }
+                              }
+                            },
+                            {
                               "entity": "switch.living_room_tv",
                               "name": false,
                               "styles": {
@@ -2925,7 +2978,7 @@
                           "entity": "binary_sensor.bedroom_motion_sensor_occupancy"
                         },
                         {
-                          "entity": "binary_sensor.office_door_motion_sensor_occupancy"
+                          "entity": "binary_sensor.office_presence_sensor_presence"
                         },
                         {
                           "entity": "binary_sensor.wyzesense_778e716f"
@@ -2955,19 +3008,19 @@
                           "entity": "binary_sensor.master_bath_water_leak_sensor_water_leak"
                         },
                         {
-                          "entity": "binary_sensor.dining_room_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.dining_room_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.dining_room_refrigerator_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.dining_room_refrigerator_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.kitchen_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.kitchen_sink_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.kitchen_refrigerator_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.kitchen_refrigerator_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.living_room_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.living_room_water_leak_sensor"
                         },
                         {
                           "entity": "binary_sensor.god_damn_water_leak_sensor_water_leak"

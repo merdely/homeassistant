@@ -130,9 +130,11 @@
                               },
                               "styles": {
                                 "icon": {
+                                  "--mdc-icon-size": "32px",
                                   "color": "var(--plex-icon-color)"
                                 },
                                 "button": {
+                                  "font-size": "16px",
                                   "color": "var(--plex-color)"
                                 }
                               }
@@ -148,9 +150,11 @@
                               },
                               "styles": {
                                 "icon": {
+                                  "--mdc-icon-size": "32px",
                                   "color": "var(--jellyfin-icon-color)"
                                 },
                                 "button": {
+                                  "font-size": "16px",
                                   "color": "var(--jellyfin-color)"
                                 }
                               }
@@ -166,9 +170,11 @@
                               },
                               "styles": {
                                 "icon": {
+                                  "--mdc-icon-size": "32px",
                                   "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--paper-item-icon-color){% endif %}\n"
                                 },
                                 "button": {
+                                  "font-size": "16px",
                                   "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--primary-text-color){% endif %}\n"
                                 }
                               }
@@ -181,7 +187,7 @@
                         {
                           "type": "custom:html-template-card",
                           "ignore_line_breaks": true,
-                          "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_watching.attributes.sessions.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>＞</td><td>{{ client | regex_replace('(_+)? - .*$', '') | replace('reed530','Tracy') | replace('ebfab', 'EricB') | replace('humber952','Christina') | replace('Atheo37','Alex/Marce') | replace('ahuldtgren','Andrea') | replace('jhuldtgren', 'Johan') | replace('stuckonu5', 'Madsen') | replace('simpliop','DavidG') }}</td><td> {{ value }}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>⟁</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
+                          "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table>{% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_watching.attributes.sessions.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>＞</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td>{% set pieces = value.split(\" - \") -%}{% for i in range(pieces | length) %}{{ pieces[i] | title | truncate(20, True, \"‥\") }}{% if i < (pieces | length) - 1 %} - {% endif %}{% endfor -%}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>⟁</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td>{% set pieces = value.split(\" - \") -%}{% for i in range(pieces | length) %}{{ pieces[i] | title | truncate(20, True, \"‥\") }}{% if i < (pieces | length) - 1 %} - {% endif %}{% endfor -%}</td></tr> {% endfor -%}{% endif -%} </table>\n"
                         }
                       ],
                       "state_color": true,
@@ -962,13 +968,12 @@
                         {
                           "type": "entities",
                           "entities": [
-                            "switch.kitchen",
+                            {
+                              "entity": "switch.kitchen"
+                            },
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:bubble-card",
@@ -994,18 +999,20 @@
                                     "action": "more-info"
                                   }
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "section"
                             },
-                            "switch.living_room",
+                            {
+                              "entity": "switch.living_room"
+                            },
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:bubble-card",
@@ -1031,14 +1038,14 @@
                                     "action": "more-info"
                                   }
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:bubble-card",
@@ -1046,6 +1053,18 @@
                                   "entity": "light.white_lamp",
                                   "name": "White Lamp",
                                   "button_type": "slider",
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  }
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
+                                  "entity": "light.living_room_cabinet_light",
+                                  "name": "Cabinet",
                                   "tap_action": {
                                     "action": "toggle"
                                   },
@@ -1066,18 +1085,20 @@
                                   },
                                   "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "section"
                             },
-                            "switch.dining_room",
+                            {
+                              "entity": "switch.dining_room"
+                            },
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:bubble-card",
@@ -1103,7 +1124,10 @@
                                     "action": "more-info"
                                   }
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "section"
@@ -1111,9 +1135,6 @@
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:button-card",
@@ -1149,7 +1170,10 @@
                                     ]
                                   }
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             }
                           ]
                         }
@@ -1787,7 +1811,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "tile",
@@ -1908,7 +1932,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "tile",
@@ -1932,7 +1956,7 @@
                           "entity": "binary_sensor.bedroom_motion_sensor_occupancy"
                         },
                         {
-                          "entity": "binary_sensor.office_door_motion_sensor_occupancy"
+                          "entity": "binary_sensor.office_presence_sensor_presence"
                         },
                         {
                           "entity": "binary_sensor.wyzesense_778e716f"
@@ -1982,19 +2006,19 @@
                           "entity": "binary_sensor.master_bath_water_leak_sensor_water_leak"
                         },
                         {
-                          "entity": "binary_sensor.dining_room_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.dining_room_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.dining_room_refrigerator_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.dining_room_refrigerator_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.kitchen_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.kitchen_sink_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.kitchen_refrigerator_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.kitchen_refrigerator_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.living_room_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.living_room_water_leak_sensor"
                         },
                         {
                           "entity": "binary_sensor.god_damn_water_leak_sensor_water_leak"
@@ -2032,7 +2056,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:html-template-card",
@@ -2118,7 +2142,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:html-template-card",
@@ -2269,7 +2293,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:html-template-card",
@@ -2314,7 +2338,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "horizontal-stack",
@@ -2996,7 +3020,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:auto-entities",
@@ -3097,7 +3121,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:auto-entities",
@@ -3198,7 +3222,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:auto-entities",
@@ -3299,7 +3323,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:auto-entities",
@@ -3499,7 +3523,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "entities",
@@ -3668,7 +3692,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "media-control",
@@ -3766,7 +3790,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fkb_control_panel\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "entities",
