@@ -27,6 +27,9 @@ holiday_url = "https://www.montgomerycountymd.gov/dep/trash-recycling/holidays.h
 
 debug = False
 
+if len(sys.argv) == 2 and sys.argv[1] == "-d":
+    debug = True
+
 moco_code = holidays_code = exception_code = 0
 moco_address = ""
 is_holiday = False
@@ -74,24 +77,27 @@ def get_weekday_num(date):
     date_obj = datetime.strptime(date, "%Y-%m-%d")
     return date_obj.weekday()
 
-def next_weekday(weekday):
+def next_weekday(weekday, date=None):
     global weekday_mapping
 
     # Get today's date
-    today = datetime.today()
-    if today.strftime("%A") == weekday:
-        return today.strftime("%Y-%m-%d")
+    if not date:
+        day = datetime.today()
+        if day.strftime("%A") == weekday:
+            return day.strftime("%Y-%m-%d")
+    else:
+        day = datetime.strptime(date, "%Y-%m-%d")
 
     # Convert the input weekday to an integer (0=Monday, ..., 6=Sunday)
     target_weekday = weekday_mapping[weekday]
 
     # Calculate the number of days to add to get to the next occurrence
-    days_to_next = (target_weekday - today.weekday() + 7) % 7
+    days_to_next = (target_weekday - day.weekday() + 7) % 7
     if days_to_next == 0:  # If today is the target day, go to the next week
         days_to_next = 7
 
     # Calculate the next occurrence
-    next_date = today + timedelta(days=days_to_next)
+    next_date = day + timedelta(days=days_to_next)
 
     return next_date.strftime("%Y-%m-%d")  # Format the date as YYYY-MM-DD
 
@@ -185,6 +191,11 @@ def get_exception(pickup_day, date = None):
         mon2 = datetime.today().strftime("%B")
         day1 = datetime.today().strftime("%d")
         day2 = datetime.today().strftime("%e").strip()
+
+    if debug:
+        print(f"mon1 = {mon1}, mon2 = {mon2}, day1 = {day1}, day2 = {day2}")
+        print()
+
     response = requests.get(holiday_url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
@@ -205,8 +216,8 @@ def get_exception(pickup_day, date = None):
                             match = re.search(r"(?:this week|(?:January|Jan|February|Feb|March|Mar|April|Apr|May|June|Jun|July|Jul|August|Aug|September|Sep|Sept|October|Oct|November|Nov|December|Dec)\s+\d{1,2})", paragraph.text, re.IGNORECASE)
                             if match:
                                 match = re.search(r'slide one day', paragraph.text, re.IGNORECASE)
-                                if match:
-                                    return (next_weekday(add_days(pickup_day, 1)), True, alert_response.status_code)
+                                if match and "holiday" not in paragraph.text:
+                                    return (next_weekday(add_days(pickup_day, 1), date), True, alert_response.status_code)
                                 # match = re.search(rf'{pickup_day}.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))', paragraph.text)
                                 # match = re.search(r'%s.*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))' % pickup_day, paragraph.text, re.IGNORECASE)
                                 match = re.search(r'(?:%s|(?:January|February|March|April|May|June|July|August|Sepember|October|November|December)[ ]+\d{1,2}).*slide.*((?:Sun|Mon|Tues|Wed|Thurs|Fri|Satur)day(?:, \w+ \d{1,2}))' % pickup_day, paragraph.text, re.IGNORECASE)
@@ -216,12 +227,12 @@ def get_exception(pickup_day, date = None):
                                         #print(f"{match.group(1)}, {datetime.now().strftime('%Y')}")
                                         return (datetime.strptime(f"{match.group(1)}, {datetime.now().strftime('%Y')}", f"%A, %B %d, %Y").strftime("%F"), True, alert_response.status_code)
                                     else:
-                                        return (next_weekday(match.group(1)), True, alert_response.status_code)
+                                        return (next_weekday(match.group(1), date), True, alert_response.status_code)
                                 else:
-                                    return (next_weekday(add_days(pickup_day, 1)), True, alert_response.status_code)
+                                    return (next_weekday(add_days(pickup_day, 1), date), True, alert_response.status_code)
                     else:
-                        return (next_weekday(pickup_day), False, alert_response.status_code)
-    return (next_weekday(pickup_day), False, 0)
+                        return (next_weekday(pickup_day, date), False, alert_response.status_code)
+    return (next_weekday(pickup_day, date), False, 0)
 
 def get_holidays():
     global holiday_url
@@ -264,10 +275,21 @@ def holiday_slide(pickup_day, date = None):
     else:
         woy = datetime.today().isocalendar()[1]
     #woy = woy - 1
+    if debug:
+        print(f"Holiday slide woy for {date} is {woy}")
+        print(f"Holiday slide pickup day for {date} is {pickup_day}")
+        print()
+
     holidays, holidays_code = get_holidays()
     for holiday in holidays:
+        if debug:
+            print(f"holiday woy = {holidays[holiday]['woy']}; woy = {woy}; date = {date}")
+            print()
         if holidays[holiday]["woy"] == woy:
             day = add_days(pickup_day, 1)
+            if debug:
+                print(f"Holiday slide pickup_day for {date} is {day}")
+                print()
             change = True
             break
     return (day, change, holidays_code)
@@ -303,20 +325,35 @@ def get_recycle_day(date = None):
 
     holiday_day, is_holiday, holidays_code = holiday_slide(recycle_day, date)
     recycle_day = holiday_day
-    recycle_date = next_weekday(recycle_day)
+    if debug:
+        print(f"Next weekday for {date} is {recycle_day}")
+        print()
+
+    recycle_date = next_weekday(recycle_day, date)
+    if debug:
+        print(f"Next weekday for {recycle_date} is {recycle_day}")
+        print()
+
     recycle_days = days_between(recycle_date)
     if debug:
-        print(f"Holiday adjusted day is {recycle_day}")
-        print(f"Holiday adjusted date is {recycle_date} ({recycle_days})")
+        print(f"Holiday adjusted day for {date} is {recycle_day}")
+        print(f"Holiday adjusted date for {date} is {recycle_date} ({recycle_days})")
         print()
 
     recycle_date, has_exception, exception_code = get_exception(recycle_day, date)
+    if debug:
+        print(f"Exception adjusted day for {date} is {recycle_date}")
+        print()
+
     recycle_day = get_weekday(recycle_date)
+    if debug:
+        print(f"Next weekday for {recycle_date} is {recycle_day}")
+        print()
+
     recycle_days = days_between(recycle_date)
     if debug:
-        print(f"Exception adjusted day is {recycle_day}")
-        print(f"Exception adjusted day is {recycle_date} ({recycle_days})")
-
+        print(f"Exception adjusted day for {date} is {recycle_day}")
+        print(f"Exception adjusted day for {date} is {recycle_date} ({recycle_days})")
         print()
 
     return {
@@ -340,8 +377,19 @@ def get_recycle_day(date = None):
 
 recycle_day, _, _ = get_starting_recycle_day()
 last_week_date = get_last_weekday(recycle_day)
+if debug:
+    print(f"last_week_date = {last_week_date}")
+    print()
+
 last_week = get_recycle_day(last_week_date)
+if debug:
+    print(f"last_week = {last_week['recycle_date']}")
+    print(f"last_week = {last_week}")
+    print(f"date_passed = {date_passed(last_week['recycle_date'])}")
+    print()
+
 if date_passed(last_week['recycle_date']) == False:
     print(json.dumps(last_week))
 else:
     print(json.dumps(get_recycle_day()))
+
