@@ -145,6 +145,10 @@
             {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_bulb_seconds') | int(0) -%}
               {% set ns.count = ns.count + 1 -%}
             {% endif -%}
+          {% elif entity['entity_id'][-19:] == "_button_linkquality" -%}
+            {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_button_seconds') | int(0) -%}
+              {% set ns.count = ns.count + 1 -%}
+            {% endif -%}
           {% else %}
             {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_seconds') | int(0) -%}
               {% set ns.count = ns.count + 1 -%}

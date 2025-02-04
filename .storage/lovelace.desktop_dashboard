@@ -59,10 +59,6 @@
                           "name": false
                         },
                         {
-                          "entity": "switch.bedroom_humidifier",
-                          "name": false
-                        },
-                        {
                           "entity": "light.master_bath_light",
                           "name": false
                         },
@@ -261,6 +257,10 @@
                         {
                           "entity": "switch.god_damn_tv",
                           "name": false
+                        },
+                        {
+                          "entity": "switch.god_damn_humidifier",
+                          "name": false
                         }
                       ]
                     },
@@ -433,18 +433,52 @@
                   "entities": [
                     {
                       "entity": "person.holly_erdely",
-                      "name": "Status",
-                      "icon": "mdi:compass-outline",
+                      "name": false,
+                      "icon": "mdi:human-male-female",
                       "type": "custom:multiple-entity-row",
                       "entities": [
                         {
                           "entity": "person.holly_erdely",
-                          "name": "Holly"
+                          "name": "Holly",
+                          "styles": {
+                            "width": "75px"
+                          }
                         },
                         {
                           "entity": "person.michael_erdely",
-                          "name": "Mike"
+                          "name": "Mike",
+                          "styles": {
+                            "width": "75px"
+                          }
                         },
+                        {
+                          "entity": "input_text.unknown"
+                        },
+                        {
+                          "entity": "sensor.holly_is_in_bed",
+                          "name": "Holly",
+                          "styles": {
+                            "color": "var(--holly-bed-color)",
+                            "width": "75px"
+                          }
+                        },
+                        {
+                          "entity": "sensor.mike_is_in_bed",
+                          "name": "Mike",
+                          "styles": {
+                            "color": "var(--mike-bed-color)",
+                            "width": "75px"
+                          }
+                        }
+                      ],
+                      "show_state": false
+                    },
+                    {
+                      "entity": "person.holly_erdely",
+                      "name": "Status",
+                      "icon": "mdi:compass",
+                      "type": "custom:multiple-entity-row",
+                      "entities": [
                         {
                           "entity": "sensor.washer_and_dryer_state",
                           "name": "Laundry",
@@ -471,29 +505,6 @@
                             "service_data": {
                               "entity_id": "input_boolean.mail_delivered"
                             }
-                          }
-                        }
-                      ],
-                      "show_state": false
-                    },
-                    {
-                      "entity": "person.holly_erdely",
-                      "name": "Who's in Bed",
-                      "icon": "mdi:bed",
-                      "type": "custom:multiple-entity-row",
-                      "entities": [
-                        {
-                          "entity": "sensor.holly_is_in_bed",
-                          "name": "Holly",
-                          "styles": {
-                            "color": "var(--holly-bed-color)"
-                          }
-                        },
-                        {
-                          "entity": "sensor.mike_is_in_bed",
-                          "name": "Mike",
-                          "styles": {
-                            "color": "var(--mike-bed-color)"
                           }
                         }
                       ],
@@ -1449,18 +1460,6 @@
                     },
                     {
                       "entity": "input_number.office_heater_auto_off_temperature"
-                    },
-                    {
-                      "entity": "input_number.ood_wyze_seconds"
-                    },
-                    {
-                      "entity": "input_number.ood_zigbee_seconds"
-                    },
-                    {
-                      "entity": "input_number.ood_zigbee_bulb_seconds"
-                    },
-                    {
-                      "entity": "input_number.ood_zwave_seconds"
                     }
                   ],
                   "title": "Configuration Settings",
@@ -2432,12 +2431,12 @@
                               }
                             },
                             {
-                              "entity": "light.dresser_bulb",
+                              "entity": "script.power_cycle_closet_switch",
                               "icon": "mdi:sync",
-                              "name": "Zigbee Bulbs",
+                              "name": "Mikrotik",
                               "tap_action": {
                                 "action": "call-service",
-                                "service": "script.zigbee_bulbs_keepalive"
+                                "service": "script.power_cycle_closet_switch"
                               }
                             }
                           ]
@@ -2769,7 +2768,7 @@
                 {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol> {% set ns = namespace(count = 0) %} {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) - 21600) and \"bulb\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endif %} {% endfor -%} </ol>\n\n{% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}",
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}\n<ol> {% set ns = namespace(count = 0) %} {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n{% endif %} {% endfor -%} </ol> {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}\n<h1>All WyzeSense Devices</h1>\nCount: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}\n<ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list') | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
                   "title": "Zigbee Devices"
                 }
               ]
@@ -2780,7 +2779,7 @@
                 {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol start=  {{ (state_attr('sensor.zigbee_entities', 'count') | int(0) / 2)|int + 1}}> {% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count > state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) - 21600) and \"bulb\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endif %} {% endfor -%} </ol>\n\n{% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}",
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}\n<ol start=  {{ (state_attr('sensor.zigbee_entities', 'count') | int(0) / 2)|int + 1}}> {% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count > state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n{% endif %} {% endfor -%} </ol> {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}\n<h1>All Zwave Devices</h1>\nCount: {{ state_attr('sensor.zwave_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zwave_entities') }}\n<ol>\n{% for entity in state_attr('sensor.zwave_entities', 'entity_list') | sort(attribute=iif(states('input_select.zwave_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zwave_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_zwave_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_zwave_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
                   "title": "Zigbee Devices"
                 }
               ]
@@ -2792,24 +2791,41 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "input_select.zigbee_entities_sort"
+                      "entity": "input_number.ood_wyze_seconds",
+                      "name": "OOD Wyze"
+                    },
+                    {
+                      "entity": "input_number.ood_zigbee_seconds",
+                      "name": "OOD Zigbee"
+                    },
+                    {
+                      "entity": "input_number.ood_zigbee_bulb_seconds",
+                      "name": "OOD Zigbee Bulb"
+                    },
+                    {
+                      "entity": "input_number.ood_zigbee_button_seconds",
+                      "name": "OOD Zigbee Button"
+                    },
+                    {
+                      "entity": "input_number.ood_zwave_seconds",
+                      "name": "OOD Zwave"
+                    },
+                    {
+                      "entity": "input_number.ood_warning_threshold"
+                    },
+                    {
+                      "type": "section"
                     },
                     {
                       "entity": "input_select.wyze_entities_sort"
+                    },
+                    {
+                      "entity": "input_select.zigbee_entities_sort"
+                    },
+                    {
+                      "entity": "input_select.zwave_entities_sort"
                     }
                   ]
-                },
-                {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}; Threshold: {{ states(\"input_number.ood_wyze_seconds\")|int(0) }} <ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list')  | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true))-%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * 0.50) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
-                  "title": "All Wyze Devices"
-                },
-                {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zwave_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zwave_entities') }}; Threshold: {{ states(\"input_number.ood_zwave_seconds\")|int(0) }} <ol>\n{% for entity in state_attr('sensor.zwave_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_zwave_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_zwave_seconds\")|int(0) - 2000) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
-                  "title": "Zwave Devices"
                 },
                 {
                   "show_name": true,

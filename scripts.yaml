@@ -1316,20 +1316,18 @@ power_cycle_closet_switch:
   alias: Power Cycle Closet Switch
   sequence:
   - data: {}
-    target:
-      entity_id:
-      - switch.mikrotik_plug
     action: homeassistant.turn_off
+    target:
+      entity_id: switch.sol_plug
   - delay:
       hours: 0
       minutes: 0
       seconds: 10
       milliseconds: 0
   - data: {}
-    target:
-      entity_id:
-      - switch.mikrotik_plug
     action: homeassistant.turn_on
+    target:
+      entity_id: switch.sol_plug
   mode: single
   icon: mdi:sync
 zigbee_bulbs_keepalive:

@@ -966,17 +966,15 @@
                           },
                           "cards": [
                             {
-                              "type": "custom:bubble-card",
-                              "card_type": "button",
-                              "entity": "switch.bedroom_humidifier",
-                              "name": "Humidifier",
-                              "tap_action": {
-                                "action": "toggle"
-                              },
-                              "hold_action": {
-                                "action": "more-info"
-                              },
-                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
                             },
                             {
                               "type": "custom:bubble-card",
@@ -990,6 +988,17 @@
                                 "action": "more-info"
                               },
                               "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            },
+                            {
+                              "type": "custom:button-card",
+                              "color_type": "blank-card",
+                              "styles": {
+                                "card": [
+                                  {
+                                    "width": "60px"
+                                  }
+                                ]
+                              }
                             }
                           ]
                         },
@@ -1681,6 +1690,20 @@
                             {
                               "type": "custom:bubble-card",
                               "card_type": "button",
+                              "entity": "switch.god_damn_humidifier",
+                              "name": "Humidifier",
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              },
+                              "scrolling_effect": false,
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
                               "entity": "switch.christmas_tree",
                               "tap_action": {
                                 "action": "toggle"
@@ -2349,15 +2372,6 @@
                           "position": "right",
                           "buttons": [
                             {
-                              "entity": "switch.bedroom_humidifier",
-                              "name": false,
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "35px"
-                                }
-                              }
-                            },
-                            {
                               "entity": "light.master_bath_light",
                               "name": false,
                               "styles": {
@@ -2975,9 +2989,6 @@
                           "entity": "binary_sensor.kitchen_refrigerator_door_contact"
                         },
                         {
-                          "entity": "binary_sensor.bedroom_motion_sensor_occupancy"
-                        },
-                        {
                           "entity": "binary_sensor.office_presence_sensor_presence"
                         },
                         {
@@ -2987,25 +2998,22 @@
                           "entity": "binary_sensor.living_room_motion_sensor_occupancy"
                         },
                         {
-                          "entity": "binary_sensor.god_damn_motion_sensor_occupancy"
-                        },
-                        {
                           "entity": "binary_sensor.laundry_room_motion_sensor_occupancy"
                         },
                         {
                           "entity": "binary_sensor.den_motion_sensor_occupancy"
                         },
                         {
-                          "entity": "binary_sensor.powder_room_motion_sensor_occupancy"
+                          "entity": "binary_sensor.powder_room_presence_sensor_presence"
                         },
                         {
-                          "entity": "binary_sensor.hall_bath_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.hall_bath_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.hall_bath_sink_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.hall_bath_sink_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.master_bath_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.master_bath_water_leak_sensor"
                         },
                         {
                           "entity": "binary_sensor.dining_room_water_leak_sensor"
@@ -3023,19 +3031,19 @@
                           "entity": "binary_sensor.living_room_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.god_damn_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.god_damn_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.washer_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.washer_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.water_heater_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.water_heater_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.den_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.den_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.powder_room_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.powder_room_water_leak_sensor"
                         }
                       ],
                       "show_header_toggle": false,
@@ -4378,7 +4386,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol> {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} <li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) - 2000) and \"bulb\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) - 21600) and \"bulb\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
+                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol> {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} \n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n\n{% endfor -%} </ol>",
                       "title": "All Zigbee Devices"
                     }
                   ]
@@ -4462,14 +4470,16 @@
                       }
                     },
                     {
-                      "type": "markdown",
-                      "content": "Count: {{ states('sensor.ood_wyze_entities') }}; Threshold: {{ states('input_number.ood_wyze_seconds') | int(0) }} seconds\nSensor Updated: {{ state_attr('sensor.ood_wyze_entities', 'timestamp') }}\n\nList:\n{{ state_attr('sensor.ood_wyze_entities', 'entity_list') }}\n",
-                      "title": "Out of Date Wyze Devices"
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor\nUpdated: {{ states('sensor.wyze_entities') }}\n\n<ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list') |\nsort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly\nName','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly\nName',false,true)) -%}\n\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0)\n%} class=\"error\"{% elif entity['timediff'] >=\n(states(\"input_number.ood_wyze_seconds\")|int(0) *\nstates(\"input_number.ood_warning_threshold\")|int(80)/100) %} class=\"warn\"{%\nendif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {%\nendfor -%} </ol>",
+                      "title": "All Wyze Devices"
                     },
                     {
-                      "type": "markdown",
-                      "content": "Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}\n\n{% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.wyze_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%}\n{% set ns.count = ns.count + 1 -%}\n{% if ns.count <= state_attr('sensor.wyze_entities', 'count') | int(0) / 2 %}{% endif %}* {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %}<font color=\"red\">{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * 0.50) %}<font color=\"var(--state-active-color)\">{% endif %}({{ ns.count }}) {{ entity['friendly_name'] }} - {{ entity['timediff'] }}</font>\n{% endfor -%}\n",
-                      "title": "All Wyze Devices"
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zwave_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zwave_entities') }}\n<ol>\n{% for entity in state_attr('sensor.zwave_entities', 'entity_list') | sort(attribute=iif(states('input_select.zwave_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zwave_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_zwave_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_zwave_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|int(80)/100) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
+                      "title": "All Zwave Devices"
                     }
                   ]
                 },

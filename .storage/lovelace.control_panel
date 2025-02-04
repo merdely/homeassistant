@@ -187,7 +187,7 @@
                         {
                           "type": "custom:html-template-card",
                           "ignore_line_breaks": true,
-                          "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table>{% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_watching.attributes.sessions.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>＞</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td>{% set pieces = value.split(\" - \") -%}{% for i in range(pieces | length) %}{{ pieces[i] | title | truncate(20, True, \"‥\") }}{% if i < (pieces | length) - 1 %} - {% endif %}{% endfor -%}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>⟁</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td>{% set pieces = value.split(\" - \") -%}{% for i in range(pieces | length) %}{{ pieces[i] | title | truncate(20, True, \"‥\") }}{% if i < (pieces | length) - 1 %} - {% endif %}{% endfor -%}</td></tr> {% endfor -%}{% endif -%} </table>\n"
+                          "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table>{% if states.sensor.plex_plex != None -%}{% for client, value in states.sensor.plex_watching.attributes.sessions.items() -%} {% if client != \"unit_of_measurement\" and client != \"friendly_name\" %} <tr><td>＞</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td>{% if value | length > 55 -%}{% set pieces = value.split(\" - \") -%}{% for i in range(pieces | length) %}{{ pieces[i] | title | truncate(20, True, \"‥\") }}{% if i < (pieces | length) - 1 %} - {% endif %}{% endfor -%}{% else -%}{{ value }}{% endif -%}</td></tr> {% endif -%} {% endfor -%} {% endif -%} {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>⟁</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td>{% if value | length > 55 -%}{% set pieces = value.split(\" - \") -%}{% for i in range(pieces | length) %}{{ pieces[i] | title | truncate(20, True, \"‥\") }}{% if i < (pieces | length) - 1 %} - {% endif %}{% endfor -%}{% else -%}{{value}}{% endif -%}</td></tr> {% endfor -%}{% endif -%} </table>\n"
                         }
                       ],
                       "state_color": true,
@@ -674,19 +674,6 @@
                                     "action": "more-info"
                                   },
                                   "styles": ".bubble-icon {\n  color: ${state > 0 ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-range-fill { \n  background: var(--bubble-light-color, rgba(225, 225, 210)) !important;\n  opacity: 0.5 !important;\n}\n"
-                                },
-                                {
-                                  "type": "custom:bubble-card",
-                                  "card_type": "button",
-                                  "entity": "switch.bedroom_humidifier",
-                                  "name": "Humidifier",
-                                  "tap_action": {
-                                    "action": "toggle"
-                                  },
-                                  "hold_action": {
-                                    "action": "more-info"
-                                  },
-                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
                                 },
                                 {
                                   "type": "custom:bubble-card",
@@ -1233,17 +1220,18 @@
                         {
                           "type": "entities",
                           "entities": [
-                            "switch.downstairs",
+                            {
+                              "entity": "switch.downstairs"
+                            },
                             {
                               "type": "section"
                             },
-                            "switch.family_room",
+                            {
+                              "entity": "switch.family_room"
+                            },
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:bubble-card",
@@ -1268,14 +1256,14 @@
                                     "action": "more-info"
                                   }
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:bubble-card",
@@ -1300,19 +1288,20 @@
                                     "action": "more-info"
                                   }
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:bubble-card",
                                   "card_type": "button",
                                   "entity": "light.mantle_lights",
+                                  "scrolling_effect": false,
                                   "tap_action": {
                                     "action": "toggle"
                                   },
@@ -1323,7 +1312,22 @@
                                 {
                                   "type": "custom:bubble-card",
                                   "card_type": "button",
+                                  "entity": "switch.god_damn_humidifier",
+                                  "name": "Humidifier",
+                                  "scrolling_effect": false,
+                                  "tap_action": {
+                                    "action": "toggle"
+                                  },
+                                  "hold_action": {
+                                    "action": "more-info"
+                                  },
+                                  "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                                },
+                                {
+                                  "type": "custom:bubble-card",
+                                  "card_type": "button",
                                   "entity": "switch.christmas_tree",
+                                  "scrolling_effect": false,
                                   "tap_action": {
                                     "action": "toggle"
                                   },
@@ -1332,7 +1336,10 @@
                                   },
                                   "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "section",
@@ -1341,9 +1348,6 @@
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:bubble-card",
@@ -1368,7 +1372,10 @@
                                   },
                                   "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "section",
@@ -1377,9 +1384,6 @@
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:button-card",
@@ -1415,7 +1419,10 @@
                                     ]
                                   }
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             },
                             {
                               "type": "section",
@@ -1424,9 +1431,6 @@
                             {
                               "type": "custom:stack-in-card",
                               "mode": "horizontal",
-                              "card_mod": {
-                                "style": "ha-card {\n  border: none;\n}\n"
-                              },
                               "cards": [
                                 {
                                   "type": "custom:button-card",
@@ -1462,7 +1466,10 @@
                                     ]
                                   }
                                 }
-                              ]
+                              ],
+                              "card_mod": {
+                                "style": "ha-card {\n  border: none;\n}\n"
+                              }
                             }
                           ]
                         }
@@ -1953,9 +1960,6 @@
                       "state_color": true,
                       "entities": [
                         {
-                          "entity": "binary_sensor.bedroom_motion_sensor_occupancy"
-                        },
-                        {
                           "entity": "binary_sensor.office_presence_sensor_presence"
                         },
                         {
@@ -1965,19 +1969,16 @@
                           "entity": "binary_sensor.living_room_motion_sensor_occupancy"
                         },
                         {
-                          "entity": "binary_sensor.god_damn_motion_sensor_occupancy"
-                        },
-                        {
                           "entity": "binary_sensor.laundry_room_motion_sensor_occupancy"
                         },
                         {
                           "entity": "binary_sensor.den_motion_sensor_occupancy"
                         },
                         {
-                          "entity": "binary_sensor.powder_room_motion_sensor_occupancy"
+                          "entity": "binary_sensor.powder_room_presence_sensor_presence"
                         },
                         {
-                          "entity": "binary_sensor.powder_room_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.powder_room_water_leak_sensor"
                         }
                       ],
                       "show_header_toggle": false
@@ -1997,13 +1998,13 @@
                       "state_color": true,
                       "entities": [
                         {
-                          "entity": "binary_sensor.hall_bath_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.hall_bath_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.hall_bath_sink_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.hall_bath_sink_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.master_bath_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.master_bath_water_leak_sensor"
                         },
                         {
                           "entity": "binary_sensor.dining_room_water_leak_sensor"
@@ -2021,16 +2022,16 @@
                           "entity": "binary_sensor.living_room_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.god_damn_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.god_damn_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.washer_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.washer_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.water_heater_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.water_heater_water_leak_sensor"
                         },
                         {
-                          "entity": "binary_sensor.den_water_leak_sensor_water_leak"
+                          "entity": "binary_sensor.den_water_leak_sensor"
                         }
                       ],
                       "show_header_toggle": false

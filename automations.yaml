@@ -208,75 +208,41 @@
       title: Low Battery
       message: '{{ state_attr(''sensor.low_battery'', ''entity_list'') }}'
   mode: single
-- id: '1602886827817'
-  alias: Lighting - Shed - Shed Light Toggle
-  description: ''
-  trigger:
-  - platform: event
-    event_type: zha_event
-    event_data:
-      device_ieee: 00:15:8d:00:02:83:c5:c8
-      command: double
-  - platform: device
-    domain: mqtt
-    device_id: 8b32a51920b7a78f8166618d7a13e87d
-    type: action
-    subtype: double
-    discovery_id: 0x00158d000283c5c8 action_double
-  condition: []
-  action:
-  - service: homeassistant.toggle
-    data: {}
-    entity_id: light.shed_lamp
-  mode: single
 - id: '1602887078304'
-  alias: Lighting - Shed - Flood Light Toggle
-  description: ''
-  trigger:
-  - platform: event
-    event_type: zha_event
-    event_data:
-      device_ieee: 00:15:8d:00:02:83:c5:c8
-      command: single
-  - platform: device
-    domain: mqtt
-    device_id: 8b32a51920b7a78f8166618d7a13e87d
-    type: action
-    subtype: single
-    discovery_id: 0x00158d000283c5c8 action_single
-  condition: []
-  action:
-  - service: homeassistant.toggle
-    data: {}
-    entity_id: light.flood_light
-  mode: single
-- id: '1602887137225'
   alias: Lighting - Shed - Shed/Flood Light Toggle
   description: ''
-  trigger:
-  - platform: event
-    event_type: zha_event
-    event_data:
-      device_ieee: 00:15:8d:00:02:83:c5:c8
-      command: hold
-  - platform: device
-    domain: mqtt
-    device_id: 8b32a51920b7a78f8166618d7a13e87d
-    type: action
-    subtype: hold
-    discovery_id: 0x00158d000283c5c8 action_hold
-  condition: []
-  action:
-  - service: switch.toggle
-    data: {}
-    entity_id: light.flood_light, light.shed_lamp
+  triggers:
+  - trigger: state
+    entity_id:
+    - event.shed_button_action
+  conditions: []
+  actions:
+  - alias: If single, toggle Flood Light
+    if:
+    - condition: template
+      value_template: '{{ trigger.to_state.attributes.event_type == ''single'' }}'
+      alias: If Single Press
+    then:
+    - data: {}
+      entity_id: light.flood_light
+      action: homeassistant.toggle
+  - alias: If Double, Toggle Shed Lamp
+    if:
+    - condition: template
+      value_template: '{{ trigger.to_state.attributes.event_type == ''double'' }}'
+      alias: If Double
+    then:
+    - data: {}
+      action: homeassistant.toggle
+      target:
+        entity_id: light.shed_lamp
   mode: single
 - id: '1602952724393'
   alias: Notifications - 0 - Water Leak Detected - Water Heater
   description: ''
   triggers:
   - entity_id:
-    - binary_sensor.water_heater_water_leak_sensor_water_leak
+    - binary_sensor.water_heater_water_leak_sensor
     to: 'on'
     for:
       hours: 0
@@ -323,7 +289,23 @@
     entity_id:
     - binary_sensor.office_presence_sensor_presence
     to: 'on'
-  conditions: []
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: sensor.holly_is_in_bed
+      state: Not In Bed
+    - condition: state
+      entity_id: sensor.mike_is_in_bed
+      state: Not In Bed
+    alias: Either Holly is not in bed or Mike is not in bed (or both)
+  - condition: state
+    entity_id: light.office_fan_light
+    state: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
   actions:
   - target:
       entity_id: light.office_fan_light
@@ -346,6 +328,10 @@
     entity_id:
     - binary_sensor.office_presence_sensor_presence
     to: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
   conditions: []
   actions:
   - target:
@@ -2099,7 +2085,8 @@
   alias: Lighting - Powder Room - Motion Light On
   description: ''
   triggers:
-  - entity_id: binary_sensor.powder_room_motion_sensor_occupancy
+  - entity_id:
+    - binary_sensor.powder_room_presence_sensor_presence
     to: 'on'
     trigger: state
   conditions:
@@ -2108,8 +2095,8 @@
     state: 'off'
     for: 00:01:00
   - condition: numeric_state
-    entity_id: sensor.powder_room_motion_sensor_illuminance
-    below: 70
+    entity_id: sensor.powder_room_presence_sensor_illuminance
+    below: 800
   - condition: or
     conditions:
     - condition: state
@@ -2993,24 +2980,31 @@
 - id: '1671648815254'
   alias: Lighting - Holly Nightstand Light
   description: ''
-  trigger:
-  - platform: event
-    event_type: zha_event
-    event_data:
-      device_ieee: 00:15:8d:00:08:83:47:37
-      command: single
-  - platform: device
-    domain: mqtt
-    device_id: 4e082175ea365830e3200bd784ab1a81
-    type: action
-    subtype: single
-    discovery_id: 0x00158d0008834737 action_single
-  condition: []
-  action:
-  - service: homeassistant.toggle
-    data: {}
-    target:
-      entity_id: light.holly_nightstand_lamp
+  triggers:
+  - trigger: state
+    entity_id:
+    - event.holly_nightstand_button_action
+  conditions: []
+  actions:
+  - alias: If Single Press, Toggle Lamp
+    if:
+    - condition: template
+      value_template: '{{ trigger.to_state.attributes.event_type == ''single'' }}'
+      alias: If Event Type is "single"
+    then:
+    - data: {}
+      target:
+        entity_id: light.holly_nightstand_lamp
+      action: homeassistant.toggle
+  - alias: If Double Press, Sleep TV
+    if:
+    - alias: If Event Type is "double"
+      condition: template
+      value_template: '{{ trigger.to_state.attributes.event_type == ''double'' }}'
+    then:
+    - action: script.tv_bedroom_sleep
+      metadata: {}
+      data: {}
   mode: single
 - id: '1671832619134'
   alias: Lighting - Bedroom - Holly in Bed LEDs off
@@ -3171,7 +3165,8 @@
     - light.white_switch
     - light.front_porch_light
     - light.front_porch_switch
-    - light.holly_nightstand_lamp
+    - light.god_damn_switch
+    - light.god_damn_bulb
     to: 'off'
     trigger: state
   conditions: []
@@ -3342,24 +3337,6 @@
         entity_id: light.white_lamp
       data: {}
   mode: single
-- id: '1729313854999'
-  alias: Humidifier - Turn off bedroom humidifier at 50%
-  description: ''
-  triggers:
-  - trigger: numeric_state
-    entity_id:
-    - sensor.bedroom_multisensor_humidity
-    above: 50
-  - trigger: time
-    at: 02:00:00
-  conditions: []
-  actions:
-  - action: switch.turn_off
-    metadata: {}
-    data: {}
-    target:
-      device_id: 7f05037a5480d7fd07c1125fc56de5ac
-  mode: single
 - id: '1732810938168'
   alias: Lighting - Set the Living Room Light Color
   description: ''
@@ -3377,41 +3354,6 @@
     target:
       entity_id: '{{ trigger.id }}'
     alias: Set Bulb Color
-  mode: single
-- id: '1733516669453'
-  alias: Humidifier - Turn on Bedroom Humidifier at 6 and 8
-  description: ''
-  triggers:
-  - trigger: time
-    at: '12:00:00'
-  - trigger: time
-    at: '13:00:00'
-  - trigger: time
-    at: '14:00:00'
-  - trigger: time
-    at: '15:00:00'
-  - trigger: time
-    at: '16:00:00'
-  - trigger: time
-    at: '17:00:00'
-  - trigger: time
-    at: '18:00:00'
-  - trigger: time
-    at: '20:00:00'
-  conditions:
-  - condition: state
-    entity_id: switch.bedroom_humidifier
-    state: 'off'
-  - condition: numeric_state
-    entity_id: sensor.bedroom_multisensor_humidity
-    attribute: humidity
-    below: 50
-  actions:
-  - action: homeassistant.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: switch.bedroom_humidifier
   mode: single
 - id: '1735499752877'
   alias: Humidifier - Turn off Office Humidifier at 50%

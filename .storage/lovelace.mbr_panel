@@ -40,6 +40,25 @@
                   }
                 },
                 {
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#utilities"
+                  },
+                  "entity": "button.homeassistant_reload",
+                  "name": "Utils",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  },
+                  "icon": "mdi:tools",
+                  "hold_action": {
+                    "action": "none"
+                  }
+                },
+                {
                   "type": "custom:button-card",
                   "show_name": true,
                   "show_icon": true,
@@ -78,20 +97,6 @@
                     "columns": 3,
                     "rows": 2
                   }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "entity": "switch.bedroom_humidifier",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
-                  "name": "Humidifier"
                 },
                 {
                   "show_name": true,
@@ -1464,6 +1469,7 @@
                               "type": "custom:bubble-card",
                               "card_type": "button",
                               "entity": "light.mantle_lights",
+                              "scrolling_effect": false,
                               "tap_action": {
                                 "action": "toggle"
                               },
@@ -1474,7 +1480,22 @@
                             {
                               "type": "custom:bubble-card",
                               "card_type": "button",
+                              "entity": "switch.god_damn_humidifier",
+                              "name": "Humidifier",
+                              "scrolling_effect": false,
+                              "tap_action": {
+                                "action": "toggle"
+                              },
+                              "hold_action": {
+                                "action": "more-info"
+                              },
+                              "styles": ".bubble-icon {\n  color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--icon-primary-color,currentcolor)'} !important;\n}\n.bubble-button-background {\n  background-color: ${state === 'on' ? 'var(--bubble-light-color, rgba(225, 225, 210))' : 'var(--bubble-button-background-color)'} !important;\n  opacity: 0.5 !important;\n}\n"
+                            },
+                            {
+                              "type": "custom:bubble-card",
+                              "card_type": "button",
                               "entity": "switch.christmas_tree",
+                              "scrolling_effect": false,
                               "tap_action": {
                                 "action": "toggle"
                               },
