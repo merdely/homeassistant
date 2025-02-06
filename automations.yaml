@@ -212,25 +212,32 @@
   alias: Lighting - Shed - Shed/Flood Light Toggle
   description: ''
   triggers:
-  - trigger: state
-    entity_id:
-    - event.shed_button_action
+  - domain: mqtt
+    device_id: fbd1268b6473d4cc153fed9d87ad6b8e
+    type: action
+    subtype: single
+    trigger: device
+  - domain: mqtt
+    device_id: fbd1268b6473d4cc153fed9d87ad6b8e
+    type: action
+    subtype: double
+    trigger: device
   conditions: []
   actions:
   - alias: If single, toggle Flood Light
     if:
-    - condition: template
-      value_template: '{{ trigger.to_state.attributes.event_type == ''single'' }}'
-      alias: If Single Press
+    - alias: If Single Press
+      condition: template
+      value_template: '{{ trigger.payload == ''single'' }}'
     then:
     - data: {}
       entity_id: light.flood_light
       action: homeassistant.toggle
   - alias: If Double, Toggle Shed Lamp
     if:
-    - condition: template
-      value_template: '{{ trigger.to_state.attributes.event_type == ''double'' }}'
-      alias: If Double
+    - alias: If Double
+      condition: template
+      value_template: '{{ trigger.payload == ''double'' }}'
     then:
     - data: {}
       action: homeassistant.toggle
@@ -2981,15 +2988,22 @@
   alias: Lighting - Holly Nightstand Light
   description: ''
   triggers:
-  - trigger: state
-    entity_id:
-    - event.holly_nightstand_button_action
+  - domain: mqtt
+    device_id: a13f3b2d824e0e24338221c09a6ed8fc
+    type: action
+    subtype: single
+    trigger: device
+  - domain: mqtt
+    device_id: a13f3b2d824e0e24338221c09a6ed8fc
+    type: action
+    subtype: double
+    trigger: device
   conditions: []
   actions:
   - alias: If Single Press, Toggle Lamp
     if:
     - condition: template
-      value_template: '{{ trigger.to_state.attributes.event_type == ''single'' }}'
+      value_template: '{{ trigger.payload == ''single'' }}'
       alias: If Event Type is "single"
     then:
     - data: {}
@@ -3000,7 +3014,7 @@
     if:
     - alias: If Event Type is "double"
       condition: template
-      value_template: '{{ trigger.to_state.attributes.event_type == ''double'' }}'
+      value_template: '{{ trigger.payload == ''double'' }}'
     then:
     - action: script.tv_bedroom_sleep
       metadata: {}
@@ -3514,4 +3528,34 @@
     data:
       message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} changed to
         {{ states(trigger.entity_id) }}'
+  mode: single
+- id: '1738787365600'
+  alias: Ping Zwave when not seen for a while
+  description: ''
+  triggers:
+  - trigger: template
+    value_template: "{{ as_timestamp(utcnow()) -\n as_timestamp(states.sensor.front_door_last_seen_zwave.state)
+      >\n states.input_number.ood_zwave_seconds.state|float(0) *\n states.input_number.ood_warning_threshold.state|float(0)
+      }}"
+    alias: When Front Door hasn't been seen in 80% of OOD Zwave Seconds
+  - trigger: template
+    value_template: "{{ as_timestamp(utcnow()) -\n as_timestamp(states.sensor.range_extender_last_seen_zwave.state)
+      >\n states.input_number.ood_zwave_seconds.state|float(0) *\n states.input_number.ood_warning_threshold.state|float(0)
+      }}"
+    alias: When Range Extender hasn't been seen in 80% of OOD Zwave Seconds
+  - trigger: template
+    value_template: "{{ as_timestamp(utcnow()) -\n as_timestamp(states.sensor.garage_entry_door_lock_last_seen_zwave.state)
+      >\n states.input_number.ood_zwave_seconds.state|float(0) *\n states.input_number.ood_warning_threshold.state|float(0)
+      }}"
+    alias: When Garage Entry Door hasn't been seen in 80% of OOD Zwave Seconds
+  conditions: []
+  actions:
+  - action: button.press
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - button.front_door_zwave_ping
+      - button.garage_entry_door_ping
+      - button.range_extender_ping
   mode: single
