@@ -11,7 +11,7 @@ import sys
 import time
 
 progname = "send_frigate_email"
-camera = eventid = relay_username = relay_password = frigate_email = ""
+camera = eventid = smtp_username = smtp_password = frigate_from = frigate_to = ""
 
 if len(sys.argv) < 4:
     print('Usage: ' + sys.argv[0] + ' detected_object camera eventid')
@@ -28,7 +28,6 @@ print(f"{t.strftime('%F %T.000')} INFO (shell_command) [{progname}] starting up 
 # detected_object = "Person"
 
 MAXWAIT = 30
-smtp_server = "smtp.gmail.com"
 port = 465
 image = f"/media/frigate/clips/{camera}-{eventid}.jpg"
 camtitle = camera.replace("_", " ")
@@ -37,17 +36,21 @@ secrets = os.path.dirname(os.path.dirname(os.path.realpath(sys.argv[0]))) + '/se
 with open(secrets, 'r') as file:
     for line in file.readlines():
         m = re.search(r'^([a-zA-Z0-9_]+): (.*)$', line)
-        if m and m.group(1) == "smtp_relay_username":
-            relay_username = m.group(2)
-        if m and m.group(1) == "smtp_relay_password":
-            relay_password = m.group(2)
-        if m and m.group(1) == "frigate_email":
-            frigate_email = m.group(2)
+        if m and m.group(1) == "smtp_server":
+            smtp_server = m.group(2)
+        if m and m.group(1) == "smtp_username":
+            smtp_username = m.group(2)
+        if m and m.group(1) == "smtp_password":
+            smtp_password = m.group(2)
+        if m and m.group(1) == "frigate_from":
+            frigate_from = m.group(2)
+        if m and m.group(1) == "frigate_to":
+            frigate_to = m.group(2)
 file.close()
 
-if relay_username == "" or relay_password == "" or frigate_email == "":
+if smtp_username == "" or smtp_password == "" or frigate_from == "" or frigate_to == "":
     t = datetime.now()
-    print(f"{t.strftime('%F %T.000')} ERROR (shell_command) [{progname}] relay_username or relay_password not set")
+    print(f"{t.strftime('%F %T.000')} ERROR (shell_command) [{progname}] smtp_username or smtp_password not set")
     sys.exit(1)
 
 # Wait up to MAXWAIT seconds for file to exist
@@ -62,8 +65,8 @@ while not os.path.exists(image):
 
 message = EmailMessage()
 message['Subject'] = f"{camtitle} Camera"
-message['From'] = relay_username
-message['To'] = frigate_email
+message['From'] = frigate_from
+message['To'] = frigate_to
 message.set_content(f"{detected_object.title()} detected\nImages from {camtitle} Camera\n")
 figure_id = make_msgid()
 message.add_alternative("""\
@@ -101,6 +104,6 @@ for file in os.listdir(os.path.dirname(image)):
 
 with smtplib.SMTP_SSL(smtp_server, port) as smtp:
     smtp.connect(smtp_server, port)
-    smtp.login(relay_username, relay_password)
+    smtp.login(smtp_username, smtp_password)
     smtp.send_message(message)
 

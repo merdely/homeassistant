@@ -340,10 +340,10 @@ def get_recycle_day(date = None):
         print(f"Holiday adjusted date for {date} is {recycle_date} ({recycle_days})")
         print()
 
-    recycle_date, has_exception, exception_code = get_exception(recycle_day, date)
-    if debug:
-        print(f"Exception adjusted day for {date} is {recycle_date}")
-        print()
+    #recycle_date, has_exception, exception_code = get_exception(recycle_day, date)
+    #if debug:
+    #    print(f"Exception adjusted day for {date} is {recycle_date}")
+    #    print()
 
     recycle_day = get_weekday(recycle_date)
     if debug:

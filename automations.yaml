@@ -116,7 +116,6 @@
   - target:
       entity_id:
       - light.dining_room_christmas_lights
-      - light.living_room_cabinet_light
     data: {}
     action: homeassistant.turn_on
   mode: single
@@ -135,7 +134,6 @@
       - switch.outside_christmas_lights
       - light.dining_room_christmas_lights
       - light.near_black_lamp
-      - light.living_room_cabinet_light
     data: {}
     action: homeassistant.turn_off
   mode: single
@@ -311,8 +309,8 @@
     state: 'off'
     for:
       hours: 0
-      minutes: 5
-      seconds: 0
+      minutes: 0
+      seconds: 45
   actions:
   - target:
       entity_id: light.office_fan_light
@@ -3416,15 +3414,15 @@
   alias: Thermostat - Reset Furnace If 4 Degrees of Target (Heat)
   description: ''
   triggers:
-  - trigger: template
+  - alias: When the Thermstat Temperature is more than 3 degress less than the Thermostat
+      Target
+    trigger: template
     value_template: '{{ state_attr("climate.thermostat", "current_temperature") +
-      3 < state_attr("climate.thermostat", "temperature") }}'
+      2 < state_attr("climate.thermostat", "temperature") }}'
     for:
       hours: 0
       minutes: 1
       seconds: 0
-    alias: When the Thermstat Temperature is more than 3 degress less than the Thermostat
-      Target
   conditions:
   - condition: not
     conditions:
@@ -3433,6 +3431,7 @@
       attribute: hvac_action
       state: heating
     alias: Heat is not currently running
+    enabled: false
   - condition: state
     entity_id: climate.thermostat
     state: heat
