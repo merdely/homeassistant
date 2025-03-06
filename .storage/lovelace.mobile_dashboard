@@ -649,6 +649,20 @@
                               "--mdc-icon-size": "45px"
                             }
                           }
+                        },
+                        {
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:book-open-variant",
+                          "name": false,
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#docs"
+                          },
+                          "styles": {
+                            "icon": {
+                              "--mdc-icon-size": "40px"
+                            }
+                          }
                         }
                       ]
                     },
@@ -700,11 +714,11 @@
                         },
                         {
                           "entity": "button.homeassistant_reload",
-                          "icon": "mdi:spotify",
+                          "icon": "mdi:face-woman",
                           "name": false,
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#spotify"
+                            "navigation_path": "/mobile-dashboard/holly"
                           },
                           "styles": {
                             "icon": {
@@ -714,11 +728,11 @@
                         },
                         {
                           "entity": "button.homeassistant_reload",
-                          "icon": "mdi:book-open-variant",
+                          "icon": "mdi:face-man",
                           "name": false,
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#docs"
+                            "navigation_path": "/mobile-dashboard/mike"
                           },
                           "styles": {
                             "icon": {
@@ -3239,7 +3253,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             },
@@ -3257,7 +3271,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             },
@@ -3266,7 +3280,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             }
@@ -3282,7 +3296,7 @@
                               "icon": "mdi:home-lock",
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             },
@@ -3292,7 +3306,7 @@
                               "icon": "mdi:garage-lock",
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             },
@@ -3301,7 +3315,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             },
@@ -3310,7 +3324,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "40px"
                                 }
                               }
                             }
@@ -3366,6 +3380,92 @@
                               "entity": "switch.zigbee2mqtt_bridge_permit_join",
                               "name": "Z2M Join",
                               "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "40px"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": false,
+                              "icon": "mdi:clock",
+                              "layout": "icon_name",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "load_clock"
+                                }
+                              },
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "40px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": false,
+                              "icon": "mdi:image-frame",
+                              "layout": "icon_name",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "load_picframe"
+                                }
+                              },
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "40px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": false,
+                              "icon": "mdi:reload",
+                              "layout": "icon_name",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "reload"
+                                }
+                              },
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "40px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": false,
+                              "icon": "mdi:square-outline",
+                              "layout": "icon_name",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "blank"
+                                }
+                              },
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "40px"
@@ -3955,150 +4055,6 @@
                     {
                       "type": "custom:bubble-card",
                       "card_type": "pop-up",
-                      "hash": "#spotify",
-                      "show_header": true,
-                      "sub_button": [
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#spotify"
-                          },
-                          "icon": "mdi:spotify"
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#speakers"
-                          },
-                          "icon": "mdi:speaker-multiple"
-                        }
-                      ],
-                      "button_type": "switch",
-                      "entity": "button.homeassistant_reload",
-                      "name": "",
-                      "show_icon": false,
-                      "show_name": false,
-                      "tap_action": {
-                        "action": "none"
-                      },
-                      "button_action": {
-                        "tap_action": {
-                          "action": "none"
-                        },
-                        "double_tap_action": {
-                          "action": "none"
-                        },
-                        "hold_action": {
-                          "action": "none"
-                        }
-                      }
-                    },
-                    {
-                      "type": "media-control",
-                      "entity": "media_player.spotify_merdely"
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "media_player.spotify_merdely",
-                          "attribute": "media_playlist",
-                          "type": "attribute",
-                          "name": "Spotify Playlist",
-                          "icon": "mdi:playlist-music"
-                        },
-                        {
-                          "entity": "media_player.spotify_merdely",
-                          "attribute": "source_list",
-                          "type": "attribute",
-                          "name": "Speakers",
-                          "icon": "mdi:speaker-multiple"
-                        }
-                      ],
-                      "state_color": false
-                    },
-                    {
-                      "type": "custom:spotify-card",
-                      "limit": 6,
-                      "spotify_entity": "media_player.spotify_merdely",
-                      "playlist_type": "default",
-                      "account": "default"
-                    }
-                  ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
-                      "hash": "#speakers",
-                      "show_header": true,
-                      "sub_button": [
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#spotify"
-                          },
-                          "icon": "mdi:spotify"
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#speakers"
-                          },
-                          "icon": "mdi:speaker-multiple"
-                        }
-                      ],
-                      "button_type": "switch",
-                      "entity": "button.homeassistant_reload",
-                      "name": "",
-                      "show_icon": false,
-                      "show_name": false,
-                      "tap_action": {
-                        "action": "none"
-                      },
-                      "button_action": {
-                        "tap_action": {
-                          "action": "none"
-                        },
-                        "double_tap_action": {
-                          "action": "none"
-                        },
-                        "hold_action": {
-                          "action": "none"
-                        }
-                      }
-                    },
-                    {
-                      "type": "custom:auto-entities",
-                      "card": {
-                        "type": "entities"
-                      },
-                      "filter": {
-                        "include": [
-                          {
-                            "domain": "media_player",
-                            "entity_id": "/.*(display|speaker).*/"
-                          }
-                        ]
-                      },
-                      "sort": {
-                        "method": "name"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
                       "hash": "#unavailable",
                       "show_header": true,
                       "sub_button": [
@@ -4594,11 +4550,91 @@
                       }
                     }
                   ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#map-holly",
+                      "button_type": "switch",
+                      "sub_button": [
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#map-holly"
+                          },
+                          "icon": "mdi:face-woman"
+                        },
+                        {
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#map-mike"
+                          },
+                          "icon": "mdi:man"
+                        }
+                      ],
+                      "show_header": true,
+                      "name": "noname",
+                      "show_name": false,
+                      "show_icon": false,
+                      "scrolling_effect": false
+                    },
+                    {
+                      "type": "map",
+                      "entities": [
+                        {
+                          "entity": "person.holly_erdely"
+                        }
+                      ],
+                      "theme_mode": "auto",
+                      "title": "Holly Location"
+                    }
+                  ]
                 }
               ]
             }
           ],
           "cards": []
+        },
+        {
+          "type": "panel",
+          "path": "holly",
+          "subview": true,
+          "cards": [
+            {
+              "type": "map",
+              "entities": [
+                {
+                  "entity": "person.holly_erdely"
+                }
+              ],
+              "theme_mode": "light",
+              "default_zoom": 15
+            }
+          ],
+          "title": "Holly's Location",
+          "icon": "mdi:face-woman"
+        },
+        {
+          "type": "panel",
+          "path": "mike",
+          "title": "Mike's Location",
+          "icon": "mdi:face-man",
+          "subview": true,
+          "cards": [
+            {
+              "type": "map",
+              "entities": [
+                {
+                  "entity": "person.michael_erdely"
+                }
+              ],
+              "theme_mode": "light",
+              "default_zoom": 15
+            }
+          ]
         }
       ],
       "title": "Mobile Dashboard"

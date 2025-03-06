@@ -3681,179 +3681,39 @@
         },
         {
           "type": "panel",
+          "path": "holly",
+          "title": "Holly's Location",
+          "icon": "mdi:face-woman",
           "cards": [
             {
-              "square": false,
-              "type": "grid",
-              "columns": 2,
-              "cards": [
+              "type": "map",
+              "entities": [
                 {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
-                    },
-                    {
-                      "type": "media-control",
-                      "entity": "media_player.spotify_merdely"
-                    },
-                    {
-                      "type": "grid",
-                      "columns": 1,
-                      "cards": [
-                        {
-                          "type": "button",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "media_player.media_stop",
-                            "service_data": {},
-                            "target": {
-                              "device_id": "fa14bbd400eef1712ddcabb2a3eaa268"
-                            }
-                          },
-                          "entity": "media_player.spotify_merdely",
-                          "show_name": true,
-                          "icon": "mdi:play-pause",
-                          "show_state": true,
-                          "name": "Spotify Music Player",
-                          "hold_action": {
-                            "action": "none"
-                          },
-                          "icon_height": "40px"
-                        }
-                      ],
-                      "square": false
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "media_player.spotify_merdely",
-                          "attribute": "media_playlist",
-                          "type": "attribute",
-                          "name": "Spotify Playlist",
-                          "icon": "mdi:playlist-music"
-                        },
-                        {
-                          "entity": "media_player.spotify_merdely",
-                          "attribute": "source_list",
-                          "type": "attribute",
-                          "name": "Speakers",
-                          "icon": "mdi:speaker-multiple"
-                        }
-                      ],
-                      "state_color": false
-                    }
-                  ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
-                    },
-                    {
-                      "type": "custom:spotify-card",
-                      "limit": 20,
-                      "spotify_entity": "media_player.spotify_merdely",
-                      "playlist_type": "default",
-                      "account": "default",
-                      "always_play_random_song": true,
-                      "display_style": "list",
-                      "hide_playback_controls": true,
-                      "height": 460,
-                      "hide_top_header": true
-                    }
-                  ]
+                  "entity": "person.holly_erdely"
                 }
-              ]
+              ],
+              "theme_mode": "light",
+              "default_zoom": 15
             }
-          ],
-          "title": "Music",
-          "icon": "mdi:spotify",
-          "path": "music"
+          ]
         },
         {
           "type": "panel",
+          "path": "mike",
+          "title": "Mike's Location",
+          "icon": "mdi:face-man",
           "cards": [
             {
-              "square": false,
-              "type": "grid",
-              "columns": 2,
-              "cards": [
+              "type": "map",
+              "entities": [
                 {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "media_player.all_speakers"
-                        },
-                        {
-                          "entity": "media_player.upstairs_speakers"
-                        },
-                        {
-                          "entity": "media_player.bedroom_speaker"
-                        },
-                        {
-                          "entity": "media_player.office_speakers"
-                        },
-                        {
-                          "entity": "media_player.mike_s_desk_speaker"
-                        },
-                        {
-                          "entity": "media_player.office_speaker"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "media_player.downstairs_speakers"
-                        },
-                        {
-                          "entity": "media_player.kitchen_speaker"
-                        },
-                        {
-                          "entity": "media_player.living_room_speaker"
-                        },
-                        {
-                          "entity": "media_player.god_damn_speaker"
-                        },
-                        {
-                          "entity": "media_player.garage_speaker"
-                        }
-                      ]
-                    }
-                  ]
+                  "entity": "person.michael_erdely"
                 }
-              ]
+              ],
+              "theme_mode": "light",
+              "default_zoom": 15
             }
-          ],
-          "title": "Speakers",
-          "icon": "mdi:speaker-multiple",
-          "path": "speakers"
+          ]
         }
       ]
     }

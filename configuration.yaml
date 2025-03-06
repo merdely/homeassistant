@@ -4,6 +4,7 @@
 # default_config:
 alarm_control_panel: !include alarm_control_panel.yaml
 assist_pipeline:
+  debug_recording_dir: /share/assist_pipeline
 automation: !include automations.yaml
 binary_sensor: !include binary_sensor.yaml
 camera: !include camera.yaml
@@ -13,7 +14,7 @@ command_line: !include command_line.yaml
 config:
 counter:
 #cover: !include cover.yaml
-device_tracker: !include device_tracker.yaml
+device_tracker:
 # dialogflow:
 #fan: !include fan.yaml
 # fastdotcom: !include fastdotcom.yaml
@@ -36,7 +37,7 @@ logbook: !include logbook.yaml
 # logger: !include logger.yaml
 # map: # don't want
 media_player: !include media_player.yaml
-# media_source: # don't want
+media_source: # don't want
 mobile_app:
 mqtt: !include mqtt.yaml
 my:

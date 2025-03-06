@@ -2500,6 +2500,18 @@
     - mon
     - sun
     alias: Don't fire between 2 & 2:30 AM (nightly maintenance)
+  - alias: Don't fire between 4 & 5 AM (nightly maintenance)
+    condition: time
+    after: 05:30:00
+    before: 04:00:00
+    weekday:
+    - sat
+    - fri
+    - thu
+    - wed
+    - tue
+    - mon
+    - sun
   actions:
   - choose:
     - conditions:
@@ -2736,7 +2748,7 @@
     action: script.0000000mwe
   mode: single
 - id: '1650211137772'
-  alias: Home Assistant - Fix Nginx Proxy Manager
+  alias: Home Assistant - Fix Nginx Proxy Manager (NPM)
   description: ''
   triggers:
   - entity_id:
@@ -2749,8 +2761,8 @@
     trigger: state
   conditions:
   - condition: time
-    after: 02:30:00
-    before: 01:59:00
+    after: 05:00:00
+    before: 04:00:00
     weekday:
     - sun
     - mon
@@ -2764,8 +2776,8 @@
       addon: a0d7b954_nginxproxymanager
     action: hassio.addon_restart
   - data:
-      title: MariaDB/NPM Restarted
-      message: The Nginx Proxy Manager Add-Ons were restarted.
+      title: NPM Restarted
+      message: The Nginx Proxy Manager Add-Ons was restarted.
     action: notify.gmail_to_mike
   mode: single
 - id: '1670901378517'
@@ -3557,4 +3569,288 @@
       - button.front_door_zwave_ping
       - button.garage_entry_door_ping
       - button.range_extender_ping
+  mode: single
+- id: '1740420538290'
+  alias: 'Assist: Arm Alarm (Home)'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command: Arm the Alarm
+  conditions: []
+  actions:
+  - if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: person.michael_erdely
+        state: home
+      - condition: state
+        entity_id: person.holly_erdely
+        state: home
+    then:
+    - action: alarm_control_panel.alarm_arm_home
+      metadata: {}
+      data: {}
+      target:
+        entity_id: alarm_control_panel.home_alarm
+    else:
+    - action: alarm_control_panel.alarm_arm_away
+      metadata: {}
+      data: {}
+      target:
+        entity_id: alarm_control_panel.home_alarm
+  mode: single
+- id: '1740421539865'
+  alias: 'Assist: Where is person'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command: Where is {person}
+  conditions: []
+  actions:
+  - if:
+    - condition: template
+      value_template: '{{ trigger.slots.person | lower in [ "mike", "michael", "mike
+        erdely", "michael erdely" ] }}'
+    then:
+    - set_conversation_response: Mike is {% if states('sensor.mike_location') not
+        in [ "Away", "In Bed" ] %}at {% endif %}{{ states('sensor.mike_location')
+        | title }}
+    else:
+    - set_conversation_response: Holly is {% if states('sensor.holly_location') not
+        in [ "Away", "In Bed" ] %}at {% endif %}{{ states('sensor.holly_location')
+        | title }}
+  mode: single
+- id: '1740423183500'
+  alias: 'Assist: What is the value in the room'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command: What is the {value} in the {room}
+  conditions: []
+  actions:
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: What is the {{ room }} {{ value }}
+  mode: single
+- id: '1740424929450'
+  alias: 'Assist: Good night'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Good night
+    - Bedtime
+    - Bed time
+    - Time to hit the hay
+  conditions: []
+  actions:
+  - action: script.scene_good_night
+    metadata: {}
+    data: {}
+  - set_conversation_response: Good night
+  mode: single
+- id: '1740425322410'
+  alias: 'Assist: Who is watching Plex'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Who is watching Plex
+    - Who's watching Plex
+    - Who is watching
+    - Who is watching the Plex
+    - Who's watching the Plex
+  conditions: []
+  actions:
+  - set_conversation_response: '{% set list=state_attr(''sensor.plex_watching'', ''sessions'')
+      %}{% set l=list | length %}{% set ns=namespace(c=0) %}{% for watcher in list
+      %}{{ watcher }}{% set ns.c = ns.c + 1 %}{% if l == 2 and ns.c == 1 %} and {%
+      elif l > 1 and l > 2 and l != ns.c %}, {% endif %}{% if l > 2 and ns.c == (l
+      - 1) %}and {% endif %}{% endfor %}'
+  mode: single
+- id: '1740671742079'
+  alias: Controls - Picframe Clock
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_holly
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_mike
+  - trigger: state
+    entity_id:
+    - light.dresser_lamp
+  - trigger: state
+    entity_id:
+    - light.bedroom_fan_light
+  - trigger: state
+    entity_id:
+    - light.holly_nightstand_lamp
+  - trigger: state
+    entity_id:
+    - switch.bedroom_tv
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.bed_sensor_holly
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.bed_sensor_mike
+      state: 'on'
+    alias: Someone is in bed
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ states(''sensor.bedroom_lights_on'') | int(0) != 0 }}'
+    - condition: state
+      entity_id: switch.bedroom_tv
+      state: 'on'
+    alias: Any Bedroom Lights or TV are on
+  actions:
+  - action: shell_command.ssh_command
+    data:
+      server: picframe@sinope.erdely.in
+      command: get_state
+    response_variable: current_state
+    alias: Get Picture Frame's Current State
+  - if:
+    - condition: template
+      value_template: '{{ current_state[''stdout''] != "clock" }}'
+    then:
+    - action: shell_command.ssh_command
+      data:
+        server: picframe@sinope.erdely.in
+        command: load_clock
+      alias: Load Clock on Picture Frame
+    alias: Load the Clock
+  mode: single
+- id: '1740672747834'
+  alias: Controls - Picframe Pictures
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_holly
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_mike
+  - trigger: state
+    entity_id:
+    - light.dresser_bulb
+  - trigger: state
+    entity_id:
+    - light.bedroom_fan_light
+  - trigger: state
+    entity_id:
+    - light.holly_nightstand_lamp
+  - trigger: state
+    entity_id:
+    - switch.bedroom_tv
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.bed_sensor_holly
+    state: 'off'
+  - condition: state
+    entity_id: binary_sensor.bed_sensor_mike
+    state: 'off'
+  actions:
+  - action: shell_command.ssh_command
+    data:
+      server: picframe@sinope.erdely.in
+      command: get_state
+    response_variable: current_state
+    alias: Get Picture Frame's Current State
+  - if:
+    - condition: template
+      value_template: '{{ current_state[''stdout''] != "picframe" }}'
+    then:
+    - alias: Load Clock on Picture Frame
+      action: shell_command.ssh_command
+      data:
+        server: picframe@sinope.erdely.in
+        command: load_picframe
+    alias: Load Pictures
+  mode: single
+- id: '1740683605204'
+  alias: Assist - Leaving Home
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - We're leaving
+    - We are leaving
+    - I'm leaving
+    - I am leaving
+    - Goodbye
+    - Good-bye
+    - We're heading out
+    - We are heading out
+    - I'm heading out
+    - I am heading out
+  conditions: []
+  actions:
+  - action: script.scene_leaving_home
+    metadata: {}
+    data: {}
+  - set_conversation_response: Have a good day
+  mode: single
+- id: '1740714501926'
+  alias: Controls - Picture Frame Blank
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_holly
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_mike
+  - trigger: state
+    entity_id:
+    - light.dresser_lamp
+  - trigger: state
+    entity_id:
+    - light.bedroom_fan_light
+  - trigger: state
+    entity_id:
+    - light.holly_nightstand_lamp
+  - trigger: state
+    entity_id:
+    - switch.bedroom_tv
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.bed_sensor_holly
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.bed_sensor_mike
+      state: 'on'
+    alias: Someone is in bed
+  - condition: template
+    value_template: '{{ states(''sensor.bedroom_lights_on'') | int(0) == 0 }}'
+    alias: No Bedroom Lights are on
+  - condition: state
+    entity_id: switch.bedroom_tv
+    state: 'off'
+  actions:
+  - action: shell_command.ssh_command
+    data:
+      server: picframe@sinope.erdely.in
+      command: get_state
+    response_variable: current_state
+    alias: Get Picture Frame's Current State
+  - if:
+    - condition: template
+      value_template: '{{ current_state[''stdout''] != "blank" }}'
+    then:
+    - alias: Load Clock on Picture Frame
+      action: shell_command.ssh_command
+      data:
+        server: picframe@sinope.erdely.in
+        command: blank
+    alias: Blank the Screen
   mode: single

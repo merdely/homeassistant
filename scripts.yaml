@@ -106,17 +106,18 @@ home_mute_everything:
       is_volume_muted: false
     action: media_player.volume_mute
     target:
-      entity_id: media_player.all_speakers, media_player.bedroom_speaker, media_player.downstairs_speakers,
-        media_player.living_room_speaker, media_player.god_damn_speaker, media_player.kitchen_speaker,
-        media_player.garage_speaker, media_player.mike_s_desk_speaker, media_player.office_speaker,
-        media_player.office_speakers, media_player.upstairs_speakers
+      entity_id:
+      - media_player.bedroom_speaker
+      - media_player.living_room_speaker
+      - media_player.garage_speaker
+      - media_player.god_damn_speaker
+      - media_player.office_speaker
   mode: single
   icon: mdi:volume-mute
 security_message_open_security_devices:
   alias: Security -  Message - Open Security Devices
   sequence:
-  - service: input_text.set_value
-    data:
+  - data:
       value: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
         -%} {%- for entity_id in states.group.security_devices.attributes.entity_id
         -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state
@@ -125,10 +126,11 @@ security_message_open_security_devices:
         endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n  {{
         open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities
         | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n  {%-
-        if ns.count == ns.open_entities | length - 1 %} and {% endif -%}\n{%- endfor
-        -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
-        %} {% if ns.count > 0 %}open{% else %}No devices are open{% endif %}"
+        if ns.count == ns.open_entities | length - 1 %}and {% endif -%}\n{%- endfor
+        -%}{% if ns.count == 1 %} is{% endif %}{% if ns.count > 1 %} are{% endif %}{%
+        if ns.count > 0 %} open{% else %}No devices are open{% endif %}"
     entity_id: input_text.security_message
+    action: input_text.set_value
   mode: single
 security_message_list_all_security_devices_and_their_state:
   alias: Security - Message - List all security devices and their state
@@ -174,13 +176,10 @@ testing_speaker_announcement_2:
 testing_speaker_annoucement_3:
   alias: Testing - Speaker Announcement 3
   sequence:
-  - service: tts.cloud_say
-    data:
-      message: 'Alert! The Security System has been triggered. The Home Owners and
-        the police have been notified. Exit the premises immediately.
-
-        '
-      entity_id: media_player.all_speakers
+  - data:
+      message: Test message
+      entity_id: media_player.security_speakers
+    action: tts.cloud_say
   mode: single
 testing_speaker_announcement:
   alias: Testing - Speaker Announcement
@@ -950,30 +949,6 @@ function_camera_reset:
       frontdoor2: switch.front_door_cam_2_plug
       garage: switch.garage_cam_plug
       shed: switch.shed_cam_plug
-111_play_spotify:
-  sequence:
-  - service: media_player.clear_playlist
-    target:
-      entity_id: media_player.spotify_merdely
-  - service: media_player.play_media
-    target:
-      entity_id: media_player.spotify_merdely
-    data:
-      media_content_id: spotify:user:merdely:playlist:6eJoX2IjzI0L0ch4jMJnq8
-      media_content_type: playlist
-  - service: media_player.shuffle_set
-    target:
-      entity_id: media_player.spotify_merdely
-    data:
-      shuffle: true
-  - service: media_player.select_source
-    target:
-      entity_id: media_player.spotify_merdely
-    data:
-      source: '"Office Speakers"'
-  mode: single
-  alias: 111 - Play Spotify
-  icon: mdi:spotify
 fix_in_bed_sensors:
   alias: Fix In-Bed Sensors
   sequence:

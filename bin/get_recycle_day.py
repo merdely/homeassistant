@@ -138,8 +138,9 @@ def get_moco_recycle_day(default_day, street_number, street_name, street_type):
     #        "hiddenInputToUpdateATBuffer_CommonToolkitScripts": 0,
     #        }
     params = {
-            "__VIEWSTATE": "/wEPDwUKLTc2NTM3NDM5OWQYAQUVY3RsMDAkTWFpbkNvbnRlbnQkZ3JkD2dk5XLs8wPLP1gyIgKbcYV7CduFiws=",
-            "__EVENTVALIDATION": "/wEWJALB0ureBQLliZf0AwLr0My5DgKAuJmLBAKc4sQ6ApDkoY8FAvqJiKgHAo217/sLAuzc6OQGAo7k1eQLAt3Xw/sIAo21k/oLAt3Xy/sIAtzX+/sIApOjvtAGAvHK4+UCAtWCy80PAoq16/kFAqXi6DoCpZGhzgEC5Ner+wgC89y4igkCmqPGzgUCn5GJ3AoCk/iHuQkCp6PW3gwC8Nej+wgCyPvizQoC7teD+wgC4sPy5A0C7df/+wgC7dfD+wgCnLXf+wsCqpGlzgECpuLQOgLT8MqYCPXFTuNiLbRK1JHXgzCZj0oXSuqy",
+            "__VIEWSTATE": "/wEPDwUKLTc2NTM3NDM5OWQYAQUVY3RsMDAkTWFpbkNvbnRlbnQkZ3JkD2dkzG6rMq9Oe3SlNEEn83idpUe2bm4=",
+            "__VIEWSTATEGENERATOR": "23FD2674",
+            "__EVENTVALIDATION": "/wEWJALy6NTSBQLliZf0AwLr0My5DgKAuJmLBAKc4sQ6ApDkoY8FAvqJiKgHAo217/sLAuzc6OQGAo7k1eQLAt3Xw/sIAo21k/oLAt3Xy/sIAtzX+/sIApOjvtAGAvHK4+UCAtWCy80PAoq16/kFAqXi6DoCpZGhzgEC5Ner+wgC89y4igkCmqPGzgUCn5GJ3AoCk/iHuQkCp6PW3gwC8Nej+wgCyPvizQoC7teD+wgC4sPy5A0C7df/+wgC7dfD+wgCnLXf+wsCqpGlzgECpuLQOgLT8MqYCGNN2N4JsdjbNorRg/UXq/4G7ovh",
             "ctl00$MainContent$txtStreetNumber": street_number,
             "ctl00$MainContent$txtStreet": street_name,
             "ctl00$MainContent$DropDownList1": street_type,

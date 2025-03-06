@@ -492,7 +492,8 @@
                   "show_state": false,
                   "show_name": false,
                   "tap_action": {
-                    "action": "none"
+                    "action": "navigate",
+                    "navigation_path": "/mbr-panel/holly"
                   },
                   "styles": {
                     "icon": [
@@ -512,7 +513,8 @@
                   "show_state": false,
                   "show_name": false,
                   "tap_action": {
-                    "action": "none"
+                    "action": "navigate",
+                    "navigation_path": "/mbr-panel/mike"
                   },
                   "styles": {
                     "icon": [
@@ -2107,7 +2109,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "30px"
                                 }
                               }
                             },
@@ -2116,7 +2118,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "30px"
                                 }
                               }
                             },
@@ -2125,7 +2127,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "30px"
                                 }
                               }
                             },
@@ -2134,7 +2136,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "30px"
                                 }
                               }
                             }
@@ -2150,7 +2152,7 @@
                               "icon": "mdi:home-lock",
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "30px"
                                 }
                               }
                             },
@@ -2160,7 +2162,7 @@
                               "icon": "mdi:garage-lock",
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "30px"
                                 }
                               }
                             },
@@ -2169,7 +2171,7 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "30px"
                                 }
                               }
                             },
@@ -2178,30 +2180,155 @@
                               "name": false,
                               "styles": {
                                 "icon": {
-                                  "--mdc-icon-size": "45px"
+                                  "--mdc-icon-size": "30px"
                                 }
                               }
                             }
                           ]
                         },
                         {
-                          "entity": "alarm_control_panel.home_alarm",
-                          "name": "Security",
-                          "type": "custom:multiple-entity-row",
-                          "entities": [
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
                             {
-                              "entity": "binary_sensor.security_devices",
-                              "name": "Security",
+                              "entity": "switch.christmas_tree",
+                              "name": "Tree",
+                              "layout": "icon_name",
                               "styles": {
-                                "color": "var(--security-color)"
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
                               }
                             },
                             {
-                              "entity": "alarm_control_panel.home_alarm",
-                              "name": "Alarm"
+                              "entity": "switch.tarvos_plug",
+                              "name": "Tarvos",
+                              "icon": "mdi:power-plug",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "switch.garage_door_cam_plug",
+                              "name": "GrgDrCam",
+                              "icon": "mdi:power-plug",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "switch.petcam_plug",
+                              "name": "PetCam",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "switch.zigbee2mqtt_bridge_permit_join",
+                              "name": "Z2M Join",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
                             }
-                          ],
-                          "show_state": false
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": false,
+                              "icon": "mdi:clock",
+                              "layout": "icon_name",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "load_clock"
+                                }
+                              },
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": false,
+                              "icon": "mdi:image-frame",
+                              "layout": "icon_name",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "load_picframe"
+                                }
+                              },
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": false,
+                              "icon": "mdi:reload",
+                              "layout": "icon_name",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "reload"
+                                }
+                              },
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": false,
+                              "icon": "mdi:square-outline",
+                              "layout": "icon_name",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "blank"
+                                }
+                              },
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            }
+                          ]
                         },
                         {
                           "type": "custom:multiple-entity-row",
@@ -2209,38 +2336,6 @@
                           "name": "Temp",
                           "show_state": false,
                           "entities": [
-                            {
-                              "entity": "sensor.bedroom_temperature",
-                              "name": "BR",
-                              "unit": " ",
-                              "styles": {
-                                "color": "var(--bedroom-temp-color)"
-                              }
-                            },
-                            {
-                              "entity": "sensor.bedroom_humidity",
-                              "name": "BR(h)",
-                              "unit": " ",
-                              "styles": {
-                                "color": "var(--bedroom-humidity-color)"
-                              }
-                            },
-                            {
-                              "entity": "sensor.master_bath_temperature",
-                              "name": "MB",
-                              "unit": " ",
-                              "styles": {
-                                "color": "var(--master-bath-temp-color)"
-                              }
-                            },
-                            {
-                              "entity": "sensor.master_bath_humidity",
-                              "name": "MB(h)",
-                              "unit": " ",
-                              "styles": {
-                                "color": "var(--master-bath-humidity-color)"
-                              }
-                            },
                             {
                               "entity": "sensor.hall_bath_humidity",
                               "name": "HB(h)",
@@ -2250,37 +2345,12 @@
                               }
                             },
                             {
-                              "entity": "sensor.office_temperature",
-                              "name": "Ofc",
-                              "unit": " ",
-                              "styles": {
-                                "color": "var(--office-temp-color)"
-                              }
-                            },
-                            {
                               "entity": "sensor.office_humidity",
                               "name": "Ofc(h)",
                               "unit": " ",
                               "styles": {
                                 "color": "var(--office-humidity-color)"
                               }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:multiple-entity-row",
-                          "entity": "sensor.god_damn_multisensor_temperature",
-                          "name": "Temp",
-                          "show_state": false,
-                          "entities": [
-                            {
-                              "entity": "climate.thermostat",
-                              "styles": {
-                                "color": "var(--thermostat-color)"
-                              },
-                              "name": "Tstat",
-                              "attribute": "current_temperature",
-                              "unit": " "
                             },
                             {
                               "entity": "sensor.attic_temperature",
@@ -2299,27 +2369,11 @@
                               }
                             },
                             {
-                              "entity": "sensor.god_damn_temperature",
-                              "name": "Down",
-                              "unit": " ",
-                              "styles": {
-                                "color": "var(--god-damn-temp-color)"
-                              }
-                            },
-                            {
                               "entity": "sensor.garage_temperature",
                               "name": "Garage",
                               "unit": " ",
                               "styles": {
                                 "color": "var(--garage-temp-color)"
-                              }
-                            },
-                            {
-                              "entity": "sensor.outside_temperature",
-                              "name": "Out",
-                              "unit": " ",
-                              "styles": {
-                                "color": "var(--outside-temp-color)"
                               }
                             },
                             {
@@ -2379,86 +2433,6 @@
                               }
                             }
                           ]
-                        },
-                        {
-                          "type": "custom:multiple-entity-row",
-                          "entity": "sensor.washer_and_dryer_state",
-                          "name": "Status",
-                          "show_state": false,
-                          "entities": [
-                            {
-                              "entity": "sensor.washer_and_dryer_state",
-                              "name": "Laundry",
-                              "styles": {
-                                "color": "var(--laundry-color)",
-                                "width": "100px"
-                              }
-                            },
-                            {
-                              "entity": "binary_sensor.oven_is_on",
-                              "name": "Oven",
-                              "styles": {
-                                "color": "var(--oven-color)"
-                              }
-                            },
-                            {
-                              "entity": "input_boolean.mail_delivered",
-                              "name": "Mail",
-                              "tap_action": {
-                                "action": "toggle"
-                              },
-                              "styles": {
-                                "color": "var(--mail-color)"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:multiple-entity-row",
-                          "entity": "sensor.moco_recycle_day",
-                          "name": "Sched",
-                          "icon": "mdi:calendar",
-                          "entities": [
-                            {
-                              "entity": "sensor.days_until_cleaners",
-                              "name": "Cleaners",
-                              "styles": {
-                                "color": "var(--cleaners-color)",
-                                "width": "50px"
-                              }
-                            },
-                            {
-                              "entity": "sensor.trash",
-                              "styles": {
-                                "color": "var(--trash-color)",
-                                "width": "50px"
-                              },
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "input_boolean.toggle",
-                                "service_data": {
-                                  "entity_id": "input_boolean.trash_is_out"
-                                }
-                              }
-                            },
-                            {
-                              "entity": "sensor.moco_recycle_day",
-                              "attribute": "days_string",
-                              "name": "Recycle",
-                              "styles": {
-                                "color": "var(--recycle-color)",
-                                "width": "80px"
-                              },
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "input_boolean.toggle",
-                                "service_data": {
-                                  "entity_id": "input_boolean.recycle_is_out"
-                                }
-                              }
-                            }
-                          ],
-                          "show_state": false
                         },
                         {
                           "type": "custom:multiple-entity-row",
@@ -2536,6 +2510,13 @@
                               "styles": {
                                 "color": "var(--fkb-mbr-color)",
                                 "width": "50px"
+                              }
+                            },
+                            {
+                              "entity": "binary_sensor.oven_is_on",
+                              "name": "Oven",
+                              "styles": {
+                                "color": "var(--oven-color)"
                               }
                             }
                           ]
@@ -2627,35 +2608,6 @@
                                     "sensor.ood_wyze_entities"
                                   ]
                                 }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:multiple-entity-row",
-                          "entity": "sensor.plex_plex",
-                          "name": "Streaming",
-                          "show_state": false,
-                          "state_color": true,
-                          "double_tap_action": {
-                            "action": "more-info"
-                          },
-                          "hold_action": {
-                            "action": "more-info"
-                          },
-                          "entities": [
-                            {
-                              "entity": "sensor.plex_plex",
-                              "name": "Plex",
-                              "styles": {
-                                "color": "var(--plex-color)"
-                              }
-                            },
-                            {
-                              "entity": "sensor.jellyfin_watching",
-                              "name": "Jellyfin",
-                              "styles": {
-                                "color": "var(--jellyfin-color)"
                               }
                             }
                           ]
@@ -3773,81 +3725,49 @@
                       "entity": "input_select.god_damn_plex_show"
                     }
                   ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
-                      "hash": "#spotify",
-                      "button_type": "switch",
-                      "sub_button": [
-                        {
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#tvs"
-                          },
-                          "icon": "mdi:numeric-1-box-outline"
-                        },
-                        {
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#tvs2"
-                          },
-                          "icon": "mdi:numeric-2-box-outline"
-                        },
-                        {
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#spotify"
-                          },
-                          "icon": "mdi:spotify"
-                        }
-                      ],
-                      "show_header": true,
-                      "name": "noname",
-                      "show_name": false,
-                      "show_icon": false,
-                      "scrolling_effect": false
-                    },
-                    {
-                      "type": "media-control",
-                      "entity": "media_player.spotify_merdely"
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "media_player.spotify_merdely",
-                          "attribute": "media_playlist",
-                          "type": "attribute",
-                          "name": "Spotify Playlist",
-                          "icon": "mdi:playlist-music"
-                        },
-                        {
-                          "entity": "media_player.spotify_merdely",
-                          "attribute": "source_list",
-                          "type": "attribute",
-                          "name": "Speakers",
-                          "icon": "mdi:speaker-multiple"
-                        }
-                      ],
-                      "state_color": false
-                    },
-                    {
-                      "type": "custom:spotify-card",
-                      "limit": 6,
-                      "spotify_entity": "media_player.spotify_merdely",
-                      "playlist_type": "default",
-                      "account": "default"
-                    }
-                  ]
                 }
               ]
             }
           ],
           "cards": []
+        },
+        {
+          "type": "panel",
+          "path": "holly",
+          "title": "Holly's Location",
+          "icon": "mdi:face-woman",
+          "subview": true,
+          "cards": [
+            {
+              "type": "map",
+              "entities": [
+                {
+                  "entity": "person.holly_erdely"
+                }
+              ],
+              "theme_mode": "light",
+              "default_zoom": 15
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "path": "mike",
+          "title": "Mike's Location",
+          "icon": "mdi:face-man",
+          "subview": true,
+          "cards": [
+            {
+              "type": "map",
+              "entities": [
+                {
+                  "entity": "person.michael_erdely"
+                }
+              ],
+              "theme_mode": "light",
+              "default_zoom": 15
+            }
+          ]
         }
       ],
       "title": "MBR Panel"

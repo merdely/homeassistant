@@ -1,18 +1,14 @@
 - sensor:
     name: Installed Add-ons
+    unique_id: installed_add_ons
     command: "/config/bin/get_addons"
     value_template: "{{ value_json.count }}"
     json_attributes:
       - list
 
 - binary_sensor:
-    name: WyzeCam Status
-    command: "/config/bin/check_wyzecam"
-    payload_on: "on"
-    payload_off: "off"
-
-- binary_sensor:
     name: Earth Nginx/PHP Working
+    unique_id: earth_nginx_php_working
     command: "curl -m 2 -s https://earth.erdely.in/phptest.php | grep '^PHP is working!' || echo 'PHP is not working!'"
     #device_class: connectivity
     payload_on: "PHP is working!"
@@ -20,20 +16,23 @@
 
 - binary_sensor:
     name: Nginx Proxy Manager Working
+    unique_id: nginx_proxy_manager_working
     command: "curl -s -f -m 2 -w %{http_code} -o /dev/null https://npm.erdely.in | grep '^200$' || echo 1"
     #device_class: connectivity
     payload_on: "200"
     payload_off: "1"
 
-- binary_sensor:
-    name: OctoPrint Camera Status
-      #command: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
-    command: '/bin/echo "Camera is off"'
-    payload_on: 'Camera is streaming'
-    payload_off: 'Camera is off'
+#- binary_sensor:
+#    name: OctoPrint Camera Status
+#    unique_id: octoprint_camera_status
+#      #command: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
+#    command: '/bin/echo "Camera is off"'
+#    payload_on: 'Camera is streaming'
+#    payload_off: 'Camera is off'
 
 - binary_sensor:
     name: Bitwarden Add-On Running
+    unique_id: bitwarden_add_on_running
     device_class: running
     command: '/config/bin/check_addon_state a0d7b954_bitwarden'
     payload_on: 'on'
@@ -41,27 +40,15 @@
 
 - binary_sensor:
     name: Frigate Add-On Running
+    unique_id: frigate_add_on_running
     device_class: running
     command: '/config/bin/check_addon_state ccab4aaf_frigate'
     payload_on: 'on'
     payload_off: 'off'
 
 - binary_sensor:
-    name: Google Backup Add-On Running
-    device_class: running
-    command: '/config/bin/check_addon_state cebe7a76_hassio_google_drive_backup'
-    payload_on: 'on'
-    payload_off: 'off'
-
-- binary_sensor:
-    name: MariaDB Add-On Running
-    device_class: running
-    command: '/config/bin/check_addon_state core_mariadb'
-    payload_on: 'on'
-    payload_off: 'off'
-
-- binary_sensor:
     name: MQTT Add-On Running
+    unique_id: mqtt_add_on_running
     device_class: running
     command: '/config/bin/check_addon_state core_mosquitto'
     payload_on: 'on'
@@ -69,6 +56,7 @@
 
 - binary_sensor:
     name: NginxProxyMgr Add-On Running
+    unique_id: nginxproxymgr_add_on_running
     device_class: running
     command: '/config/bin/check_addon_state a0d7b954_nginxproxymanager'
     payload_on: 'on'
@@ -76,6 +64,7 @@
 
 - binary_sensor:
     name: Signal Add-On Running
+    unique_id: signal_add_on_running
     device_class: running
     #command: '/config/bin/check_signal_addon'
     command: '/config/bin/check_addon_state 1315902c_signal_messenger'
@@ -84,34 +73,23 @@
 
 - binary_sensor:
     name: SSH Add-On Running
+    unique_id: ssh_add_on_running
     device_class: running
     command: '/config/bin/check_addon_state a0d7b954_ssh'
     payload_on: 'on'
     payload_off: 'off'
 
 - binary_sensor:
-    name: TasmoBackup Add-On Running
-    device_class: running
-    command: '/config/bin/check_addon_state 6a15710b_tasmobackup'
-    payload_on: 'on'
-    payload_off: 'off'
-
-- binary_sensor:
     name: Unifi Add-On Running
+    unique_id: unifi_add_on_running
     device_class: running
     command: '/config/bin/check_addon_state a0d7b954_unifi'
     payload_on: 'on'
     payload_off: 'off'
 
 - binary_sensor:
-    name: Wireguard Add-On Running
-    device_class: running
-    command: '/config/bin/check_addon_state a0d7b954_wireguard'
-    payload_on: 'on'
-    payload_off: 'off'
-
-- binary_sensor:
     name: Zigbee2MQTT Add-On Running
+    unique_id: zigbee2mqtt_add_on_running
     device_class: running
     command: '/config/bin/check_addon_state 45df7312_zigbee2mqtt'
     payload_on: 'on'
@@ -127,36 +105,42 @@
 
 - binary_sensor:
     name: New SSL Cert Available
+    unique_id: new_ssl_cert_available
     command: '/config/bin/check_ssl_renewed'
     payload_on: 'on'
     payload_off: 'off'
 
 - binary_sensor:
     name: New NPM SSL Cert Available
+    unique_id: new_npm_ssl_cert_available
     command: '/config/bin/check_ssl_renewed_npm'
     payload_on: 'on'
     payload_off: 'off'
 
 - binary_sensor:
     name: Christmas Lights Should Be On
+    unique_id: christmas_lights_should_be_on
     command: '/config/bin/xmas_lights'
     payload_on: 'on'
     payload_off: 'off'
 
 - binary_sensor:
     name: New TV Show List Ready
+    unique_id: new_tv_show_list_ready
     command: 'test -f /config/.newtvshowfile && echo on || echo off'
     payload_on: 'on'
     payload_off: 'off'
 
 - sensor:
     name: CPU Temperature
+    unique_id: cpu_temperature
     command: "cat /sys/class/thermal/thermal_zone0/temp"
     unit_of_measurement: "°C"
     value_template: "{{ value | multiply(0.001) | round(2)  }}"
 
 - sensor:
     name: Unifi AP Versions
+    unique_id: unifi_ap_versions
     command: "/config/bin/get_unifi_versions"
     json_attributes:
       - data
@@ -166,6 +150,7 @@
 
 - sensor:
     name: OpnSense Versions
+    unique_id: opnsense_versions
     command: "/config/bin/opnsense_snmp_versions.py"
     json_attributes:
       - core-abi
@@ -177,6 +162,7 @@
 
 - sensor:
     name: OpnSense Package Versions
+    unique_id: opnsense_package_versions
     command: "/config/bin/opnsense_packages.sh"  # {{ state_attr('sensor.opnsense_versions', 'sys-abi') }} {{ state_attr('sensor.opnsense_versions', 'core-abi') }}"
     json_attributes:
       - timestamp
@@ -187,6 +173,7 @@
 
 - sensor:
     name: OpnSense Core ABI Version Latest
+    unique_id: opnsense_core_abi_version_latest
     command: >
       curl -s "https://opnsense.org/download/" | awk -F"'" '/data-version\s*=\s*/{print $2}'
     scan_interval: 3600
@@ -194,6 +181,7 @@
 
 - sensor:
     name: Jellyfin Sessions
+    unique_id: jellyfin_sessions
     command: "/config/bin/jellyfin_sessions"
     json_attributes:
       - sessions
@@ -214,11 +202,13 @@
 
 - sensor:
     name: YAML LOC
+    unique_id: yaml_loc
     icon: mdi:pound
     command: "find /config/ -name '*.yaml' | xargs cat | wc -l"
 
 #- sensor:
 #    name: MoCo Recycle Day
+#    unique_id: moco_recycle_day
 #    command: bin/get_recycle_day
 #    # Request every 8 hours
 #    scan_interval: 28800
@@ -226,6 +216,7 @@
 - sensor:
     name: MoCo Recycle Day
     command: bin/get_recycle_day.py
+    unique_id: moco_recycle_day
     # Request every 8 hours
     scan_interval: 28800
     value_template: "{{ value_json.recycle_day }}"
@@ -249,23 +240,14 @@
 
 - sensor:
     name: Fully Kiosk Browser Version Latest
+    unique_id: fully_kiosk_browser_version_latest
     command: bin/get_fkb_version
     scan_interval: 3600
 
 - sensor:
     name: SSL Expiry Date
+    unique_id: ssl_expiry_date
     command: "bin/get_ssl_expire.py"
-
-- switch:
-    unique_id: octoprint_camera
-    name: OctoPrint Camera
-      #command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in start_camera'
-    command_on: '/bin/true'
-      #command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in stop_camera'
-    command_off: '/bin/true'
-      #command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in camera_status'
-    command_state: '/bin/echo "Camera is off"'
-    value_template: '{{ value == "Camera is streaming" }}'
 
 - switch:
     unique_id: mercury_screensaver
