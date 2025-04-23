@@ -138,7 +138,7 @@
 
     <script>
         // Fetch content from an external site (requires the external site to have proper CORS headers)
-        fetch('https://erdely.co/me')
+        fetch('https://erdely.co/me', {mode: 'cors'})
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

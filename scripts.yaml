@@ -37,11 +37,7 @@ announcement_nightly_security:
           entity_id: binary_sensor.chimney_gate_contact
           state: 'on'
       sequence:
-      - service: script.function_speakers_prep
-        data:
-          speaker: all_speakers
-      - service: tts.cloud_say
-        entity_id: media_player.all_speakers
+      - entity_id: media_player.fkb_control_panel
         data:
           message: "{% if is_state('binary_sensor.front_door_contact', 'on') %}\n
             \ Front Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',
@@ -57,8 +53,8 @@ announcement_nightly_security:
             'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',
             'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',
             'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
-      - service: notify.signal_security
-        data:
+        action: tts.cloud_say
+      - data:
           message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door
             is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',
             'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',
@@ -71,9 +67,7 @@ announcement_nightly_security:
             'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',
             'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',
             'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
-      - service: script.function_speakers_restore
-        data:
-          speaker: all_speakers
+        action: notify.signal_security
     default: []
   mode: single
 computer_mercury_unlock:
@@ -91,29 +85,6 @@ computer_mercury_unlock:
     default: []
   mode: single
   icon: mdi:lock-open-variant-outline
-home_mute_everything:
-  alias: Home - Mute Everything
-  sequence:
-  - data: {}
-    action: script.tv_bedroom_mute
-  - data: {}
-    action: script.tv_god_damn_mute
-  - data: {}
-    action: script.tv_living_room_mute
-  - data: {}
-    action: script.tv_office_mute
-  - data:
-      is_volume_muted: false
-    action: media_player.volume_mute
-    target:
-      entity_id:
-      - media_player.bedroom_speaker
-      - media_player.living_room_speaker
-      - media_player.garage_speaker
-      - media_player.god_damn_speaker
-      - media_player.office_speaker
-  mode: single
-  icon: mdi:volume-mute
 security_message_open_security_devices:
   alias: Security -  Message - Open Security Devices
   sequence:
@@ -157,49 +128,6 @@ security_message_list_all_security_devices_and_their_state_dup:
         if ns.count == ns.open_entities | length - 1 %} and {%- endif %}\n{% endfor
         -%} {%- if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
         %} {% if ns.count > 0 %}open{% else %}No devices are open{% endif %}"
-  mode: single
-testing_speaker_announcement_2:
-  alias: Testing - Speaker Announcement 2
-  sequence:
-  - service: script.function_speakers_prep
-    data:
-      speaker: all_speakers
-  - service: tts.cloud_say
-    data:
-      entity_id: media_player.all_speakers
-      message: Alert! The Security System has been triggered. The Home Owners and
-        the police have been notified. Exit the premises immediately.
-  - service: script.function_speakers_restore
-    data:
-      speaker: all_speakers
-  mode: single
-testing_speaker_annoucement_3:
-  alias: Testing - Speaker Announcement 3
-  sequence:
-  - data:
-      message: Test message
-      entity_id: media_player.security_speakers
-    action: tts.cloud_say
-  mode: single
-testing_speaker_announcement:
-  alias: Testing - Speaker Announcement
-  sequence:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: person.holly_erdely
-          state: home
-        - condition: state
-          entity_id: person.michael_erdely
-          state: home
-      sequence:
-      - service: tts.cloud_say
-        data:
-          message: somebody is home
-          entity_id: media_player.all_speakers
-    default: []
   mode: single
 testing_email_mike:
   alias: Testing - Email Mike
@@ -643,41 +571,6 @@ function_tv_change_input:
         chromecast: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF50AF","DataLSB":"0x02FD0AF5","Repeat":0}
         playstation: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF708F","DataLSB":"0x02FD0EF1","Repeat":0}
         wii: irsend {"Protocol":"NEC","Bits":32,"Data":"0x40BF906F","DataLSB":"0x02FD09F6","Repeat":0}
-function_speakers_prep:
-  alias: Function - Speakers - Prep
-  fields:
-    speaker:
-      description: The Speaker or Speaker Group to Prep
-      example: '"all_speakers", "security_speakers", "bedroom_display", or "kitchen_speaker"'
-  sequence:
-  - service: media_player.turn_on
-    data:
-      entity_id: media_player.{{ speaker }}
-  - delay: '2'
-  - service: media_player.volume_set
-    data:
-      volume_level: 1
-      entity_id: media_player.{{ speaker }}
-  mode: single
-  icon: mdi:speaker
-function_speakers_restore:
-  alias: Function - Speakers - Restore
-  sequence:
-  - delay: '2'
-  - wait_template: '{{ not is_state("media_player." + speaker, "playing") }}'
-  - service: media_player.volume_set
-    data:
-      volume_level: 0.45
-      entity_id: media_player.{{ speaker }}
-  - service: media_player.turn_off
-    data:
-      entity_id: media_player.{{ speaker }}
-  fields:
-    speaker:
-      description: The Speaker or Speaker Group to Prep
-      example: '"all_speakers", "security_speakers", "bedroom_display", or "kitchen_speaker"'
-  mode: single
-  icon: mdi:speaker-off
 home_thermostat_down:
   alias: Home - Thermostat - Down
   sequence:
@@ -788,15 +681,6 @@ scene_good_night:
     - condition: state
       entity_id: switch.bedroom_tv
       state: 'off'
-  - target:
-      entity_id: switch.bedroom_tv
-    data: {}
-    action: homeassistant.turn_on
-  - data:
-      roku: bedroom
-      tvshow: Friends
-    alias: Start Friends
-    action: shell_command.play_plex_on_roku
   - data: {}
     target:
       entity_id: button.front_door_wake
@@ -1519,4 +1403,138 @@ tv_god_damn_sleep:
     data:
       text: Turn off the God Damn TV in 30 minutes
   alias: TV - God Damn - Sleep
+  description: ''
+tv_god_damn_soundbar_power:
+  sequence:
+  - data:
+      topic: cmnd/god_damn_tv_remote/backlog
+      payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x212EFF00","DataLSB":"0x8474FF00","Repeat":0}
+    action: mqtt.publish
+  alias: TV - God Damn - Soundbar Power
+  mode: single
+  icon: mdi:surround-sound
+  description: ''
+security_trigger_siren:
+  sequence:
+  - data: {}
+    action: script.security_message_open_security_devices
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.fully_kiosk_browser
+        attribute: currentPageUrl
+        state: https://ha.erdely.in:38123/control-panel/security
+    then:
+    - action: rest_command.fkb_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+    alias: Redirect to Security Panel if not already there
+  - data:
+      message: '{{ states(''input_text.security_message'') }}
+
+        '
+    action: notify.signal_security
+  - action: tts.cloud_say
+    data:
+      cache: false
+      entity_id: media_player.fkb_control_panel
+      message: Alert! You are trespassing. The home owners and the police have been
+        notified. Exit the premises immediately.
+  - repeat:
+      while:
+      - condition: state
+        entity_id: alarm_control_panel.home_alarm
+        state: triggered
+      sequence:
+      - data:
+          topic: cmnd/siren/backlog
+          payload: TuyaSend4 102,14; TuyaSend2 103,59
+        action: mqtt.publish
+      - target:
+          entity_id: switch.siren
+        action: homeassistant.turn_on
+        data: {}
+      - delay: '60'
+  alias: Security - Trigger Siren
+  description: ''
+security_cannot_arm_security_system:
+  sequence:
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.fully_kiosk_browser
+        attribute: currentPageUrl
+        state: https://ha.erdely.in:38123/control-panel/security
+    then:
+    - action: rest_command.fkb_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+    alias: Redirect to Security Panel if not already there
+  - action: tts.cloud_say
+    data:
+      cache: false
+      entity_id: media_player.fkb_control_panel
+      message: Alert! Cannot arm security system. Check the control panel by the stairs
+  alias: Security - Cannot Arm Security System
+  description: ''
+security_45_seconds_to_exit:
+  sequence:
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.fully_kiosk_browser
+        attribute: currentPageUrl
+        state: https://ha.erdely.in:38123/control-panel/security
+    then:
+    - action: rest_command.fkb_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+    alias: Redirect to Security Panel if not already there
+  - action: tts.cloud_say
+    data:
+      cache: false
+      entity_id: media_player.fkb_control_panel
+      message: Security system is arming. You have 45 seconds to exit.
+  alias: Security - 45 Seconds to Exit
+  description: ''
+security_45_seconds_to_enter_code:
+  sequence:
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.fully_kiosk_browser
+        attribute: currentPageUrl
+        state: https://ha.erdely.in:38123/control-panel/security
+    then:
+    - action: rest_command.fkb_command
+      data:
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+    alias: Redirect to Security Panel if not already there
+  - action: tts.cloud_say
+    data:
+      cache: false
+      entity_id: media_player.fkb_control_panel
+      message: Security system active. You have 45 seconds to enter the code in the
+        control panel by the stairs.
+  alias: Security - 45 Seconds to Enter Code
+  description: ''
+security_change_control_panel_to_security_view:
+  sequence:
+  - action: rest_command.fkb_command
+    metadata: {}
+    data:
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+  alias: Security - Change Control Panel to Security View
+  description: ''
+security_change_control_panel_to_home_view:
+  sequence:
+  - action: rest_command.fkb_command
+    metadata: {}
+    data:
+      command_string: cmd=loadStartUrl
+  alias: Security - Change Control Panel to Home View
   description: ''

@@ -34,11 +34,13 @@ sessions = {}
 count = 0
 for session in data:
     if "NowPlayingItem" in session.keys():
+        if session['PlayState']['IsPaused'] == True:
+            continue
         count = count + 1
         if "SeriesName" in session["NowPlayingItem"].keys():
             season = session['NowPlayingItem']['SeasonName'].replace("Season ", "")
             episode = session['NowPlayingItem']['IndexNumber']
-            sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['SeriesName']} - s{season:02}e{episode:02} - {session['NowPlayingItem']['Name']}" }
+            sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['SeriesName']} - s{int(season):02d}e{int(episode):02d} - {session['NowPlayingItem']['Name']}" }
         elif "AlbumArtist" in session["NowPlayingItem"].keys():
             sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['AlbumArtist']} - {session['NowPlayingItem']['Album']} - {session['NowPlayingItem']['Name']}" }
         else:

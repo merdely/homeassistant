@@ -251,28 +251,19 @@
     to: 'on'
     for:
       hours: 0
-      minutes: 1
-      seconds: 0
+      minutes: 0
+      seconds: 30
     trigger: state
   conditions: []
   actions:
-  - data:
-      speaker: all_speakers
-      entity_id: media_player.all_speakers
-    action: script.function_speakers_prep
-  - data:
-      media_content_id: /local/sounds/water_leak.mp3
-      media_content_type: music
-    target:
-      entity_id: media_player.all_speakers
-    action: media_player.play_media
+  - action: tts.cloud_say
+    data:
+      cache: false
+      entity_id: media_player.fkb_control_panel
+      message: 'Alert: Water leak detected'
   - data:
       message: Water leak detected on {{ trigger.to_state.name }}
     action: notify.signal_security
-  - data:
-      speaker: all_speakers
-      entity_id: media_player.all_speakers
-    action: script.function_speakers_restore
   - data:
       topic: cmnd/siren/backlog
       payload: TuyaSend4 102,15; TuyaSend2 103,10
@@ -352,8 +343,6 @@
     trigger: homeassistant
   conditions: []
   actions:
-  - data: {}
-    action: shell_command.rm_newshows_flag
   - data_template:
       command: convert
       package: imagemagick
@@ -453,22 +442,22 @@
 - id: '1603407289385'
   alias: Notifications - Laundry Room Washer Stopped
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.laundry_room_outlet_energy_power
+  triggers:
+  - entity_id: sensor.laundry_room_outlet_energy_power
     below: '3'
     for: 00:03:00
-  condition:
+    trigger: numeric_state
+  conditions:
   - condition: state
     entity_id: input_boolean.laundry_room_washer_running
     state: 'on'
-  action:
-  - service: input_boolean.turn_off
-    data: {}
+  actions:
+  - data: {}
     entity_id: input_boolean.laundry_room_washer_running
-  - service: notify.signal_security
-    data:
+    action: input_boolean.turn_off
+  - data:
       message: The washing machine is done
+    action: notify.signal_security
   - if:
     - condition: and
       conditions:
@@ -479,10 +468,10 @@
         entity_id: binary_sensor.bed_sensor_mike
         state: 'off'
     then:
-    - service: tts.cloud_say
-      data:
-        entity_id: media_player.security_speakers
+    - data:
+        entity_id: media_player.fkb_control_panel
         message: The washing machine is done
+      action: tts.cloud_say
   mode: single
 - id: '1604378332593'
   alias: Security - 90 Triggered - Alert of Always Monitored Door Open (Always)
@@ -520,7 +509,7 @@
         == ''off'' %} closed{%- else %} open{% endif %}.'
     action: notify.signal_security
   - data:
-      entity_id: media_player.security_speakers
+      entity_id: media_player.fkb_control_panel
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if     trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
     action: tts.cloud_say
@@ -597,22 +586,16 @@
         command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
     alias: Redirect to Security Panel if not already there
   - data:
-      speaker: all_speakers
-    action: script.function_speakers_prep
-  - data:
       message: '{{ states(''input_text.security_message'') }}
 
         '
     action: notify.signal_security
-  - data:
-      media_content_id: /local/sounds/security_trigger.mp3
-      media_content_type: music
-    target:
-      entity_id: media_player.all_speakers
-    action: media_player.play_media
-  - data:
-      speaker: all_speakers
-    action: script.function_speakers_restore
+  - action: tts.cloud_say
+    data:
+      cache: false
+      entity_id: media_player.fkb_control_panel
+      message: Alert! You are trespassing. The home owners and the police have been
+        notified. Exit the premises immediately.
   - repeat:
       while:
       - condition: state
@@ -649,22 +632,22 @@
 - id: '1604856580927'
   alias: Notifications - Laundry Room Dryer Stopped
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.dryer_monitor_analog_ctenergy_power
+  triggers:
+  - entity_id: sensor.dryer_monitor_analog_ctenergy_power
     for: 00:01:00
     below: '500'
-  condition:
+    trigger: numeric_state
+  conditions:
   - condition: state
     entity_id: input_boolean.laundry_room_dryer_running
     state: 'on'
-  action:
-  - service: input_boolean.turn_off
-    data: {}
+  actions:
+  - data: {}
     entity_id: input_boolean.laundry_room_dryer_running
-  - service: notify.signal_security
-    data:
+    action: input_boolean.turn_off
+  - data:
       message: The dryer is done
+    action: notify.signal_security
   - if:
     - condition: and
       conditions:
@@ -675,10 +658,10 @@
         entity_id: binary_sensor.bed_sensor_mike
         state: 'off'
     then:
-    - service: tts.cloud_say
-      data:
-        entity_id: media_player.security_speakers
+    - data:
+        entity_id: media_player.fkb_control_panel
         message: The dryer is done
+      action: tts.cloud_say
   mode: single
 - id: '1605633972450'
   alias: Security - 40 Armed - Re-enable Gate Notifications
@@ -972,7 +955,7 @@
       state: not_home
     then:
     - data:
-        entity_id: media_player.security_speakers
+        entity_id: media_player.fkb_control_panel
         message: Holly has left {{ trigger.from_state.state }}
       action: tts.cloud_say
     - data:
@@ -982,7 +965,7 @@
       action: notify.gmail_to_mike
     else:
     - data:
-        entity_id: media_player.security_speakers
+        entity_id: media_player.fkb_control_panel
         message: Holly is at {{ states('person.holly_erdely') }}
       action: tts.cloud_say
     - data:
@@ -1019,12 +1002,12 @@
       state: not_home
     then:
     - data:
-        entity_id: media_player.security_speakers
+        entity_id: media_player.fkb_control_panel
         message: Mike has left {{ trigger.from_state.state }}
       action: tts.cloud_say
     else:
     - data:
-        entity_id: media_player.security_speakers
+        entity_id: media_player.fkb_control_panel
         message: Mike is at {{ states("person.michael_erdely") }}
       action: tts.cloud_say
   mode: single
@@ -1133,45 +1116,6 @@
     data:
       option: Select Input
     entity_id: input_select.god_damn_input
-  mode: single
-- id: '1607188975863'
-  alias: TV - Change Roku Plex Show
-  description: ''
-  triggers:
-  - entity_id:
-    - input_select.office_plex_show
-    - input_select.bedroom_plex_show
-    - input_select.living_room_plex_show
-    - input_select.god_damn_plex_show
-    trigger: state
-  conditions:
-  - condition: template
-    value_template: '{{ states(trigger.entity_id) != ''Select Show'' }}'
-  actions:
-  - data:
-      message: Starting "{{ states(trigger.entity_id) }}" on {{ trigger.entity_id
-        | regex_findall_index(find='input_select\.(.*)_plex_show', index=0, ignorecase=False)
-        | replace('_', '-') | title }} Roku triggered by {{ trigger.entity_id }}
-      level: error
-    action: system_log.write
-    enabled: true
-  - target:
-      entity_id: switch.{{ trigger.entity_id | regex_findall_index(find='input_select\.(.*)_plex_show',
-        index=0, ignorecase=False) }}_tv
-    action: homeassistant.turn_on
-    data: {}
-  - action: shell_command.play_plex_on_roku
-    alias: Play show on Plex on Roku
-    data:
-      roku: '{{ trigger.entity_id | regex_findall_index(find=''input_select\.(.*)_plex_show'',
-        index=0, ignorecase=False) | replace(''_'', ''-'') }}'
-      tvshow: '{{ states(trigger.entity_id) }}'
-    response_variable: response
-  - data:
-      option: Select Show
-      entity_id: '{{ trigger.entity_id }}'
-    action: input_select.select_option
-    enabled: true
   mode: single
 - id: '1607196597834'
   alias: TV - Office - Power Off
@@ -1437,17 +1381,17 @@
       target:
         entity_id: input_boolean.recycle_is_out
       data: {}
-  - if:
+  - alias: Reset Trash is Out if day after Trash Day
+    if:
     - condition: template
-      value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1_number'')
-        | int(0) + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2_number'')
+      value_template: '{{ now().weekday() == (states(''sensor.trash_weekday_1'') |
+        int(0) + 1) % 7 or now().weekday() == (states(''sensor.trash_weekday_2'')
         | int(0) + 1) % 7 }}'
     then:
     - action: input_boolean.turn_off
       target:
         entity_id: input_boolean.trash_is_out
       data: {}
-    alias: Reset Trash is Out if day after Trash Day
   - target:
       entity_id: binary_sensor.new_npm_ssl_cert_available
     data: {}
@@ -1460,12 +1404,6 @@
     - data:
         addon: a0d7b954_nginxproxymanager
       action: hassio.addon_restart
-  - data: {}
-    action: shell_command.update_tv_shows
-  - target:
-      entity_id: binary_sensor.new_tv_show_list_ready
-    data: {}
-    action: homeassistant.update_entity
   - data:
       addon: core_letsencrypt
     action: hassio.addon_restart
@@ -1481,9 +1419,6 @@
   - if:
     - condition: or
       conditions:
-      - condition: state
-        entity_id: binary_sensor.new_tv_show_list_ready
-        state: 'on'
       - condition: state
         entity_id: binary_sensor.new_ssl_cert_available
         state: 'on'
@@ -1790,18 +1725,22 @@
 - id: '1617741916452'
   alias: Notifications - 1 - Water Leak Detected - All Sensors
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.water_leak_sensors
+  triggers:
+  - entity_id:
+    - binary_sensor.water_leak_sensors
     to: 'on'
-    for: 00:01:00
-  condition: []
-  action:
-  - service: notify.signal_security
-    data:
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       message: "Water Leak Detected by the {% for entity_id in states.binary_sensor.water_leak_sensors.attributes.entity_id
         -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')
         }}\n{% endif -%}{% endfor -%}"
+    action: notify.signal_security
   mode: single
 - id: '1618083518993'
   alias: Lighting - Living Room - Far Black Lamp
@@ -3651,25 +3590,6 @@
     data: {}
   - set_conversation_response: Good night
   mode: single
-- id: '1740425322410'
-  alias: 'Assist: Who is watching Plex'
-  description: ''
-  triggers:
-  - trigger: conversation
-    command:
-    - Who is watching Plex
-    - Who's watching Plex
-    - Who is watching
-    - Who is watching the Plex
-    - Who's watching the Plex
-  conditions: []
-  actions:
-  - set_conversation_response: '{% set list=state_attr(''sensor.plex_watching'', ''sessions'')
-      %}{% set l=list | length %}{% set ns=namespace(c=0) %}{% for watcher in list
-      %}{{ watcher }}{% set ns.c = ns.c + 1 %}{% if l == 2 and ns.c == 1 %} and {%
-      elif l > 1 and l > 2 and l != ns.c %}, {% endif %}{% if l > 2 and ns.c == (l
-      - 1) %}and {% endif %}{% endfor %}'
-  mode: single
 - id: '1740671742079'
   alias: Controls - Picframe Clock
   description: ''
@@ -3853,4 +3773,272 @@
         server: picframe@sinope.erdely.in
         command: blank
     alias: Blank the Screen
+  mode: single
+- id: '1741306717937'
+  alias: Music Assistant - Local LLM Enhanced Voice Support Blueprint
+  description: ''
+  use_blueprint:
+    path: music-assistant/mass_llm_enhanced_assist_blueprint_en.yaml
+    input:
+      llm_agent: conversation.home_assistant
+      default_player: media_player.office_speaker
+- id: '1741320064454'
+  alias: Controls - Picture Frame
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_holly
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_holly
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_mike
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - binary_sensor.bed_sensor_mike
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - light.dresser_lamp
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - light.dresser_lamp
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - light.bedroom_fan_light
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - light.bedroom_fan_light
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - light.holly_nightstand_lamp
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - light.holly_nightstand_lamp
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - switch.bedroom_tv
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - trigger: state
+    entity_id:
+    - switch.bedroom_tv
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{% if states(''light.master_bath_light'') == "on" %}{{
+            states(''sensor.bedroom_lights_on'') | int(0) - 1 > 0 }}{% else %}{{ states(''sensor.bedroom_lights_on'')
+            | int(0) > 0 }}{% endif %}'
+          alias: Bedroom Lights are On
+        - condition: numeric_state
+          entity_id: sensor.number_in_bed
+          below: 1
+          alias: Nobody in Bed
+        - condition: state
+          entity_id: switch.bedroom_tv
+          state: 'on'
+          enabled: true
+      sequence:
+      - action: shell_command.ssh_command
+        data:
+          server: picframe@sinope.erdely.in
+          command: get_state
+        response_variable: current_state
+        alias: Get Picture Frame's Current State
+      - condition: template
+        value_template: '{{ current_state[''stdout''] != "picframe" }}'
+        alias: Picture Frame not already showing Pictures
+      - alias: Load Pictures on Picture Frame
+        action: shell_command.ssh_command
+        data:
+          server: picframe@sinope.erdely.in
+          command: picframe
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{% if states(''light.master_bath_light'') == "on" %}{{
+            states(''sensor.bedroom_lights_on'') | int(0) - 1 > 0 }}{% else %}{{ states(''sensor.bedroom_lights_on'')
+            | int(0) > 0 }}{% endif %}'
+          alias: Bedroom Lights are On
+        - condition: template
+          value_template: '{{ states(''sensor.number_home'') | int(0) > states(''sensor.number_in_bed'')
+            | int(0) }}'
+          alias: More People Home than in Bed
+        - condition: state
+          entity_id: switch.bedroom_tv
+          state: 'on'
+        - condition: and
+          conditions:
+          - condition: numeric_state
+            entity_id: sensor.number_in_bed
+            above: 0
+          - condition: numeric_state
+            entity_id: sensor.bedroom_lights_on
+            below: 1
+          - condition: state
+            entity_id: switch.bedroom_tv
+            state: 'off'
+          - condition: template
+            value_template: '{{ sensor(''sensor.number_home'') > sensor(''sensor.number_in_bed'')
+              }}'
+      sequence:
+      - alias: Load Clock on Picture Frame
+        action: shell_command.ssh_command
+        data:
+          server: picframe@sinope.erdely.in
+          command: clock
+    default:
+    - alias: Blank Picture Frame
+      action: shell_command.ssh_command
+      data:
+        server: picframe@sinope.erdely.in
+        command: blank
+  mode: single
+- id: '1741888508340'
+  alias: Controls - Picframe (timebased)
+  description: ''
+  triggers:
+  - trigger: time
+    at: '22:30:00'
+  - trigger: time
+    at: 07:00:00
+  conditions: []
+  actions:
+  - if:
+    - condition: time
+      after: '22:00:00'
+      before: 07:00:00
+    then:
+    - alias: Blank Picture Frame
+      action: shell_command.ssh_command
+      data:
+        server: picframe@sinope.erdely.in
+        command: blank
+    else:
+    - alias: Load Pictures
+      action: shell_command.ssh_command
+      data:
+        server: picframe@sinope.erdely.in
+        command: picframe
+  mode: single
+- id: '1743533561078'
+  alias: Home Assistant - Restart - PicFrame Unavailable
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.picture_frame_status
+    to: unavailable
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  conditions:
+  - condition: time
+    after: 09:00:00
+    before: '23:00:00'
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.sinope_plug
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.sinope_plug
+  - action: notify.gmail_to_mike
+    metadata: {}
+    data:
+      message: Picture Frame (sinope) was restarted
+      title: Picture Frame restarted
+  mode: single
+- id: '1743534633370'
+  alias: Home Assistant - Reload - Picframe Unknown
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.picture_frame_status
+    to: unknown
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  conditions: []
+  actions:
+  - action: shell_command.ssh_command
+    data:
+      server: picframe@sinope.erdely.in
+      command: reload
   mode: single

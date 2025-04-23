@@ -6,9 +6,9 @@
       {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
            's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
            '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-           '(remote|media_player)\.(?:55s435_c000x|roku_|plex|plex_[\w]{0,15}_plex_for_android_|playstation|firefox|chrom|pixel_9_pro(?:_\d)?)[\w]{0,40}|' +
-           'media_player\.(?:[a-z_]{1,30}_speaker|(?:google_)?pixel_[\w]{1,20}|curl|50r4ax_g000x(?:_[0-9]+)?)|' +
+           '(remote|media_player)\..{0,50}|' +
            'button\.(?:un)?ignore_all_issues|' +
+           '(?:binary_)?sensor.(?:holly|mike)_s_phone_[a-z0-9_]{1,25}|' +
            '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
            'button\.home_?assistant_(?:.{1,25}_)?re(?:load|start)|' +
            '(?:binary_)?sensor\.[a-zA-Z0-9_-]{1,25}_high_accuracy_(?:mode|update_interval)?|' +
@@ -20,9 +20,9 @@
         {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
              's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
              '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-             '(remote|media_player)\.(?:55s435_c000x|roku_|plex|plex_[\w]{0,15}_plex_for_android_|playstation|firefox|chrom|pixel_9_pro(?:_\d)?)[\w]{0,40}|' +
-             'media_player\.(?:[a-z_]{1,30}_speaker|(?:google_)?pixel_[\w]{1,20}|curl|50r4ax_g000x(?:_[0-9]+)?)|' +
+             '(remote|media_player)\..{0,50}|' +
              'button\.(?:un)?ignore_all_issues|' +
+             '(?:binary_)?sensor.(?:holly|mike)_s_phone_[a-z0-9_]{1,25}|' +
              '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
              'button\.home_?assistant_(?:.{1,25}_)?re(?:load|start)|' +
              '(?:binary_)?sensor\.[a-zA-Z0-9_-]{1,25}_high_accuracy_(?:mode|update_interval)?|' +
@@ -196,7 +196,7 @@
   sensor:
     name: Zwave Entities
     unique_id: zwave_entities
-    icon: mdi:zwave
+    icon: mdi:z-wave
     state: "{{ now().strftime('%FT%T') }}"
     attributes:
       entity_list: >-
@@ -213,7 +213,7 @@
 - sensor:
     name: OOD Zwave Entities
     unique_id: ood_zwave_entities
-    icon: mdi:zwave
+    icon: mdi:z-wave
     state: |
       {% if state_attr('sensor.zwave_entities', 'entity_list') -%}
         {% set ns = namespace(count=0) -%}
@@ -303,46 +303,3 @@
         {% endfor -%}
         {{ ns.output }}
       ha_count: true
-
-- sensor:
-    unique_id: plex_watching
-    name: Plex Watching
-    icon: mdi:plex
-    state: '{{ states("sensor.plex_plex") | int(default=0) }}'
-    unit_of_measurement: "watching"
-    attributes:
-      sessions: |
-        { {% set names = {
-             'ahuldtgren': 'Andrea',
-             'anne.henderson': 'Anne',
-             'Atheo37': 'Alex/Marce',
-             'brian.7806': 'BrianG',
-             'cmilkeman': 'ChrisM',
-             'ebfab': 'EricB',
-             'erdelyt': 'TomE',
-             'heat828': 'Heather',
-             'heyitsmikey128': 'Kush',
-             'holly__': 'Holly',
-             'humber952': 'Chris/Adrian',
-             'jhuldtgren': 'Johan',
-             'justin7805': 'Justin',
-             'Kristy Arthur': 'Kristy',
-             'kristyarthur': 'Kristy',
-             'l.t.e': 'Dad',
-             'Maddie D': 'Maddie',
-             'maddied363': 'Maddie',
-             'merdely_': 'Mike',
-             'Modderno': 'MattM',
-             'nacho5631': 'ChrisH',
-             'orletsky': 'Martha',
-             'plexguest_': 'plexguest',
-             'reed530': 'Tracy',
-             'SimpliOP': 'DavidG',
-             'stuckonu5': 'Madsen',
-             }-%}
-        {% for attr in states.sensor.plex_plex.attributes -%}
-        {% if attr not in ['friendly_name', 'unit_of_measurement'] -%}
-        "{{ names[attr | regex_replace(' - .*$','', ignorecase=True)] }}": "{{ state_attr('sensor.plex_plex', attr) }}",
-        {% endif -%}
-        {% endfor -%} }
-

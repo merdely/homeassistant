@@ -1,4 +1,11 @@
 - sensor:
+    name: Picture Frame Status
+    unique_id: picture_frame_status
+    command: "/config/bin/picframe_status.sh"
+    value_template: "{{ value_json.status }}"
+    scan_interval: 60
+
+- sensor:
     name: Installed Add-ons
     unique_id: installed_add_ons
     command: "/config/bin/get_addons"
@@ -124,13 +131,6 @@
     payload_on: 'on'
     payload_off: 'off'
 
-- binary_sensor:
-    name: New TV Show List Ready
-    unique_id: new_tv_show_list_ready
-    command: 'test -f /config/.newtvshowfile && echo on || echo off'
-    payload_on: 'on'
-    payload_off: 'off'
-
 - sensor:
     name: CPU Temperature
     unique_id: cpu_temperature
@@ -174,14 +174,15 @@
 - sensor:
     name: OpnSense Core ABI Version Latest
     unique_id: opnsense_core_abi_version_latest
-    command: >
-      curl -s "https://opnsense.org/download/" | awk -F"'" '/data-version\s*=\s*/{print $2}'
+    command: /config/bin/opnsense_get_abi.py
     scan_interval: 3600
+      # curl -s "https://opnsense.org/download/" | awk -F"'" '/data-version\s*=\s*/{print $2}'
       # curl -s "https://opnsense.org/download/" | awk -F'"' '/var version\s+=/{print $2}'
 
 - sensor:
     name: Jellyfin Sessions
     unique_id: jellyfin_sessions
+    icon: mdi:television-play
     command: "/config/bin/jellyfin_sessions"
     json_attributes:
       - sessions
