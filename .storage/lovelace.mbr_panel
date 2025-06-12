@@ -16,28 +16,30 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "picture",
-                  "image": "/local/images/homeassistant-icon.png",
-                  "tap_action": {
-                    "action": "navigate",
-                    "navigation_path": "#utilities"
-                  },
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
-                  }
-                },
-                {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n table {\n   width: 100%;\n   border: none;\n }\n td.left {\n   width: 20;\n   text-align: left;\n   color: var(--paper-item-icon-color);\n }\n td.right {\n   text-align: right;\n   font-size: 18px;\n }\n .laundry-status {\n   {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' -%}\n   color: var(--state-active-color);\n   {% endif %}\n }\n </style>\n <table>\n <tr><td class=left><ha-icon\n icon=\"mdi:face-woman\"></ha-icon></td></td>\n <td class=right>{{ states('person.holly_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title\n }}</td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:face-man\"></ha-icon></font></td>\n <td class=right>{{ states('person.michael_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:washing-machine\"></ha-icon></td>\n <td class=right><span class=laundry-status>{{\n states('sensor.washer_and_dryer_state') }}</td></tr>\n </table>\n",
-                  "grid_options": {
-                    "columns": 9,
-                    "rows": "auto"
-                  }
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "entity_picture": "/local/images/homeassistant-icon.png",
+                      "show_entity_picture": true,
+                      "size": "100%",
+                      "styles": {
+                        "card": [
+                          {
+                            "border-radius": "10%"
+                          },
+                          {
+                            "width": "126px"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n table {\n   width: 100%;\n   border: none;\n }\n td.left {\n   width: 20;\n   text-align: left;\n   color: var(--state-icon-color);\n }\n td.right {\n   text-align: right;\n   font-size: 18px;\n }\n .laundry-status {\n   {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' -%}\n   color: var(--state-active-color);\n   {% endif %}\n }\n </style>\n <table>\n <tr><td class=left><ha-icon\n icon=\"mdi:face-woman\"></ha-icon></td></td>\n <td class=right>{{ states('person.holly_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title\n }}</td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:face-man\"></ha-icon></font></td>\n <td class=right>{{ states('person.michael_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:washing-machine\"></ha-icon></td>\n <td class=right><span class=laundry-status>{{\n states('sensor.washer_and_dryer_state') }}</td></tr>\n </table>\n"
+                    }
+                  ]
                 },
                 {
                   "show_name": true,
@@ -85,7 +87,7 @@
                     ],
                     "icon": [
                       {
-                        "color": "[[[ if (entity.state > 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (entity.state > 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -110,48 +112,6 @@
                   "grid_options": {
                     "columns": 3,
                     "rows": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "entity": "script.security_disarm_system",
-                  "icon": "mdi:home-lock-open",
-                  "name": "Disarm",
-                  "show_state": false,
-                  "theme": "red-button",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "alarm_control_panel.home_alarm",
-                      "state_not": "disarmed"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "alarm_control_panel.home_alarm",
-                      "state_not": "arming"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "alarm_control_panel.home_alarm",
-                      "state_not": "disarming"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "alarm_control_panel.home_alarm",
-                      "state_not": "pending"
-                    }
-                  ],
-                  "hold_action": {
-                    "action": "none"
                   }
                 },
                 {
@@ -240,6 +200,48 @@
                       "condition": "state",
                       "entity": "binary_sensor.security_devices",
                       "state_not": "off"
+                    }
+                  ],
+                  "hold_action": {
+                    "action": "none"
+                  }
+                },
+                {
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "script.security_disarm_system",
+                  "icon": "mdi:home-lock-open",
+                  "name": "Disarm",
+                  "show_state": false,
+                  "theme": "red-button",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  },
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "alarm_control_panel.home_alarm",
+                      "state_not": "disarmed"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "alarm_control_panel.home_alarm",
+                      "state_not": "arming"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "alarm_control_panel.home_alarm",
+                      "state_not": "disarming"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "alarm_control_panel.home_alarm",
+                      "state_not": "pending"
                     }
                   ],
                   "hold_action": {
@@ -358,7 +360,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -387,7 +389,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -416,7 +418,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -445,7 +447,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -456,6 +458,13 @@
                 {
                   "type": "custom:button-card",
                   "entity": "switch.bedroom_tv",
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "[[[ if (entity.state == \"on\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
+                      }
+                    ]
+                  },
                   "show_state": false,
                   "show_name": false,
                   "tap_action": {
@@ -471,6 +480,13 @@
                   "entity": "script.announcement_ha_app_test_announcement",
                   "name": "Sleep",
                   "icon": "mdi:sleep",
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "var(--state-icon-color)"
+                      }
+                    ]
+                  },
                   "show_state": false,
                   "show_name": false,
                   "tap_action": {
@@ -498,7 +514,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (states['sensor.holly_is_in_bed'].state == \"In Bed\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (states['sensor.holly_is_in_bed'].state == \"In Bed\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -519,7 +535,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (states['sensor.mike_is_in_bed'].state == \"In Bed\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (states['sensor.mike_is_in_bed'].state == \"In Bed\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -531,6 +547,13 @@
                   "type": "custom:button-card",
                   "entity": "input_boolean.mail_delivered",
                   "name": "Mail",
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "[[[ if (entity.state == \"on\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
+                      }
+                    ]
+                  },
                   "grid_options": {
                     "columns": 3
                   }
@@ -545,7 +568,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (entity.state == \"Today\") return \"green\";\n    else if (entity.state == \"Tomorrow\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (entity.state == \"Today\") return \"green\";\n    else if (entity.state == \"Tomorrow\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -567,7 +590,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (entity.state == \"Today\" && states['input_boolean.trash_is_out'].state == \"off\") return \"red\";\n    else if (entity.state == \"Tomorrow\" && states['input_boolean.trash_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (entity.state == \"Today\" && states['input_boolean.trash_is_out'].state == \"off\") return \"red\";\n    else if (entity.state == \"Tomorrow\" && states['input_boolean.trash_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -589,7 +612,7 @@
                   "styles": {
                     "icon": [
                       {
-                        "color": "[[[ if (entity.attributes.days_string == \"Today\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"red\";\n    else if (entity.attributes.days_string == \"Tomorrow\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                        "color": "[[[ if (entity.attributes.days_string == \"Today\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"red\";\n    else if (entity.attributes.days_string == \"Tomorrow\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                       }
                     ]
                   },
@@ -629,7 +652,7 @@
                           "styles": {
                             "icon": {
                               "--mdc-icon-size": "40px",
-                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--paper-item-icon-color){% endif %}\n"
+                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--state-icon-color){% endif %}\n"
                             },
                             "button": {
                               "font-size": "18px",
@@ -2167,20 +2190,36 @@
                               }
                             },
                             {
-                              "entity": "input_boolean.trash_is_out",
+                              "entity": "sensor.trash",
                               "name": false,
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "30px"
                                 }
+                              },
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "input_boolean.toggle",
+                                "target": {},
+                                "service_data": {
+                                  "entity_id": "input_boolean.trash_is_out"
+                                }
                               }
                             },
                             {
-                              "entity": "input_boolean.recycle_is_out",
+                              "entity": "sensor.moco_recycle_day",
                               "name": false,
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "30px"
+                                }
+                              },
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "input_boolean.toggle",
+                                "target": {},
+                                "service_data": {
+                                  "entity_id": "input_boolean.recycle_is_out"
                                 }
                               }
                             }
@@ -2849,7 +2888,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--paper-item-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n</style> <table> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', 'HA') | replace('Operating System', 'OS') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endfor -%} {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'title') != None and state_attr(software, 'device_class') != 'firmware' %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'var(--state-active-color)'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', '') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('Mosquitto broker', 'MQTT') | replace('Signal Messenger', 'Signal') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('Google Drive Backup', 'Google Backup') | replace(' (Bitwarden)','') | replace('Studio Code Server', 'VS Code Server') | replace('UniFi Network Application','UniFi') | replace('ESPHome Device Builder','ESPHome') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr>{% endif -%}{% endfor -%} </table>"
+                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n</style> <table> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', 'HA') | replace('Operating System', 'OS') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endfor -%} {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'title') != None and state_attr(software, 'device_class') != 'firmware' %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'var(--state-active-color)'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', '') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('Mosquitto broker', 'MQTT') | replace('Signal Messenger', 'Signal') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('Google Drive Backup', 'Google Backup') | replace(' (Bitwarden)','') | replace('Studio Code Server', 'VS Code Server') | replace('UniFi Network Application','UniFi') | replace('ESPHome Device Builder','ESPHome') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr>{% endif -%}{% endfor -%} </table>"
                     }
                   ]
                 },
@@ -2933,7 +2972,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--paper-item-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <table> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr> <td class=\"{{'off-icon' if states(software|replace('_latest','')) == states(software) else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software|replace('_latest','')) }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software) }}</td> </tr> {% endfor -%} <tr> <td class=\"{{'off-icon' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}\" /></td> <td class=\"left {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text)'}}\">OPNsense</font></td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ states('sensor.opnsense_versions') }}</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</td> </tr> {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr> <td class=\"{{'off-icon' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}\" /></td> <td class=\"left {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">OPNsense {{ plugin }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</td> </tr> {% endfor -%} {% for ap in state_attr('sensor.unifi_ap_versions', 'data') -%} <tr> <td class=\"{{'off-icon' if ap['version'] == ap['version_available'] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}\" /></td> <td class=\"left {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['name'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version_available'] }}</td></tr> {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td class=warning><ha-icon icon='mdi:alert-circle'></ha-icon></td> <td colspan=\"3\" class=warning>Error: Could not load Unifi Data</td></tr> {% endif %} </table>"
+                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <table> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr> <td class=\"{{'off-icon' if states(software|replace('_latest','')) == states(software) else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software|replace('_latest','')) }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software) }}</td> </tr> {% endfor -%} <tr> <td class=\"{{'off-icon' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}\" /></td> <td class=\"left {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text)'}}\">OPNsense</font></td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ states('sensor.opnsense_versions') }}</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</td> </tr> {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr> <td class=\"{{'off-icon' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}\" /></td> <td class=\"left {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">OPNsense {{ plugin }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</td> </tr> {% endfor -%} {% for ap in state_attr('sensor.unifi_ap_versions', 'data') -%} <tr> <td class=\"{{'off-icon' if ap['version'] == ap['version_available'] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}\" /></td> <td class=\"left {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['name'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version_available'] }}</td></tr> {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td class=warning><ha-icon icon='mdi:alert-circle'></ha-icon></td> <td colspan=\"3\" class=warning>Error: Could not load Unifi Data</td></tr> {% endif %} </table>"
                     }
                   ]
                 },
@@ -3197,67 +3236,33 @@
                       }
                     },
                     {
-                      "square": false,
-                      "type": "grid",
-                      "cards": [
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
                         {
-                          "show_state": false,
-                          "show_name": false,
-                          "camera_view": "auto",
-                          "type": "picture-entity",
-                          "entity": "camera.front_door_cam",
-                          "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                          "camera_entity": "camera.front_door"
                         },
                         {
-                          "show_state": false,
-                          "show_name": false,
-                          "camera_view": "auto",
-                          "type": "picture-entity",
-                          "entity": "camera.front_door_cam_2",
-                          "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                          "camera_entity": "camera.front_door_2"
                         },
                         {
-                          "show_state": false,
-                          "show_name": false,
-                          "camera_view": "auto",
-                          "type": "picture-entity",
-                          "entity": "camera.garage_cam",
-                          "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                          "camera_entity": "camera.garage"
                         },
                         {
-                          "show_state": false,
-                          "show_name": false,
-                          "camera_view": "auto",
-                          "type": "picture-entity",
-                          "entity": "camera.shed_cam",
-                          "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                          "camera_entity": "camera.shed"
                         },
                         {
-                          "show_state": false,
-                          "show_name": false,
-                          "camera_view": "auto",
-                          "type": "picture-entity",
-                          "entity": "camera.backyard_cam",
-                          "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                          "camera_entity": "camera.backyard"
                         },
                         {
-                          "show_state": false,
-                          "show_name": false,
-                          "camera_view": "auto",
-                          "type": "picture-entity",
-                          "entity": "camera.chimney_cam",
-                          "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                        },
-                        {
-                          "show_state": false,
-                          "show_name": false,
-                          "camera_view": "auto",
-                          "type": "picture-entity",
-                          "entity": "camera.garage_door_cam",
-                          "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
+                          "camera_entity": "camera.chimney"
                         }
                       ],
-                      "columns": 2
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ]
+                      }
                     }
                   ]
                 },

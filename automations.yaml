@@ -1,38 +1,3 @@
-- id: '1600366629972'
-  alias: Lighting - Family Room Lights Off
-  description: ''
-  triggers:
-  - entity_id: light.god_damn_light
-    to: 'off'
-    trigger: state
-  conditions: []
-  actions:
-  - target:
-      entity_id:
-      - light.fireplace_light
-      - light.three_headed_lamp
-      - light.god_damn_light
-    action: homeassistant.turn_off
-    data: {}
-  mode: single
-- id: '1600528857994'
-  alias: Lighting - Outside - Garage Arrival at Night
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: cover.garage_door
-    to: open
-  condition:
-  - condition: sun
-    before: sunrise
-    after: sunset
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id:
-      - light.front_porch_light
-      - light.foyer_light
-  mode: single
 - id: '1600528964920'
   alias: Lighting - Sunset Lights On
   description: ''
@@ -273,68 +238,6 @@
     action: homeassistant.turn_on
     data: {}
   mode: single
-- id: '1603064762451'
-  alias: Lighting - Office - Motion Light On
-  description: ''
-  triggers:
-  - entity_id: binary_sensor.wyzesense_778e716f
-    to: 'on'
-    trigger: state
-    enabled: true
-  - trigger: state
-    entity_id:
-    - binary_sensor.office_presence_sensor_presence
-    to: 'on'
-  conditions:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: sensor.holly_is_in_bed
-      state: Not In Bed
-    - condition: state
-      entity_id: sensor.mike_is_in_bed
-      state: Not In Bed
-    alias: Either Holly is not in bed or Mike is not in bed (or both)
-  - condition: state
-    entity_id: light.office_fan_light
-    state: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 45
-  actions:
-  - target:
-      entity_id: light.office_fan_light
-    action: homeassistant.turn_on
-    data: {}
-  mode: single
-- id: '1603115550660'
-  alias: Lighting - Office - Motion Light Off
-  description: ''
-  triggers:
-  - entity_id: binary_sensor.wyzesense_778e716f
-    to: 'off'
-    for:
-      hours: 2
-      minutes: 0
-      seconds: 0
-    trigger: state
-    enabled: false
-  - trigger: state
-    entity_id:
-    - binary_sensor.office_presence_sensor_presence
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-  conditions: []
-  actions:
-  - target:
-      entity_id: light.office_fan_light
-    action: homeassistant.turn_off
-    data: {}
-  mode: single
 - id: '1603148838343'
   alias: 00 - Home Assistant - Startup
   description: ''
@@ -379,45 +282,6 @@
       - switch.ymir_plug
     enabled: false
     action: homeassistant.turn_on
-  mode: single
-- id: '1603391662402'
-  alias: Security - 40 Armed - Disarm Security System in the morning when someone
-    gets out of bed
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.bed_sensor_holly
-    from: 'on'
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 5
-  - platform: state
-    entity_id: binary_sensor.bed_sensor_mike
-    from: 'on'
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 5
-  condition:
-  - condition: time
-    before: input_datetime.automatic_security_disarm
-    after: '22:00:00'
-  action:
-  - service: script.security_disarm_system
-    data: {}
-  - condition: state
-    entity_id: binary_sensor.christmas_tree_available
-    state: 'on'
-  - condition: state
-    entity_id: input_boolean.christmas_tree_is_up
-    state: 'on'
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.christmas_tree
-    data: {}
   mode: single
 - id: '1603407121485'
   alias: Notifications - Laundry Room Washer Started
@@ -514,27 +378,6 @@
         == ''off'' %} closed{%- else %} open{% endif %}.'
     action: tts.cloud_say
   mode: single
-- id: '1604420272678'
-  alias: Security - 20 Disarmed - Security System Disarmed
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    to: disarmed
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    target:
-      entity_id: switch.siren
-    data: {}
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=loadStartUrl
-  - service: homeassistant.turn_off
-    data: {}
-    target:
-      entity_id: switch.petcam_plug
-  mode: single
 - id: '1604422426174'
   alias: Security - 90 Triggered - Alert of Exterior Doors (Away)
   description: ''
@@ -561,56 +404,6 @@
         -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
         %} {%- if ns.count > 0 %} open{% else %}No devices are open{% endif %}"
     action: notify.signal_security
-  mode: single
-- id: '1604422951001'
-  alias: Security - 90 Triggered - Start Siren
-  description: ''
-  triggers:
-  - entity_id: alarm_control_panel.home_alarm
-    to: triggered
-    trigger: state
-  conditions: []
-  actions:
-  - data: {}
-    action: script.security_message_open_security_devices
-  - if:
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: sensor.fully_kiosk_browser
-        attribute: currentPageUrl
-        state: https://ha.erdely.in:38123/control-panel/security
-    then:
-    - action: rest_command.fkb_command
-      data:
-        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-    alias: Redirect to Security Panel if not already there
-  - data:
-      message: '{{ states(''input_text.security_message'') }}
-
-        '
-    action: notify.signal_security
-  - action: tts.cloud_say
-    data:
-      cache: false
-      entity_id: media_player.fkb_control_panel
-      message: Alert! You are trespassing. The home owners and the police have been
-        notified. Exit the premises immediately.
-  - repeat:
-      while:
-      - condition: state
-        entity_id: alarm_control_panel.home_alarm
-        state: triggered
-      sequence:
-      - data:
-          topic: cmnd/siren/backlog
-          payload: TuyaSend4 102,14; TuyaSend2 103,59
-        action: mqtt.publish
-      - target:
-          entity_id: switch.siren
-        action: homeassistant.turn_on
-        data: {}
-      - delay: '60'
   mode: single
 - id: '1604856519122'
   alias: Notifications - Laundry Room Dryer Started
@@ -663,241 +456,22 @@
         message: The dryer is done
       action: tts.cloud_say
   mode: single
-- id: '1605633972450'
-  alias: Security - 40 Armed - Re-enable Gate Notifications
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    from: disarmed
-  condition: []
-  action:
-  - service: input_boolean.turn_on
-    data: {}
-    entity_id: input_boolean.gate_notifications
-  mode: single
-- id: '1606763802325'
-  alias: Security - 30 Arming - Announcement (45 seconds to exit)
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    to: arming
-    from: disarmed
-  condition:
-  - condition: state
-    entity_id: binary_sensor.security_devices
-    state: 'off'
-  action:
-  - service: homeassistant.turn_on
-    data: {}
-    target:
-      entity_id: switch.petcam_plug
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=setAudioVolume&level=100
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45_seconds_to_exit.mp3
-  - delay: '10'
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=setAudioVolume&level=60
-  mode: single
-- id: '1606764059402'
-  alias: Security - 30 Arming - Announcement (Cannot Arm)
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    to: arming
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    to: armed_home
-    from: disarmed
-  condition:
-  - condition: or
-    conditions:
-    - condition: and
-      conditions:
-      - condition: template
-        value_template: "{{ expand(\"binary_sensor.interior_doors_and_windows\") |
-          selectattr('state', 'eq', 'on') |\n      list | count > 0 }}"
-      - condition: time
-        before: input_datetime.automatic_security_disarm
-        weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
-        - sat
-        - sun
-        after: input_datetime.ignore_bedroom_slider
-    - condition: and
-      conditions:
-      - condition: template
-        value_template: "{{ expand(\"binary_sensor.interior_doors_and_windows\") |
-          rejectattr('entity_id', 'eq', 'binary_sensor.bedroom_slider_contact')\n
-          \     | selectattr('state', 'eq', 'on') | list | count > 0 }}"
-      - condition: time
-        after: input_datetime.automatic_security_disarm
-        weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
-        - sat
-        - sun
-        before: input_datetime.ignore_bedroom_slider
-  action:
-  - service: script.security_disarm_system
-    data: {}
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=setAudioVolume&level=100
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/cannot_arm.mp3
-  - delay: '10'
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=setAudioVolume&level=60
-  mode: single
-- id: '1606765482798'
-  alias: Security - 80 Pending - Alarm Pending (45 seconds to Disarm)
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    to: pending
-  condition: []
-  action:
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=setAudioVolume&level=100
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-  - delay: '5'
-  - service: rest_command.fkb_command
-    entity_id: media_player.all_speakers
-    data:
-      command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45_seconds_to_enter_code.mp3
-  - delay: '10'
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=setAudioVolume&level=60
-  - service: input_text.set_value
-    data:
-      value: "{%- set ns = namespace(count = 0) %} {%- for entity_id in states.binary_sensor.interior_doors_and_windows.attributes.entity_id
-        %}\n  {%- set domain, device = entity_id.split('.') %}\n  {%- if states[domain][device].state
-        == 'on' -%}\n    {%- set ns.count = ns.count + 1 -%}\n    {%- if ns.count
-        > 1 %} and {% endif -%}\n    {{ state_attr(entity_id,\"friendly_name\") }}\n
-        \ {%- endif %}\n{%- endfor %} {%- if not is_state('cover.garage_door', 'closed')
-        -%}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.count > 1 %} and {%
-        endif -%}\n  Garage Door\n{%- endif %} {%- if ns.count == 0 %} No doors or
-        windows are {%- elif ns.count > 1 %} are{% else %} is{% endif %} Open\n"
-    entity_id: input_text.security_message
-  mode: single
-- id: '1606772769370'
-  alias: Security - 60 Tripped - Trigger Alarm Home
-  description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ expand("group.security_devices") | selectattr(''state'', ''eq'',
-      ''on'') | list | count > 0 }}'
-    for: 00:00:01
-  condition:
-  - condition: state
-    entity_id: alarm_control_panel.home_alarm
-    state: armed_home
-  - condition: or
-    conditions:
-    - condition: and
-      conditions:
-      - condition: template
-        value_template: '{{ trigger.entity_id == "binary_sensor.bedroom_slider_contact"
-          }}'
-      - condition: time
-        before: input_datetime.automatic_security_disarm
-        weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
-        - sat
-        - sun
-        after: input_datetime.ignore_bedroom_slider
-      alias: Is Bedroom Slider
-    - condition: or
-      conditions:
-      - condition: template
-        value_template: '{{ trigger.entity_id != "binary_sensor.bedroom_slider_contact"
-          }}'
-      alias: Is NOT Bedroom Slider
-    alias: Handle Bedroom Slider
-  action:
-  - service: alarm_control_panel.alarm_trigger
-    data: {}
-    entity_id: alarm_control_panel.home_alarm
-  - service: system_log.write
-    data:
-      message: entity_id = {{ trigger.entity_id }} ; now = {{ now() }} ; ignore =
-        {{ today_at(states("input_datetime.ignore_bedroom_slider")) }} ; disarm =
-        {{ today_at(states("input_datetime.automatic_security_disarm")) }}
-    enabled: false
-  trace:
-    stored_traces: 50
-  mode: single
-- id: '1606776219305'
-  alias: Security - 40 Armed - Set Control Panel to Alarm Panel
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    from: disarmed
-  condition: []
-  action:
-  - service: rest_command.fkb_command
-    data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
-  mode: single
-- id: '1606776305027'
-  alias: Security - 60 Tripped - Trigger Alarm Away
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.interior_doors_and_windows
-    to: 'on'
-    for: 00:00:01
-  condition:
-  - condition: state
-    entity_id: alarm_control_panel.home_alarm
-    state: armed_away
-  action:
-  - service: alarm_control_panel.alarm_trigger
-    data: {}
-    entity_id: alarm_control_panel.home_alarm
-  mode: single
 - id: '1606835846142'
   alias: Security - 10 All - Update alarm.state File
   description: ''
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-  condition: []
-  action:
-  - service: notify.send_message
+  triggers:
+  - entity_id: alarm_control_panel.home_alarm
+    trigger: state
+  conditions: []
+  actions:
+  - data:
+      message: '{% if states(''alarm_control_panel.home_alarm'') == "disarmed" %}0{%
+        elif states(''alarm_control_panel.home_alarm'') == "armed_home" %}1{% elif
+        states(''alarm_control_panel.home_alarm'') == "armed_away" %}2{% else %}99{%
+        endif -%}'
+    action: notify.send_message
     target:
       entity_id: notify.alarm_state_file
-    data:
-      message: '{{ states(''alarm_control_panel.home_alarm'') }}'
   mode: single
 - id: '1607035454754'
   alias: Lighting - Office - Mike Desk Lamp Toggle
@@ -911,21 +485,6 @@
     action: homeassistant.toggle
     target:
       entity_id: light.mike_desk_lamp
-  mode: single
-- id: '1607035951583'
-  alias: Lighting - Living Room Lights Off
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: light.near_black_lamp
-    to: 'off'
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    target:
-      entity_id:
-      - light.far_black_lamp
-      - light.white_lamp
   mode: single
 - id: '1607093471372'
   alias: Notifications - Presence - Holly
@@ -1116,26 +675,6 @@
     data:
       option: Select Input
     entity_id: input_select.god_damn_input
-  mode: single
-- id: '1607196597834'
-  alias: TV - Office - Power Off
-  description: ''
-  triggers:
-  - entity_id:
-    - switch.office_tv
-    from: 'on'
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 2
-      seconds: 0
-    trigger: state
-  actions:
-  - data:
-      source: Home
-    target:
-      entity_id: media_player.office_roku_tv
-    action: media_player.select_source
   mode: single
 - id: '1607196620269'
   alias: TV - Bedroom - Power Off
@@ -1481,85 +1020,6 @@
         - action: ARM_HOME
           title: Arm Alarm (Home)
   mode: single
-- id: '1612040347239'
-  alias: TV - Living Room - TV Volume to Soundbar Volume
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: tele/living_room_tv_remote/RESULT
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0E01F" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x070707F8"
-          or trigger.payload_json.IrReceived.DataLSB == "0x70707F8" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_tv_remote/backlog
-          payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0}
-      - service: system_log.write
-        data:
-          message: sony soundbar volume up
-          level: warning
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0D02F" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x07070BF4"
-          or trigger.payload_json.IrReceived.DataLSB == "0x7070BF4" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_tv_remote/backlog
-          payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0}
-      - service: system_log.write
-        data:
-          message: sony soundbar volume down
-          level: warning
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Protocol | lower == "samsung"
-          }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Bits | int(0) == 32 }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.Data == "0xE0E0F00F" }}'
-      - condition: template
-        value_template: '{{ trigger.payload_json.IrReceived.DataLSB == "0x07070FF0"
-          or trigger.payload_json.IrReceived.DataLSB == "0x7070FF0" }}'
-      sequence:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/living_room_tv_remote/backlog
-          payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x140C","DataLSB":"0x2830","Repeat":0}
-      - service: system_log.write
-        data:
-          message: sony soundbar mute
-          level: warning
-    default:
-    - service: system_log.write
-      data:
-        message: 'no condition met: {{ trigger.payload_json.IrReceived }}'
-        level: error
-  - service: system_log.write
-    data:
-      message: 'sony soundbar received: {{ trigger.payload_json.IrReceived }}'
-      level: warning
-  mode: single
 - id: '1613160102079'
   alias: Lighting - Mantle Lights On
   description: ''
@@ -1742,28 +1202,6 @@
         }}\n{% endif -%}{% endfor -%}"
     action: notify.signal_security
   mode: single
-- id: '1618083518993'
-  alias: Lighting - Living Room - Far Black Lamp
-  description: ''
-  trigger:
-  - platform: mqtt
-    topic: cmnd/far_black_lamp/power1
-  condition: []
-  action:
-  - if:
-    - condition: template
-      value_template: '{{ trigger.payload.lower() == "on" }}'
-    then:
-    - service: homeassistant.turn_on
-      target:
-        entity_id: light.far_black_lamp
-      data: {}
-    else:
-    - service: homeassistant.turn_off
-      target:
-        entity_id: light.far_black_lamp
-      data: {}
-  mode: single
 - id: '1622222404078'
   alias: 20 - Home Assistant - Bedtime Tasks
   description: ''
@@ -1827,24 +1265,6 @@
       message: Finishing Bedtime Tasks
       level: warning
     action: system_log.write
-  mode: single
-- id: '1629490638700'
-  alias: TV - Family Room - Change Input (family_room_input)
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_select.family_room_input
-    from: Select Input
-  condition: []
-  action:
-  - service: input_select.select_option
-    data:
-      option: '{{ states(''input_select.family_room_input'') }}'
-    entity_id: input_select.god_damn_input
-  - service: input_select.select_option
-    data:
-      option: Select Input
-    entity_id: input_select.family_room_input
   mode: single
 - id: '1631118685373'
   alias: Notifications - Frigate - Front Door Cam 2
@@ -1913,56 +1333,6 @@
     enabled: false
   mode: single
   max: 10
-- id: '1632758469302'
-  alias: Lighting - Bedroom - Motion Light On
-  description: ''
-  triggers:
-  - entity_id: binary_sensor.bedroom_motion_sensor_occupancy
-    to: 'on'
-    trigger: state
-  conditions:
-  - condition: state
-    entity_id: light.dresser_lamp
-    state: 'off'
-    for: 00:01:00
-  - condition: state
-    entity_id: switch.bedroom_tv
-    state: 'off'
-  - condition: numeric_state
-    entity_id: sensor.bedroom_motion_sensor_illuminance
-    below: '16'
-  - condition: state
-    entity_id: binary_sensor.bed_sensor_holly
-    state: 'off'
-  - condition: state
-    entity_id: binary_sensor.bed_sensor_mike
-    state: 'off'
-  - condition: time
-    after: 06:00:00
-    before: '23:00:00'
-    weekday:
-    - sun
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-    - sat
-  - condition: state
-    entity_id: input_boolean.bedroom_motion_enabled
-    state: 'on'
-  actions:
-  - data:
-      topic: cmnd/dresser_lamp/backlog
-      payload: rule2 off; Delay 40; rule2 on
-      qos: 0
-      retain: false
-    action: mqtt.publish
-  - target:
-      entity_id: light.dresser_lamp
-    data: {}
-    action: homeassistant.turn_on
-  mode: single
 - id: '1632841431902'
   alias: Fan - Master Bath Humidity - Fan On
   description: ''
@@ -2025,115 +1395,85 @@
     target:
       entity_id: switch.master_bath_fan
   mode: single
-- id: '1633300929464'
-  alias: Lighting - Powder Room - Motion Light On
+- id: '1634428046004'
+  alias: Controls - 3D Printer - Turn on OctoPrint Camera
   description: ''
   triggers:
-  - entity_id:
-    - binary_sensor.powder_room_presence_sensor_presence
+  - entity_id: binary_sensor.octoprint_printing
     to: 'on'
     trigger: state
-  conditions:
-  - condition: state
-    entity_id: light.powder_room_light
-    state: 'off'
-    for: 00:01:00
-  - condition: numeric_state
-    entity_id: sensor.powder_room_presence_sensor_illuminance
-    below: 800
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: binary_sensor.bed_sensor_holly
-      state: 'off'
-    - condition: state
-      entity_id: binary_sensor.bed_sensor_mike
-      state: 'off'
+  conditions: []
   actions:
   - data:
-      topic: cmnd/powder_room_light/backlog
-      payload: SetOption73 1; Delay 30; SetOption73 0
-    action: mqtt.publish
-  - target:
-      entity_id: light.powder_room_light
-    data: {}
-    action: homeassistant.turn_on
-  mode: single
-- id: '1634428046004'
-  alias: OctoPrint - Turn on Camera
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.octoprint_printing
-    to: 'on'
-  condition: []
-  action:
-  - service: shell_command.ssh_command
-    data:
       server: ha@carpo.erdely.in
       command: start_camera
-  - service: homeassistant.update_entity
-    target:
+    action: shell_command.ssh_command
+  - target:
       entity_id: binary_sensor.octoprint_camera_status
-  - service: homeassistant.turn_on
-    target:
+    action: homeassistant.update_entity
+    data: {}
+  - target:
       entity_id: switch.octoprint_light_plug
+    action: homeassistant.turn_on
+    data: {}
   mode: single
 - id: '1634428228462'
-  alias: OctoPrint - Turn off Camera
+  alias: Controls - 3D Printer - Turn off OctoPrint Camera
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.octoprint_printing
+  triggers:
+  - entity_id: binary_sensor.octoprint_printing
     to: 'off'
     for:
       hours: 0
       minutes: 15
       seconds: 0
-      milliseconds: 0
-  condition: []
-  action:
-  - service: shell_command.ssh_command
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       server: ha@carpo.erdely.in
       command: stop_camera
-  - service: homeassistant.update_entity
-    target:
+    action: shell_command.ssh_command
+  - target:
       entity_id: binary_sensor.octoprint_camera_status
-  - service: homeassistant.turn_off
-    target:
+    action: homeassistant.update_entity
+    data: {}
+  - target:
       entity_id: switch.octoprint_light_plug
+    action: homeassistant.turn_off
+    data: {}
   mode: single
 - id: '1635180091668'
-  alias: Controls - Power On Ender3 Screen with Ender 3
+  alias: Controls - 3D Printer - Power On Ender3 Screen with Ender 3
   description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.ender3_plug
+  triggers:
+  - entity_id: switch.ender3_plug
     to: 'on'
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
+    trigger: state
+  conditions: []
+  actions:
+  - target:
       entity_id: switch.guest_room_usb_hub
+    action: homeassistant.turn_on
+    data: {}
   mode: single
 - id: '1635180126214'
-  alias: Controls - Power Off Ender3 Screen with Ender 3
+  alias: Controls - 3D Printer - Power Off Ender3 Screen with Ender 3
   description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.ender3_plug
+  triggers:
+  - entity_id: switch.ender3_plug
     to: 'off'
     for:
       hours: 0
       minutes: 0
       seconds: 30
-      milliseconds: 0
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    target:
+    trigger: state
+  conditions: []
+  actions:
+  - target:
       entity_id: switch.guest_room_usb_hub
+    action: homeassistant.turn_off
+    data: {}
   mode: single
 - id: '1635775206466'
   alias: Controls - Save Holly In Bed State
@@ -2319,6 +1659,7 @@
       minutes: 5
       seconds: 0
     trigger: numeric_state
+    enabled: false
   - entity_id: sensor.unavailable_entities
     for:
       hours: 0
@@ -2326,6 +1667,14 @@
       seconds: 30
     below: '1'
     trigger: numeric_state
+    enabled: false
+  - trigger: template
+    value_template: '{{ state_attr("sensor.unavailable_entities", "entity_list") |
+      length > 0 }}'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
   - entity_id: binary_sensor.bitwarden_add_on_running
     for:
       hours: 0
@@ -2635,26 +1984,23 @@
 - id: '1645068726044'
   alias: Security - 40 Armed - Disarm Security System in the morning after 6:30
   description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.automatic_security_disarm
-  condition:
-  - condition: state
-    entity_id: group.holly_mike
-    state: home
-  action:
-  - service: script.security_disarm_system
-    data: {}
+  triggers:
+  - at: input_datetime.automatic_security_disarm
+    trigger: time
+  conditions: []
+  actions:
+  - data: {}
+    action: script.security_disarm_system
   - condition: state
     entity_id: binary_sensor.christmas_tree_available
     state: 'on'
   - condition: state
     entity_id: input_boolean.christmas_tree_is_up
     state: 'on'
-  - service: homeassistant.turn_on
-    target:
+  - target:
       entity_id: switch.christmas_tree
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1650048811718'
   alias: Lighting - Fix 3-way Lights
@@ -3117,40 +2463,6 @@
       - light.kitchen_table_light
       - light.foyer_light
   mode: single
-- id: '1688076582161'
-  alias: Lighting - Sync Bulb Status
-  description: ''
-  triggers:
-  - entity_id:
-    - light.dresser_lamp
-    - light.dresser_switch
-    - light.white_lamp
-    - light.white_switch
-    - light.front_porch_light
-    - light.front_porch_switch
-    - light.god_damn_switch
-    - light.god_damn_bulb
-    to: 'off'
-    trigger: state
-  conditions: []
-  actions:
-  - data:
-      level: error
-      message: Turning off {{ trigger.entity_id | replace('_lamp', '_bulb') | replace('_light',
-        '_bulb') }}
-    action: system_log.write
-  - data: {}
-    target:
-      entity_id: '{{ trigger.entity_id | replace(''_lamp'', ''_bulb'') | replace(''_light'',
-        ''_bulb'') }}'
-    action: homeassistant.turn_off
-  - data:
-      entity_id: '{{ trigger.entity_id | replace(''_lamp'', ''_bulb'') | replace(''_light'',
-        ''_bulb'') }}'
-      state: 'off'
-    action: python_script.set_state
-  mode: parallel
-  max: 10
 - id: '1704658454909'
   alias: Lighting - Toggle Garage Door Light
   description: ''
@@ -3229,54 +2541,6 @@
       entity_id:
       - '{{ trigger.entity_id }}'
     action: homeassistant.turn_on
-  mode: single
-- id: '1712846768542'
-  alias: Lighting - Disable Automatic Living Room Light Turn Off If Used
-  description: If someone goes into the living room and or uses anything in the living
-    room, disable the automatic turning off of the living room light
-  triggers:
-  - entity_id:
-    - media_player.living_room_roku_tv
-    - light.near_black_lamp
-    - light.white_lamp
-    - light.far_black_lamp
-    trigger: state
-  - entity_id:
-    - binary_sensor.living_room_motion_sensor_occupancy
-    attribute: occupancy
-    enabled: true
-    trigger: state
-  conditions:
-  - condition: state
-    entity_id: input_boolean.automatic_living_room_light
-    state: 'on'
-  actions:
-  - metadata: {}
-    data: {}
-    target:
-      entity_id: input_boolean.automatic_living_room_light
-    action: homeassistant.turn_off
-  mode: single
-- id: '1712846900243'
-  alias: Lighting - Turn off Near Living Room Lamp After Sunset
-  description: Unless some action forced it to stay on
-  triggers:
-  - event: sunset
-    offset: 00:15:00
-    trigger: sun
-  conditions:
-  - condition: state
-    entity_id: input_boolean.automatic_living_room_light
-    state: 'on'
-    enabled: true
-  actions:
-  - metadata: {}
-    data: {}
-    target:
-      entity_id:
-      - input_boolean.automatic_living_room_light
-      - light.near_black_lamp
-    action: homeassistant.turn_off
   mode: single
 - id: '1720882109923'
   alias: Lighting - Living Room - White Lamp
@@ -3361,71 +2625,6 @@
     target:
       entity_id: lock.front_door_zwave
   mode: single
-- id: '1736483323342'
-  alias: Thermostat - Reset Furnace If 4 Degrees of Target (Heat)
-  description: ''
-  triggers:
-  - alias: When the Thermstat Temperature is more than 3 degress less than the Thermostat
-      Target
-    trigger: template
-    value_template: '{{ state_attr("climate.thermostat", "current_temperature") +
-      2 < state_attr("climate.thermostat", "temperature") }}'
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 0
-  conditions:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: climate.thermostat
-      attribute: hvac_action
-      state: heating
-    alias: Heat is not currently running
-    enabled: false
-  - condition: state
-    entity_id: climate.thermostat
-    state: heat
-  actions:
-  - action: switch.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id: switch.furnace_switch
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-  - action: switch.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: switch.furnace_switch
-  mode: single
-- id: '1736744742720'
-  alias: Assist - Play title on roku TV
-  description: ''
-  triggers:
-  - trigger: conversation
-    command:
-    - Play {title} on the {roku} TV
-    - Play {title} on {roku} TV
-    - Play {title} on {roku} Roku
-  conditions: []
-  actions:
-  - target:
-      entity_id: switch.{{ trigger.slots.roku | lower }}_tv
-    action: homeassistant.turn_on
-    data: {}
-  - action: shell_command.play_plex_on_roku
-    alias: Play show on Plex on Roku
-    data:
-      roku: '{{ trigger.slots.roku | lower }}'
-      tvshow: '{{ trigger.slots.title }}'
-    response_variable: response
-  - set_conversation_response: Playing "{{ trigger.slots.title }}" on the {{ trigger.slots.roku
-      }} TV
-  mode: single
 - id: '1737680625031'
   alias: Turn on God Damn Switch LEDs when Bulb Turns Off
   description: ''
@@ -3463,21 +2662,6 @@
       topic: cmnd/god_damn_switch2/ledstate
       payload: '0'
     action: mqtt.publish
-  mode: single
-- id: '1738255798106'
-  alias: ++++Notify Mike when Office Presence Changes
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.office_presence_sensor_presence
-  conditions: []
-  actions:
-  - action: notify.signal_mike
-    metadata: {}
-    data:
-      message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} changed to
-        {{ states(trigger.entity_id) }}'
   mode: single
 - id: '1738787365600'
   alias: Ping Zwave when not seen for a while
@@ -3590,111 +2774,6 @@
     data: {}
   - set_conversation_response: Good night
   mode: single
-- id: '1740671742079'
-  alias: Controls - Picframe Clock
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_holly
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_mike
-  - trigger: state
-    entity_id:
-    - light.dresser_lamp
-  - trigger: state
-    entity_id:
-    - light.bedroom_fan_light
-  - trigger: state
-    entity_id:
-    - light.holly_nightstand_lamp
-  - trigger: state
-    entity_id:
-    - switch.bedroom_tv
-  conditions:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: binary_sensor.bed_sensor_holly
-      state: 'on'
-    - condition: state
-      entity_id: binary_sensor.bed_sensor_mike
-      state: 'on'
-    alias: Someone is in bed
-  - condition: or
-    conditions:
-    - condition: template
-      value_template: '{{ states(''sensor.bedroom_lights_on'') | int(0) != 0 }}'
-    - condition: state
-      entity_id: switch.bedroom_tv
-      state: 'on'
-    alias: Any Bedroom Lights or TV are on
-  actions:
-  - action: shell_command.ssh_command
-    data:
-      server: picframe@sinope.erdely.in
-      command: get_state
-    response_variable: current_state
-    alias: Get Picture Frame's Current State
-  - if:
-    - condition: template
-      value_template: '{{ current_state[''stdout''] != "clock" }}'
-    then:
-    - action: shell_command.ssh_command
-      data:
-        server: picframe@sinope.erdely.in
-        command: load_clock
-      alias: Load Clock on Picture Frame
-    alias: Load the Clock
-  mode: single
-- id: '1740672747834'
-  alias: Controls - Picframe Pictures
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_holly
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_mike
-  - trigger: state
-    entity_id:
-    - light.dresser_bulb
-  - trigger: state
-    entity_id:
-    - light.bedroom_fan_light
-  - trigger: state
-    entity_id:
-    - light.holly_nightstand_lamp
-  - trigger: state
-    entity_id:
-    - switch.bedroom_tv
-  conditions:
-  - condition: state
-    entity_id: binary_sensor.bed_sensor_holly
-    state: 'off'
-  - condition: state
-    entity_id: binary_sensor.bed_sensor_mike
-    state: 'off'
-  actions:
-  - action: shell_command.ssh_command
-    data:
-      server: picframe@sinope.erdely.in
-      command: get_state
-    response_variable: current_state
-    alias: Get Picture Frame's Current State
-  - if:
-    - condition: template
-      value_template: '{{ current_state[''stdout''] != "picframe" }}'
-    then:
-    - alias: Load Clock on Picture Frame
-      action: shell_command.ssh_command
-      data:
-        server: picframe@sinope.erdely.in
-        command: load_picframe
-    alias: Load Pictures
-  mode: single
 - id: '1740683605204'
   alias: Assist - Leaving Home
   description: ''
@@ -3718,62 +2797,6 @@
     data: {}
   - set_conversation_response: Have a good day
   mode: single
-- id: '1740714501926'
-  alias: Controls - Picture Frame Blank
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_holly
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_mike
-  - trigger: state
-    entity_id:
-    - light.dresser_lamp
-  - trigger: state
-    entity_id:
-    - light.bedroom_fan_light
-  - trigger: state
-    entity_id:
-    - light.holly_nightstand_lamp
-  - trigger: state
-    entity_id:
-    - switch.bedroom_tv
-  conditions:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: binary_sensor.bed_sensor_holly
-      state: 'on'
-    - condition: state
-      entity_id: binary_sensor.bed_sensor_mike
-      state: 'on'
-    alias: Someone is in bed
-  - condition: template
-    value_template: '{{ states(''sensor.bedroom_lights_on'') | int(0) == 0 }}'
-    alias: No Bedroom Lights are on
-  - condition: state
-    entity_id: switch.bedroom_tv
-    state: 'off'
-  actions:
-  - action: shell_command.ssh_command
-    data:
-      server: picframe@sinope.erdely.in
-      command: get_state
-    response_variable: current_state
-    alias: Get Picture Frame's Current State
-  - if:
-    - condition: template
-      value_template: '{{ current_state[''stdout''] != "blank" }}'
-    then:
-    - alias: Load Clock on Picture Frame
-      action: shell_command.ssh_command
-      data:
-        server: picframe@sinope.erdely.in
-        command: blank
-    alias: Blank the Screen
-  mode: single
 - id: '1741306717937'
   alias: Music Assistant - Local LLM Enhanced Voice Support Blueprint
   description: ''
@@ -3782,182 +2805,6 @@
     input:
       llm_agent: conversation.home_assistant
       default_player: media_player.office_speaker
-- id: '1741320064454'
-  alias: Controls - Picture Frame
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_holly
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_holly
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_mike
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor_mike
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - light.dresser_lamp
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - light.dresser_lamp
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - light.bedroom_fan_light
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - light.bedroom_fan_light
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - light.holly_nightstand_lamp
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - light.holly_nightstand_lamp
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - switch.bedroom_tv
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  - trigger: state
-    entity_id:
-    - switch.bedroom_tv
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: template
-          value_template: '{% if states(''light.master_bath_light'') == "on" %}{{
-            states(''sensor.bedroom_lights_on'') | int(0) - 1 > 0 }}{% else %}{{ states(''sensor.bedroom_lights_on'')
-            | int(0) > 0 }}{% endif %}'
-          alias: Bedroom Lights are On
-        - condition: numeric_state
-          entity_id: sensor.number_in_bed
-          below: 1
-          alias: Nobody in Bed
-        - condition: state
-          entity_id: switch.bedroom_tv
-          state: 'on'
-          enabled: true
-      sequence:
-      - action: shell_command.ssh_command
-        data:
-          server: picframe@sinope.erdely.in
-          command: get_state
-        response_variable: current_state
-        alias: Get Picture Frame's Current State
-      - condition: template
-        value_template: '{{ current_state[''stdout''] != "picframe" }}'
-        alias: Picture Frame not already showing Pictures
-      - alias: Load Pictures on Picture Frame
-        action: shell_command.ssh_command
-        data:
-          server: picframe@sinope.erdely.in
-          command: picframe
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: template
-          value_template: '{% if states(''light.master_bath_light'') == "on" %}{{
-            states(''sensor.bedroom_lights_on'') | int(0) - 1 > 0 }}{% else %}{{ states(''sensor.bedroom_lights_on'')
-            | int(0) > 0 }}{% endif %}'
-          alias: Bedroom Lights are On
-        - condition: template
-          value_template: '{{ states(''sensor.number_home'') | int(0) > states(''sensor.number_in_bed'')
-            | int(0) }}'
-          alias: More People Home than in Bed
-        - condition: state
-          entity_id: switch.bedroom_tv
-          state: 'on'
-        - condition: and
-          conditions:
-          - condition: numeric_state
-            entity_id: sensor.number_in_bed
-            above: 0
-          - condition: numeric_state
-            entity_id: sensor.bedroom_lights_on
-            below: 1
-          - condition: state
-            entity_id: switch.bedroom_tv
-            state: 'off'
-          - condition: template
-            value_template: '{{ sensor(''sensor.number_home'') > sensor(''sensor.number_in_bed'')
-              }}'
-      sequence:
-      - alias: Load Clock on Picture Frame
-        action: shell_command.ssh_command
-        data:
-          server: picframe@sinope.erdely.in
-          command: clock
-    default:
-    - alias: Blank Picture Frame
-      action: shell_command.ssh_command
-      data:
-        server: picframe@sinope.erdely.in
-        command: blank
-  mode: single
 - id: '1741888508340'
   alias: Controls - Picframe (timebased)
   description: ''
@@ -4041,4 +2888,30 @@
     data:
       server: picframe@sinope.erdely.in
       command: reload
+  mode: single
+- id: '1745466993579'
+  alias: Temp Automation - Charge Mike's Phone
+  description: ''
+  triggers:
+  - trigger: time
+    at: '13:00:00'
+  conditions: []
+  actions:
+  - data: {}
+    target:
+      entity_id: switch.office_heater_plug
+    action: homeassistant.turn_on
+  mode: single
+- id: '1745467026998'
+  alias: Temp Automation - Turn off Charging Mike's Phone
+  description: ''
+  triggers:
+  - trigger: time
+    at: '15:00:00'
+  conditions: []
+  actions:
+  - data: {}
+    target:
+      entity_id: switch.office_heater_plug
+    action: homeassistant.turn_off
   mode: single

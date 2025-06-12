@@ -1,7 +1,10 @@
 #!/bin/sh
 
+#statefile=alarm.state
+statefile=FToWPiV68vhCo1loCXAvIwoD58dw3QMs2pUKc4b5RHmNEkux5eYDgsIPbVqXh3ka
+
 hapath=/srv/docker/homeassistant
 [ -f /config/.HA_VERSION ] && hapath=/config
 
-curstate=$(tail -n1 $hapath/www/alarm.state)
-echo "$curstate" > $hapath/www/alarm.state
+curstate=$(tail -n1 $hapath/www/$statefile)
+echo "$curstate" > $hapath/www/$statefile

@@ -30,7 +30,14 @@
                         {
                           "type": "custom:button-card",
                           "entity": "input_boolean.mail_delivered",
-                          "name": "Mail"
+                          "name": "Mail",
+                          "styles": {
+                            "icon": [
+                              {
+                                "color": "[[[ if (entity.state == \"on\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
+                              }
+                            ]
+                          }
                         },
                         {
                           "type": "custom:button-card",
@@ -42,7 +49,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.state == \"Today\") return \"green\";\n    else if (entity.state == \"Tomorrow\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                                "color": "[[[ if (entity.state == \"Today\") return \"green\";\n    else if (entity.state == \"Tomorrow\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                               }
                             ]
                           }
@@ -61,7 +68,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.state == \"Today\" && states['input_boolean.trash_is_out'].state == \"off\") return \"red\";\n    else if (entity.state == \"Tomorrow\" && states['input_boolean.trash_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                                "color": "[[[ if (entity.state == \"Today\" && states['input_boolean.trash_is_out'].state == \"off\") return \"red\";\n    else if (entity.state == \"Tomorrow\" && states['input_boolean.trash_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                               }
                             ]
                           }
@@ -80,7 +87,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.attributes.days_string == \"Today\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"red\";\n    else if (entity.attributes.days_string == \"Tomorrow\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                                "color": "[[[ if (entity.attributes.days_string == \"Today\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"red\";\n    else if (entity.attributes.days_string == \"Tomorrow\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                               }
                             ]
                           }
@@ -88,7 +95,7 @@
                         {
                           "type": "custom:button-card",
                           "entity": "binary_sensor.security_devices",
-                          "name": "[[[ if (entity.state == \"off\") return \"Closed\"; else return \"Open\"; ]]]\n",
+                          "name": "[[[ if (states['alarm_control_panel.home_alarm'].state != 'disarmed') return states['sensor.alarm_state_pretty'].state; else if (entity.state == \"off\") return \"Closed\"; else return \"Open\"; ]]]\n",
                           "icon": "[[[ if (entity.state == \"off\") return \"mdi:shield-lock-outline\"; else return \"mdi:shield-lock-open-outline\"; ]]]\n",
                           "tap_action": {
                             "action": "navigate",
@@ -100,7 +107,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.state != 'off') return 'var(--state-active-color)'; else return 'var(--paper-item-icon-color)' ]]]"
+                                "color": "[[[ if (states['alarm_control_panel.home_alarm'].state != 'disarmed') return 'red'; else if (entity.state != 'off') return 'var(--state-active-color)'; else return 'var(--state-icon-color)' ]]]"
                               }
                             ]
                           }
@@ -151,7 +158,7 @@
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "32px",
-                                  "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--paper-item-icon-color){% endif %}\n"
+                                  "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--state-icon-color){% endif %}\n"
                                 },
                                 "button": {
                                   "font-size": "16px",
@@ -161,7 +168,7 @@
                             }
                           ],
                           "card_mod": {
-                            "style": "ha-card {\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-icon-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--paper-item-icon-color){% endif %};\n}\n"
+                            "style": "ha-card {\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-icon-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--state-icon-color){% endif %};\n}\n"
                           }
                         },
                         {
@@ -172,7 +179,7 @@
                       ],
                       "state_color": true,
                       "card_mod": {
-                        "style": "ha-card {\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-icon-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--paper-item-icon-color){% endif %};\n}\n"
+                        "style": "ha-card {\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-icon-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--state-icon-color){% endif %};\n}\n"
                       }
                     },
                     {
@@ -361,7 +368,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                                "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                               }
                             ]
                           }
@@ -386,7 +393,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                                "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                               }
                             ]
                           }
@@ -411,7 +418,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                                "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                               }
                             ]
                           }
@@ -436,7 +443,7 @@
                           "styles": {
                             "icon": [
                               {
-                                "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--paper-item-icon-color)\" ]]]"
+                                "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
                               }
                             ]
                           }
@@ -515,6 +522,13 @@
                           "name": "PetCam",
                           "hold_action": {
                             "action": "none"
+                          },
+                          "styles": {
+                            "icon": [
+                              {
+                                "color": "[[[ if (entity.state == 'on') return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
+                              }
+                            ]
                           }
                         },
                         {
@@ -527,7 +541,14 @@
                             "target": {}
                           },
                           "entity": "script.scene_leaving_home",
-                          "name": "Leaving Home"
+                          "name": "Leaving Home",
+                          "styles": {
+                            "icon": [
+                              {
+                                "color": "[[[ if (entity.state == 'on') return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
+                              }
+                            ]
+                          }
                         }
                       ]
                     },
@@ -1798,7 +1819,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "tile",
@@ -1922,11 +1943,9 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
-                      "type": "tile",
-                      "entity": "alarm_control_panel.home_alarm",
                       "features": [
                         {
                           "type": "alarm-modes",
@@ -1936,7 +1955,11 @@
                             "disarmed"
                           ]
                         }
-                      ]
+                      ],
+                      "type": "tile",
+                      "entity": "alarm_control_panel.home_alarm",
+                      "features_position": "bottom",
+                      "vertical": false
                     },
                     {
                       "type": "entities",
@@ -1956,9 +1979,6 @@
                         },
                         {
                           "entity": "binary_sensor.den_motion_sensor_occupancy"
-                        },
-                        {
-                          "entity": "binary_sensor.powder_room_presence_sensor_presence"
                         },
                         {
                           "entity": "binary_sensor.powder_room_water_leak_sensor"
@@ -2029,239 +2049,79 @@
         },
         {
           "type": "panel",
-          "path": "cameras",
+          "title": "Cameras3",
+          "path": "cameras3",
+          "icon": "mdi:cctv",
           "cards": [
             {
-              "type": "vertical-stack",
+              "square": false,
+              "type": "grid",
+              "columns": 2,
               "cards": [
                 {
-                  "type": "horizontal-stack",
+                  "type": "vertical-stack",
                   "cards": [
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
-                    }
-                  ]
-                },
-                {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.garage_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.front_door_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.front_door_cam_2",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    }
-                  ]
-                },
-                {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.shed_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.backyard_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "auto",
-                      "type": "picture-entity",
-                      "entity": "camera.chimney_cam",
-                      "image": "https://demo.home-assistant.io/stub_config/bedroom.png"
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          "title": "Cameras",
-          "icon": "mdi:cctv"
-        },
-        {
-          "type": "panel",
-          "path": "cameras2",
-          "cards": [
-            {
-              "type": "vertical-stack",
-              "cards": [
-                {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
-                    },
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
-                    }
-                  ]
-                },
-                {
-                  "square": false,
-                  "type": "grid",
-                  "columns": 3,
-                  "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "empty-column"
-                    },
-                    {
-                      "show_state": false,
-                      "show_name": false,
-                      "camera_view": "live",
-                      "type": "picture-entity",
-                      "entity": "camera.garage_door_cam",
-                      "camera_image": "camera.garage_door_cam"
-                    },
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "empty-column"
-                    },
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "empty-column"
-                    },
-                    {
-                      "square": false,
-                      "type": "grid",
-                      "columns": 4,
-                      "cards": [
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
                         {
-                          "show_name": false,
-                          "show_icon": true,
-                          "type": "button",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "onvif.ptz",
-                            "target": {
-                              "entity_id": "camera.garage_door_cam"
-                            },
-                            "data": {
-                              "distance": 0.25,
-                              "speed": 0.5,
-                              "move_mode": "ContinuousMove",
-                              "pan": "LEFT"
-                            }
-                          },
-                          "entity": "camera.garage_door_cam",
-                          "name": "Left",
-                          "icon": "mdi:arrow-left-bold"
+                          "camera_entity": "camera.front_door"
                         },
                         {
-                          "show_name": false,
-                          "show_icon": true,
-                          "type": "button",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "onvif.ptz",
-                            "target": {
-                              "entity_id": "camera.garage_door_cam"
-                            },
-                            "data": {
-                              "distance": 0.25,
-                              "speed": 0.5,
-                              "move_mode": "ContinuousMove",
-                              "pan": "RIGHT"
-                            }
-                          },
-                          "entity": "camera.garage_door_cam",
-                          "name": "Right",
-                          "icon": "mdi:arrow-right-bold"
+                          "camera_entity": "camera.front_door_2"
                         },
                         {
-                          "show_name": false,
-                          "show_icon": true,
-                          "type": "button",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "onvif.ptz",
-                            "target": {
-                              "entity_id": "camera.garage_door_cam"
-                            },
-                            "data": {
-                              "distance": 0.5,
-                              "speed": 0.5,
-                              "move_mode": "ContinuousMove",
-                              "tilt": "UP"
-                            }
-                          },
-                          "entity": "camera.garage_door_cam",
-                          "name": "Up",
-                          "icon": "mdi:arrow-up-bold"
-                        },
-                        {
-                          "show_name": false,
-                          "show_icon": true,
-                          "type": "button",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "onvif.ptz",
-                            "target": {
-                              "entity_id": "camera.garage_door_cam"
-                            },
-                            "data": {
-                              "distance": 0.5,
-                              "speed": 0.5,
-                              "move_mode": "ContinuousMove",
-                              "tilt": "DOWN"
-                            }
-                          },
-                          "entity": "camera.garage_door_cam",
-                          "name": "Down",
-                          "icon": "mdi:arrow-down-bold"
+                          "camera_entity": "camera.garage"
                         }
-                      ]
+                      ],
+                      "live": {
+                        "preload": true,
+                        "lazy_load": true,
+                        "auto_play": [
+                          "visible"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:html-template-card",
+                      "ignore_line_breaks": true,
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td.left1 {\n    text-align: left;\n    line-height: 1;\n    font-size: 32px;\n    width: 20%;\n  }\n  td.right1 {\n    text-align: right;\n    line-height: 1;\n    font-size: 32px;\n  }\n</style> <table><tr> {% if states(\"binary_sensor.spotify_broadcasting\") != \"on\" %} <td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\"  width=30 /> Holly</td> <td class=right1>{{ states('sensor.holly_location') }}</font></td></tr> <tr><td class=left1> <img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /> Mike</td> <td class=right1>{{ states('sensor.mike_location') }}</font></td> {% else %} <td><ha-icon icon=\"mdi:spotify\"></ha-icon> {% if states(\"sensor.spotify_artist_title\") == \"None - None\" %}Nothing playing{% else %}{{ states(\"sensor.spotify_artist_title\") }}{% endif %}</tr> {% endif %} </tr></table>\n"
                     },
                     {
-                      "type": "custom:bubble-card",
-                      "card_type": "empty-column"
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.backyard"
+                        },
+                        {
+                          "camera_entity": "camera.shed"
+                        },
+                        {
+                          "camera_entity": "camera.chimney"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ]
+                      }
                     }
                   ]
                 }
               ]
             }
-          ],
-          "title": "Cameras2",
-          "icon": "mdi:cctv"
+          ]
         },
         {
           "type": "panel",
@@ -2277,12 +2137,12 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: none;\n  }\n  td {\n    line-height: none;\n  }\n  td.left {\n    text-align: left;\n    border: none;\n    width: none;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--paper-item-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <table> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\"> {{ state_attr(software, 'title') | replace('Operating System', 'OS') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endfor -%} <tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr> <td class=\"{{'off-icon' if states(software|replace('_latest','')) == states(software) else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></td> <td class=\"left {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software|replace('_latest','')) }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software) }}</td> </tr> {% endfor -%} <tr> <td class=\"{{'off-icon' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}\"></ha-icon></td> <td class=\"left {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">OPNsense</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ states('sensor.opnsense_versions') }}</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</td> </tr> {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr> <td class=\"{{'off-icon' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}' /></td> <td class=\"left {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">OPNsense {{ plugin[:11] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</td> </tr> {% endfor -%} {% set ns = namespace(cv=[],lv=[]) %} {% for ap in state_attr('sensor.unifi_ap_versions', 'data') | sort(attribute=\"name\") -%} {% if ap['version'] not in ns.cv and ap['version_available'] not in ns.lv -%} {% set ns.cv=ns.cv + [ap['version']] -%} {% set ns.lv=ns.lv + [ap['version_available']] -%} <tr> <td class=\"{{'off-icon' if ap['version'] == ap['version_available'] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}' /></td> <td class=\"left {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">Unifi {{ ap['name'] | replace('wap-','') | title }} AP</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version_available'] }}</td> </tr> {% endif %} {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td class=warning> <ha-icon icon='mdi:alert-circle'></ha-icon></td><td colspan=\"3\" class=warning>Error: Could not load Unifi Data</td></tr>{% endif %}\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: none;\n  }\n  td {\n    line-height: none;\n  }\n  td.left {\n    text-align: left;\n    border: none;\n    width: none;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <table> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\"> {{ state_attr(software, 'title') | replace('Operating System', 'OS') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endfor -%} <tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr> <td class=\"{{'off-icon' if states(software|replace('_latest','')) == states(software) else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></td> <td class=\"left {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\"> {{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software|replace('_latest','')) }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software) }}</td> </tr> {% endfor -%} <tr> <td class=\"{{'off-icon' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}\"></ha-icon></td> <td class=\"left {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">OPNsense</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ states('sensor.opnsense_versions') }}</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</td> </tr> {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr> <td class=\"{{'off-icon' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}' /></td> <td class=\"left {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">OPNsense {{ plugin[:11] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</td> </tr> {% endfor -%} {% set ns = namespace(cv=[],lv=[]) %} {% for ap in state_attr('sensor.unifi_ap_versions', 'data') | sort(attribute=\"name\") -%} {% if ap['version'] not in ns.cv and ap['version_available'] not in ns.lv -%} {% set ns.cv=ns.cv + [ap['version']] -%} {% set ns.lv=ns.lv + [ap['version_available']] -%} <tr> <td class=\"{{'off-icon' if ap['version'] == ap['version_available'] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}' /></td> <td class=\"left {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">Unifi {{ ap['name'] | replace('wap-','') | title }} AP</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version_available'] }}</td> </tr> {% endif %} {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td class=warning> <ha-icon icon='mdi:alert-circle'></ha-icon></td><td colspan=\"3\" class=warning>Error: Could not load Unifi Data</td></tr>{% endif %}\n"
                     }
                   ]
                 },
@@ -2297,7 +2157,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--paper-item-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n</style> <table> {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'title') != None and state_attr(software, 'device_class') != 'firmware' %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\"> {{ state_attr(software, 'title') | replace('Home Assistant', '') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('Google Drive Backup', 'Google Backup') | replace('UniFi Network Application', 'UniFi') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') | replace(' (Bitwarden)', '') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr>{% endif -%}{% endfor -%} </table>"
+                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n</style> <table> {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'title') != None and state_attr(software, 'device_class') != 'firmware' %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\"> {{ state_attr(software, 'title') | replace('Home Assistant', '') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('Google Drive Backup', 'Google Backup') | replace('UniFi Network Application', 'UniFi') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') | replace(' (Bitwarden)', '') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr>{% endif -%}{% endfor -%} </table>"
                     }
                   ]
                 }
@@ -2322,7 +2182,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "horizontal-stack",
@@ -2987,7 +2847,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:auto-entities",
@@ -3088,7 +2948,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:auto-entities",
@@ -3189,7 +3049,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:auto-entities",
@@ -3290,7 +3150,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "custom:auto-entities",
@@ -3505,7 +3365,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--paper-item-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
+                      "content": "<style>\n  table {\n    width: 100%;\n    height: 110px;\n  }\n  td {\n    text-align: center;\n    line-height: 1;\n  }\n  td.left {\n    width: 36%;\n  }\n  td.right {\n    border-left: 2px solid white;\n  }\n  .clock {\n    font-size: 56px;\n  }\n  .battery-status {\n    font-size: 56px;\n  }\n  .battery-status ha-icon {\n    color: var(--state-icon-color);\n    --mdc-icon-size: 56px;\n  }\n</style> <table> <tr> <td class=left><span class=clock> {{ states('sensor.time_formatted') }} </span></td> <td class=right><span class=battery-status> <ha-icon icon=\"mdi:battery\"></ha-icon> Panel: {{ states(\"sensor.fully_kiosk_browser\") }}%</span></td> </tr> </table>\n"
                     },
                     {
                       "type": "entities",
