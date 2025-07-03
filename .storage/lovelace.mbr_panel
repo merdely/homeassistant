@@ -16,78 +16,32 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "type": "custom:button-card",
-                      "entity_picture": "/local/images/homeassistant-icon.png",
-                      "show_entity_picture": true,
-                      "size": "100%",
-                      "styles": {
-                        "card": [
-                          {
-                            "border-radius": "10%"
-                          },
-                          {
-                            "width": "126px"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n table {\n   width: 100%;\n   border: none;\n }\n td.left {\n   width: 20;\n   text-align: left;\n   color: var(--state-icon-color);\n }\n td.right {\n   text-align: right;\n   font-size: 18px;\n }\n .laundry-status {\n   {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' -%}\n   color: var(--state-active-color);\n   {% endif %}\n }\n </style>\n <table>\n <tr><td class=left><ha-icon\n icon=\"mdi:face-woman\"></ha-icon></td></td>\n <td class=right>{{ states('person.holly_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title\n }}</td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:face-man\"></ha-icon></font></td>\n <td class=right>{{ states('person.michael_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:washing-machine\"></ha-icon></td>\n <td class=right><span class=laundry-status>{{\n states('sensor.washer_and_dryer_state') }}</td></tr>\n </table>\n"
-                    }
-                  ]
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "tap_action": {
-                    "action": "navigate",
-                    "navigation_path": "#utilities"
-                  },
-                  "entity": "button.homeassistant_reload",
-                  "name": "Utils",
+                  "type": "picture",
+                  "image": "/local/images/homeassistant-icon.png",
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
-                  },
-                  "icon": "mdi:tools",
-                  "hold_action": {
-                    "action": "none"
+                    "rows": "auto"
                   }
+                },
+                {
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "grid_options": {
+                    "columns": 9,
+                    "rows": "auto"
+                  },
+                  "content": "<style>\n * {\n   padding-top: 1px !important;\n   padding-bottom: 1px !important;\n }\n table {\n   width: 100%;\n }\n table, th, tr, td {\n   border: none; // 1px solid white;\n }\n ha-icon, ha-svg-icon, svg {\n   width: 20px !important;\n   height: 20px !important;\n   display: block !important;\n }\n td.left {\n   width: 20;\n   text-align: left;\n   color: var(--state-icon-color);\n }\n td.right {\n   text-align: right;\n   font-size: 16px;\n }\n .laundry-status {\n   {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' -%}\n   color: var(--state-active-color);\n   {% endif %}\n }\n </style>\n <table>\n <tr>\n <td class=left><ha-icon\n icon=\"mdi:face-woman\"></ha-icon></td></td>\n <td class=right>{{ states('person.holly_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title\n }}</td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:face-man\"></ha-icon></font></td>\n <td class=right>{{ states('person.michael_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:washing-machine\"></ha-icon></td>\n <td class=right><span class=laundry-status>{{\n states('sensor.washer_and_dryer_state') }}</td></tr>\n </table>\n"
                 },
                 {
                   "type": "custom:button-card",
                   "show_name": true,
                   "show_icon": true,
-                  "show_state": false,
-                  "show_label": true,
-                  "name": "[[[ return states[\"sensor.jellyfin_sessions\"].state ]]]",
-                  "label": "Watching",
-                  "entity": "sensor.jellyfin_sessions",
+                  "name": "Utils",
+                  "icon": "mdi:tools",
                   "styles": {
-                    "card": [
-                      {
-                        "height": "120px"
-                      }
-                    ],
-                    "img_cell": [
-                      {
-                        "padding-top": "14px"
-                      }
-                    ],
-                    "label": [
-                      {
-                        "padding-bottom": "10px"
-                      }
-                    ],
                     "icon": [
                       {
-                        "color": "[[[ if (entity.state > 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
+                        "color": "var(--state-icon-color)"
                       }
                     ]
                   },
@@ -95,29 +49,74 @@
                     "action": "navigate",
                     "navigation_path": "#utilities"
                   },
+                  "hold_action": {
+                    "action": "none"
+                  },
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": "auto"
                   }
                 },
                 {
+                  "type": "custom:button-card",
                   "show_name": true,
                   "show_icon": true,
-                  "type": "button",
+                  "name": "[[[ return states[\"sensor.jellyfin_sessions\"].state + \" viewers\" ]]]",
+                  "icon": "mdi:television-play",
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "[[[ if (states[\"sensor.jellyfin_sessions\"].state > 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
+                      }
+                    ]
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#utilities"
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": true,
+                  "show_icon": true,
+                  "name": "Good Night",
+                  "entity": "script.scene_good_night",
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "var(--state-icon-color)"
+                      }
+                    ]
+                  },
                   "tap_action": {
                     "action": "toggle"
                   },
-                  "entity": "script.scene_good_night",
-                  "name": "Good Night",
+                  "hold_action": {
+                    "action": "none"
+                  },
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": "auto"
                   }
                 },
                 {
+                  "type": "custom:button-card",
                   "show_name": true,
                   "show_icon": true,
-                  "type": "button",
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "green"
+                      }
+                    ]
+                  },
                   "tap_action": {
                     "action": "call-service",
                     "service": "alarm_control_panel.alarm_arm_home",
@@ -128,11 +127,9 @@
                   "entity": "alarm_control_panel.home_alarm",
                   "icon": "mdi:home-lock",
                   "name": "Arm",
-                  "show_state": false,
-                  "theme": "green-button",
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": "auto"
                   },
                   "hold_action": {
                     "action": "none"
@@ -161,9 +158,16 @@
                   ]
                 },
                 {
+                  "type": "custom:button-card",
                   "show_name": true,
                   "show_icon": true,
-                  "type": "button",
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "yellow"
+                      }
+                    ]
+                  },
                   "tap_action": {
                     "action": "call-service",
                     "service": "alarm_control_panel.alarm_arm_home",
@@ -174,11 +178,9 @@
                   "entity": "alarm_control_panel.home_alarm",
                   "icon": "mdi:home-lock",
                   "name": "Arm",
-                  "show_state": false,
-                  "theme": "yellow-button",
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": "auto"
                   },
                   "visibility": [
                     {
@@ -207,20 +209,25 @@
                   }
                 },
                 {
+                  "type": "custom:button-card",
                   "show_name": true,
                   "show_icon": true,
-                  "type": "button",
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "red"
+                      }
+                    ]
+                  },
                   "tap_action": {
                     "action": "toggle"
                   },
                   "entity": "script.security_disarm_system",
                   "icon": "mdi:home-lock-open",
                   "name": "Disarm",
-                  "show_state": false,
-                  "theme": "red-button",
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": "auto"
                   },
                   "visibility": [
                     {
@@ -1938,14 +1945,6 @@
                         },
                         {
                           "entity": "button.homeassistant_reload",
-                          "icon": "mdi:home-assistant",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#software2"
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
                           "icon": "mdi:help-rhombus",
                           "tap_action": {
                             "action": "navigate",
@@ -2064,7 +2063,7 @@
                           "icon": "mdi:tools",
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#utilities"
+                            "navigation_path": "#utilities2"
                           }
                         },
                         {
@@ -2072,14 +2071,6 @@
                           "tap_action": {
                             "action": "navigate",
                             "navigation_path": "#software"
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "icon": "mdi:home-assistant",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#software2"
                           }
                         },
                         {
@@ -2129,60 +2120,8 @@
                           "buttons": [
                             {
                               "entity": "script.scene_good_night",
-                              "name": false,
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
-                            },
-                            {
-                              "entity": "script.scene_night_night",
-                              "name": false,
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
-                            },
-                            {
-                              "entity": "script.scene_leaving_home",
-                              "name": false,
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
-                            },
-                            {
-                              "entity": "script.scene_movie_time",
-                              "name": false,
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:paper-buttons-row",
-                          "position": "right",
-                          "buttons": [
-                            {
-                              "entity": "lock.front_door_zwave",
-                              "name": false,
-                              "icon": "mdi:home-lock",
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
-                            },
-                            {
-                              "entity": "lock.garage_entry_door",
-                              "name": false,
-                              "icon": "mdi:garage-lock",
+                              "name": "Good Night",
+                              "layout": "icon_name",
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "30px"
@@ -2191,7 +2130,8 @@
                             },
                             {
                               "entity": "sensor.trash",
-                              "name": false,
+                              "name": "Trash",
+                              "layout": "icon_name",
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "30px"
@@ -2208,7 +2148,8 @@
                             },
                             {
                               "entity": "sensor.moco_recycle_day",
-                              "name": false,
+                              "name": "Recycle",
+                              "layout": "icon_name",
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "30px"
@@ -2222,63 +2163,20 @@
                                   "entity_id": "input_boolean.recycle_is_out"
                                 }
                               }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:paper-buttons-row",
-                          "position": "right",
-                          "buttons": [
-                            {
-                              "entity": "switch.christmas_tree",
-                              "name": "Tree",
-                              "layout": "icon_name",
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
                             },
                             {
-                              "entity": "switch.tarvos_plug",
-                              "name": "Tarvos",
-                              "icon": "mdi:power-plug",
+                              "entity": "button.homeassistant_reload",
+                              "name": "Page 2",
                               "layout": "icon_name",
+                              "icon": "mdi:tools",
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "30px"
                                 }
-                              }
-                            },
-                            {
-                              "entity": "switch.garage_door_cam_plug",
-                              "name": "GrgDrCam",
-                              "icon": "mdi:power-plug",
-                              "layout": "icon_name",
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
-                            },
-                            {
-                              "entity": "switch.petcam_plug",
-                              "name": "PetCam",
-                              "layout": "icon_name",
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
-                            },
-                            {
-                              "entity": "switch.zigbee2mqtt_bridge_permit_join",
-                              "name": "Z2M Join",
-                              "layout": "icon_name",
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
+                              },
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#utilities2"
                               }
                             }
                           ]
@@ -2289,7 +2187,7 @@
                           "buttons": [
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": false,
+                              "name": "Pictures",
                               "icon": "mdi:image-frame",
                               "layout": "icon_name",
                               "tap_action": {
@@ -2309,7 +2207,7 @@
                             },
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": false,
+                              "name": "Clock",
                               "icon": "mdi:clock",
                               "layout": "icon_name",
                               "tap_action": {
@@ -2329,7 +2227,7 @@
                             },
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": false,
+                              "name": "Reload",
                               "icon": "mdi:reload",
                               "layout": "icon_name",
                               "tap_action": {
@@ -2349,7 +2247,7 @@
                             },
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": false,
+                              "name": "Blank",
                               "icon": "mdi:square-outline",
                               "layout": "icon_name",
                               "tap_action": {
@@ -2368,19 +2266,10 @@
                               }
                             },
                             {
-                              "entity": "shell_command.ssh_command",
-                              "name": false,
-                              "icon": "mdi:fireplace",
+                              "entity": "switch.sinope_plug",
+                              "name": "Reboot Frame",
+                              "icon": "mdi:power-plug",
                               "layout": "icon_name",
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "shell_command.ssh_command",
-                                "target": {},
-                                "service_data": {
-                                  "server": "picframe@sinope.erdely.in",
-                                  "command": "chimneycam"
-                                }
-                              },
                               "styles": {
                                 "icon": {
                                   "--mdc-icon-size": "30px"
@@ -2395,9 +2284,8 @@
                           "buttons": [
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": false,
+                              "name": "G",
                               "icon": "mdi:garage",
-                              "layout": "icon_name",
                               "tap_action": {
                                 "action": "call-service",
                                 "service": "shell_command.ssh_command",
@@ -2415,9 +2303,8 @@
                             },
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": false,
+                              "name": "F",
                               "icon": "mdi:home",
-                              "layout": "icon_name",
                               "tap_action": {
                                 "action": "call-service",
                                 "service": "shell_command.ssh_command",
@@ -2435,7 +2322,7 @@
                             },
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": 2,
+                              "name": "F2",
                               "icon": "mdi:home",
                               "tap_action": {
                                 "action": "call-service",
@@ -2454,16 +2341,15 @@
                             },
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": false,
-                              "icon": "mdi:car",
-                              "layout": "icon_name",
+                              "name": "C",
+                              "icon": "mdi:fireplace",
                               "tap_action": {
                                 "action": "call-service",
                                 "service": "shell_command.ssh_command",
                                 "target": {},
                                 "service_data": {
                                   "server": "picframe@sinope.erdely.in",
-                                  "command": "garagedoorcam"
+                                  "command": "chimneycam"
                                 }
                               },
                               "styles": {
@@ -2474,29 +2360,8 @@
                             },
                             {
                               "entity": "shell_command.ssh_command",
-                              "name": false,
-                              "icon": "mdi:barn",
-                              "layout": "icon_name",
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "shell_command.ssh_command",
-                                "target": {},
-                                "service_data": {
-                                  "server": "picframe@sinope.erdely.in",
-                                  "command": "shedcam"
-                                }
-                              },
-                              "styles": {
-                                "icon": {
-                                  "--mdc-icon-size": "30px"
-                                }
-                              }
-                            },
-                            {
-                              "entity": "shell_command.ssh_command",
-                              "name": false,
+                              "name": "BY",
                               "icon": "mdi:tree",
-                              "layout": "icon_name",
                               "tap_action": {
                                 "action": "call-service",
                                 "service": "shell_command.ssh_command",
@@ -2504,6 +2369,25 @@
                                 "service_data": {
                                   "server": "picframe@sinope.erdely.in",
                                   "command": "backyardcam"
+                                }
+                              },
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "shell_command.ssh_command",
+                              "name": "S",
+                              "icon": "mdi:barn",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "shell_command.ssh_command",
+                                "target": {},
+                                "service_data": {
+                                  "server": "picframe@sinope.erdely.in",
+                                  "command": "shedcam"
                                 }
                               },
                               "styles": {
@@ -2814,7 +2698,7 @@
                     {
                       "type": "custom:bubble-card",
                       "card_type": "pop-up",
-                      "hash": "#software",
+                      "hash": "#utilities2",
                       "show_header": true,
                       "sub_button": [
                         {
@@ -2838,6 +2722,182 @@
                           "tap_action": {
                             "action": "navigate",
                             "navigation_path": "#software"
+                          }
+                        },
+                        {
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:help-rhombus",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#unavailable"
+                          }
+                        },
+                        {
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:cctv",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#cameras"
+                          }
+                        }
+                      ],
+                      "button_type": "switch",
+                      "entity": "button.homeassistant_reload",
+                      "name": "",
+                      "show_icon": false,
+                      "show_name": false,
+                      "tap_action": {
+                        "action": "none"
+                      },
+                      "button_action": {
+                        "tap_action": {
+                          "action": "none"
+                        },
+                        "double_tap_action": {
+                          "action": "none"
+                        },
+                        "hold_action": {
+                          "action": "none"
+                        }
+                      },
+                      "scrolling_effect": false
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "lock.front_door_zwave",
+                              "name": "Front Door",
+                              "layout": "icon_name",
+                              "icon": "mdi:home-lock",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "lock.garage_entry_door",
+                              "name": "Garage Entry",
+                              "layout": "icon_name",
+                              "icon": "mdi:garage-lock",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "cover.garage_door",
+                              "name": "Garage",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "button.homeassistant_reload",
+                              "name": "Page 1",
+                              "layout": "icon_name",
+                              "icon": "mdi:tools",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              },
+                              "tap_action": {
+                                "action": "navigate",
+                                "navigation_path": "#utilities"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "switch.christmas_tree",
+                              "name": "Tree",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "switch.tarvos_plug",
+                              "name": "Tarvos",
+                              "icon": "mdi:power-plug",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:paper-buttons-row",
+                          "position": "right",
+                          "buttons": [
+                            {
+                              "entity": "switch.petcam_plug",
+                              "name": "PetCam",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            },
+                            {
+                              "entity": "switch.zigbee2mqtt_bridge_permit_join",
+                              "name": "Z2M Join",
+                              "layout": "icon_name",
+                              "styles": {
+                                "icon": {
+                                  "--mdc-icon-size": "30px"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#software",
+                      "show_header": true,
+                      "sub_button": [
+                        {
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:security",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#security"
+                          }
+                        },
+                        {
+                          "entity": "button.homeassistant_reload",
+                          "icon": "mdi:tools",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "#utilities"
                           }
                         },
                         {
@@ -2926,14 +2986,6 @@
                         },
                         {
                           "entity": "button.homeassistant_reload",
-                          "icon": "mdi:home-assistant",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#software2"
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
                           "icon": "mdi:help-rhombus",
                           "tap_action": {
                             "action": "navigate",
@@ -3006,14 +3058,6 @@
                           "tap_action": {
                             "action": "navigate",
                             "navigation_path": "#software"
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "icon": "mdi:home-assistant",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#software2"
                           }
                         },
                         {
@@ -3188,14 +3232,6 @@
                           "tap_action": {
                             "action": "navigate",
                             "navigation_path": "#software"
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "icon": "mdi:home-assistant",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "#software2"
                           }
                         },
                         {

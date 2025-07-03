@@ -201,12 +201,6 @@
 #    scan_interval: 900  # 15 minutes
 #    command_timeout: 30 # seconds
 
-- sensor:
-    name: YAML LOC
-    unique_id: yaml_loc
-    icon: mdi:pound
-    command: "find /config/ -name '*.yaml' | xargs cat | wc -l"
-
 #- sensor:
 #    name: MoCo Recycle Day
 #    unique_id: moco_recycle_day
@@ -216,7 +210,8 @@
 
 - sensor:
     name: MoCo Recycle Day
-    command: bin/get_recycle_day.py
+    #command: bin/get_recycle_day.py
+    command: bin/get_recycle_day
     unique_id: moco_recycle_day
     # Request every 8 hours
     scan_interval: 28800
@@ -224,7 +219,7 @@
     json_attributes:
       - recycle_day
       - default_day
-      - moco_day
+      - county_day
       - holiday_day
       - exception_day
       - recycle_day_num
@@ -234,8 +229,8 @@
       - is_holiday
       - has_exception
       - address
-      - moco_address
-      - moco_code
+      - county_address
+      - county_code
       - holidays_code
       - exception_code
 

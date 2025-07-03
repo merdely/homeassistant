@@ -1,99 +1,307 @@
-#!/bin/sh
-
-datecmd() {
-  if [ "$datetype" = "busybox" ]; then
-    date -D "%A, %B %d, %Y" $*
-  else
-    date $*
-  fi
-}
-datetype=gnu
-date --version 2>&1 | grep -iq busybox && datetype=busybox
-default_day=Friday
-verbose=0
-if [ "$1" = "-v" ]; then
-  verbose=1
-fi
-
-get_day_num() {
-  case "$1" in
-    Monday) echo 1;;
-    Tuesday) echo 2;;
-    Wednesday) echo 3;;
-    Thursday) echo 4;;
-    Friday) echo 5;;
-    Saturday) echo 6;;
-    *) echo 0;;
-  esac
-}
-get_day_name() {
-  case "$1" in
-    1) echo Monday;;
-    2) echo Tuesday;;
-    3) echo Wednesday;;
-    4) echo Thursday;;
-    5) echo Friday;;
-    6) echo Saturday;;
-    *) echo Sunday;;
-  esac
-}
+#!/bin/bash
 
 secrets_file="$(readlink -f $(dirname "$0")/../secrets.yaml)"
+mydate=$(date +%F)
+unset error
+
+usage () {
+  ret=$1
+  [ -z "$ret" ] && ret=0
+  echo "usage: $(basename $0) [-h] [-f HOLIDAY_FILE] [-d YYYY-mm-dd] [-s SECRETS_FILE] [RECYCLE_DAY]"
+  echo "           -h               : This help text"
+  echo "           -D               : Print debug info to stderr"
+  echo "           -d YYYY-mm-dd    : Date to use (default: $mydate)"
+  echo "           -s SECRETS_FILE  : Home Assistant Secrets File ($secrets_file)"
+  echo "           -f HOLIDAY_FILE  : Holiday html to use"
+  echo "                              (default: Download from recycle_holiday_url in secrets file)"
+  echo "           RECYCLE_DAY      : If no RECYCLE_DAY given, recycle_default_day must be in the SECRETS_FILE"
+  exit $ret
+}
+
+verbose=0
+debug=0
+while getopts ":hDvd:f:s:" opt; do
+  case $opt in
+    d)
+      mydate=$OPTARG
+      if [[ ! $mydate =~ ^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$ ]]; then
+        echo "Error: Invalid date ($mydate)"
+        exit 1
+      fi
+      ;;
+    s)
+      secrets_file=$OPTARG
+      if [ ! -r $secrets_file ]; then
+        echo "Error: Cannot read SECRETS_FILE file ($SECRETS_FILE)"
+        exit 1
+      fi
+      ;;
+    f)
+      holiday_file=$OPTARG
+      if [ ! -r $holiday_file ]; then
+        echo "Error: Cannot read HOLIDAY_FILE file ($holiday_file)"
+        exit 1
+      fi
+      ;;
+    D)
+      debug=1
+      ;;
+    v)
+      verbose=1
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
 [ ! -f "$secrets_file" ] && echo "Error: Could not find secrets.yaml" && exit 1
 
-county_url=$(awk "\$1 == \"recycle_url:\" { s=\$2;gsub(/(^\"|\"$)/,\"\",s);print s }" $secrets_file)
-[ $verbose = 1 ] && echo county_url=$county_url
+# Read settings from secrets.yaml file
+collection_url=$(awk '$1=="recycle_collection_url:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+[ -z "$collection_url" ] && echo "Error: Secrets file does not have 'recycle_collection_url'" > /dev/stderr && exit 1
+holiday_url=$(awk '$1=="recycle_holiday_url:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+[ -z "$holiday_url" ] && echo "Error: Secrets file does not have 'recycle_holiday_url'" > /dev/stderr && exit 1
+street_number=$(awk '$1=="recycle_street_number:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+[ -z "$street_number" ] && echo "Error: Secrets file does not have 'recycle_street_number'" > /dev/stderr && exit 1
+street_name=$(awk '$1=="recycle_street_name:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+[ -z "$street_name" ] && echo "Error: Secrets file does not have 'recycle_street_name'" > /dev/stderr && exit 1
+street_type=$(awk '$1=="recycle_street_type:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+[ -z "$street_type" ] && echo "Error: Secrets file does not have 'recycle_street_type'" > /dev/stderr && exit 1
+default_day=$(awk '$1=="recycle_default_day:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
 
-county_day=$(python3 -c "import re,bs4,requests;p=requests.get('$county_url');s=bs4.BeautifulSoup(p.text,'lxml');print(s.find_all('p',class_='day')[0].string)")
-[ $verbose = 1 ] && echo county_day=$county_day
+[ $debug = 1 ] && echo collection_url=$collection_url > /dev/stderr
+[ $debug = 1 ] && echo holiday_url=$holiday_url > /dev/stderr
+[ $debug = 1 ] && echo street_number=$street_number > /dev/stderr
+[ $debug = 1 ] && echo street_name=$street_name > /dev/stderr
+[ $debug = 1 ] && echo street_type=$street_type > /dev/stderr
+[ $debug = 1 ] && echo default_day=$default_day > /dev/stderr
 
-case "$county_day" in
-  Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)
+county_code=200
+if [ -z "$county_collection_file" ]; then
+  err_tmpfile=$(mktemp)
+  county_tmpfile=$(mktemp)
+  county_collection_file=$county_tmpfile
+  county_code=$(curl -w %{http_code} -Lo $county_collection_file \
+    -X GET \
+    -G \
+    --data-urlencode "__VIEWSTATE=/wEPDwUKLTc2NTM3NDM5OWQYAQUVY3RsMDAkTWFpbkNvbnRlbnQkZ3JkD2dkzG6rMq9Oe3SlNEEn83idpUe2bm4=" \
+    --data-urlencode "__VIEWSTATEGENERATOR=23FD2674" \
+    --data-urlencode "__EVENTVALIDATION=/wEWJALy6NTSBQLliZf0AwLr0My5DgKAuJmLBAKc4sQ6ApDkoY8FAvqJiKgHAo217/sLAuzc6OQGAo7k1eQLAt3Xw/sIAo21k/oLAt3Xy/sIAtzX+/sIApOjvtAGAvHK4+UCAtWCy80PAoq16/kFAqXi6DoCpZGhzgEC5Ner+wgC89y4igkCmqPGzgUCn5GJ3AoCk/iHuQkCp6PW3gwC8Nej+wgCyPvizQoC7teD+wgC4sPy5A0C7df/+wgC7dfD+wgCnLXf+wsCqpGlzgECpuLQOgLT8MqYCGNN2N4JsdjbNorRg/UXq/4G7ovh" \
+    --data-urlencode "ctl00\$MainContent\$txtStreetNumber=$street_number" \
+    --data-urlencode "ctl00\$MainContent\$txtStreet=$street_name" \
+    --data-urlencode "ctl00\$MainContent\$DropDownList1=$street_type" \
+    --data-urlencode "ctl00\$MainContent\$Button1=Search" \
+    "$collection_url" 2> $err_tmpfile)
+  if ! grep -iq "$street_number $street_name $street_type" $county_collection_file; then
+    echo "Error: Could not get data from $collection_url (Status Code: $county_code)"
+    cat $err_tmpfile
+    rm -f $err_tmpfile $county_collection_file
+    exit 1
+  fi
+  county_address=$(cat $county_collection_file | python -c "import sys; from lxml import html; doc=html.fromstring(sys.stdin.read()); [print(el.text) for el in doc.xpath('//body//form//h1')]")
+  county_day=$(cat $county_collection_file | python -c "import sys; from lxml import html; doc=html.fromstring(sys.stdin.read()); print(''.join(doc.xpath('//tbody/tr[td[@data-title=\"Service\"][contains(.,\"Recycling\")]]/td[@data-title=\"Day\"]//mark/text()')))")
+  default_day=$county_day
+  rm -f $county_collection_file
+fi
+
+case "$1" in
+  Sunday|Monday|Tuesday|Wednesday|Thursday|Friday)
+    default_day=$1
+    ;;
+  sunday|monday|tuesday|wednesday|thursday|friday)
+    default_day=${1^}
     ;;
   *)
-    county_day=$default_day
+    if [ -z "$default_day" ]; then
+      echo "Error: Missing or invalid RECYCLE_DAY ($1)"
+      echo
+      usage 1
+    fi
     ;;
 esac
-this_week_day=$(get_day_num $county_day)
 
+get_date() {
+  if date --version 2>&1 | grep -iq busybox; then
+    case "$1" in
+      Sunday|Monday|Tuesday|Wednesday|Thursday|Friday)
+        date -D "%A" -d "$1" "+%Y-%m-%d"
+        ;;
+      sunday|monday|tuesday|wednesday|thursday|friday)
+        date -D "%A" -d "$1" "+%Y-%m-%d"
+        ;;
+      *)
+        date -D "%A, %B %d, %Y" -d "$1" "+%F"
+        ;;
+    esac
+  else
+    date -d "$1" "+%Y-%m-%d"
+  fi
+}
+
+get_year() {
+  if date --version 2>&1 | grep -iq busybox; then
+    date -D "%A, %B %d, %Y" -d "$1" "+%Y"
+  else
+    date -d "$1" "+%Y"
+  fi
+}
+
+get_epoch() {
+  if date --version 2>&1 | grep -iq busybox; then
+    date -D "%Y-%m-%d" -d "$1" "+%s"
+  else
+    date -d "$1" "+%s"
+  fi
+}
+
+get_week_num() {
+  if date --version 2>&1 | grep -iq busybox; then
+    if [[ "$1" =~ [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] ]]; then
+      date -D "%Y-%m-%d" -d "$1" "+%-W"
+    else
+      date -D "%A, %B %d, %Y" -d "$1" "+%-W"
+    fi
+  else
+    date -d "$1" "+%-W"
+  fi
+}
+
+get_day() {
+  if date --version 2>&1 | grep -iq busybox; then
+    if [[ "$1" =~ [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] ]]; then
+      date -D "%Y-%m-%d" -d "$1" "+%A"
+    elif [[ "$1" =~ ^[0-9]+$ ]]; then
+      date -D "%w" -d "$1" "+%A"
+    else
+      date -D "%A, %B %d, %Y" -d "$1" "+%A"
+    fi
+  else
+    date -d "$1" "+%A"
+  fi
+}
+
+get_day_num() {
+  if date --version 2>&1 | grep -iq busybox; then
+    case "$1" in
+      [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])
+        date -D "%Y-%m-%d" -d "$1" "+%w"
+        ;;
+      Sunday|Monday|Tuesday|Wednesday|Thursday|Friday)
+        date -D "%A" -d "$1" "+%w"
+        ;;
+      sunday|monday|tuesday|wednesday|thursday|friday)
+        date -D "%A" -d "$1" "+%w"
+        ;;
+      *)
+        date -D "%A, %B %d, %Y" -d "$1" "+%w"
+        ;;
+    esac
+  else
+    date -d "$1" "+%w"
+  fi
+}
+
+days_string() {
+  if [ "$1" = 0 ]; then
+    echo Today
+  elif [ "$1" = 1 ]; then
+    echo Tomorrow
+  else
+    echo $1 days
+  fi
+}
+
+OIFS=$IFS
 IFS=$(printf "\n\b")
 
-current_year=$(date "+%Y")
-current_week_number=$(date "+%U")
+holidays_code=200
+if [ -z "$holiday_file" ]; then
+  tmpfile=$(mktemp)
+  holiday_file=$tmpfile
+  holidays_code=$(curl -w %{http_code} -sLo $holiday_file "$holiday_url")
+fi
 
-# Download holiday data
-#holiday_data=$(curl -fs "https://www.montgomerycountymd.gov/sws/holidays/")
-holiday_data=$(curl -fs "https://www.montgomerycountymd.gov/dep/trash-recycling/holidays.html")
-[ $? != 0 ] && echo "$0: Error: Could not download county holiday data" > /dev/stderr && echo $county_day && exit 1
-#[ $verbose = 1 ] && echo holiday_data=$holiday_data
+mydaynum=$(get_day_num $mydate)
+pickup_day=$default_day
+pickup_day_num=$(get_day_num $default_day)
+if [ $mydaynum = $pickup_day_num ]; then
+  pickup_date=$mydate
+elif [ $mydaynum -lt $pickup_day_num ]; then
+  epoch=$(get_epoch $mydate)
+  epoch_diff=$((60*60*24 * ($mydaynum - $pickup_day_num)))
+  pickup_date=$(date -d @$((epoch-epoch_diff)) +%F)
+else
+  epoch=$(get_epoch $mydate)
+  epoch_diff=$((60*60*24 * 6))
+  pickup_date=$(date -d @$((epoch+epoch_diff)) +%F)
+fi
+changed=false
 
-# Loop through holiday data
-for f in $(echo "$holiday_data" | grep -A1 ">$county_day<" | sed 's/&nbsp;/ /g' | awk "\$0!~/>$county_day</&&\$0!=\"--\"{s=substr(\$0,index(\$0,\">\")+1);s=substr(s,1,index(s,\"<\")-1);gsub(/ \(no change\)/, \"\", s);print s}")
-do
-  ! echo "$f" | grep -Eq "^(Sun|Mon|Tues|Wednes|Thurs|Fri|Satur)day, (January|February|March|April|May|June|July|August|September|October|November|December) [123]?[0-9], [0-9]{4}$" && echo "$0: Warning: Invalid date string '$f'" > /dev/stderr && continue
-  this_year=$(datecmd -d "$f" "+%Y")
-  [ $? != 0 ] && echo "$0: Warning: Cannot get year for '$f'" > /dev/stderr && continue
+if [ $debug = 1 ]; then
+  echo mydaynum=$mydaynum > /dev/stderr
+  echo pickup_day=$pickup_day > /dev/stderr
+  echo pickup_day_num=$pickup_day_num > /dev/stderr
+  echo pickup_date=$pickup_date > /dev/stderr
+  echo changed=$changed
+fi
 
-  this_week_number=$(datecmd -d "$f" "+%U")
-  [ $? != 0 ] && echo "$0: Warning: Cannot get week number for '$f'" > /dev/stderr && continue
-
-  [ $verbose = 1 ] && echo "current_year=$current_year; this_year=$this_year; current_week_number=$current_week_number; this_week_number=$this_week_number; this_week_day=$(datecmd -d "$f", "+%u")"
-  [ $current_year = $this_year ] && [ $current_week_number = $this_week_number ] && this_week_day=$(datecmd -d "$f" "+%u")
+for line in $(cat $holiday_file | python -c "import sys; from lxml import html; doc=html.fromstring(sys.stdin.read()); [print(el.text) for el in doc.xpath('//table//tbody/tr[td[@data-title=\"Normal day\" and text()=\"$pickup_day\"]]/preceding::h3[1] | //table//tbody/tr[td[@data-title=\"Normal day\" and text()=\"$pickup_day\"]]/td[@data-title=\"Day this week\"]')]"); do
+  [ $debug = 1 ] && echo "line='$line'"
+  unset shift_date
+  if [[ $line =~ ^[\^,]+,\ [\^,]+,\ [\^,]+, ]]; then
+    holiday=$(echo $line | sed -r 's/, (Mon|Tues|Wedne|Thurs|Fri|Satur|Sun).*$//')
+    holiday_date=$(echo $line | sed "s/^$holiday, //")
+    holiday_year=$(get_year "$holiday_date")
+  else
+    shift_date="$line, $holiday_year"
+  fi
+  if [ $debug = 1 ]; then
+    echo pickup_date=$pickup_date > /dev/stderr
+    echo holiday_date=$holiday_date > /dev/stderr
+    echo pickup_date-num=$(get_week_num $pickup_date) > /dev/stderr
+    echo holiday_date-num=$(get_week_num $holiday_date) > /dev/stderr
+  fi
+  if [ -n "$shift_date" ] && [ $(get_week_num $pickup_date) = $(get_week_num $holiday_date) ]; then
+    pickup_day=$(get_day $shift_date)
+    pickup_day_num=$(get_day_num $shift_date)
+    pickup_date=$(get_date $shift_date)
+    changed=true
+    reason=$holiday
+    if [ $debug = 1 ]; then
+      echo holiday=$holiday > /dev/stderr
+      echo holiday_date=$holiday_date > /dev/stderr
+      echo holiday_year=$holiday_year > /dev/stderr
+      echo shift_date=$shift_date > /dev/stderr
+      #echo "=====" > /dev/stderr
+      echo pickup_day=$pickup_day > /dev/stderr
+      echo pickup_day_num=$pickup_day_num > /dev/stderr
+      echo changed=$changed > /dev/stderr
+      echo reason=$reason > /dev/stderr
+    fi
+    break
+  fi
+  [ $debug = 1 ] && echo
 done
 
-#update=$(python3 -c "import bs4;import requests;p=requests.get('https://montgomerycountymd.gov/sws/Common/UserControls/status-include.htm');s=bs4.BeautifulSoup(p.text,'lxml');print(s.find_all('div',class_='alert')[0].text)")
-#if [[ "$update" =~ "(slide|slid|shift|shifted|bump|bumped)" ]]; then
-#  this_week_day=$((this_week_day+1))
-#fi
+recycle_days=$((pickup_day_num - $(date +%w)))
 
-case $this_week_day in
-  0|1|2|3|4|5|6|7)
-    get_day_name $this_week_day
-    ;;
-  Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)
-    echo $this_week_day
-    ;;
-  *)
-    echo $county_day
-    ;;
-esac
+printf '{ "default_day": "%s", "county_day": "%s", "holiday_day": "%s", "exception_day": "%s", "recycle_day": "%s", "recycle_day_num": %d, "recycle_day_date": "%s", "recycle_days": %d, "days_string": "%s", "is_holiday": %s, "address": "%s", "county_address": "%s", "county_code": %d, "holidays_code": %d, "exception_code": %d, "error": "%s", "change_reason": "%s" }\n' \
+  $default_day \
+  $county_day \
+  $pickup_day \
+  $pickup_day \
+  $pickup_day \
+  $pickup_day_num \
+  $pickup_date \
+  $recycle_days \
+  $(days_string $recycle_days) \
+  $changed \
+  home \
+  $county_address \
+  $county_code \
+  $holidays_code \
+  0 \
+  "$error" \
+  $reason | jq

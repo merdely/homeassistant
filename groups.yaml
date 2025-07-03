@@ -8,11 +8,41 @@ security_devices:
   name: All Security Devices
   entities:
     - cover.garage_door
-    - binary_sensor.exterior_doors_and_gates
-    - binary_sensor.interior_doors_and_windows
+    - group.exterior_security_devices
+    - group.interior_security_devices
+
+interior_security_devices:
+  name: Interor Security Devices
+  entities:
+    - binary_sensor.back_door_contact
+    - binary_sensor.front_door_contact
+    - binary_sensor.den_window_contact
+    - binary_sensor.powder_room_window_contact
+    - binary_sensor.bedroom_slider_contact
+    - binary_sensor.dining_room_slider_contact
+    - binary_sensor.living_room_slider_contact
+    - binary_sensor.god_damn_slider_contact
 
 exterior_security_devices:
   name: Exterior Security Devices
   entities:
     - cover.garage_door
-    - binary_sensor.exterior_doors_and_gates
+    - binary_sensor.shed_door_contact
+    - binary_sensor.shed_gate_contact
+    - binary_sensor.chimney_gate_contact
+    - binary_sensor.garage_entry_door_contact
+
+all_doors_windows_gates:
+  name: All Doors/Windows/Gates
+  entities:
+    - group.interior_security_devices
+    - group.exterior_security_devices
+    - group.fridge_and_freezer_doors
+
+fridge_and_freezer_doors:
+  name: Fridge and Freezer Doors
+  entities:
+    - binary_sensor.dining_room_freezer_door_contact
+    - binary_sensor.dining_room_refrigerator_door_contact
+    - binary_sensor.kitchen_freezer_door_contact
+    - binary_sensor.kitchen_refrigerator_door_contact

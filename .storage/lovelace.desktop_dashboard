@@ -434,34 +434,6 @@
                           "name": false
                         }
                       ]
-                    },
-                    {
-                      "type": "section"
-                    },
-                    {
-                      "type": "custom:paper-buttons-row",
-                      "buttons": [
-                        {
-                          "entity": "lock.front_door_zwave",
-                          "name": "Front Door"
-                        },
-                        {
-                          "entity": "lock.garage_entry_door",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.locking_garage_entry_door_toggle"
-                          }
-                        },
-                        {
-                          "entity": "cover.garage_door",
-                          "active": "open",
-                          "styles": {
-                            "button": {
-                              "color": "{% if states(\"cover.garage_door\") == \"open\" %}\n  rgb(244,67,54)\n{% else %}\n  rgb(76,175,80)\n{% endif %}"
-                            }
-                          }
-                        }
-                      ]
                     }
                   ],
                   "state_color": false,
@@ -663,26 +635,26 @@
                       "show_state": false
                     },
                     {
-                      "entity": "binary_sensor.all_doors_windows_gates",
+                      "entity": "group.all_doors_windows_gates",
                       "name": "Security",
                       "type": "custom:multiple-entity-row",
                       "entities": [
                         {
-                          "entity": "binary_sensor.fridge_and_freezer_doors",
+                          "entity": "group.fridge_and_freezer_doors",
                           "name": "Fridge/Freezers",
                           "styles": {
                             "color": "var(--fridges-color)"
                           }
                         },
                         {
-                          "entity": "binary_sensor.interior_doors_and_windows",
+                          "entity": "group.interior_security_devices",
                           "name": "Interior",
                           "styles": {
                             "color": "var(--int-doors-windows-color)"
                           }
                         },
                         {
-                          "entity": "binary_sensor.exterior_doors_and_gates",
+                          "entity": "group.exterior_security_devices",
                           "name": "Exterior",
                           "styles": {
                             "color": "var(--ext-doors-gates-color)"
@@ -916,7 +888,7 @@
                           },
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "/desktop-dashboard/utilities"
+                            "navigation_path": "/desktop-dashboard/home-assistant"
                           },
                           "double_tap_action": {
                             "action": "more-info"
@@ -975,27 +947,6 @@
                           "hold_action": {
                             "action": "more-info"
                           }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "section"
-                    },
-                    {
-                      "type": "custom:paper-buttons-row",
-                      "position": "right",
-                      "buttons": [
-                        {
-                          "entity": "switch.petcam_plug",
-                          "name": "Pet Cam"
-                        },
-                        {
-                          "entity": "script.scene_good_night",
-                          "name": "Good Night"
-                        },
-                        {
-                          "entity": "script.testing_signal_mike",
-                          "name": "Test Signal ME"
                         }
                       ]
                     },
@@ -1076,11 +1027,11 @@
                     {
                       "graph": "line",
                       "type": "sensor",
-                      "entity": "sensor.master_bath_humidity",
-                      "name": "MBath",
+                      "entity": "sensor.attic_temperature",
+                      "name": "Attic",
                       "detail": 1,
                       "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
                       }
                     }
                   ]
@@ -1088,16 +1039,6 @@
                 {
                   "type": "horizontal-stack",
                   "cards": [
-                    {
-                      "graph": "line",
-                      "type": "sensor",
-                      "entity": "sensor.attic_temperature",
-                      "name": "Attic",
-                      "detail": 1,
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
-                      }
-                    },
                     {
                       "graph": "line",
                       "type": "sensor",
@@ -1111,91 +1052,11 @@
                     {
                       "graph": "line",
                       "type": "sensor",
-                      "entity": "sensor.office_humidity",
-                      "detail": 1,
-                      "name": "Office",
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
-                      }
-                    },
-                    {
-                      "graph": "line",
-                      "type": "sensor",
-                      "entity": "sensor.hall_bath_humidity",
-                      "name": "HBath",
-                      "detail": 1,
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "graph": "line",
-                      "type": "sensor",
-                      "entity": "sensor.living_room_temperature",
-                      "name": "LR",
-                      "detail": 1,
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
-                      }
-                    },
-                    {
-                      "graph": "line",
-                      "type": "sensor",
-                      "entity": "sensor.living_room_humidity",
-                      "name": "LR",
-                      "detail": 1,
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
-                      }
-                    },
-                    {
-                      "graph": "line",
-                      "type": "sensor",
                       "entity": "sensor.god_damn_temperature",
                       "name": "Down",
                       "detail": 1,
                       "card_mod": {
                         "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int >= 90 %}orange{% endif %};\n}\n"
-                      }
-                    },
-                    {
-                      "graph": "line",
-                      "type": "sensor",
-                      "entity": "sensor.god_damn_humidity",
-                      "name": "Down",
-                      "detail": 1,
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "graph": "line",
-                      "type": "sensor",
-                      "entity": "sensor.garage_temperature",
-                      "name": "Garage",
-                      "detail": 1,
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
-                      }
-                    },
-                    {
-                      "graph": "line",
-                      "type": "sensor",
-                      "entity": "sensor.garage_humidity",
-                      "name": "Garage",
-                      "detail": 1,
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 65 %}red{% endif %};\n}\n"
                       }
                     },
                     {
@@ -1261,6 +1122,55 @@
                             "service": "script.home_thermostat_up"
                           },
                           "name": false
+                        }
+                      ]
+                    },
+                    {
+                      "type": "section"
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "buttons": [
+                        {
+                          "entity": "lock.front_door_zwave",
+                          "name": "Front Door"
+                        },
+                        {
+                          "entity": "lock.garage_entry_door",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.locking_garage_entry_door_toggle"
+                          }
+                        },
+                        {
+                          "entity": "cover.garage_door",
+                          "active": "open",
+                          "styles": {
+                            "button": {
+                              "color": "{% if states(\"cover.garage_door\") == \"open\" %}\n  rgb(244,67,54)\n{% else %}\n  rgb(76,175,80)\n{% endif %}"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "section"
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "switch.petcam_plug",
+                          "name": "Pet Cam"
+                        },
+                        {
+                          "entity": "script.scene_good_night",
+                          "name": "Good Night"
+                        },
+                        {
+                          "entity": "script.testing_signal_mike",
+                          "name": "Test Signal ME"
                         }
                       ]
                     }
@@ -1526,6 +1436,261 @@
             }
           ],
           "max_columns": 3
+        },
+        {
+          "type": "sections",
+          "max_columns": 4,
+          "title": "Temperature/Humidity",
+          "path": "temperature-humidity",
+          "icon": "mdi:home-thermometer",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "horizontal-stack",
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "cards": [
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.bedroom_temperature",
+                      "name": "MBR",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int(69) >= 80 %}red{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.bedroom_humidity",
+                      "name": "MBR",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.master_bath_temperature",
+                      "name": "MBath",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int(69) >= 80 %}red{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.master_bath_humidity",
+                      "name": "MBath",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "cards": [
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.hallway_temperature",
+                      "name": "Hallway",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int(69) >= 80 %}orange{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.hallway_humidity",
+                      "detail": 1,
+                      "name": "Hallway",
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.hall_bath_temperature",
+                      "name": "HBath",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int(69) >= 80 %}red{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.hall_bath_humidity",
+                      "name": "HBath",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "cards": [
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.attic_temperature",
+                      "name": "Attic",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.attic_humidity",
+                      "name": "Attic",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.office_temperature",
+                      "name": "Office",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int(69) >= 80 %}orange{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.office_humidity",
+                      "detail": 1,
+                      "name": "Office",
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "cards": [
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.living_room_temperature",
+                      "name": "LR",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.living_room_humidity",
+                      "name": "LR",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.god_damn_temperature",
+                      "name": "Down",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int >= 90 %}orange{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.god_damn_humidity",
+                      "name": "Down",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 50 %}red{% endif %};\n}\n"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "cards": [
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.garage_temperature",
+                      "name": "Garage",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.garage_humidity",
+                      "name": "Garage",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 65 %}red{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.outside_temperature",
+                      "name": "Outside",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
+                      }
+                    },
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.outside_humidity",
+                      "name": "Outside",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 65 %}red{% endif %};\n}\n"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "column_span": 2
+            }
+          ]
         },
         {
           "title": "Schedules",
@@ -1945,9 +2110,128 @@
                   "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  .topborder {\n    border-top: 2px solid white;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <h2>Software</h2>\n<table> <tr> <th></th> <th align=\"left\">Name</th> <th align=\"right\">Installed</th> <th align=\"right\">Available</th> </tr> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr><td class=\"{{'off-icon' if states(software|replace('_latest','')) == states(software) else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}' /></td> <td class=\"left {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software|replace('_latest','')) }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software) }}</td> </tr>{% endfor -%}\n<tr><td class=\"{{'off-icon' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}' /></td> <td class=\"left {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">OPNsense</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ states('sensor.opnsense_versions') }}</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</td></tr>\n{% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr> <td class=\"{{'off-icon' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}' /></td> <td class=\"left {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">OPN {{ plugin }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</td> </tr>{% endfor -%}\n{% for ap in state_attr('sensor.unifi_ap_versions', 'data') | sort(attribute=\"name\") -%} <tr> <td class=\"{{'off-icon' if ap['version'] == ap['version_available'] else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}' /></td> <td class=\"left {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">Unifi {{ ap['name'] | replace('wap-','') | title }} AP</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version_available'] }}</td></tr> {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td class=warning><ha-icon icon='mdi:alert-circle'></ha-icon></td> <td colspan=\"3\" class=warning>Error: Could not load Unifi Data</td></tr> {% endif %} </table>"
                 },
                 {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  th.left, td.left {\n    text-align: left;\n  }\n  th.right, td.right {\n    text-align: right;\n  }\n  .unavailable-icon {\n    color: {{'var(--state-active-color);' if\n    states('sensor.unavailable_entities') | int(0) != 0\n    else 'var(--state-icon-color)'}}\n  }\n  .unavailable-text {\n    color: {{'var(--state-active-color);' if\n    states('sensor.unavailable_entities') | int(0) != 0 }}\n  }\n  .jellyfin-icon {\n    color: {{'var(--state-active-color);' if\n    states('sensor.jellyfin_sessions') | int(0) != 0\n    else 'var(--state-icon-color)'}}\n  }\n  .jellyfin-text {\n    color: {{'var(--state-active-color);' if\n    states('sensor.jellyfin_sessions') | int(0) != 0 }}\n  }\n  .ssl-icon {\n    color: {{'var(--state-active-color);' if\n    as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2)\n    else 'var(--state-icon-color)'}}\n  }\n  .ssl-text {\n    color: {{'var(--state-active-color);' if\n    as_timestamp(states('sensor.ssl_expiry_date'), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2) }}\n  }\n  .earth-icon {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.earth') == 'off'\n    else 'var(--state-icon-color)'}}\n  }\n  .earth-text {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.earth') == 'off' }}\n  }\n  .earth-www-icon {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.earth_nginx_php_working') == 'off'\n    else 'var(--state-icon-color)'}}\n  }\n  .earth-www-text {\n    color: {{'var(--state-active-color);' if\n    states('binary_sensor.earth_nginx_php_working') == 'off' }}\n  }\n</style> <!-- <h2>Other Info</h2> -->\n<table> <tr><th></th> <th class=\"left\">Name</th> <th class=\"right\">Status</th></tr> <tr><td class=unavailable-icon><ha-icon icon='mdi:cloud-question'></td> <td class=\"left unavailable-text\">Unavailable Entities</td> <td class=\"right unavailable-text\">{{ states('sensor.unavailable_entities') }} unavailable entities</td></tr>\n<tr><td class=jellyfin-icon><ha-icon icon='mdi:television-play'></td> <td class=\"left jellyfin-text\">Jellyfin Status</td> <td class=\"right jellyfin-text\">{{ states('sensor.jellyfin_sessions') }} Users</td></tr>\n<tr><td class=ssl-icon><ha-icon icon='mdi:shield-lock'></td> <td class=\"left ssl-text\">SSL Expiry Date</td> <td class=\"right ssl-text\">{{ states('sensor.ssl_expiry_date') }}</td></tr>\n<tr><td class=earth-icon><ha-icon icon='mdi:{{ \"server-network\" if states('binary_sensor.earth') == 'on' else \"server-network-off\" }}'></td> <td class=\"left earth-text\">Earth Host Status</td> <td class=\"right earth-text\">{{ \"Up\" if states('binary_sensor.earth') == 'on' else \"Down\" }}</td></tr>\n<tr><td class=earth-www-icon><ha-icon icon='mdi:{{ \"web-check\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"web-off\"}}'></td> <td class=\"left earth-www-text\">Earth Nginx/PHP Status</font></td> <td class=\"right earth-www-text\">{{ \"Up\" if states('binary_sensor.earth_nginx_php_working') == 'on' else \"Down\" }}</td></tr> </table>"
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "sensor.opnsense_package_versions",
+                          "name": "OpnSense",
+                          "icon": "mdi:briefcase-download",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {
+                              "entity_id": [
+                                "sensor.opnsense_package_versions",
+                                "sensor.opnsense_versions",
+                                "sensor.opnsense_core_abi_version",
+                                "sensor.opnsense_core_abi_version_latest"
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "entity": "sensor.fully_kiosk_browser_version",
+                          "name": "FKB",
+                          "icon": "mdi:briefcase-download",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {
+                              "entity_id": [
+                                "sensor.fully_kiosk_browser_version",
+                                "sensor.fully_kiosk_browser_version_latest"
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "entity": "sensor.unifi_ap_versions",
+                          "name": "Unifi",
+                          "icon": "mdi:briefcase-download",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {
+                              "entity_id": [
+                                "sensor.unifi_ap_versions"
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "entity": "switch.zigbee2mqtt_bridge_permit_join",
+                          "name": "Z2M Join"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "sensor.speedtest_download",
+                          "icon": "mdi:speedometer",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "target": {
+                              "entity_id": [
+                                "sensor.speedtest_download",
+                                "sensor.speedtest_upload",
+                                "sensor.speedtest_ping"
+                              ]
+                            },
+                            "data": {}
+                          },
+                          "show_state": true,
+                          "name": "SpeedTest",
+                          "hold_action": {
+                            "action": "none"
+                          }
+                        },
+                        {
+                          "entity": "button.homeassistant_reload",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/control-panel"
+                          },
+                          "name": "FKB",
+                          "icon": "mdi:tablet-dashboard",
+                          "hold_action": {
+                            "action": "none"
+                          }
+                        },
+                        {
+                          "entity": "button.homeassistant_reload",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/mbr-panel"
+                          },
+                          "name": "FKBMBR",
+                          "icon": "mdi:cellphone-text",
+                          "hold_action": {
+                            "action": "none"
+                          }
+                        },
+                        {
+                          "entity": "button.homeassistant_reload",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/mobile-dashboard"
+                          },
+                          "name": "Mobile",
+                          "icon": "mdi:cellphone",
+                          "hold_action": {
+                            "action": "none"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -1958,6 +2242,120 @@
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
                   "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  .topborder {\n    border-top: 2px solid white;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <h2>Home Assistant</h2>\n<table> <tr> <th></th> <th align=\"left\">Name</th> <th align=\"right\">Installed</th> <th align=\"right\">Available</th> </tr> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', 'HA') | replace('Operating System', 'OS') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-test' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endfor -%} {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.(home_assistant_(core|operating_system|supervisor)_update$|frigate_server$|wap_)') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'device_class') != \"firmware\" and state_attr(software, 'title') != None %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon='mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}' /></td> <td class=\"left {{'off-test' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('UniFi Network Application', 'UniFi') | replace(' (Bitwarden)', '') | replace('Mosquitto broker', 'MQTT') | replace('Studio Code Server', 'VSCode') | replace('Signal Messenger', 'Signal') | replace('Google Drive Backup', 'Google Backup') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') | replace('Home Assistant', '') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endif -%} {% endfor -%} </table>"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:auto-entities",
+                  "card": {
+                    "type": "entities",
+                    "title": "Refresh Entities (click)"
+                  },
+                  "filter": {
+                    "include": [
+                      {
+                        "entity_id": "/^sensor\\.(unavailable_entities|ood_wyze_entities|ood_zigbee_entities)$/",
+                        "options": {
+                          "card_mod": {
+                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                          },
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "this.entity_id"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "entity_id": "/^sensor\\.(jellyfin_sessions)$/",
+                        "options": {
+                          "card_mod": {
+                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                          },
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "this.entity_id"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "entity_id": "/^sensor\\.(ssl_expiry_date)$/",
+                        "options": {
+                          "card_mod": {
+                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if as_timestamp(states(\"this.entity_id\"), 0) as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2) %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                          },
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "this.entity_id"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "entity_id": "/^binary_sensor\\.(earth|earth_nginx_php_working)$/",
+                        "options": {
+                          "card_mod": {
+                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"on\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                          },
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "this.entity_id"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "entity_id": "sensor.moco_recycle_day",
+                        "options": {
+                          "card_mod": {
+                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if state_attr(\"this.entity_id\", \"days_string\") == \"Tomorrow\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: var(--state-active-color);\n  {% elif state_attr(\"this.entity_id\", \"days_string\") == \"Today\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red\n  {% else %}\n  color: var(--primary-text-color)\n  {% endif %}\n}\n"
+                          },
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "this.entity_id"
+                            }
+                          },
+                          "sort": "name"
+                        }
+                      }
+                    ],
+                    "exclude": []
+                  },
+                  "sort": {
+                    "method": "none"
+                  }
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "type": "attribute",
+                      "entity": "sensor.unavailable_entities",
+                      "attribute": "entity_list",
+                      "name": " ",
+                      "icon": " "
+                    }
+                  ],
+                  "title": "Unavailable Entities"
                 },
                 {
                   "type": "gauge",
@@ -2076,85 +2474,6 @@
                     "columns": 3,
                     "rows": 1
                   }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n    border: 1px;\n  }\n  ha-icon {\n    color: var(--state-icon-color);\n  }\n</style> <table> {% for entity in (states | selectattr('entity_id', 'match', 'sensor.ha_count.*') | list + [states.sensor.yaml_loc]) | sort(attribute='entity_id') -%} <tr> <td><ha-icon icon=\"{{ entity.attributes.icon }}\"></ha-icon></td> <td>{{ entity.attributes.friendly_name | replace(\"HA Count \", \"\") }}</td> <td>{{ entity.state }}</td> </tr> {% endfor -%} </table>"
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "type": "custom:paper-buttons-row",
-                      "position": "right",
-                      "buttons": [
-                        {
-                          "entity": "sensor.speedtest_download",
-                          "icon": "mdi:speedometer",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "homeassistant.update_entity",
-                            "target": {
-                              "entity_id": [
-                                "sensor.speedtest_download",
-                                "sensor.speedtest_upload",
-                                "sensor.speedtest_ping"
-                              ]
-                            },
-                            "data": {}
-                          },
-                          "show_state": true,
-                          "name": "SpeedTest",
-                          "hold_action": {
-                            "action": "none"
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "/control-panel"
-                          },
-                          "name": "FKB",
-                          "icon": "mdi:tablet-dashboard",
-                          "hold_action": {
-                            "action": "none"
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "/mbr-panel"
-                          },
-                          "name": "FKBMBR",
-                          "icon": "mdi:cellphone-text",
-                          "hold_action": {
-                            "action": "none"
-                          }
-                        },
-                        {
-                          "entity": "button.homeassistant_reload",
-                          "tap_action": {
-                            "action": "navigate",
-                            "navigation_path": "/mobile-dashboard"
-                          },
-                          "name": "Mobile",
-                          "icon": "mdi:cellphone",
-                          "hold_action": {
-                            "action": "none"
-                          }
-                        }
-                      ]
-                    }
-                  ],
-                  "show_header_toggle": false
                 }
               ]
             }
@@ -2355,6 +2674,9 @@
                           ]
                         },
                         {
+                          "type": "section"
+                        },
+                        {
                           "type": "custom:paper-buttons-row",
                           "position": "right",
                           "buttons": [
@@ -2367,26 +2689,12 @@
                               "name": "Frigate"
                             },
                             {
-                              "entity": "input_boolean.scrypted_add_on_running_triggered",
-                              "name": "Scrypted"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:paper-buttons-row",
-                          "position": "right",
-                          "buttons": [
-                            {
                               "entity": "input_boolean.mqtt_add_on_running_triggered",
                               "name": "MQTT"
                             },
                             {
-                              "entity": "input_boolean.nginxproxymgr_add_on_running_triggered",
-                              "name": "NPM"
-                            },
-                            {
-                              "entity": "input_boolean.signal_add_on_running_triggered",
-                              "name": "Signal"
+                              "entity": "input_boolean.ssh_add_on_running_triggered",
+                              "name": "SSH"
                             }
                           ]
                         },
@@ -2395,8 +2703,8 @@
                           "position": "right",
                           "buttons": [
                             {
-                              "entity": "input_boolean.ssh_add_on_running_triggered",
-                              "name": "SSH"
+                              "entity": "input_boolean.signal_add_on_running_triggered",
+                              "name": "Signal"
                             },
                             {
                               "entity": "input_boolean.tasmota_devices_triggered",
@@ -2479,62 +2787,6 @@
                               }
                             }
                           ]
-                        },
-                        {
-                          "type": "custom:paper-buttons-row",
-                          "position": "right",
-                          "buttons": [
-                            {
-                              "entity": "sensor.opnsense_package_versions",
-                              "name": "OpnSense",
-                              "icon": "mdi:briefcase-download",
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "homeassistant.update_entity",
-                                "service_data": {
-                                  "entity_id": [
-                                    "sensor.opnsense_package_versions",
-                                    "sensor.opnsense_versions",
-                                    "sensor.opnsense_core_abi_version",
-                                    "sensor.opnsense_core_abi_version_latest"
-                                  ]
-                                }
-                              }
-                            },
-                            {
-                              "entity": "sensor.fully_kiosk_browser_version",
-                              "name": "FKB",
-                              "icon": "mdi:briefcase-download",
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "homeassistant.update_entity",
-                                "service_data": {
-                                  "entity_id": [
-                                    "sensor.fully_kiosk_browser_version",
-                                    "sensor.fully_kiosk_browser_version_latest"
-                                  ]
-                                }
-                              }
-                            },
-                            {
-                              "entity": "sensor.unifi_ap_versions",
-                              "name": "Unifi",
-                              "icon": "mdi:briefcase-download",
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "homeassistant.update_entity",
-                                "service_data": {
-                                  "entity_id": [
-                                    "sensor.unifi_ap_versions"
-                                  ]
-                                }
-                              }
-                            },
-                            {
-                              "entity": "switch.zigbee2mqtt_bridge_permit_join",
-                              "name": "Z2M Join"
-                            }
-                          ]
                         }
                       ]
                     }
@@ -2561,6 +2813,12 @@
                           "secondary_info": "last-changed"
                         }
                       }
+                    ],
+                    "exclude": [
+                      {
+                        "options": {},
+                        "entity_id": "*cameras_disk_plug"
+                      }
                     ]
                   },
                   "sort": {
@@ -2578,11 +2836,6 @@
                     },
                     {
                       "entity": "switch.sinope_plug"
-                    },
-                    {
-                      "entity": "light.middle_garage_light",
-                      "name": "Garage Door Camera",
-                      "icon": "mdi:cctv"
                     }
                   ],
                   "title": "Other Plugs",
@@ -2593,91 +2846,6 @@
             {
               "type": "grid",
               "cards": [
-                {
-                  "type": "custom:auto-entities",
-                  "card": {
-                    "type": "entities",
-                    "title": "Refresh Entities (click)"
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "entity_id": "sensor.unavailable_entities",
-                        "options": {
-                          "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "homeassistant.update_entity",
-                            "service_data": {},
-                            "target": {
-                              "entity_id": "this.entity_id"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "entity_id": "sensor.ood_zigbee_entities",
-                        "options": {
-                          "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "homeassistant.update_entity",
-                            "service_data": {},
-                            "target": {
-                              "entity_id": "this.entity_id"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "entity_id": "sensor.ood_wyze_entities",
-                        "options": {
-                          "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "homeassistant.update_entity",
-                            "service_data": {},
-                            "target": {
-                              "entity_id": "this.entity_id"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "entity_id": "sensor.moco_recycle_day",
-                        "options": {
-                          "style": "* {\n  {% if state_attr(\"this.entity_id\", \"days_string\") == \"Tomorrow\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: var(--state-active-color);\n  {% elif state_attr(\"this.entity_id\", \"days_string\") == \"Today\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red\n  {% else %}\n  color: var(--primary-text-color)\n  {% endif %}\n}\n",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "homeassistant.update_entity",
-                            "service_data": {},
-                            "target": {
-                              "entity_id": "this.entity_id"
-                            }
-                          },
-                          "sort": "name"
-                        }
-                      }
-                    ],
-                    "exclude": []
-                  },
-                  "sort": {
-                    "method": "none"
-                  }
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "type": "attribute",
-                      "entity": "sensor.unavailable_entities",
-                      "attribute": "entity_list",
-                      "name": " ",
-                      "icon": " "
-                    }
-                  ],
-                  "title": "Unavailable Entities"
-                },
                 {
                   "type": "entities",
                   "entities": [
@@ -2962,16 +3130,25 @@
                   "filter": {
                     "include": [
                       {
-                        "domain": "sensor",
                         "options": {
                           "secondary_info": "last-changed"
                         },
-                        "entity_id": "sensor.*pixel*battery*"
+                        "domain": "sensor",
+                        "entity_id": "/sensor\\.(holly|mike).*battery.*/"
                       }
                     ],
                     "exclude": [
                       {
+                        "options": {},
                         "entity_id": "*_state*"
+                      },
+                      {
+                        "options": {},
+                        "entity_id": "*nightstand*"
+                      },
+                      {
+                        "options": {},
+                        "entity_id": "*duet*"
                       }
                     ]
                   },
@@ -3357,6 +3534,11 @@
                   "filter": {
                     "include": [
                       {
+                        "options": {},
+                        "entity_id": "device_tracker.holly_s_phone"
+                      },
+                      {
+                        "options": {},
                         "entity_id": ".*\\.holly_s_phone.*"
                       }
                     ],
@@ -3384,10 +3566,20 @@
                   "filter": {
                     "include": [
                       {
-                        "entity_id": ".*\\.mike_s_phone.*"
+                        "options": {},
+                        "entity_id": ".*\\.mike.*"
                       }
                     ],
-                    "exclude": []
+                    "exclude": [
+                      {
+                        "options": {},
+                        "entity_id": "/.*(desk|bed|location|presence|duet).*/"
+                      },
+                      {
+                        "options": {},
+                        "domain": "/(media_player|zone)/"
+                      }
+                    ]
                   },
                   "sort": {
                     "method": "friendly_name"
@@ -3510,7 +3702,131 @@
           "title": "Test",
           "path": "test",
           "icon": "mdi:test-tube",
-          "sections": []
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "glance",
+                  "entities": [
+                    {
+                      "entity": "sensor.master_bath_humidity"
+                    },
+                    {
+                      "entity": "sensor.master_bath_multisensor_2_humidity"
+                    }
+                  ]
+                },
+                {
+                  "type": "glance",
+                  "entities": [
+                    {
+                      "entity": "sensor.master_bath_multisensor_temperature"
+                    },
+                    {
+                      "entity": "sensor.master_bath_multisensor_2_temperature"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "features": [
+                    {
+                      "type": "area-controls"
+                    }
+                  ],
+                  "alert_classes": [
+                    "motion",
+                    "moisture"
+                  ],
+                  "sensor_classes": [
+                    "temperature",
+                    "humidity"
+                  ],
+                  "features_position": "bottom",
+                  "display_type": "picture",
+                  "type": "area",
+                  "area": "e578e8c2f75a11ea912663367f9be460",
+                  "color": ""
+                },
+                {
+                  "features": [
+                    {
+                      "type": "area-controls"
+                    }
+                  ],
+                  "alert_classes": [
+                    "motion",
+                    "moisture",
+                    "occupancy"
+                  ],
+                  "sensor_classes": [
+                    "temperature",
+                    "humidity"
+                  ],
+                  "features_position": "bottom",
+                  "display_type": "picture",
+                  "type": "area",
+                  "area": "e0ed57d0f82011eaabf815b2224a559b",
+                  "color": ""
+                },
+                {
+                  "features": [
+                    {
+                      "type": "area-controls"
+                    }
+                  ],
+                  "alert_classes": [
+                    "motion",
+                    "moisture",
+                    "door",
+                    "occupancy"
+                  ],
+                  "sensor_classes": [
+                    "temperature",
+                    "humidity"
+                  ],
+                  "features_position": "bottom",
+                  "display_type": "picture",
+                  "type": "area",
+                  "area": "e578c331f75a11ea8934e9d0c5b82a8b",
+                  "color": ""
+                },
+                {
+                  "alert_classes": [
+                    "motion",
+                    "moisture"
+                  ],
+                  "sensor_classes": [
+                    "temperature",
+                    "humidity"
+                  ],
+                  "features_position": "bottom",
+                  "display_type": "picture",
+                  "type": "area",
+                  "area": "b98ef399f82011eab9688f8a4035f84e",
+                  "color": "",
+                  "features": [
+                    {
+                      "type": "area-controls"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }

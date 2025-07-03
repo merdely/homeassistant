@@ -400,8 +400,8 @@
         endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n  {{
         open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities
         | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n  {%-
-        if ns.count == ns.open_entities | length - 1 %} and {% endif -%}\n{%- endfor
-        -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
+        if ns.count == ns.open_entities | length - 1 %}and {% endif -%}\n{%- endfor
+        -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %}are{% endif
         %} {%- if ns.count > 0 %} open{% else %}No devices are open{% endif %}"
     action: notify.signal_security
   mode: single
@@ -880,7 +880,9 @@
       Front Door: 1
       Mailbox: 1
       Mike S5: 1
+      Mike S5 Trunk: 1
       Holly Santa Fe: 1
+      Holly Sante Fe Trunk: 1
       Holly Tundra: 1
     tags:
       741a22c8-f682-4319-8d86-eeaa31516012: Foyer
@@ -888,7 +890,9 @@
       3eb9caa6-d3ed-4532-a368-8b9fd2a659a5: Front Door
       2aa97775-6bd0-4786-a767-058b393b35d5: Mailbox
       0cb8568f-8feb-4f09-9422-e960f7890ed7: Mike S5
+      352fdc00-2ba9-44d4-90b5-0912c987e37d: Mike S5 Trunk
       b4cde339-fb97-4619-9d7d-a8663a418753: Holly Santa Fe
+      40cf4348-6ab2-4823-aaca-9f0814793154: Holly Sante Fe Trunk
       85e387a4-90b1-4241-afe2-f5303bfb2aa1: Holly Tundra
     users:
       80ad218b0cf54379b5ee622fbb721c6b: Mike
