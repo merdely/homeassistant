@@ -183,16 +183,40 @@ get_day() {
 }
 
 get_day_num() {
+  case "$1" in
+    [Ss]unday)
+      echo 0
+      return
+      ;;
+    [Mm]onday)
+      echo 1
+      return
+      ;;
+    [Tt]uesday)
+      echo 2
+      return
+      ;;
+    [Ww]ednesday)
+      echo 3
+      return
+      ;;
+    [Tt]hursday)
+      echo 4
+      return
+      ;;
+    [Ff]riday)
+      echo 5
+      return
+      ;;
+    [Ss]aturday)
+      echo 6
+      return
+      ;;
+  esac
   if date --version 2>&1 | grep -iq busybox; then
     case "$1" in
       [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])
         date -D "%Y-%m-%d" -d "$1" "+%w"
-        ;;
-      Sunday|Monday|Tuesday|Wednesday|Thursday|Friday)
-        date -D "%A" -d "$1" "+%w"
-        ;;
-      sunday|monday|tuesday|wednesday|thursday|friday)
-        date -D "%A" -d "$1" "+%w"
         ;;
       *)
         date -D "%A, %B %d, %Y" -d "$1" "+%w"
@@ -225,7 +249,7 @@ fi
 
 mydaynum=$(get_day_num $mydate)
 pickup_day=$default_day
-pickup_day_num=$(get_day_num $default_day)
+pickup_day_num=$(get_day_num $pickup_day)
 if [ $mydaynum = $pickup_day_num ]; then
   pickup_date=$mydate
 elif [ $mydaynum -lt $pickup_day_num ]; then
