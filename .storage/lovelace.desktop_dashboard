@@ -710,15 +710,13 @@
                           "entity": "sensor.days_until_cleaners",
                           "name": "Cleaners",
                           "styles": {
-                            "color": "var(--cleaners-color)",
-                            "width": "50px"
+                            "color": "var(--cleaners-color)"
                           }
                         },
                         {
                           "entity": "sensor.trash",
                           "styles": {
-                            "color": "var(--trash-color)",
-                            "width": "50px"
+                            "color": "var(--trash-color)"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -733,24 +731,7 @@
                           "attribute": "days_string",
                           "name": "Recycle",
                           "styles": {
-                            "color": "var(--recycle-color)",
-                            "width": "50px"
-                          },
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "input_boolean.toggle",
-                            "service_data": {
-                              "entity_id": "input_boolean.recycle_is_out"
-                            }
-                          }
-                        },
-                        {
-                          "entity": "sensor.moco_recycle_day",
-                          "name": "Rec. Day",
-                          "attribute": "recycle_day",
-                          "styles": {
-                            "color": "var(--recycle-color)",
-                            "width": "55px"
+                            "color": "var(--recycle-color)"
                           },
                           "tap_action": {
                             "action": "call-service",
