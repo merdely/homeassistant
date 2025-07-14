@@ -1,75 +1,3 @@
-announcement_ha_app_test_announcement:
-  alias: Announcement - HA App - Test Announcement
-  sequence:
-  - service: notify.mobile_app_pixel_3
-    data:
-      title: Laundry
-      message: The dryer is still running
-  - service: notify.signal_mike
-    data:
-      message: The dryer is still running
-      title: Laundry
-  mode: single
-announcement_nightly_security:
-  alias: Announcement - Nightly Security
-  sequence:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: group.interior_doors_and_windows
-          state: 'on'
-        - condition: state
-          entity_id: binary_sensor.shed_door_contact
-          state: 'on'
-        - condition: not
-          conditions:
-          - condition: device
-            type: is_off
-            device_id: 4063a0557ed26b25b779f2cfc024d04a
-            entity_id: e69f018e5d60aa7d19638f5df91de52f
-            domain: switch
-        - condition: state
-          entity_id: binary_sensor.shed_gate_contact
-          state: 'on'
-        - condition: state
-          entity_id: binary_sensor.chimney_gate_contact
-          state: 'on'
-      sequence:
-      - entity_id: media_player.fkb_control_panel
-        data:
-          message: "{% if is_state('binary_sensor.front_door_contact', 'on') %}\n
-            \ Front Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',
-            'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',
-            'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',
-            'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',
-            'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',
-            'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',
-            'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',
-            'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',
-            'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',
-            'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_gate_contact',
-            'on') %}\n  Shed Gate is Open.\n{% endif %}\n{% if is_state('binary_sensor.chimney_gate_contact',
-            'on') %}\n  Chimney Gate is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',
-            'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
-        action: tts.cloud_say
-      - data:
-          message: "{% if is_state('binary_sensor.front_door', 'on') %}\n  Front Door
-            is Open.\n{% endif %}\n{% if is_state('binary_sensor.back_door_contact',
-            'on') %}\n  Back Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.bedroom_slider_contact',
-            'on') %}\n  Bedroom Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.dining_room_slider_contact',
-            'on') %}\n  Dining Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.god_damn_slider_contact',
-            'on') %}\n  God Damn Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.living_room_slider_contact',
-            'on') %}\n  Living Room Slider is Open.\n{% endif %}\n{% if is_state('binary_sensor.garage_entry_door_contact',
-            'on') %}\n  Garage Entry Door is Open.\n{% endif %}\n{% if is_state('binary_sensor.den_window_contact',
-            'on') %}\n  Den Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.powder_room_window_contact',
-            'on') %}\n  Powder Room Window is Open.\n{% endif %}\n{% if is_state('binary_sensor.shed_door_contact',
-            'on') %}\n  Shed Door is Open.\n{% endif %}\n{% if not is_state('cover.garage_door',
-            'closed') %}\n  Garage Door is Open.\n{% endif %}\n"
-        action: notify.signal_security
-    default: []
-  mode: single
 computer_mercury_unlock:
   alias: Computer - Mercury - Unlock
   sequence:
@@ -85,50 +13,6 @@ computer_mercury_unlock:
     default: []
   mode: single
   icon: mdi:lock-open-variant-outline
-security_message_open_security_devices:
-  alias: Security -  Message - Open Security Devices
-  sequence:
-  - data:
-      value: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
-        -%} {%- for entity_id in states.group.security_devices.attributes.entity_id
-        -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state
-        != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities
-        = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-
-        endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n  {{
-        open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities
-        | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n  {%-
-        if ns.count == ns.open_entities | length - 1 %}and {% endif -%}\n{%- endfor
-        -%}{% if ns.count == 1 %} is{% endif %}{% if ns.count > 1 %} are{% endif %}{%
-        if ns.count > 0 %} open{% else %}No devices are open{% endif %}"
-    entity_id: input_text.security_message
-    action: input_text.set_value
-  mode: single
-security_message_list_all_security_devices_and_their_state:
-  alias: Security - Message - List all security devices and their state
-  sequence:
-  - service: notify.signal_mike
-    data:
-      message: "{%- for entity_id in states.group.security_devices.attributes.entity_id
-        %}\n  {%- set domain, device = entity_id.split('.') -%}\n  {{ state_attr(entity_id,\"friendly_name\")
-        }} - {{ states[domain][device].state }}\n{% endfor %}\n"
-  mode: single
-security_message_list_all_security_devices_and_their_state_dup:
-  alias: Security - Message - List all security devices and their state (Duplicate)
-  sequence:
-  - service: notify.signal_mike
-    data:
-      message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
-        -%} {%- for entity_id in states.group.security_devices.attributes.entity_id
-        -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state
-        != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities
-        = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-
-        endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n  {{
-        open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities
-        | length > 2 and ns.count < ns.open_entities | length %}, {%- endif %}\n  {%-
-        if ns.count == ns.open_entities | length - 1 %} and {%- endif %}\n{% endfor
-        -%} {%- if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %} are{% endif
-        %} {% if ns.count > 0 %}open{% else %}No devices are open{% endif %}"
-  mode: single
 testing_email_mike:
   alias: Testing - Email Mike
   sequence:
@@ -160,33 +44,6 @@ tv_bedroom_mute:
       payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0F00F","DataLSB":"0x07070FF0","Repeat":0}
   mode: single
   icon: mdi:volume-mute
-tv_bedroom_roku_ok:
-  alias: TV - Bedroom - Roku - OK
-  sequence:
-  - service: remote.send_command
-    data:
-      command: select
-    entity_id: remote.bedroom_roku
-  mode: single
-  icon: file:roku
-tv_bedroom_roku_pause:
-  alias: TV - Bedroom - Roku - Pause
-  sequence:
-  - service: media_player.media_play_pause
-    data: {}
-    entity_id: media_player.bedroom_roku
-  mode: single
-  icon: file:roku
-tv_bedroom_roku_replay:
-  alias: TV - Bedroom - Roku - Replay
-  sequence:
-  - service: remote.send_command
-    data:
-      entity_id: remote.bedroom_roku
-      command:
-      - replay
-  mode: single
-  icon: file:roku
 tv_bedroom_roku_stop:
   alias: TV - Bedroom - Roku - Stop
   sequence:
@@ -196,110 +53,6 @@ tv_bedroom_roku_stop:
     entity_id: media_player.bedroom_roku
   mode: single
   icon: mdi:stop
-tv_bedroom_volume_down:
-  alias: TV - Bedroom - Volume Down
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/bedroom_tv_remote/backlog
-      payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0}
-  mode: single
-  icon: mdi:volume-minus
-tv_bedroom_volume_up:
-  alias: TV - Bedroom - Volume Up
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/bedroom_tv_remote/backlog
-      payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0};
-        delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0}
-  mode: single
-  icon: mdi:volume-plus
-tv_god_damn_input_roku:
-  alias: TV - God Damn - Input - Roku
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Roku
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: file:roku
-tv_god_damn_input_chromecast:
-  alias: TV - God Damn - Input - Chromecast
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Chromecast
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: mdi:cast
-tv_god_damn_input_cameras:
-  alias: TV - God Damn - Input - Cameras
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Cameras
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: mdi:cctv
-tv_god_damn_input_front_door_camera:
-  alias: TV - God Damn - Input - Front Door Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Front Door Camera
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: mdi:cctv
-tv_god_damn_input_garage_camera:
-  alias: TV - God Damn - Input - Garage Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Garage Camera
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: mdi:cctv
-tv_god_damn_input_chimney_camera:
-  alias: TV - God Damn - Input - Chimney Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Chimney Camera
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: mdi:cctv
-tv_god_damn_input_shed_camera:
-  alias: TV - God Damn - Input - Shed Camera
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Shed Camera
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: mdi:cctv
-tv_god_damn_input_playstation:
-  alias: TV - God Damn - Input - Playstation
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Playstation
-  mode: single
-  icon: mdi:sony-playstation
-tv_god_damn_input_wii:
-  alias: TV - God Damn - Input - Wii
-  sequence:
-  - service: input_select.select_option
-    data:
-      option: Wii
-    entity_id: input_select.god_damn_input
-  mode: single
-  icon: mdi:nintendo-wii
 tv_god_damn_mute:
   alias: TV - God Damn - Mute
   sequence:
@@ -309,33 +62,6 @@ tv_god_damn_mute:
       payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x140C","DataLSB":"0x2830","Repeat":0}
   mode: single
   icon: mdi:volume-mute
-tv_god_damn_roku_ok:
-  alias: TV - God Damn - Roku - OK
-  sequence:
-  - service: remote.send_command
-    data:
-      command: select
-    entity_id: remote.god_damn_roku
-  mode: single
-  icon: file:roku
-tv_god_damn_roku_pause:
-  alias: TV - God Damn - Roku - Pause
-  sequence:
-  - service: media_player.media_play_pause
-    data: {}
-    entity_id: media_player.god_damn_roku
-  mode: single
-  icon: file:roku
-tv_god_damn_roku_replay:
-  alias: TV - God Damn - Roku - Replay
-  sequence:
-  - service: remote.send_command
-    data:
-      entity_id: remote.god_damn_roku
-      command:
-      - replay
-  mode: single
-  icon: file:roku
 tv_god_damn_roku_stop:
   alias: TV - God Damn - Roku - Stop
   sequence:
@@ -345,39 +71,6 @@ tv_god_damn_roku_stop:
     entity_id: media_player.god_damn_roku
   mode: single
   icon: mdi:stop
-tv_god_damn_soundbar_input:
-  alias: TV - God Damn - Soundbar Input
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/god_damn_tv_remote/backlog
-      payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x4B0D","DataLSB":"0xD2B0","Repeat":0}
-  mode: single
-  icon: mdi:surround-sound
-tv_god_damn_volume_down:
-  alias: TV - God Damn - Volume Down
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/god_damn_tv_remote/backlog
-      payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0}
-  mode: single
-  icon: mdi:volume-minus
-tv_god_damn_volume_up:
-  alias: TV - God Damn - Volume Up
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/god_damn_tv_remote/backlog
-      payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0}
-  mode: single
-  icon: mdi:volume-plus
 tv_living_room_mute:
   alias: TV - Living Room - Mute
   sequence:
@@ -387,33 +80,6 @@ tv_living_room_mute:
       payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x140C","DataLSB":"0x2830","Repeat":0}
   mode: single
   icon: mdi:volume-mute
-tv_living_room_roku_ok:
-  alias: TV - Living Room - Roku - OK
-  sequence:
-  - data:
-      command: select
-    entity_id: remote.living_room_roku_tv
-    action: remote.send_command
-  mode: single
-  icon: file:roku
-tv_living_room_roku_pause:
-  alias: TV - Living Room - Roku - Pause
-  sequence:
-  - data: {}
-    entity_id: media_player.living_room_roku_tv
-    action: media_player.media_play_pause
-  mode: single
-  icon: file:roku
-tv_living_room_roku_replay:
-  alias: TV - Living Room - Roku - Replay
-  sequence:
-  - data:
-      entity_id: remote.living_room_roku_tv
-      command:
-      - replay
-    action: remote.send_command
-  mode: single
-  icon: file:roku
 tv_living_room_roku_stop:
   alias: TV - Living Room - Roku - Stop
   sequence:
@@ -424,30 +90,6 @@ tv_living_room_roku_stop:
       entity_id: media_player.living_room_roku_tv
   mode: single
   icon: mdi:stop
-tv_living_room_volume_down:
-  alias: TV - Living Room - Volume Down
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/living_room_tv_remote/backlog
-      payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x640C","DataLSB":"0x2630","Repeat":0}
-  mode: single
-  icon: mdi:volume-minus
-tv_living_room_volume_up:
-  alias: TV - Living Room - Volume Up
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/living_room_tv_remote/backlog
-      payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0};
-        delay 2; irsend {"Protocol":"SONY","Bits":15,"Data":"0x240C","DataLSB":"0x2430","Repeat":0}
-  mode: single
-  icon: mdi:volume-plus
 tv_office_mute:
   alias: TV - Office - Mute
   sequence:
@@ -457,33 +99,6 @@ tv_office_mute:
       payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33E916","DataLSB":"0x33CC9768","Repeat":0}
   mode: single
   icon: mdi:volume-mute
-tv_office_roku_ok:
-  alias: TV - Office - Roku - OK
-  sequence:
-  - data:
-      command: select
-    entity_id: remote.office_roku_tv
-    action: remote.send_command
-  mode: single
-  icon: file:roku
-tv_office_roku_pause:
-  alias: TV - Office - Roku - Pause
-  sequence:
-  - data: {}
-    entity_id: media_player.office_roku_tv
-    action: media_player.media_play_pause
-  mode: single
-  icon: file:roku
-tv_office_roku_replay:
-  alias: TV - Office - Roku - Replay
-  sequence:
-  - data:
-      entity_id: remote.office_roku_tv
-      command:
-      - replay
-    action: remote.send_command
-  mode: single
-  icon: file:roku
 tv_office_roku_stop:
   alias: TV - Office - Roku - Stop
   sequence:
@@ -493,30 +108,6 @@ tv_office_roku_stop:
     action: media_player.select_source
   mode: single
   icon: mdi:stop
-tv_office_volume_down:
-  alias: TV - Office - Volume Down
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/office_tv_remote/backlog
-      payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33D12E","DataLSB":"0x33CC8B74","Repeat":0};
-        delay 2; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33D12E","DataLSB":"0x33CC8B74","Repeat":0};
-        delay 2; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33D12E","DataLSB":"0x33CC8B74","Repeat":0};
-        delay 2; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33D12E","DataLSB":"0x33CC8B74","Repeat":0}
-  mode: single
-  icon: mdi:volume-minus
-tv_office_volume_up:
-  alias: TV - Office - Volume Up
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/office_tv_remote/backlog
-      payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33E11E","DataLSB":"0x33CC8778","Repeat":0};
-        delay 2; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33E11E","DataLSB":"0x33CC8778","Repeat":0};
-        delay 2; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33E11E","DataLSB":"0x33CC8778","Repeat":0};
-        delay 2; irsend {"Protocol":"NEC","Bits":32,"Data":"0xCC33E11E","DataLSB":"0x33CC8778","Repeat":0}
-  mode: single
-  icon: mdi:volume-plus
 function_tv_roku_choose_camera:
   alias: Function - TV - Roku - Choose Camera
   variables:
@@ -575,23 +166,6 @@ home_thermostat_down:
   alias: Home - Thermostat - Down
   sequence:
   - data:
-      message: Lowering thermostat from {{ state_attr('climate.thermostat', 'target_temp_high')
-        }}/{{ state_attr('climate.thermostat', 'target_temp_low') }} to {{ state_attr('climate.thermostat',
-        'target_temp_high') | float(0) | round - 1.0 }}/{{ state_attr('climate.thermostat',
-        'target_temp_low') | float(0) | round - 1.0 }}
-      level: warning
-    action: system_log.write
-    enabled: false
-  - data:
-      target_temp_high: '{{ state_attr(''climate.thermostat'', ''target_temp_high'')
-        | float(0) | round - 1.0 }}'
-      target_temp_low: '{{ state_attr(''climate.thermostat'', ''target_temp_low'')
-        | float(0) | round - 1.0 }}'
-    target:
-      entity_id: climate.thermostat
-    action: climate.set_temperature
-    enabled: false
-  - data:
       message: Lowering thermostat from {{ state_attr('climate.thermostat', 'temperature')
         }} to {{ state_attr('climate.thermostat', 'temperature') - 1 }}
       level: warning
@@ -604,16 +178,7 @@ home_thermostat_down:
       entity_id: climate.thermostat
   mode: single
   icon: mdi:thermometer-minus
-000_test_script:
-  alias: 000-Test Script
-  sequence:
-  - service: homeassistant.turn_off
-    target:
-      entity_id:
-      - light.office_fan_light
-      - fan.office_fan
-  mode: single
-  icon: mdi:tools
+  description: ''
 scene_good_night:
   alias: Scene - Good Night
   sequence:
@@ -763,18 +328,6 @@ scene_night_night:
     entity_id: cover.garage_door
   mode: single
   icon: mdi:moon-waning-crescent
-tv_all_off:
-  alias: TV - All - Off
-  sequence:
-  - service: homeassistant.turn_off
-    target:
-      entity_id:
-      - switch.god_damn_tv
-      - switch.office_tv
-      - switch.bedroom_tv
-      - switch.living_room_tv
-  mode: single
-  icon: mdi:television
 home_thermostat_up:
   alias: Home - Thermostat - Up
   sequence:
@@ -809,30 +362,6 @@ home_thermostat_up:
   mode: single
   icon: mdi:thermometer-plus
   description: ''
-function_camera_reset:
-  alias: Function - Camera Reset
-  sequence:
-  - service: homeassistant.turn_off
-    target:
-      entity_id: '{{ cameras[camera] }}'
-  - delay: '5'
-  - service: homeassistant.turn_on
-    target:
-      entity_id: '{{ cameras[camera] }}'
-  mode: single
-  icon: mdi:restart
-  fields:
-    camera:
-      description: The Camera Power Plug to Reset
-      example: '"backyard", "chimney", "frontdoor", "frontdoor2", "garage", or "shed"'
-  variables:
-    cameras:
-      backyard: switch.backyard_cam_plug
-      chimney: switch.chimney_cam_plug
-      frontdoor: switch.front_door_cam_plug
-      frontdoor2: switch.front_door_cam_2_plug
-      garage: switch.garage_cam_plug
-      shed: switch.shed_cam_plug
 fix_in_bed_sensors:
   alias: Fix In-Bed Sensors
   sequence:
@@ -846,15 +375,6 @@ fix_in_bed_sensors:
       state: '{{ states(''input_boolean.mike_is_in_bed'') }}'
   mode: single
   icon: mdi:bed
-close_garage_door:
-  alias: Close Garage Door
-  sequence:
-  - service: mqtt.publish
-    data:
-      topic: cmnd/garage_door/event
-      payload: doorclose
-  mode: single
-  icon: mdi:garage
 scene_turn_off_the_office:
   alias: Scene - Turn off the Office
   sequence:
@@ -868,63 +388,7 @@ scene_turn_off_the_office:
       - switch.venus_screensaver
   mode: single
   icon: mdi:desk
-function_frigate_send_email:
-  alias: Function - Frigate - Send Email
-  sequence:
-  - service: notify.gmail_to_security
-    data:
-      message: '{{ object | title }} detected
-
-        Images from {{ camera | replace("_", " ") }} Camera
-
-        '
-      title: '{{ camera | replace("_", " ") }} Camera'
-      data:
-        images:
-        - /media/frigate/clips/{{ camera }}-{{ eventid }}.jpg
-        html: '<p>{{ object | title }} detected</p>
-
-          <p>Images from {{ camera | replace("_", " ") }} Camera</p>
-
-          '
-  fields:
-    object:
-      description: Object detected by Frigate
-      example: trigger.payload_json["after"]["label"]
-    camera:
-      description: Camera with which Frigate detected movement
-      example: trigger.payload_json["after"]["camera"]
-    eventid:
-      description: Frigate Event ID
-      example: trigger.payload_json['after']['id']
-  mode: single
-  icon: mdi:email-fast
-flash_back_porch_lights:
-  sequence:
-  - repeat:
-      count: '5'
-      sequence:
-      - service: homeassistant.turn_on
-        data: {}
-        target:
-          entity_id: light.back_porch_light
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 1
-          milliseconds: 0
-      - service: homeassistant.turn_off
-        data: {}
-        target:
-          entity_id: light.back_porch_light
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 1
-          milliseconds: 0
-  mode: single
-  alias: Flash Back Porch Lights
-0000000mwe:
+fix_3_way_lights:
   alias: Fix 3-way Lights
   sequence:
   - repeat:
@@ -1068,55 +532,6 @@ testing_signal_security:
     data:
       message: Test message of signal_security
   mode: single
-if_then_test:
-  alias: if-then test
-  sequence:
-  - if:
-    - condition: template
-      value_template: '{{ 1 == 1 }}'
-    - condition: template
-      value_template: '{{ 4 == 4 }}'
-    - condition: template
-      value_template: '{{ 3 == 3 }}'
-    then:
-    - service: system_log.write
-      data:
-        message: test successful
-  mode: single
-lock_garage_entry_door:
-  alias: 'Locking: Garage Entry Door Lock'
-  sequence:
-  - service: button.press
-    data: {}
-    target:
-      entity_id: button.garage_entry_door_ping
-  - service: lock.lock
-    data: {}
-    target:
-      entity_id: lock.garage_entry_door
-  - service: button.press
-    data: {}
-    target:
-      entity_id: button.garage_entry_door_ping
-  mode: single
-  icon: mdi:lock
-unlock_garage_entry_door:
-  alias: 'Locking: Garage Entry Door Unlock'
-  sequence:
-  - service: button.press
-    data: {}
-    target:
-      entity_id: button.garage_entry_door_ping
-  - service: lock.unlock
-    data: {}
-    target:
-      entity_id: lock.garage_entry_door
-  - service: button.press
-    data: {}
-    target:
-      entity_id: button.garage_entry_door_ping
-  mode: single
-  icon: mdi:lock-open-variant
 locking_garage_entry_door_toggle:
   alias: 'Locking: Garage Entry Door Toggle'
   sequence:
@@ -1189,79 +604,6 @@ power_cycle_closet_switch:
       entity_id: switch.sol_plug
   mode: single
   icon: mdi:sync
-zigbee_bulbs_keepalive:
-  alias: Zigbee Bulbs Keepalive
-  sequence:
-  - service: input_text.set_value
-    data:
-      value: ''
-    target:
-      entity_id: input_text.zigbee_bulbs_script_list
-  - service: mqtt.publish
-    data:
-      qos: '0'
-      topic: zigbee2mqtt/bridge/request/permit_join
-      payload: '{"value": true, "time": 30}'
-  - repeat:
-      for_each:
-      - light.dresser_lamp
-      - light.near_black_lamp
-      - light.front_porch_light
-      - light.god_damn_light
-      sequence:
-      - if:
-        - condition: template
-          value_template: '{{ is_state(repeat.item, ''off'') }}'
-          alias: Bulb is off
-        - alias: Bulb has been out of date for more than 12 hours
-          condition: template
-          value_template: '{{ (as_timestamp(now()) - as_timestamp(state_attr(repeat.item
-            | regex_replace("_(lamp|light)$", "_bulb"), ''last_seen''))) > 60 * 60
-            * 13 }}'
-        then:
-        - service: input_text.set_value
-          data:
-            value: '{{ states(''input_text.zigbee_bulbs_script_list'') }},{{ repeat.item
-              }}'
-          target:
-            entity_id: input_text.zigbee_bulbs_script_list
-        - service: homeassistant.turn_on
-          target:
-            entity_id:
-            - '{{ repeat.item }}'
-            - '{% for ent in state_attr(repeat.item, "entity_id") %}{% if ent[-5:]
-              != "_bulb" %}{{ ent }}{% endif %}{% endfor %}'
-        - service: system_log.write
-          data:
-            level: error
-            message: '{{ repeat.item }} fixed (turned on {{ repeat.item }} and {%
-              for ent in state_attr(repeat.item, "entity_id") %}{% if ent[-5:] !=
-              "_bulb" %}{{ ent }}{% endif %}{% endfor %})'
-      - service: system_log.write
-        data:
-          level: error
-          message: '{{repeat.item}}: {% for ent in state_attr(repeat.item, "entity_id")
-            %}{% if ent[-5:] != "_bulb" %}{{ ent }}{% endif %}{% endfor %}'
-        enabled: false
-  - if:
-    - condition: template
-      value_template: '{{ states("input_text.zigbee_bulbs_script_list") | length >
-        0 }}'
-    then:
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 30
-        milliseconds: 0
-    - repeat:
-        for_each: '{{ states("input_text.zigbee_bulbs_script_list")[1:].split(",")
-          }}'
-        sequence:
-        - service: homeassistant.turn_off
-          target:
-            entity_id: '{{ repeat.item }}'
-  mode: single
-  icon: mdi:zigbee
 restart_octoprint:
   alias: Restart Octoprint
   sequence:
@@ -1280,98 +622,6 @@ test_action_notification_to_pixel_9_pro:
           title: Trash Is Already Out
     action: notify.mobile_app_pixel_9_pro
   description: ''
-backup_full_on_nfs:
-  alias: Backup - Full on NFS
-  sequence:
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: 'Starting backup: {{ name | default(now().strftime("Full Backup %Y-%m-%d
-        %H:%M:%S %a.tar")) }}'
-  - data:
-      name: '{{ name | default(now().strftime("Full Backup %Y-%m-%d %H:%M:%S %a.tar"))
-        }}'
-      compressed: true
-      homeassistant_exclude_database: true
-      password: entb94qj##q$P@QXDhupA^w755e5Uc$Q
-    action: hassio.backup_full
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: 'Backup complete: {{ name | default(now().strftime("Full Backup %Y-%m-%d
-        %H:%M:%S %a.tar")) }}'
-  mode: single
-  icon: mdi:backup-restore
-  fields:
-    name:
-      description: Name of the Full Backup to run
-      example: Backup before upgrade
-  description: ''
-backup_partial_on_nfs:
-  alias: Backup - Partial on NFS
-  sequence:
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: 'Starting partial backup: {{ name | default(now().strftime("Partial
-        Backup %Y-%m-%d %H:%M:%S %a.tar")) }}'
-  - data:
-      name: '{{ name | default(now().strftime("Partial Backup %Y-%m-%d %H:%M:%S %a.tar"))
-        }}'
-      compressed: true
-      homeassistant_exclude_database: true
-      folders: '{{ folder_list | default(''homeassistant,share,ssl''.split('','')|list)
-        }}'
-      addons: '{{ addons | default(state_attr(''sensor.installed_add_ons'', ''list'').split('','')|list)
-        }}'
-      password: entb94qj##q$P@QXDhupA^w755e5Uc$Q
-    action: hassio.backup_partial
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: 'Partial backup complete: {{ name | default(now().strftime("Partial
-        Backup %Y-%m-%d %H:%M:%S %a.tar")) }}'
-  mode: single
-  icon: mdi:backup-restore
-  fields:
-    name:
-      description: Name of the SSH Backup to run
-      example: Backup of SSH before upgrade
-    addons:
-      description: List of slugs to back up (leave blank to back up all addons)
-      example: '- a0d7b954_ssh - core_mosquitto - a0d7b954_bitwarden - a0d7b954_unifi'
-    folders:
-      description: List of folders to back up
-      example: homeassistant,share,ssl,media
-  description: ''
-test_script:
-  alias: test script
-  sequence:
-  - if:
-    - condition: template
-      value_template: '{{ name in do_unlock }}'
-    then:
-    - action: light.toggle
-      metadata: {}
-      data: {}
-      target:
-        entity_id: light.laundry_room_light
-  variables:
-    do_unlock:
-      Garage: 1
-      Front Door: 1
-      Mike Car: 1
-      Holly Car: 1
-      Holly Tundra: 1
-  description: ''
-  fields:
-    name:
-      description: A Name
-      example: Mike Car
 tv_bedroom_sleep:
   sequence:
   - action: conversation.process
@@ -1404,20 +654,8 @@ tv_god_damn_sleep:
       text: Turn off the God Damn TV in 30 minutes
   alias: TV - God Damn - Sleep
   description: ''
-tv_god_damn_soundbar_power:
-  sequence:
-  - data:
-      topic: cmnd/god_damn_tv_remote/backlog
-      payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x212EFF00","DataLSB":"0x8474FF00","Repeat":0}
-    action: mqtt.publish
-  alias: TV - God Damn - Soundbar Power
-  mode: single
-  icon: mdi:surround-sound
-  description: ''
 security_trigger_siren:
   sequence:
-  - data: {}
-    action: script.security_message_open_security_devices
   - if:
     - condition: not
       conditions:
@@ -1430,11 +668,6 @@ security_trigger_siren:
       data:
         command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
     alias: Redirect to Security Panel if not already there
-  - data:
-      message: '{{ states(''input_text.security_message'') }}
-
-        '
-    action: notify.signal_security
   - action: tts.cloud_say
     data:
       cache: false

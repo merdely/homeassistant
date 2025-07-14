@@ -6,17 +6,6 @@ roku_rest_command:
   url: "http://{{ roku_ip }}:8060/launch/{{ roku_app_id }}{{ roku_querystring }}"
   method: post
 
-# Examples:
-#
-# service: roku_rest_command
-# data:
-#   roku_ip: 192.168.25.128
-#   roku_app_id: 143683
-#   roku_querystring: '&view=single&camera=1'
-#
-# http://192.168.1.37:8060/launch/143683?view=single&camera=3
-# http://192.168.1.37:8060/launch/143683?view=split
-
 fkb_command:
   url: !secret fkb_rest_command
   verify_ssl: false
@@ -24,15 +13,3 @@ fkb_command:
 fkbmbr_command:
   url: !secret fkbmbr_rest_command
   verify_ssl: false
-
-# Examples:
-# command_string: cmd=loadStartUrl
-# command_string: cmd=loadUrl&url=https://homeassistant.local:8123/wall-panel/alarm-panel
-# command_string: cmd=loadUrl&url=https://homeassistant.local:8123/wall-panel/security-status
-
-# command_string: cmd=setAudioVolume&level=100
-# command_string: cmd=setAudioVolume&level=60
-
-# command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45-seconds-to-disarm.mp3
-# command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/45-seconds-to-exit.mp3
-# command_string: cmd=playSound&stream=1&url=file:///sdcard/security_sounds/cannot-arm.mp3

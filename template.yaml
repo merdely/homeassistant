@@ -307,3 +307,16 @@
         {% endfor -%}
         {{ ns.output }}
       ha_count: true
+
+# Storage for Bubble Card Modules
+- trigger:
+    - trigger: event
+      event_type: bubble_card_update_modules
+  sensor:
+    - name: "Bubble Card Modules"
+      state: "saved"
+      icon: "mdi:puzzle"
+      attributes:
+        modules: "{{ trigger.event.data.modules }}"
+        last_updated: "{{ trigger.event.data.last_updated }}"
+

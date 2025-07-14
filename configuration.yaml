@@ -1,75 +1,27 @@
 # Configure a default setup of Home Assistant (frontend, api, etc)
 # Disable default_config so we don't have EVERYTHING pulled in
 
-# default_config:
-alarm_control_panel: !include alarm_control_panel.yaml
-assist_pipeline:
-  debug_recording_dir: /share/assist_pipeline
+default_config:
 automation: !include automations.yaml
-binary_sensor: !include binary_sensor.yaml
-camera: !include camera.yaml
-climate: !include climate.yaml
-cloud:
-command_line: !include command_line.yaml
-config:
-counter:
-#cover: !include cover.yaml
-device_tracker:
-# dialogflow:
-#fan: !include fan.yaml
-# fastdotcom: !include fastdotcom.yaml
-frontend: !include frontend.yaml
-# google_assistant:
-group: !include groups.yaml
-history: # !include history.yaml
-homeassistant: !include homeassistant.yaml
-http: !include http.yaml
-image_upload:
-# influxdb: !include influxdb.yaml
-input_boolean:
-input_datetime:
-input_number:
-input_select: !include input_select.yaml
-input_text:
-#intent_script: !include intent_script.yaml
-#light: !include light.yaml
-logbook: !include logbook.yaml
-# logger: !include logger.yaml
-# map: # don't want
-media_player: !include media_player.yaml
-media_source: # don't want
-mobile_app:
-mqtt: !include mqtt.yaml
-my:
-# nest: !include nest.yaml
-notify: !include notify.yaml
-#octoprint: !include octoprint.yaml
-#panel_custom: !include panel_custom.yaml
-#panel_iframe: !include panel_iframe.yaml
-person:
-python_script:
-recorder: !include recorder.yaml
-rest_command: !include rest_command.yaml
 scene: !include scenes.yaml
-#script: !include_dir_merge_named scripts
 script: !include scripts.yaml
 script secret: !include scripts/scripts_with_secrets.yaml
+
+binary_sensor: !include binary_sensor.yaml
+command_line: !include command_line.yaml
+frontend: !include frontend.yaml
+homeassistant: !include homeassistant.yaml
+http: !include http.yaml
+input_select: !include input_select.yaml
+logbook: !include logbook.yaml
+mqtt: !include mqtt.yaml
+notify: !include notify.yaml
+recorder: !include recorder.yaml
+rest_command: !include rest_command.yaml
 sensor: !include sensor.yaml
 shell_command: !include shell_command.yaml
-# siren: !include siren.yaml
 splunk: !include splunk.yaml
-# spotcast: !include spotcast.yaml
-# spotify: !include spotify.yaml
-ssdp:
-stream:
-sun:
-switch: !include switch.yaml
-system_health:
-tag:
 template: !include template.yaml
-timer:
 tts: !include tts.yaml
-#updater:
-#withings: !include withings.yaml
-zeroconf:
-zone:
+
+python_script:

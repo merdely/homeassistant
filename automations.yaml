@@ -65,19 +65,23 @@
       target:
         entity_id: scene.front_porch_normal
       action: scene.turn_on
-  - if:
+  - alias: Turn on Kitchen Table Light if Holly & Mike are not home
+    if:
     - condition: not
       conditions:
       - condition: state
-        entity_id: group.holly_mike
+        entity_id: person.holly_erdely
         state: home
+      - condition: state
+        entity_id: person.michael_erdely
+        state: home
+      alias: If neither Holly or Mike are Home
     then:
     - metadata: {}
       data: {}
       target:
         entity_id: light.kitchen_table_light
       action: light.turn_on
-    alias: Turn on Kitchen Table Light if Holly & Mike are not home
   - target:
       entity_id:
       - light.dining_room_christmas_lights
@@ -257,9 +261,8 @@
       milliseconds: 0
   - data: {}
     action: script.fix_in_bed_sensors
-  - data: {}
-    enabled: true
-    action: script.0000000mwe
+  - action: script.fix_3_way_lights
+    data: {}
   - data: {}
     target:
       entity_id:
@@ -345,6 +348,7 @@
     - binary_sensor.shed_door_contact
     - binary_sensor.shed_gate_contact
     - binary_sensor.chimney_gate_contact
+    - binary_sensor.test_gate
     for:
       hours: 0
       minutes: 0
@@ -356,6 +360,7 @@
     - binary_sensor.shed_door_contact
     - binary_sensor.shed_gate_contact
     - binary_sensor.chimney_gate_contact
+    - binary_sensor.test_gate
     for:
       hours: 0
       minutes: 0
@@ -377,33 +382,6 @@
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if     trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
     action: tts.cloud_say
-  mode: single
-- id: '1604422426174'
-  alias: Security - 90 Triggered - Alert of Exterior Doors (Away)
-  description: ''
-  triggers:
-  - entity_id: group.exterior_security_devices
-    to: 'on'
-    for: 00:00:01
-    trigger: state
-  conditions:
-  - condition: state
-    entity_id: alarm_control_panel.home_alarm
-    state: armed_away
-  actions:
-  - data:
-      message: "{%- set ns = namespace(count = 0) -%} {%- set ns.open_entities = []
-        -%} {%- for entity_id in states.group.exterior_security_devices.attributes.entity_id
-        -%}\n  {%- set domain, device = entity_id.split('.') -%}\n  {%- if states[domain][device].state
-        != 'off' and states[domain][device].state != 'closed' -%}\n    {%- set ns.open_entities
-        = ns.open_entities + [state_attr(entity_id,\"friendly_name\")] -%}\n  {%-
-        endif -%}\n{%- endfor -%} {%- for open_entity in ns.open_entities -%}\n  {{
-        open_entity }}\n  {%- set ns.count = ns.count + 1 -%}\n  {%- if ns.open_entities
-        | length > 2 and ns.count < ns.open_entities | length %}, {% endif %}\n  {%-
-        if ns.count == ns.open_entities | length - 1 %}and {% endif -%}\n{%- endfor
-        -%} {% if ns.count == 1 %} is{% endif %} {% if ns.count > 1 %}are{% endif
-        %} {%- if ns.count > 0 %} open{% else %}No devices are open{% endif %}"
-    action: notify.signal_security
   mode: single
 - id: '1604856519122'
   alias: Notifications - Laundry Room Dryer Started
@@ -730,11 +708,24 @@
   alias: Lighting - Automatic Lights When We Come Home
   description: ''
   triggers:
-  - entity_id: group.holly_mike
+  - entity_id:
+    - person.holly_erdely
     from: not_home
     to: home
-    for: 00:00:30
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
     trigger: state
+  - trigger: state
+    entity_id:
+    - person.michael_erdely
+    to: home
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    from: not_home
   conditions: []
   actions:
   - if:
@@ -998,23 +989,37 @@
 - id: '1610231390167'
   alias: Notifications - Nobody Home - Alarm Disarmed
   description: ''
-  trigger:
-  - platform: state
-    entity_id: group.holly_mike
+  triggers:
+  - entity_id:
+    - person.holly_erdely
     from: home
     to: not_home
     for:
       hours: 0
       minutes: 5
       seconds: 0
-      milliseconds: 0
-  condition:
+    trigger: state
+  - entity_id:
+    - person.michael_erdely
+    from: home
+    to: not_home
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    trigger: state
+  conditions:
   - condition: state
     entity_id: alarm_control_panel.home_alarm
     state: disarmed
-  action:
-  - service: notify.notify
-    data:
+  - condition: state
+    entity_id: person.holly_erdely
+    state: not_home
+  - condition: state
+    entity_id: person.michael_erdely
+    state: not_home
+  actions:
+  - data:
       message: The alarm is not armed
       title: Security Alert
       data:
@@ -1023,6 +1028,7 @@
           title: Arm Alarm (Away)
         - action: ARM_HOME
           title: Arm Alarm (Home)
+    action: notify.notify
   mode: single
 - id: '1613160102079'
   alias: Lighting - Mantle Lights On
@@ -1276,6 +1282,7 @@
   triggers:
   - topic: frigate/events
     trigger: mqtt
+    alias: When there are frigate/events in MQTT
   conditions:
   - condition: or
     conditions:
@@ -1290,15 +1297,14 @@
     - condition: template
       value_template: '{{ trigger.payload_json["after"]["label"] == "sports ball"
         }}'
-  - condition: or
+    alias: Payload matches object dection type (person, ball, ...)
+  - alias: Camera matches Frigate Notification Camera
+    condition: or
     conditions:
     - condition: template
       value_template: '{{ trigger.payload_json["after"]["camera"] == "Front_Door_2"
         }}'
-    - condition: template
-      value_template: '{{ trigger.payload_json["after"]["camera"] == "Garage_Door"
-        }}'
-      enabled: false
+      alias: Front_Door_2
   actions:
   - delay:
       hours: 0
@@ -1306,35 +1312,11 @@
       seconds: 3
       milliseconds: 0
   - data:
-      object: '{{ trigger.payload_json["after"]["label"] }}'
-      camera: '{{ trigger.payload_json["after"]["camera"] }}'
-      eventid: '{{ trigger.payload_json["after"]["id"] }}'
-    enabled: false
-    action: script.function_frigate_send_email
-  - data:
-      detected_object: '{{ trigger.payload_json["after"]["label"] }}'
-      camera: '{{ trigger.payload_json["after"]["camera"] }}'
-      eventid: '{{ trigger.payload_json["after"]["id"] }}'
-    enabled: false
-    action: python_script.send_frigate_email
-  - data:
       detected_object: '{{ trigger.payload_json["after"]["label"] }}'
       camera: '{{ trigger.payload_json["after"]["camera"] }}'
       eventid: '{{ trigger.payload_json["after"]["id"] }}'
     action: shell_command.send_frigate_email
     response_variable: command_response
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: 'stderr: {{ command_response[''stderr''] }}'
-    enabled: false
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: 'stdout: {{ command_response[''stdout''] }}'
-    enabled: false
   mode: single
   max: 10
 - id: '1632841431902'
@@ -1592,17 +1574,26 @@
 - id: '1637383883544'
   alias: Notifications - Nobody Home - Oven On
   description: ''
-  trigger:
-  - platform: state
-    entity_id: group.holly_mike
+  triggers:
+  - entity_id:
+    - person.holly_erdely
     from: home
     to: not_home
     for:
       hours: 0
       minutes: 5
       seconds: 0
-      milliseconds: 0
-  condition:
+    trigger: state
+  - entity_id:
+    - person.michael_erdely
+    from: home
+    to: not_home
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    trigger: state
+  conditions:
   - condition: state
     entity_id: binary_sensor.oven_is_on
     state: 'on'
@@ -1611,11 +1602,17 @@
       minutes: 5
       seconds: 0
       milliseconds: 0
-  action:
-  - service: notify.signal_security
-    data:
+  - condition: state
+    entity_id: person.holly_erdely
+    state: not_home
+  - condition: state
+    entity_id: person.michael_erdely
+    state: not_home
+  actions:
+  - data:
       message: The oven is on and nobody is home
       title: Security Alert
+    action: notify.signal_security
   mode: single
 - id: '1638997594019'
   alias: Home Assistant - Monitor Earth / HA Entities
@@ -2033,8 +2030,8 @@
     trigger: state
   conditions: []
   actions:
-  - data: {}
-    action: script.0000000mwe
+  - action: script.fix_3_way_lights
+    data: {}
   mode: single
 - id: '1650211137772'
   alias: Home Assistant - Fix Nginx Proxy Manager (NPM)
