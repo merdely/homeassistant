@@ -1162,7 +1162,7 @@
                 },
                 {
                   "type": "weather-forecast",
-                  "entity": "weather.home_2",
+                  "entity": "weather.home",
                   "forecast_type": "daily"
                 }
               ]
@@ -3729,6 +3729,18 @@
                   "name": "popup"
                 },
                 {
+                  "clock_size": "medium",
+                  "show_seconds": true,
+                  "type": "clock"
+                },
+                {
+                  "show_current": true,
+                  "show_forecast": true,
+                  "type": "weather-forecast",
+                  "entity": "weather.home",
+                  "forecast_type": "daily"
+                },
+                {
                   "type": "vertical-stack",
                   "cards": [
                     {
@@ -3859,6 +3871,15 @@
                       "type": "area-controls"
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
                 }
               ]
             }
