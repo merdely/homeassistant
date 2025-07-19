@@ -71,6 +71,7 @@ street_type=$(awk '$1=="recycle_street_type:"{gsub(/(^"|"$)/,"",$2);print $2}' $
 [ -z "$street_type" ] && echo "Error: Secrets file does not have 'recycle_street_type'" > /dev/stderr && exit 1
 default_day=$(awk '$1=="recycle_default_day:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
 
+[ $debug = 1 ] && echo mydate=$mydate > /dev/stderr
 [ $debug = 1 ] && echo collection_url=$collection_url > /dev/stderr
 [ $debug = 1 ] && echo holiday_url=$holiday_url > /dev/stderr
 [ $debug = 1 ] && echo street_number=$street_number > /dev/stderr
@@ -227,6 +228,14 @@ get_day_num() {
   fi
 }
 
+date_diff() {
+  if date --version 2>&1 | grep -iq busybox; then
+    echo $(( ($(date -D "%Y-%m-%d" -d "$1" "+%s") - $(date -D "%Y-%m-%d" -d "$2" "+%s")) / 24 / 60 / 60 ))
+  else
+    echo $(( ($(date -d "$1" "+%s") - $(date -d "$2" "+%s")) / 24 / 60 / 60 ))
+  fi
+}
+
 days_string() {
   if [ "$1" = 0 ]; then
     echo Today
@@ -309,7 +318,8 @@ for line in $(cat $holiday_file | python -c "import sys; from lxml import html; 
   [ $debug = 1 ] && echo
 done
 
-recycle_days=$((pickup_day_num - $(date +%w)))
+#recycle_days=$((pickup_day_num - $(date +%w)))
+recycle_days=$(date_diff $pickup_date $mydate)
 
 printf '{ "default_day": "%s", "county_day": "%s", "holiday_day": "%s", "exception_day": "%s", "recycle_day": "%s", "recycle_day_num": %d, "recycle_day_date": "%s", "recycle_days": %d, "days_string": "%s", "is_holiday": %s, "address": "%s", "county_address": "%s", "county_code": %d, "holidays_code": %d, "exception_code": %d, "error": "%s", "change_reason": "%s" }\n' \
   $default_day \
