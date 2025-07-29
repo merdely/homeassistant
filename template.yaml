@@ -1,63 +1,48 @@
-- sensor:
-    unique_id: unavailable_entities
-    name: Unavailable Entities
-    icon: mdi:cloud-question
-    state: >-
-      {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
-           's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
-           '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-           '(remote|media_player)\..{0,50}|' +
-           'event\.backup_automatic_backup|' + 
-           'camera\.(front_door(?:_2)?|garage|shed|backyard|chimney)|' +
-           'button\.(?:(?:un)?ignore_all_issues|[a-z0-9_]{1,25}_favorite_current_song(?:_[0-9])?)|' +
-           '(?:binary_)?sensor.(?:holly|mike)_s_phone_[a-z0-9_]{1,25}|' +
-           '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
-           'button\.home_?assistant_(?:.{1,25}_)?re(?:load|start)|' +
-           '(?:binary_)?sensor\.[a-zA-Z0-9_-]{1,25}_high_accuracy_(?:mode|update_interval)?|' +
-           'event\.home_assistant_voice_.*_button_press|' +
-           'conversation\.home_assistant|' +
-           'wake_word\.openwakeword)$') | map(attribute='entity_id') | list | length }}
-    attributes:
-      entity_list: >-
-        {{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('entity_id', 'match', '^(?:' +
-             's?tts?\.(?:home_assistant_cloud|piper|faster_whisper)|' +
-             '[\w.]{1,15}(?:[0-9a-f]{16}|kukui|octoprint)_[\w.]{1,25}|' +
-             '(remote|media_player)\..{0,50}|' +
-             'event\.backup_automatic_backup|' + 
-             'camera\.(front_door(?:_2)?|garage|shed|backyard|chimney)|' +
-             'button\.(?:(?:un)?ignore_all_issues|[a-z0-9_]{1,25}_favorite_current_song(?:_[0-9])?)|' +
-             '(?:binary_)?sensor.(?:holly|mike)_s_phone_[a-z0-9_]{1,25}|' +
-             '[\w.]{1,20}_roku(?:_tv)?_(?:active_app(?:_id)?|application|headphones_connected|supports_[a-z0-9_]{1,20})|' +
-             'button\.home_?assistant_(?:.{1,25}_)?re(?:load|start)|' +
-             '(?:binary_)?sensor\.[a-zA-Z0-9_-]{1,25}_high_accuracy_(?:mode|update_interval)?|' +
-             'event\.home_assistant_voice_.*_button_press|' +
-             'conversation\.home_assistant|' +
-             'wake_word\.openwakeword)$') | map(attribute='entity_id') | list | join(', ') }}
+- trigger:
+    - platform: time_pattern
+      seconds: "/10"
+    - platform: homeassistant
+      event: start
+  sensor:
+    unique_id: thermostat_area_yaml
+    name: Thermostat Area YAML
+    state: "{{ area_name(device_id('climate.thermostat')) }}"
 
 - sensor:
-    unique_id: unavailable_entities_full_list
-    name: Unavailable Entities Full List
+    unique_id: unavailable_entities_list
+    name: Unavailable Entities List
     icon: mdi:cloud-question
-    state: "{{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | length }}"
+    state: "{{ now().strftime('%FT%T') }}"
     attributes:
-      entity_list: "{{ states | selectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='entity_id') | list | join(', ') }}"
-
-- binary_sensor:
-    unique_id: oven_is_on
-    name: Oven is On
-    state: "{{ states('sensor.oven_monitor_analog_ctenergy_power') | int(0) > 400 }}"
-    delay_off:
-        minutes: 3
+      entity_list: |
+        {{ states | selectattr('state', 'in', ['unavailable', 'unknown'])
+           | rejectattr('entity_id', 'match', states('sensor.unavailable_entities_filter') | default(''))
+           | map(attribute='entity_id') | list | join(', ') }}
 
 - trigger:
     - platform: time_pattern
-      seconds: 13
+      seconds: "/10"
+    - platform: homeassistant
+      event: start
+  sensor:
+    unique_id: tasmota_devices_list
+    name: Tasmota Devices List
+    icon: mdi:devices
+    state: "{{ now().strftime('%FT%T') }}"
+    attributes:
+      devices: >
+        {% set ns = namespace(div = "", output = "") -%}
+        {% for i in integration_entities('tasmota') | sort -%}
+        {% if i.endswith("_ip") -%}
+        {% set ns.output = ns.output + ns.div + device_attr(device_id(i), 'name') + "," + states(i) -%}
+        {% set ns.div = "|" -%}
+        {% endif -%}
+        {% endfor -%}
+        {{ ns.output }}
+
+- trigger:
     - platform: time_pattern
-      seconds: 28
-    - platform: time_pattern
-      seconds: 43
-    - platform: time_pattern
-      seconds: 58
+      seconds: "/10"
     - platform: homeassistant
       event: start
   sensor:
@@ -78,24 +63,12 @@
             "timediff": (utcnow().strftime('%s') | int(0) - as_timestamp(state_attr(entity, 'timestamp'), 0)) | int(0) }] -%}
         {% endfor -%}
         {{ ns.entities | sort(attribute='timediff', reverse=true) }}
-      count: '{{ states | selectattr("entity_id", "match", "^(binary_)?sensor\.wyzesense(_|$)") | map(attribute="entity_id") | list | length }}'
 
 - sensor:
-    name: OOD Wyze Entities
-    unique_id: ood_wyze_entities
+    name: OOD Wyze Entities List
+    unique_id: ood_wyze_entities_list
     icon: mdi:leak
-    state: |
-      {% if state_attr('sensor.wyze_entities', 'entity_list') -%}
-        {% set ns = namespace(count=0) -%}
-        {% for entity in state_attr('sensor.wyze_entities', 'entity_list') | default([]) -%}
-          {% if entity['timediff'] | int(0) > states('input_number.ood_wyze_seconds') | int(0) -%}
-            {% set ns.count = ns.count + 1 -%}
-          {% endif -%}
-        {% endfor -%}
-        {{ ns.count }}
-      {% else -%}
-        0
-      {% endif -%}
+    state: "{{ now().strftime('%FT%T') }}"
     attributes:
       timestamp: "{{ now().strftime('%FT%T') }}"
       entity_list: >-
@@ -113,13 +86,7 @@
 
 - trigger:
     - platform: time_pattern
-      seconds: 14
-    - platform: time_pattern
-      seconds: 29
-    - platform: time_pattern
-      seconds: 44
-    - platform: time_pattern
-      seconds: 59
+      seconds: "/10"
     - platform: homeassistant
       event: start
   sensor:
@@ -136,35 +103,12 @@
             "timediff": (utcnow().strftime('%s') | int(0) - as_timestamp(states(entity | replace('_linkquality', '_last_seen')), 0) | int(0)) }] -%}
         {% endfor -%}
         {{ ns.entities | sort(attribute='timediff', reverse=true) }}
-      count: >-
-        {{ states | selectattr('entity_id', 'match', '^[\w.]{1,50}_linkquality$') | map(attribute='entity_id') | list | count }}
 
 - sensor:
-    name: OOD Zigbee Entities
-    unique_id: ood_zigbee_entities
+    name: OOD Zigbee Entities List
+    unique_id: ood_zigbee_entities_list
     icon: mdi:zigbee
-    state: |
-      {% if state_attr('sensor.zigbee_entities', 'entity_list') -%}
-        {% set ns = namespace(count=0) -%}
-        {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | default([]) -%}
-          {% if entity['entity_id'][-17:] == "_bulb_linkquality" -%}
-            {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_bulb_seconds') | int(0) -%}
-              {% set ns.count = ns.count + 1 -%}
-            {% endif -%}
-          {% elif entity['entity_id'][-19:] == "_button_linkquality" -%}
-            {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_button_seconds') | int(0) -%}
-              {% set ns.count = ns.count + 1 -%}
-            {% endif -%}
-          {% else %}
-            {% if entity['timediff'] | int(0) > states('input_number.ood_zigbee_seconds') | int(0) -%}
-              {% set ns.count = ns.count + 1 -%}
-            {% endif -%}
-          {% endif -%}
-        {% endfor -%}
-        {{ ns.count }}
-      {% else -%}
-        0
-      {% endif -%}
+    state: "{{ now().strftime('%FT%T') }}"
     attributes:
       timestamp: "{{ now().strftime('%FT%T') }}"
       entity_list: >
@@ -188,13 +132,7 @@
 
 - trigger:
     - platform: time_pattern
-      seconds: 12
-    - platform: time_pattern
-      seconds: 27
-    - platform: time_pattern
-      seconds: 42
-    - platform: time_pattern
-      seconds: 57
+      seconds: "/10"
     - platform: homeassistant
       event: start
   sensor:
@@ -211,31 +149,12 @@
             "timediff": (utcnow().strftime('%s') | int(0) - as_timestamp(states(entity), 0) | int(0)) }] -%}
         {% endfor -%}
         {{ ns.entities | sort(attribute='timediff', reverse=true) }}
-      count: >-
-        {{ states | selectattr('entity_id', 'match', '^[\w.]{1,50}_last_seen_zwave$') | map(attribute='entity_id') | list | count }}
 
 - sensor:
-    name: OOD Zwave Entities
-    unique_id: ood_zwave_entities
+    name: OOD Zwave Entities List
+    unique_id: ood_zwave_entities_list
     icon: mdi:z-wave
-    state: |
-      {% if state_attr('sensor.zwave_entities', 'entity_list') -%}
-        {% set ns = namespace(count=0) -%}
-        {% for entity in state_attr('sensor.zwave_entities', 'entity_list') | default([]) -%}
-          {% if entity['entity_id'][-17:] == "_bulb_linkquality" -%}
-            {% if entity['timediff'] | int(0) > states('input_number.ood_zwave_bulb_seconds') | int(0) -%}
-              {% set ns.count = ns.count + 1 -%}
-            {% endif -%}
-          {% else %}
-            {% if entity['timediff'] | int(0) > states('input_number.ood_zwave_seconds') | int(0) -%}
-              {% set ns.count = ns.count + 1 -%}
-            {% endif -%}
-          {% endif -%}
-        {% endfor -%}
-        {{ ns.count }}
-      {% else -%}
-        0
-      {% endif -%}
+    state: "{{ now().strftime('%FT%T') }}"
     attributes:
       timestamp: "{{ now().strftime('%FT%T') }}"
       entity_list: >
@@ -251,17 +170,15 @@
         {% endif -%}
         {{ ns.list | regex_replace(", $", "") }}
 
-- sensor:
-    unique_id: low_battery
-    name: Low Battery
-    state: >-
-      {% set ns=namespace(state="Off") %}
-      {% for state in states.sensor -%}
-        {% if state.entity_id.endswith('_battery') and state.entity_id != 'sensor.low_battery' and state.state | int(0) < 10 -%}
-          {% set ns.state = "On" %}
-        {% endif -%}
-      {% endfor -%}
-      {{ ns.state }}
+- trigger:
+    - platform: time_pattern
+      seconds: "/10"
+    - platform: homeassistant
+      event: start
+  sensor:
+    unique_id: low_battery_list
+    name: Low Battery List
+    state: "{{ now().strftime('%FT%T') }}"
     attributes:
       entity_list: >-
         {% set ns=namespace(list="") %}
@@ -271,6 +188,13 @@
           {% endif -%}
         {% endfor -%}
         {{ ns.list | regex_replace(", $", "") }}
+
+- binary_sensor:
+    unique_id: oven_is_on
+    name: Oven is On
+    state: "{{ states('sensor.oven_monitor_analog_ctenergy_power') | int(0) > 400 }}"
+    delay_off:
+        minutes: 3
 
 - binary_sensor:
     unique_id: mailbox_sensor
@@ -283,30 +207,6 @@
       rssi: '{{ state_attr("binary_sensor.wyzesense_77ca81b4", "rssi") }}'
       battery_level: '{{ state_attr("binary_sensor.wyzesense_77ca81b4", "battery_level") }}'
       parent_entity: "binary_sensor.wyzesense_77ca81b4"
-
-- sensor:
-    unique_id: tasmota_devices
-    name: Tasmota Devices
-    icon: mdi:devices
-    state: >
-      {% set ns = namespace(count = 0) -%}
-      {% for i in integration_entities('tasmota') | sort -%}
-      {% if i.endswith("_ip") -%}
-      {% set ns.count = ns.count + 1 -%}
-      {% endif -%}
-      {% endfor -%}
-      {{ ns.count }}
-    attributes:
-      devices: >
-        {% set ns = namespace(div = "", output = "") -%}
-        {% for i in integration_entities('tasmota') | sort -%}
-        {% if i.endswith("_ip") -%}
-        {% set ns.output = ns.output + ns.div + device_attr(device_id(i), 'name') + "," + states(i) -%}
-        {% set ns.div = "|" -%}
-        {% endif -%}
-        {% endfor -%}
-        {{ ns.output }}
-      ha_count: true
 
 # Storage for Bubble Card Modules
 - trigger:

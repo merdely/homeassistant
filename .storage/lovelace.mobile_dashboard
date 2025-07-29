@@ -103,57 +103,64 @@
                       "show_state": false,
                       "entities": [
                         {
-                          "entity": "sensor.bedroom_temperature",
+                          "entity": "sensor.bedroom_multisensor_temperature",
                           "name": "BR",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--bedroom-temp-color)"
                           }
                         },
                         {
-                          "entity": "sensor.bedroom_humidity",
+                          "entity": "sensor.bedroom_multisensor_humidity",
                           "name": "BR(h)",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--bedroom-humidity-color)"
                           }
                         },
                         {
-                          "entity": "sensor.master_bath_temperature",
+                          "entity": "sensor.master_bath_multisensor_temperature",
                           "name": "MB",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--master-bath-temp-color)"
                           }
                         },
                         {
-                          "entity": "sensor.master_bath_humidity",
+                          "entity": "sensor.master_bath_multisensor_humidity",
                           "name": "MB(h)",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--master-bath-humidity-color)"
                           }
                         },
                         {
-                          "entity": "sensor.hall_bath_humidity",
+                          "entity": "sensor.hall_bath_multisensor_humidity",
                           "name": "HB(h)",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--hall-bath-humidity-color)"
                           }
                         },
                         {
-                          "entity": "sensor.office_temperature",
+                          "entity": "sensor.office_multisensor_temperature",
                           "name": "Ofc",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--office-temp-color)"
                           }
                         },
                         {
-                          "entity": "sensor.office_humidity",
+                          "entity": "sensor.office_multisensor_humidity",
                           "name": "Ofc(h)",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--office-humidity-color)"
                           }
@@ -167,58 +174,64 @@
                       "show_state": false,
                       "entities": [
                         {
-                          "entity": "climate.thermostat",
+                          "entity": "sensor.hallway_temperature",
+                          "name": "Tstat",
+                          "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--thermostat-color)"
-                          },
-                          "name": "Tstat",
-                          "attribute": "current_temperature",
-                          "unit": " "
+                          }
                         },
                         {
-                          "entity": "sensor.attic_temperature",
+                          "entity": "sensor.attic_multisensor_temperature",
                           "name": "Attic",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--attic-temp-color)"
                           }
                         },
                         {
-                          "entity": "sensor.living_room_temperature",
+                          "entity": "sensor.living_room_multisensor_temperature",
                           "name": "LR",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--living-room-temp-color)"
                           }
                         },
                         {
-                          "entity": "sensor.god_damn_temperature",
+                          "entity": "sensor.god_damn_multisensor_temperature",
                           "name": "Down",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--god-damn-temp-color)"
                           }
                         },
                         {
-                          "entity": "sensor.garage_temperature",
+                          "entity": "sensor.garage_multisensor_temperature",
                           "name": "Garage",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--garage-temp-color)"
                           }
                         },
                         {
-                          "entity": "sensor.outside_temperature",
+                          "entity": "sensor.outside_multisensor_temperature",
                           "name": "Out",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--outside-temp-color)"
                           }
                         },
                         {
-                          "entity": "sensor.outside_humidity",
+                          "entity": "sensor.outside_multisensor_humidity",
                           "name": "Out(h)",
                           "unit": " ",
+                          "format": "precision1",
                           "styles": {
                             "color": "var(--outside-humidity-color)"
                           }
@@ -451,12 +464,12 @@
                     },
                     {
                       "type": "custom:multiple-entity-row",
-                      "entity": "switch.mercury_screensaver",
+                      "entity": "sensor.mercury_screensaver",
                       "name": "Devices",
                       "show_state": false,
                       "entities": [
                         {
-                          "entity": "switch.mercury_screensaver",
+                          "entity": "sensor.mercury_screensaver",
                           "name": "M SS",
                           "styles": {
                             "color": "var(--mercury-screensaver-color)",
@@ -473,7 +486,7 @@
                           }
                         },
                         {
-                          "entity": "switch.venus_screensaver",
+                          "entity": "sensor.venus_screensaver",
                           "name": "V SS",
                           "styles": {
                             "color": "var(--venus-screensaver-color)",
@@ -615,7 +628,7 @@
                       "position": "right",
                       "buttons": [
                         {
-                          "entity": "switch.upstairs",
+                          "entity": "sensor.upstairs_lights_on",
                           "icon": "mdi:stairs-up",
                           "name": false,
                           "tap_action": {
@@ -629,7 +642,7 @@
                           }
                         },
                         {
-                          "entity": "switch.middle_level",
+                          "entity": "sensor.middle_level_lights_on",
                           "icon": "mdi:format-align-middle",
                           "name": false,
                           "tap_action": {
@@ -643,7 +656,7 @@
                           }
                         },
                         {
-                          "entity": "switch.downstairs",
+                          "entity": "sensor.downstairs_lights_on",
                           "icon": "mdi:stairs-down",
                           "name": false,
                           "tap_action": {
@@ -657,7 +670,7 @@
                           }
                         },
                         {
-                          "entity": "switch.outside",
+                          "entity": "sensor.outside_lights_on",
                           "icon": "mdi:image",
                           "name": false,
                           "tap_action": {
@@ -852,7 +865,7 @@
                     }
                   ],
                   "card_mod": {
-                    "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--state-icon-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--state-icon-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --attic-temp-color: {% if states(\"sensor.attic_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.attic_temperature\") | int(69) >= 90 %}orange{% endif %};\n  --bedroom-temp-color: {% if states(\"sensor.bedroom_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.bedroom_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --master-bath-temp-color: {% if states(\"sensor.master_bath_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.master_bath_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --office-temp-color: {% if states(\"sensor.office_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.office_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --living-room-temp-color: {% if states(\"sensor.living_room_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.living_room_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --god-damn-temp-color: {% if states(\"sensor.god_damn_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.god_damn_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --garage-temp-color: {% if states(\"sensor.garage_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.garage_temperature\") | int(69) >= 90 %}orange{% endif %};\n  --outside-temp-color: {% if states(\"sensor.outside_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.outside_temperature\") | int(69) >= 90 %}orange{% endif %};\n\n  --bedroom-humidity-color: {% if states(\"sensor.bedroom_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.bedroom_humidity\") | int(45) >= 55 %}red{% endif %};\n  --master-bath-humidity-color: {% if states(\"sensor.master_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.master_bath_humidity\") | int(45) >= 55 %}red{% endif %};\n  --hall-bath-humidity-color: {% if states(\"sensor.hall_bath_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.hall_bath_humidity\") | int(45) >= 55 %}red{% endif %};\n  --office-humidity-color: {% if states(\"sensor.office_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.office_humidity\") | int(45) >= 55 %}red{% endif %};\n  --outside-humidity-color: {% if states(\"sensor.outside_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.outside_humidity\") | int(45) >= 65 %}red{% endif %};\n  \n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count', 'number') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('switch.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('switch.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_active_clients') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                    "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}var(--state-active-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.holly_is_in_bed') == 'Not In Bed' %}var(--state-icon-color){% else %}red{% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% elif states('sensor.mike_is_in_bed') == 'Not In Bed' %}var(--state-icon-color){% else %}red{% endif %};\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --attic-temp-color: {% if states(\"sensor.attic_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.attic_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n  --bedroom-temp-color: {% if states(\"sensor.bedroom_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.bedroom_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --master-bath-temp-color: {% if states(\"sensor.master_bath_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.master_bath_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --office-temp-color: {% if states(\"sensor.office_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.office_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --living-room-temp-color: {% if states(\"sensor.living_room_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.living_room_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --god-damn-temp-color: {% if states(\"sensor.god_damn_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.god_damn_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --garage-temp-color: {% if states(\"sensor.garage_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.garage_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n  --outside-temp-color: {% if states(\"sensor.outside_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.outside_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n\n  --bedroom-humidity-color: {% if states(\"sensor.bedroom_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.bedroom_multisensor_humidity\") | int(45) >= 55 %}red{% endif %};\n  --master-bath-humidity-color: {% if states(\"sensor.master_bath_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.master_bath_multisensor_humidity\") | int(45) >= 55 %}red{% endif %};\n  --hall-bath-humidity-color: {% if states(\"sensor.hall_bath_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.hall_bath_multisensor_humidity\") | int(45) >= 55 %}red{% endif %};\n  --office-humidity-color: {% if states(\"sensor.office_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.office_multisensor_humidity\") | int(45) >= 55 %}red{% endif %};\n  --outside-humidity-color: {% if states(\"sensor.outside_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.outside_multisensor_humidity\") | int(45) >= 65 %}red{% endif %};\n  \n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count', 'number') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('sensor.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('sensor.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -911,12 +924,20 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
+                      "title": "Upstairs",
                       "entities": [
-                        "switch.bedroom",
+                        {
+                          "type": "section",
+                          "label": "Bedroom"
+                        },
                         {
                           "type": "custom:stack-in-card",
                           "mode": "horizontal",
@@ -1033,9 +1054,9 @@
                           ]
                         },
                         {
-                          "type": "section"
+                          "type": "section",
+                          "label": "Master Bath"
                         },
-                        "switch.master_bath",
                         {
                           "type": "custom:stack-in-card",
                           "mode": "horizontal",
@@ -1071,9 +1092,9 @@
                           ]
                         },
                         {
-                          "type": "section"
+                          "type": "section",
+                          "label": "Office"
                         },
-                        "switch.office",
                         {
                           "type": "custom:stack-in-card",
                           "mode": "horizontal",
@@ -1180,9 +1201,9 @@
                           ]
                         },
                         {
-                          "type": "section"
+                          "type": "section",
+                          "label": "Hall Bath"
                         },
-                        "switch.hall_bath",
                         {
                           "type": "custom:stack-in-card",
                           "mode": "horizontal",
@@ -1312,13 +1333,19 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
+                      "title": "Middle Level",
                       "entities": [
                         {
-                          "entity": "switch.kitchen"
+                          "type": "section",
+                          "label": "Kitchen"
                         },
                         {
                           "type": "custom:stack-in-card",
@@ -1355,10 +1382,8 @@
                           }
                         },
                         {
-                          "type": "section"
-                        },
-                        {
-                          "entity": "switch.living_room"
+                          "type": "section",
+                          "label": "Living Room"
                         },
                         {
                           "type": "custom:stack-in-card",
@@ -1474,10 +1499,8 @@
                           }
                         },
                         {
-                          "type": "section"
-                        },
-                        {
-                          "entity": "switch.dining_room"
+                          "type": "section",
+                          "label": "Dining Room"
                         },
                         {
                           "type": "custom:stack-in-card",
@@ -1619,19 +1642,19 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
+                      "title": "Downstairs",
                       "entities": [
                         {
-                          "entity": "switch.downstairs"
-                        },
-                        {
-                          "type": "section"
-                        },
-                        {
-                          "entity": "switch.family_room"
+                          "type": "section",
+                          "label": "Family Room"
                         },
                         {
                           "type": "custom:stack-in-card",
@@ -1943,19 +1966,19 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
+                      "title": "Outside",
                       "entities": [
                         {
-                          "entity": "switch.outside"
-                        },
-                        {
-                          "type": "section"
-                        },
-                        {
-                          "entity": "switch.garage"
+                          "type": "section",
+                          "label": "Garage"
                         },
                         {
                           "type": "custom:stack-in-card",
@@ -2034,10 +2057,8 @@
                           }
                         },
                         {
-                          "type": "section"
-                        },
-                        {
-                          "entity": "switch.front_yard"
+                          "type": "section",
+                          "label": "Front Yard"
                         },
                         {
                           "type": "custom:stack-in-card",
@@ -2118,10 +2139,8 @@
                           }
                         },
                         {
-                          "type": "section"
-                        },
-                        {
-                          "entity": "switch.back_yard"
+                          "type": "section",
+                          "label": "Back Yard"
                         },
                         {
                           "type": "custom:stack-in-card",
@@ -2247,7 +2266,11 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
@@ -2341,7 +2364,11 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
@@ -2888,7 +2915,11 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "tile",
@@ -3000,7 +3031,11 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
@@ -3116,7 +3151,11 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "custom:advanced-camera-card",
@@ -3225,7 +3264,10 @@
                         "hold_action": {
                           "action": "none"
                         }
-                      }
+                      },
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
@@ -3938,12 +3980,15 @@
                         "hold_action": {
                           "action": "none"
                         }
-                      }
+                      },
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <table> <tr> <th></th> <th align=\"left\">Name</th> <th align=\"right\">Installed</th> <th align=\"right\">Available</th> </tr> {% for software in states | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', 'HA ') | replace('Operating System', 'OS') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endfor -%} {% for software in states | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'title') != None and state_attr(software, 'device_class') != 'firmware' %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', '') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace(' (Bitwarden)', '') | replace('UniFi Network Application', 'UniFi') | replace('Google Drive Backup', 'Google Backup') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endif -%} {% endfor -%} <tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr> {% for software in states.sensor | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr> <td class=\"{{'off-icon' if states(software|replace('_latest','')) == states(software) else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software|replace('_latest','')) }}</td> <td class=\"right\" {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software) }}</td> </tr> {% endfor -%} <tr> <td class=\"{{'off-icon' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'download'}}\" /></td> <td class=\"left {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">OPNsense</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ states('sensor.opnsense_versions') }}</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] }}</td> </tr> {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') -%} <tr> <td class=\"{{'off-icon' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}\" /></td> <td class=\"left {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">OPNsense {{ plugin }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</td> </tr> {% endfor -%} {% for ap in state_attr('sensor.unifi_ap_versions', 'data') -%} <tr> <td class=\"{{'off-icon' if ap['version'] == ap['version_available'] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}\" /></td> <td class=\"left {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['name'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version_available'] }}</font></td></tr> {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td class=warning><ha-icon icon='mdi:alert-circle'></ha-icon></td> <td colspan=\"3\" class=warning>Error: Could not load Unifi Data</td></tr> {% endif %} </table>"
+                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n  .warning {\n    color: orange;\n  }\n</style> <table> <tr> <th></th> <th align=\"left\">Name</th> <th align=\"right\">Installed</th> <th align=\"right\">Available</th> </tr> {% for software in states | default([]) | selectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', 'HA ') | replace('Operating System', 'OS') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endfor -%} {% for software in states | default([]) | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'title') != None and state_attr(software, 'device_class') != 'firmware' %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'title') | replace('Home Assistant', '') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace(' (Bitwarden)', '') | replace('UniFi Network Application', 'UniFi') | replace('Google Drive Backup', 'Google Backup') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr> {% endif -%} {% endfor -%} <tr><td colspan=\"4\"><hr width=\"100%\" /></td></tr> {% for software in states.sensor | default([]) | selectattr('entity_id', 'match', '^sensor\\..*_version_latest$') | map(attribute='entity_id') | list | sort -%} <tr> <td class=\"{{'off-icon' if states(software|replace('_latest','')) == states(software) else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software|replace('_latest','')) == states(software) else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ state_attr(software|replace('_latest',''), 'friendly_name') | replace(' Version', '') }}</td> <td class=\"right {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software|replace('_latest','')) }}</td> <td class=\"right\" {{'off-text' if states(software|replace('_latest','')) == states(software) else 'on-text'}}\">{{ states(software) }}</td> </tr> {% endfor -%} <tr> <td class=\"{{'off-icon' if states('sensor.opnsense_versions') | default('0') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] | default('1') else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states('sensor.opnsense_versions') | default('0') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] | default('1') else 'download'}}\" /></td> <td class=\"left {{'off-text' if states('sensor.opnsense_versions') | default('0') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] | default('1') else 'on-text'}}\">OPNsense</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') | default('0') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] | default('1') else 'on-text'}}\">{{ states('sensor.opnsense_versions') | default('--') }}</td> <td class=\"right {{'off-text' if states('sensor.opnsense_versions') | default('0') == state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] | default('1') else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"opnsense\"] | default('--') }}</td> </tr> {% for plugin in state_attr('sensor.opnsense_versions', 'plugins') | default([]) -%} <tr> <td class=\"{{'off-icon' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'download'}}\" /></td> <td class=\"left {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">OPNsense {{ plugin }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_versions', 'plugins')[plugin] }}</td> <td class=\"right {{'off-text' if state_attr('sensor.opnsense_versions', 'plugins')[plugin] == state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] else 'on-text'}}\">{{ state_attr('sensor.opnsense_package_versions', 'plugins')[\"os-\"+plugin] }}</td> </tr> {% endfor -%} {% for ap in state_attr('sensor.unifi_ap_versions', 'data') | default([]) -%} <tr> <td class=\"{{'off-icon' if ap['version'] == ap['version_available'] else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if ap['version'] == ap['version_available'] else 'download'}}\" /></td> <td class=\"left {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['name'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version'] }}</td> <td class=\"right {{'off-text' if ap['version'] == ap['version_available'] else 'on-text'}}\">{{ ap['version_available'] }}</font></td></tr> {% endfor -%} {% if state_attr('sensor.unifi_ap_versions', 'error') != False %}<tr><td class=warning><ha-icon icon='mdi:alert-circle'></ha-icon></td> <td colspan=\"3\" class=warning>Error: Could not load Unifi Data</td></tr> {% endif %} </table>"
                     }
                   ]
                 },
@@ -3953,7 +3998,11 @@
                     {
                       "type": "custom:bubble-card",
                       "card_type": "pop-up",
-                      "hash": "#docs"
+                      "hash": "#docs",
+                      "button_type": "name",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "markdown",
@@ -3989,7 +4038,11 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "grid",
@@ -4246,7 +4299,11 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "grid",
@@ -4477,90 +4534,91 @@
                         "hold_action": {
                           "action": "none"
                         }
-                      }
-                    },
-                    {
-                      "type": "custom:auto-entities",
-                      "card": {
-                        "type": "entities"
                       },
-                      "filter": {
-                        "include": [
-                          {
-                            "entity_id": "sensor.unavailable_entities",
-                            "options": {
-                              "style": "* {\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n",
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "homeassistant.update_entity",
-                                "service_data": {},
-                                "target": {
-                                  "entity_id": "this.entity_id"
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "entity_id": "/_version$/",
-                            "domain": "sensor",
-                            "options": {
-                              "style": "* {\n  {% if states(\"this.entity_id\") != states(\"this.entity_id_latest\") %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n",
-                              "tap_action": {
-                                "action": "call-service",
-                                "service": "homeassistant.update_entity",
-                                "service_data": {},
-                                "target": {
-                                  "entity_id": "this.entity_id"
-                                }
-                              },
-                              "sort": "name"
-                            },
-                            "not": {
-                              "entity_id": "/^sensor\\.(ha_.*|hacs_.*|pixel_.*|.*_firmware|home_assistant|hacs)_version$/"
-                            }
-                          }
-                        ],
-                        "exclude": []
-                      },
-                      "sort": {
-                        "method": "none"
-                      }
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "entities",
                       "entities": [
                         {
-                          "entity": "sensor.unavailable_entities"
-                        },
-                        {
-                          "type": "attribute",
-                          "entity": "sensor.unavailable_entities",
-                          "attribute": "entity_list",
-                          "name": " ",
-                          "icon": " "
-                        },
-                        {
-                          "type": "divider"
-                        },
-                        {
-                          "entity": "sensor.ood_zigbee_entities"
-                        },
-                        {
-                          "type": "attribute",
-                          "entity": "sensor.ood_zigbee_entities",
-                          "attribute": "entity_list",
-                          "name": " ",
-                          "icon": " "
-                        },
-                        {
-                          "type": "divider"
-                        },
-                        {
-                          "entity": "sensor.ood_wyze_entities"
-                        },
-                        {
-                          "type": "attribute",
                           "entity": "sensor.ood_wyze_entities",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "sensor.ood_wyze_entities_list"
+                            }
+                          }
+                        },
+                        {
+                          "entity": "sensor.ood_wyze_entities_list",
+                          "type": "attribute",
+                          "attribute": "entity_list",
+                          "name": " ",
+                          "icon": " "
+                        },
+                        {
+                          "type": "divider"
+                        },
+                        {
+                          "entity": "sensor.ood_zigbee_entities",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "sensor.ood_zigbee_entities_list"
+                            }
+                          }
+                        },
+                        {
+                          "entity": "sensor.ood_zigbee_entities_list",
+                          "type": "attribute",
+                          "attribute": "entity_list",
+                          "name": " ",
+                          "icon": " "
+                        },
+                        {
+                          "type": "divider"
+                        },
+                        {
+                          "entity": "sensor.ood_zwave_entities",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "sensor.ood_zwave_entities_list"
+                            }
+                          }
+                        },
+                        {
+                          "entity": "sensor.ood_zwave_entities_list",
+                          "type": "attribute",
+                          "attribute": "entity_list",
+                          "name": " ",
+                          "icon": " "
+                        },
+                        {
+                          "type": "divider"
+                        },
+                        {
+                          "entity": "sensor.unavailable_entities",
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "homeassistant.update_entity",
+                            "service_data": {},
+                            "target": {
+                              "entity_id": "sensor.unavailable_entities_list"
+                            }
+                          }
+                        },
+                        {
+                          "entity": "sensor.unavailable_entities_list",
+                          "type": "attribute",
                           "attribute": "entity_list",
                           "name": " ",
                           "icon": " "
@@ -4579,12 +4637,12 @@
                               "name": false
                             },
                             {
-                              "entity": "script.0000000mwe",
+                              "entity": "script.fix_3_way_lights",
                               "name": false,
                               "icon": "mdi:floor-lamp-dual",
                               "tap_action": {
                                 "action": "call-service",
-                                "service": "script.0000000mwe"
+                                "service": "script.fix_3_way_lights"
                               }
                             },
                             {
@@ -4684,7 +4742,10 @@
                         "hold_action": {
                           "action": "none"
                         }
-                      }
+                      },
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "markdown",
@@ -4694,7 +4755,7 @@
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol> {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} \n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n\n{% endfor -%} </ol>",
+                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}; Threshold: {{ states(\"input_number.ood_zigbee_seconds\")|int(0) }} <ol> {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} \n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n\n{% endfor -%} </ol>",
                       "title": "All Zigbee Devices"
                     }
                   ]
@@ -4775,18 +4836,21 @@
                         "hold_action": {
                           "action": "none"
                         }
-                      }
+                      },
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor\nUpdated: {{ states('sensor.wyze_entities') }}\n\n<ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list') |\nsort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly\nName','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly\nName',false,true)) -%}\n\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0)\n%} class=\"error\"{% elif entity['timediff'] >=\n(states(\"input_number.ood_wyze_seconds\")|int(0) *\nstates(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{%\nendif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {%\nendfor -%} </ol>",
+                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.wyze_entities', 'entity_list') | default([]) | length }} ; Sensor\nUpdated: {{ states('sensor.wyze_entities') }}\n\n<ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list') |\nsort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly\nName','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly\nName',false,true)) -%}\n\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0)\n%} class=\"error\"{% elif entity['timediff'] >=\n(states(\"input_number.ood_wyze_seconds\")|int(0) *\nstates(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{%\nendif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {%\nendfor -%} </ol>",
                       "title": "All Wyze Devices"
                     },
                     {
                       "type": "custom:html-template-card",
                       "ignore_line_breaks": true,
-                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zwave_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zwave_entities') }}\n<ol>\n{% for entity in state_attr('sensor.zwave_entities', 'entity_list') | sort(attribute=iif(states('input_select.zwave_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zwave_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_zwave_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_zwave_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
+                      "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zwave_entities', 'entity_list') | default([]) | length }} ; Sensor Updated: {{ states('sensor.zwave_entities') }}\n<ol>\n{% for entity in state_attr('sensor.zwave_entities', 'entity_list') | sort(attribute=iif(states('input_select.zwave_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zwave_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_zwave_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_zwave_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
                       "title": "All Zwave Devices"
                     }
                   ]
@@ -4867,7 +4931,10 @@
                         "hold_action": {
                           "action": "none"
                         }
-                      }
+                      },
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "custom:auto-entities",
@@ -4931,7 +4998,11 @@
                       "name": "noname",
                       "show_name": false,
                       "show_icon": false,
-                      "scrolling_effect": false
+                      "scrolling_effect": false,
+                      "entity": "button.homeassistant_reload",
+                      "modules": [
+                        "home-assistant-default"
+                      ]
                     },
                     {
                       "type": "map",
@@ -4987,6 +5058,1999 @@
               "default_zoom": 15
             }
           ]
+        },
+        {
+          "type": "sections",
+          "max_columns": 1,
+          "title": "Mobile Dashboard2",
+          "path": "home2",
+          "icon": "mdi:cellphone-wireless",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:local-conditional-card",
+                  "id": "tab-info-buttons",
+                  "default": "show",
+                  "card": {
+                    "type": "vertical-stack",
+                    "cards": [
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:information",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "styles": {
+                              "card": [
+                                {
+                                  "border": "1px solid dimgrey"
+                                }
+                              ],
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:stairs-up",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-upstairs": "show"
+                                  },
+                                  {
+                                    "tab-upstairs-buttons": "show"
+                                  },
+                                  {
+                                    "tab-middle": "hide"
+                                  },
+                                  {
+                                    "tab-middle-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-downstairs": "hide"
+                                  },
+                                  {
+                                    "tab-downstairs-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-outside": "hide"
+                                  },
+                                  {
+                                    "tab-outside-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-security": "hide"
+                                  },
+                                  {
+                                    "tab-security-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-utilities": "hide"
+                                  },
+                                  {
+                                    "tab-utilities-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-tvs": "hide"
+                                  },
+                                  {
+                                    "tab-tvs-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-locations": "hide"
+                                  },
+                                  {
+                                    "tab-locations-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:format-align-middle",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "show"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:stairs-up",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "show"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:image",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "show"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:security",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "show"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:tools",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "show"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:television",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "show"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "show"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:compass-rose",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "show"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "show"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:local-conditional-card",
+                  "id": "tab-upstairs-buttons",
+                  "default": "hide",
+                  "card": {
+                    "type": "vertical-stack",
+                    "cards": [
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:information",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "show"
+                                  },
+                                  {
+                                    "tab-info-buttons": "show"
+                                  },
+                                  {
+                                    "tab-upstairs": "hide"
+                                  },
+                                  {
+                                    "tab-upstairs-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-middle": "hide"
+                                  },
+                                  {
+                                    "tab-middle-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-downstairs": "hide"
+                                  },
+                                  {
+                                    "tab-downstairs-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-outside": "hide"
+                                  },
+                                  {
+                                    "tab-outside-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-security": "hide"
+                                  },
+                                  {
+                                    "tab-security-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-utilities": "hide"
+                                  },
+                                  {
+                                    "tab-utilities-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-tvs": "hide"
+                                  },
+                                  {
+                                    "tab-tvs-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-locations": "hide"
+                                  },
+                                  {
+                                    "tab-locations-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:stairs-up",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "styles": {
+                              "card": [
+                                {
+                                  "border": "1px solid dimgrey"
+                                }
+                              ],
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:format-align-middle",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "show"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:stairs-up",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "show"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:image",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "show"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:security",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "show"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:tools",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "show"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "show"
+                                  },
+                                  {
+                                    "tab-plugs3": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "hide"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:television",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "show"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "show"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "custom:button-card",
+                            "icon": "mdi:compass-rose",
+                            "size": "35px",
+                            "tap_action": {
+                              "action": "fire-dom-event",
+                              "local_conditional_card": {
+                                "action": "set",
+                                "ids": [
+                                  {
+                                    "tab-info": "hide"
+                                  },
+                                  {
+                                    "tab-info-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-temps": "hide"
+                                  },
+                                  {
+                                    "tab-temps-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-issues": "hide"
+                                  },
+                                  {
+                                    "tab-issues-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1": "hide"
+                                  },
+                                  {
+                                    "tab-plugs1-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2": "hide"
+                                  },
+                                  {
+                                    "tab-plugs2-buttons": "hide"
+                                  },
+                                  {
+                                    "tab-plugs3": "show"
+                                  },
+                                  {
+                                    "tab-plugs3-buttons": "show"
+                                  }
+                                ]
+                              }
+                            },
+                            "styles": {
+                              "icon": [
+                                {
+                                  "color": "var(--state-icon-color)"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:local-conditional-card",
+                  "id": "tab-info",
+                  "default": "show",
+                  "card": {
+                    "type": "vertical-stack",
+                    "cards": [
+                      {
+                        "type": "custom:html-template-card",
+                        "grid_options": {
+                          "columns": 12,
+                          "rows": 1
+                        },
+                        "entities": [
+                          "sensor.holly_location",
+                          "sensor.mike_location"
+                        ],
+                        "ignore_line_breaks": true,
+                        "content": "<style>\n  ha-card:has(.locations) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  table {\n    width: 100%;\n    table-layout: fixed;\n    // margin-left: -10px;\n  }\n  td {\n    width: 50%;\n    text-align: left;\n    line-height: 1;\n    font-size: 1rem;\n    vertical-align: middle;\n    // border: 1px solid white;\n  }\n  td.img {\n    width: 35px;\n  }\n</style> <table class=\"locations\"> <tr> <td class=\"img\"><img src=\"https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512\" width=30 /></td><td>{{ states(\"sensor.holly_location\") }}</td> <td class=\"img\"><img src=\"https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512\" width=30 /></td><td>{{ states(\"sensor.mike_location\") }}</td> </tr> </table>\n"
+                      },
+                      {
+                        "type": "entities",
+                        "entities": [
+                          {
+                            "entity": "alarm_control_panel.home_alarm",
+                            "name": "Security",
+                            "type": "custom:multiple-entity-row",
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "binary_sensor.all_security_devices",
+                                "name": "Devices",
+                                "styles": {
+                                  "color": "var(--security-color)"
+                                }
+                              },
+                              {
+                                "entity": "sensor.alarm_state_pretty",
+                                "name": "Alarm",
+                                "styles": {
+                                  "color": "var(--alarm-color)"
+                                }
+                              }
+                            ],
+                            "show_state": false,
+                            "card_mod": {
+                              "style": ".entity {\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "entity": "binary_sensor.all_doors_windows_gates",
+                            "name": "Status",
+                            "icon": "mdi:shield",
+                            "type": "custom:multiple-entity-row",
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "binary_sensor.fridge_and_freezer_doors",
+                                "name": "Fridge/Freezers",
+                                "styles": {
+                                  "color": "var(--fridges-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.oven_is_on",
+                                "name": "Oven",
+                                "styles": {
+                                  "color": "var(--oven-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.interior_security_devices",
+                                "name": "Interior",
+                                "styles": {
+                                  "color": "var(--int-doors-windows-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.exterior_security_devices",
+                                "name": "Exterior",
+                                "styles": {
+                                  "color": "var(--ext-doors-gates-color)"
+                                }
+                              }
+                            ],
+                            "show_state": false,
+                            "card_mod": {
+                              "style": ".entity {\n  --fridges-color: {% if states('binary_sensor.fridge_and_freezer_doors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --int-doors-windows-color: {% if states('binary_sensor.interior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --ext-doors-gates-color: {% if states('binary_sensor.exterior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "entity": "cover.garage_door",
+                            "type": "custom:multiple-entity-row",
+                            "show_state": false,
+                            "state_color": false,
+                            "name": "Outside",
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "binary_sensor.front_door_open",
+                                "name": "FrontDoor",
+                                "styles": {
+                                  "color": "var(--front-door-sensor-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.mailbox_sensor",
+                                "name": "Mailbox",
+                                "styles": {
+                                  "color": "var(--mailbox-sensor-color)"
+                                }
+                              },
+                              {
+                                "entity": "cover.garage_door",
+                                "name": "GargDoor",
+                                "styles": {
+                                  "color": "var(--garage-door-sensor-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.garage_door_motion_occupancy",
+                                "name": "GargMotion",
+                                "styles": {
+                                  "color": "var(--garage-door-motion-sensor-color)"
+                                }
+                              }
+                            ],
+                            "card_mod": {
+                              "style": ".entity {\n  --front-door-sensor-color: {% if states('binary_sensor.front_door_open') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-color: {% if states('cover.garage_door') != \"closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-motion-sensor-color: {% if states('binary_sensor.garage_door_motion_occupancy') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "entity": "binary_sensor.motion_sensors",
+                            "name": "Motion",
+                            "type": "custom:multiple-entity-row",
+                            "show_state": false,
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "binary_sensor.upstairs_motion_sensors",
+                                "name": "Upstairs",
+                                "styles": {
+                                  "color": "var(--up-motion-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.middle_level_motion_sensors",
+                                "name": "Middle",
+                                "styles": {
+                                  "color": "var(--middle-motion-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.downstairs_motion_sensors",
+                                "name": "Downstairs",
+                                "styles": {
+                                  "color": "var(--down-motion-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.outside_motion_sensors",
+                                "name": "Outside",
+                                "styles": {
+                                  "color": "var(--out-motion-color)"
+                                }
+                              }
+                            ],
+                            "card_mod": {
+                              "style": ".entity {\n  --up-motion-color: {% if states('binary_sensor.upstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-motion-color: {% if states('binary_sensor.middle_level_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-motion-color: {% if states('binary_sensor.downstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --out-motion-color: {% if states('binary_sensor.outside_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "entity": "binary_sensor.water_leak_sensors",
+                            "name": "Leaks",
+                            "type": "custom:multiple-entity-row",
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "binary_sensor.upstairs_water_leak_sensors",
+                                "name": "Upstairs",
+                                "styles": {
+                                  "color": "var(--up-water-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.middle_level_water_leak_sensors",
+                                "name": "Downstairs",
+                                "styles": {
+                                  "color": "var(--middle-water-color)"
+                                }
+                              },
+                              {
+                                "entity": "binary_sensor.downstairs_water_leak_sensors",
+                                "name": "Downstairs",
+                                "styles": {
+                                  "color": "var(--down-water-color)"
+                                }
+                              }
+                            ],
+                            "show_state": false,
+                            "card_mod": {
+                              "style": ".entity {\n  --up-water-color: {% if states('binary_sensor.upstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-water-color: {% if states('binary_sensor.middle_level_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-water-color: {% if states('binary_sensor.downstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "type": "custom:multiple-entity-row",
+                            "entity": "sensor.downstairs_lights_on",
+                            "name": "Lights",
+                            "show_state": false,
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "sensor.upstairs_lights_on",
+                                "name": "Up",
+                                "unit": false,
+                                "styles": {
+                                  "color": "var(--upstairs-lights-color)"
+                                }
+                              },
+                              {
+                                "entity": "sensor.middle_level_lights_on",
+                                "name": "Middle",
+                                "unit": false,
+                                "styles": {
+                                  "color": "var(--middle-level-lights-color)"
+                                }
+                              },
+                              {
+                                "entity": "sensor.downstairs_lights_on",
+                                "name": "Down",
+                                "unit": false,
+                                "styles": {
+                                  "color": "var(--downstairs-lights-color)"
+                                }
+                              },
+                              {
+                                "entity": "sensor.garage_lights_on",
+                                "name": "Garage",
+                                "unit": false,
+                                "styles": {
+                                  "color": "var(--garage-lights-color)"
+                                }
+                              },
+                              {
+                                "entity": "sensor.outside_lights_on",
+                                "name": "Out",
+                                "unit": false,
+                                "styles": {
+                                  "color": "var(--outside-lights-color)"
+                                }
+                              }
+                            ],
+                            "card_mod": {
+                              "style": ".entity {\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "type": "custom:multiple-entity-row",
+                            "entity": "sensor.moco_recycle_day",
+                            "name": "Schedule",
+                            "icon": "mdi:calendar",
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "input_boolean.mail_delivered",
+                                "name": "Mail",
+                                "styles": {
+                                  "color": "var(--mail-color)"
+                                },
+                                "tap_action": {
+                                  "action": "call-service",
+                                  "service": "input_boolean.toggle",
+                                  "service_data": {
+                                    "entity_id": "input_boolean.mail_delivered"
+                                  }
+                                }
+                              },
+                              {
+                                "entity": "sensor.days_until_cleaners",
+                                "name": "Cleaners",
+                                "styles": {
+                                  "color": "var(--cleaners-color)",
+                                  "width": "45px"
+                                }
+                              },
+                              {
+                                "entity": "sensor.trash",
+                                "styles": {
+                                  "color": "var(--trash-color)",
+                                  "width": "45px"
+                                },
+                                "tap_action": {
+                                  "action": "call-service",
+                                  "service": "input_boolean.toggle",
+                                  "service_data": {
+                                    "entity_id": "input_boolean.trash_is_out"
+                                  }
+                                }
+                              },
+                              {
+                                "entity": "sensor.moco_recycle_day",
+                                "attribute": "days_string",
+                                "name": "Recycle",
+                                "styles": {
+                                  "color": "var(--recycle-color)",
+                                  "width": "45px"
+                                },
+                                "tap_action": {
+                                  "action": "call-service",
+                                  "service": "input_boolean.toggle",
+                                  "service_data": {
+                                    "entity_id": "input_boolean.recycle_is_out"
+                                  }
+                                }
+                              },
+                              {
+                                "entity": "sensor.moco_recycle_day",
+                                "name": "Rec Day",
+                                "styles": {
+                                  "color": "var(--recycle-color)",
+                                  "width": "45px"
+                                },
+                                "tap_action": {
+                                  "action": "call-service",
+                                  "service": "input_boolean.toggle",
+                                  "service_data": {
+                                    "entity_id": "input_boolean.recycle_is_out"
+                                  }
+                                }
+                              }
+                            ],
+                            "show_state": false,
+                            "card_mod": {
+                              "style": ".entity {\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "type": "custom:multiple-entity-row",
+                            "entity": "sensor.printer_ink",
+                            "show_state": false,
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "attribute": "photoblack",
+                                "name": "PB",
+                                "styles": {
+                                  "color": "var(--photoblack-color)"
+                                }
+                              },
+                              {
+                                "attribute": "cyan",
+                                "name": "C",
+                                "styles": {
+                                  "color": "var(--cyan-color)"
+                                }
+                              },
+                              {
+                                "attribute": "magenta",
+                                "name": "M",
+                                "styles": {
+                                  "color": "var(--magenta-color)"
+                                }
+                              },
+                              {
+                                "attribute": "yellow",
+                                "name": "Y",
+                                "styles": {
+                                  "color": "var(--yellow-color)"
+                                }
+                              },
+                              {
+                                "attribute": "black",
+                                "name": "K",
+                                "styles": {
+                                  "color": "var(--black-color)"
+                                }
+                              }
+                            ],
+                            "card_mod": {
+                              "style": ".entity {\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "type": "custom:multiple-entity-row",
+                            "entity": "sensor.mercury_screensaver",
+                            "name": "Devices",
+                            "show_state": false,
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "sensor.mercury_screensaver",
+                                "name": "MercurySS",
+                                "styles": {
+                                  "color": "var(--mercury-screensaver-color)",
+                                  "width": "50px"
+                                }
+                              },
+                              {
+                                "entity": "sensor.venus_screensaver",
+                                "name": "VenusSS",
+                                "styles": {
+                                  "color": "var(--venus-screensaver-color)",
+                                  "width": "43px"
+                                }
+                              },
+                              {
+                                "entity": "sensor.picture_frame_status",
+                                "name": "PicFrame",
+                                "styles": {
+                                  "color": "var(--picframe-color)",
+                                  "width": "43px"
+                                },
+                                "tap_action": {
+                                  "action": "call-service",
+                                  "service": "homeassistant.update_entity",
+                                  "service_data": {
+                                    "entity_id": "sensor.picture_frame_status"
+                                  }
+                                }
+                              },
+                              {
+                                "entity": "sensor.fully_kiosk_browser",
+                                "name": "FKB",
+                                "styles": {
+                                  "color": "var(--fkb-color)",
+                                  "width": "45px"
+                                }
+                              },
+                              {
+                                "entity": "sensor.fully_kiosk_browser_mbr",
+                                "name": "FKB MBR",
+                                "styles": {
+                                  "color": "var(--fkb-mbr-color)",
+                                  "width": "45px"
+                                }
+                              }
+                            ],
+                            "card_mod": {
+                              "style": ".entity {\n  --mercury-screensaver-color: {% if states('sensor.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('sensor.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --picframe-color: {% if states('sensor.picture_frame_status') == \"unavailable\" %}red{% elif states('sensor.picture_frame_status') == \"unknown\" %}yellow{% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          },
+                          {
+                            "type": "custom:multiple-entity-row",
+                            "entity": "binary_sensor.software_update_available",
+                            "name": "HA",
+                            "icon": "mdi:home-assistant",
+                            "show_state": false,
+                            "state_color": true,
+                            "tap_action": {
+                              "action": "none"
+                            },
+                            "double_tap_action": {
+                              "action": "none"
+                            },
+                            "hold_action": {
+                              "action": "none"
+                            },
+                            "entities": [
+                              {
+                                "entity": "sensor.jellyfin_sessions",
+                                "name": "Jellyfin",
+                                "styles": {
+                                  "color": "var(--jellyfin-color)"
+                                }
+                              },
+                              {
+                                "entity": "sensor.software_updates_available_count",
+                                "name": "Updates",
+                                "styles": {
+                                  "color": "var(--updates-color)"
+                                },
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/desktop-dashboard/home-assistant"
+                                },
+                                "double_tap_action": {
+                                  "action": "more-info"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                }
+                              },
+                              {
+                                "entity": "sensor.unavailable_entities",
+                                "name": "Unavail",
+                                "styles": {
+                                  "color": "var(--unavailable-color)"
+                                },
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/desktop-dashboard/home-assistant"
+                                },
+                                "double_tap_action": {
+                                  "action": "more-info"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                }
+                              },
+                              {
+                                "entity": "sensor.ood_wyze_entities",
+                                "name": "Wyze",
+                                "styles": {
+                                  "color": "var(--wyze-color)"
+                                },
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/desktop-dashboard/zigbee"
+                                },
+                                "double_tap_action": {
+                                  "action": "more-info"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                }
+                              },
+                              {
+                                "entity": "sensor.ood_zigbee_entities",
+                                "name": "Zigbee",
+                                "styles": {
+                                  "color": "var(--zigbee-color)"
+                                },
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/desktop-dashboard/zigbee"
+                                },
+                                "double_tap_action": {
+                                  "action": "more-info"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                }
+                              },
+                              {
+                                "entity": "sensor.ood_zwave_entities",
+                                "name": "Zwave",
+                                "styles": {
+                                  "color": "var(--zwave-color)"
+                                },
+                                "tap_action": {
+                                  "action": "navigate",
+                                  "navigation_path": "/desktop-dashboard/zigbee"
+                                },
+                                "double_tap_action": {
+                                  "action": "more-info"
+                                },
+                                "hold_action": {
+                                  "action": "more-info"
+                                }
+                              }
+                            ],
+                            "card_mod": {
+                              "style": ".entity {\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zwave-color: {% if states('sensor.ood_zwave_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "entities",
+                        "entities": [
+                          {
+                            "type": "custom:paper-buttons-row",
+                            "position": "right",
+                            "buttons": [
+                              {
+                                "entity": "script.home_thermostat_down",
+                                "tap_action": {
+                                  "action": "call-service",
+                                  "service": "script.home_thermostat_down"
+                                },
+                                "name": false,
+                                "styles": {
+                                  "icon": {
+                                    "--mdc-icon-size": "40px"
+                                  }
+                                }
+                              },
+                              {
+                                "entity": "sensor.thermostat_temperature",
+                                "layout": "icon|state",
+                                "icon": "mdi:thermostat",
+                                "state": "Set: {{ states(\"sensor.thermostat_setpoints\") }}°F ({{\n    states('climate.thermostat') | capitalize | replace(\"_cool\",\"/Cool\") }} · {{\n    state_attr('climate.thermostat', 'current_temperature') }}°F)",
+                                "tap_action": {
+                                  "action": "more-info",
+                                  "entity": "climate.thermostat"
+                                },
+                                "styles": {
+                                  "icon": {
+                                    "--mdc-icon-size": "40px",
+                                    "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--state-icon-color){% endif %}\n"
+                                  },
+                                  "button": {
+                                    "font-size": "18px",
+                                    "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--primary-text-color){% endif %}\n"
+                                  }
+                                }
+                              },
+                              {
+                                "entity": "script.home_thermostat_up",
+                                "tap_action": {
+                                  "action": "call-service",
+                                  "service": "script.home_thermostat_up"
+                                },
+                                "name": false,
+                                "styles": {
+                                  "icon": {
+                                    "--mdc-icon-size": "40px"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "section"
+                          },
+                          {
+                            "type": "custom:multiple-entity-row",
+                            "entity": "sensor.jellyfin_sessions",
+                            "name": "Jellyfin",
+                            "show_state": false,
+                            "state_color": true,
+                            "double_tap_action": {
+                              "action": "more-info"
+                            },
+                            "hold_action": {
+                              "action": "more-info"
+                            },
+                            "entities": [
+                              {
+                                "entity": "sensor.jellyfin_sessions",
+                                "name": false,
+                                "unit": "Watchers",
+                                "styles": {
+                                  "color": "var(--jellyfin-color)"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "custom:html-template-card",
+                            "ignore_line_breaks": true,
+                            "content": "<style>\n  table {\n    width: 100%;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table>{% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>⟁</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
+                          }
+                        ],
+                        "card_mod": {
+                          "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\n"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:local-conditional-card",
+                  "id": "tab-upstairs",
+                  "default": "hide",
+                  "card": {
+                    "type": "vertical-stack",
+                    "cards": [
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "alert_classes": [
+                              "motion",
+                              "moisture"
+                            ],
+                            "sensor_classes": [
+                              "temperature",
+                              "humidity"
+                            ],
+                            "features_position": "inline",
+                            "display_type": "picture",
+                            "type": "area",
+                            "area": "e578e8c2f75a11ea912663367f9be460",
+                            "color": "",
+                            "features": [
+                              {
+                                "type": "area-controls"
+                              }
+                            ]
+                          },
+                          {
+                            "alert_classes": [
+                              "motion",
+                              "moisture"
+                            ],
+                            "sensor_classes": [
+                              "temperature",
+                              "humidity"
+                            ],
+                            "features_position": "inline",
+                            "display_type": "picture",
+                            "type": "area",
+                            "area": "master_bathroom",
+                            "color": "",
+                            "features": [
+                              {
+                                "type": "area-controls"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "light.dresser_lamp",
+                            "name": "Dresser"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "light.holly_nightstand_lamp",
+                            "name": "Nitestnd"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "light.bedroom_fan_light",
+                            "name": "Fan Lite"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "fan.bedroom_fan",
+                            "name": "Fan"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "switch.bedroom_tv",
+                            "name": "TV"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "humidifier.bedroom_humidifier",
+                            "name": "Hmdfr",
+                            "tap_action": {
+                              "action": "more-info"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "features": [
+                              {
+                                "type": "area-controls"
+                              }
+                            ],
+                            "alert_classes": [
+                              "motion",
+                              "moisture"
+                            ],
+                            "sensor_classes": [
+                              "temperature",
+                              "humidity"
+                            ],
+                            "features_position": "inline",
+                            "display_type": "picture",
+                            "type": "area",
+                            "area": "e0ed57d0f82011eaabf815b2224a559b",
+                            "color": ""
+                          },
+                          {
+                            "features": [
+                              {
+                                "type": "area-controls"
+                              }
+                            ],
+                            "alert_classes": [
+                              "motion",
+                              "moisture"
+                            ],
+                            "sensor_classes": [
+                              "temperature",
+                              "humidity"
+                            ],
+                            "features_position": "inline",
+                            "display_type": "picture",
+                            "type": "area",
+                            "area": "db9adb0df82011eaa78b4964f6b4b378",
+                            "color": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "light.mike_desk_lamp",
+                            "name": "Desk"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "light.office_fan_light",
+                            "name": "Fan Lite"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "fan.office_fan",
+                            "name": "Fan"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "media_player.office_roku_tv",
+                            "name": "TV"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "switch.office_heater_plug",
+                            "name": "Heater"
+                          },
+                          {
+                            "show_name": true,
+                            "show_icon": true,
+                            "type": "button",
+                            "entity": "switch.mike_desk_strip_plug_4_humidifier",
+                            "name": "Hmdfr"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "features": [
+                              {
+                                "type": "area-controls"
+                              }
+                            ],
+                            "alert_classes": [
+                              "motion",
+                              "moisture"
+                            ],
+                            "sensor_classes": [
+                              "temperature",
+                              "humidity"
+                            ],
+                            "features_position": "inline",
+                            "display_type": "picture",
+                            "type": "area",
+                            "area": "d5a3f493f82011eab36aa3c3ed2ba75c",
+                            "color": ""
+                          },
+                          {
+                            "features": [
+                              {
+                                "type": "area-controls"
+                              }
+                            ],
+                            "alert_classes": [
+                              "motion",
+                              "moisture"
+                            ],
+                            "sensor_classes": [
+                              "temperature",
+                              "humidity"
+                            ],
+                            "features_position": "inline",
+                            "display_type": "picture",
+                            "type": "area",
+                            "area": "hall_bath",
+                            "color": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "cards": [],
+          "subview": true
         }
       ],
       "title": "Mobile Dashboard"

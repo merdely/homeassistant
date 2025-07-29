@@ -765,15 +765,15 @@
     then:
     - data:
         entity_id:
-        - switch.mercury_screensaver
+        - switch.mercury_unlocked
       action: homeassistant.update_entity
     - data:
         message: Mike scanned at Mike's Desk
         level: warning
       action: system_log.write
     - condition: state
-      entity_id: switch.mercury_screensaver
-      state: 'on'
+      entity_id: switch.mercury_unlocked
+      state: 'off'
     - data:
         message: Unlocking mercury for Mike
         level: warning
@@ -900,9 +900,15 @@
       message: Starting Nightly Tasks
       level: warning
     action: system_log.write
+  - action: script.scene_night_night
+    continue_on_error: true
+    metadata: {}
+    data: {}
   - data: {}
+    continue_on_error: true
     action: shell_command.clean_alarm_state
   - data: {}
+    continue_on_error: true
     action: shell_command.rotate_ha_logs
   - alias: Reset Recycle Is Out if day after Recycle Day
     if:
@@ -938,6 +944,7 @@
     - data:
         addon: a0d7b954_nginxproxymanager
       action: hassio.addon_restart
+    alias: Restart NPM if new Cert
   - data:
       addon: core_letsencrypt
     action: hassio.addon_restart
@@ -956,6 +963,7 @@
       - condition: state
         entity_id: binary_sensor.new_ssl_cert_available
         state: 'on'
+      alias: If a New SSL Certificate is Available
     then:
     - data:
         message: 'Nightly Tasks: Restarting Home Assistant'
@@ -963,6 +971,7 @@
       action: system_log.write
     - action: homeassistant.restart
       data: {}
+    alias: If there's a new cert, restart HA
   - data:
       message: Finishing Nightly Tasks
       level: warning
@@ -974,9 +983,7 @@
       entity_id: weather.home
     response_variable: daily_forecast
     action: weather.get_forecasts
-  - action: script.backup_partial_on_nfs
-    data: {}
-    enabled: false
+    continue_on_error: true
   - action: button.press
     metadata: {}
     data: {}
@@ -1381,86 +1388,6 @@
     target:
       entity_id: switch.master_bath_fan
   mode: single
-- id: '1634428046004'
-  alias: Controls - 3D Printer - Turn on OctoPrint Camera
-  description: ''
-  triggers:
-  - entity_id: binary_sensor.octoprint_printing
-    to: 'on'
-    trigger: state
-  conditions: []
-  actions:
-  - data:
-      server: ha@carpo.erdely.in
-      command: start_camera
-    action: shell_command.ssh_command
-  - target:
-      entity_id: binary_sensor.octoprint_camera_status
-    action: homeassistant.update_entity
-    data: {}
-  - target:
-      entity_id: switch.octoprint_light_plug
-    action: homeassistant.turn_on
-    data: {}
-  mode: single
-- id: '1634428228462'
-  alias: Controls - 3D Printer - Turn off OctoPrint Camera
-  description: ''
-  triggers:
-  - entity_id: binary_sensor.octoprint_printing
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 15
-      seconds: 0
-    trigger: state
-  conditions: []
-  actions:
-  - data:
-      server: ha@carpo.erdely.in
-      command: stop_camera
-    action: shell_command.ssh_command
-  - target:
-      entity_id: binary_sensor.octoprint_camera_status
-    action: homeassistant.update_entity
-    data: {}
-  - target:
-      entity_id: switch.octoprint_light_plug
-    action: homeassistant.turn_off
-    data: {}
-  mode: single
-- id: '1635180091668'
-  alias: Controls - 3D Printer - Power On Ender3 Screen with Ender 3
-  description: ''
-  triggers:
-  - entity_id: switch.ender3_plug
-    to: 'on'
-    trigger: state
-  conditions: []
-  actions:
-  - target:
-      entity_id: switch.guest_room_usb_hub
-    action: homeassistant.turn_on
-    data: {}
-  mode: single
-- id: '1635180126214'
-  alias: Controls - 3D Printer - Power Off Ender3 Screen with Ender 3
-  description: ''
-  triggers:
-  - entity_id: switch.ender3_plug
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    trigger: state
-  conditions: []
-  actions:
-  - target:
-      entity_id: switch.guest_room_usb_hub
-    action: homeassistant.turn_off
-    data: {}
-  mode: single
 - id: '1635775206466'
   alias: Controls - Save Holly In Bed State
   description: ''
@@ -1626,6 +1553,14 @@
       minutes: 0
       seconds: 30
     trigger: numeric_state
+  - entity_id:
+    - sensor.software_updates_available_count
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    trigger: numeric_state
+    below: 1
   - entity_id: binary_sensor.earth
     for:
       hours: 0
@@ -1660,7 +1595,7 @@
       minutes: 5
       seconds: 0
     trigger: numeric_state
-    enabled: false
+    enabled: true
   - entity_id: sensor.unavailable_entities
     for:
       hours: 0
@@ -1668,14 +1603,7 @@
       seconds: 30
     below: '1'
     trigger: numeric_state
-    enabled: false
-  - trigger: template
-    value_template: '{{ state_attr("sensor.unavailable_entities", "entity_list") |
-      length > 0 }}'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
+    enabled: true
   - entity_id: binary_sensor.bitwarden_add_on_running
     for:
       hours: 0
@@ -1777,6 +1705,7 @@
   conditions:
   - condition: template
     value_template: '{{ trigger.to_state.state != trigger.from_state.state }}'
+    alias: There was a state change
   - condition: time
     after: 02:30:00
     before: 01:59:00
@@ -1789,10 +1718,11 @@
     - mon
     - sun
     alias: Don't fire between 2 & 2:30 AM (nightly maintenance)
-  - alias: Don't fire between 4 & 5 AM (nightly maintenance)
+    enabled: false
+  - alias: Don't fire between 4:45 & 6 AM (nightly backups)
     condition: time
-    after: 05:30:00
-    before: 04:00:00
+    after: 06:00:00
+    before: 04:45:00
     weekday:
     - sat
     - fri
@@ -1801,21 +1731,24 @@
     - tue
     - mon
     - sun
+    enabled: true
   actions:
   - choose:
     - conditions:
       - condition: template
         value_template: '{{ trigger.to_state.state | int(-1) > 0 or trigger.to_state.state
           | string == "off" }}'
+        alias: If sensor is a bad state
       sequence:
       - data:
           message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
             }}
 
 
-            {% if state_attr(trigger.entity_id, ''entity_list'') %}
+            {% if state_attr(trigger.entity_id + "_list", ''entity_list'') %}
 
-            Entity List: {{ state_attr(trigger.entity_id, ''entity_list'') }}
+            Entity List: {{ state_attr(trigger.entity_id + "_list", ''entity_list'')
+            }}
 
             {% elif states(trigger.entity_id | regex_replace(''_count$'', '''')) %}
 
@@ -1832,10 +1765,12 @@
           entity_id: '{{ "input_boolean." + trigger.entity_id.split(".")[1] + "_triggered"
             }}'
         action: homeassistant.turn_on
+        data: {}
     - conditions:
       - condition: template
         value_template: '{{ trigger.to_state.state | int(-1) == 0 or trigger.to_state.state
           | string == "on" }}'
+        alias: If sensor in a good state
       sequence:
       - condition: template
         value_template: '{{ states("input_boolean." + trigger.entity_id.split(".")[1]
@@ -1852,15 +1787,17 @@
           entity_id: '{{ "input_boolean." + trigger.entity_id.split(".")[1] + "_triggered"
             }}'
         action: homeassistant.turn_off
+        data: {}
     default:
     - data:
         message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} is {{ states(trigger.entity_id)
           }}
 
 
-          {% if state_attr(trigger.entity_id, ''entity_list'') %}
+          {% if state_attr(trigger.entity_id + "_list", ''entity_list'') %}
 
-          Entity List: {{ state_attr(trigger.entity_id, ''entity_list'') }}
+          Entity List: {{ state_attr(trigger.entity_id + "_list", ''entity_list'')
+          }}
 
           {% elif states(trigger.entity_id | regex_replace(''_count$'', '''')) %}
 
@@ -1873,6 +1810,7 @@
         title: '** UNKNOWN Issue Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
           }} is {{ states(trigger.entity_id) }} **'
       action: notify.gmail_to_mike
+    alias: Determine context for sending alert (bad, good, unknown)
   mode: single
 - id: '1641590686089'
   alias: Actionable Notifications - RESET_MAILBOX
@@ -2589,7 +2527,7 @@
   triggers:
   - trigger: numeric_state
     entity_id:
-    - sensor.office_humidity
+    - sensor.office_multisensor_humidity
     above: 50
   - trigger: time
     at: 02:00:00
@@ -2798,14 +2736,6 @@
     data: {}
   - set_conversation_response: Have a good day
   mode: single
-- id: '1741306717937'
-  alias: Music Assistant - Local LLM Enhanced Voice Support Blueprint
-  description: ''
-  use_blueprint:
-    path: music-assistant/mass_llm_enhanced_assist_blueprint_en.yaml
-    input:
-      llm_agent: conversation.home_assistant
-      default_player: media_player.office_speaker
 - id: '1741888508340'
   alias: Controls - Picframe (timebased)
   description: ''
@@ -2915,4 +2845,229 @@
     target:
       entity_id: switch.office_heater_plug
     action: homeassistant.turn_off
+  mode: single
+- id: '1752607917440'
+  alias: 'Assist: Turn on the Bedroom'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command: Turn on the Bedroom
+  conditions: []
+  actions:
+  - action: homeassistant.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.dresser_lamp
+  mode: single
+- id: '1752607968560'
+  alias: 'Assist: Turn off the Bedroom'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn off the Bedroom
+  conditions: []
+  actions:
+  - action: homeassistant.turn_off
+    metadata: {}
+    data: {}
+    target:
+      label_id: bedroom
+  mode: single
+- id: '1752608140881'
+  alias: 'Assist: Turn on the Office'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn on the Office
+  conditions: []
+  actions:
+  - action: homeassistant.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.office_fan_light
+  mode: single
+- id: '1752608188802'
+  alias: 'Assist: Turn off the Office'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn off the Office
+  conditions: []
+  actions:
+  - action: homeassistant.turn_off
+    metadata: {}
+    data: {}
+    target:
+      label_id: office
+  mode: single
+- id: '1752609581971'
+  alias: 'Assist: Turn off the Upstairs'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn off the Upstairs
+  conditions: []
+  actions:
+  - action: homeassistant.turn_off
+    metadata: {}
+    data: {}
+    target:
+      label_id: upstairs
+  mode: single
+- id: '1752609637701'
+  alias: 'Assist: Turn on the Upstairs'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn on the Upstairs
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      floor_id: upstairs
+  mode: single
+- id: '1752610803004'
+  alias: 'Assist: Turn off the Downstairs'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn off the Downstairs
+  conditions: []
+  actions:
+  - action: homeassistant.turn_off
+    metadata: {}
+    data: {}
+    target:
+      label_id: downstairs
+  mode: single
+- id: '1752610886378'
+  alias: 'Assist: Turn on the Downstairs'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn on the Downstairs
+  conditions: []
+  actions:
+  - action: homeassistant.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.god_damn_tv
+      - light.god_damn_light
+  mode: single
+- id: '1752612402761'
+  alias: 'Assist: Turn of the God Damn Light'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn off the God Damn Light
+  conditions: []
+  actions:
+  - action: homeassistant.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.god_damn_light
+  mode: single
+- id: '1752612440753'
+  alias: 'Assist: Turn on the God Damn Light'
+  description: ''
+  triggers:
+  - trigger: conversation
+    command:
+    - Turn on the God Damn Light
+  conditions: []
+  actions:
+  - action: homeassistant.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.god_damn_light
+  mode: single
+- id: '1752695879335'
+  alias: Control Panel - Show Front Door Camera
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - sensor.front_door_person_count
+    above: 1
+  conditions: []
+  actions:
+  - action: script.fkb_load_camera
+    data:
+      camera: camera.front_door
+  mode: single
+- id: '1753798002260'
+  alias: Notifications - Thermostat Area
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.thermostat_area
+    enabled: false
+  - trigger: template
+    value_template: '{{ area_name(device_id("climate.thermostat")) == "Attic" }}'
+  - trigger: template
+    value_template: '{{ area_name(device_id("climate.thermostat")) != "Attic" }}'
+  conditions: []
+  actions:
+  - if:
+    - condition: template
+      value_template: '{{ states("sensor.thermostat_area") != "Attic" }}'
+    then:
+    - action: notify.gmail_to_mike
+      metadata: {}
+      data:
+        message: Area for Thermostat changed to "{{ states("sensor.thermostat_area")
+          }}". Should be "Attic".
+        title: Area for Thermostat changed
+    else:
+    - action: notify.gmail_to_mike
+      metadata: {}
+      data:
+        message: Area for Thermostat restored to "{{ states("sensor.thermostat_area")
+          }}"
+        title: Area for Thermostat restored
+  mode: single
+- id: '1753805337203'
+  alias: Notifications - Thermostat Area YAML
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.thermostat_area_yaml
+    enabled: true
+  conditions: []
+  actions:
+  - if:
+    - condition: template
+      value_template: '{{ states("sensor.thermostat_area_yaml") != "None" }}'
+    then:
+    - action: notify.gmail_to_mike
+      metadata: {}
+      data:
+        message: Area for Thermostat changed to "{{ states("sensor.thermostat_area_yaml")
+          }}". Should be "None".
+        title: Area for Thermostat changed
+    else:
+    - action: notify.gmail_to_mike
+      metadata: {}
+      data:
+        message: Area for Thermostat restored to "{{ states("sensor.thermostat_area_yaml")
+          }}"
+        title: Area for Thermostat restored
   mode: single

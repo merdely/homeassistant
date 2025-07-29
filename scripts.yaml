@@ -7,9 +7,9 @@ computer_mercury_unlock:
         entity_id: person.michael_erdely
         state: home
       sequence:
-      - service: switch.turn_off
-        data: {}
-        entity_id: switch.mercury_screensaver
+      - data: {}
+        entity_id: switch.mercury_unlocked
+        action: switch.turn_on
     default: []
   mode: single
   icon: mdi:lock-open-variant-outline
@@ -223,13 +223,17 @@ scene_good_night:
       entity_id: lock.front_door_zwave
   - target:
       entity_id:
-      - switch.downstairs
-      - switch.middle_level
-      - switch.back_yard
-      - switch.garage
-      - light.front_porch_light
       - light.mantle_lights
-      - light.deck_lights
+      - switch.god_damn_humidifier
+      - switch.god_damn_tv
+      - switch.living_room_tv
+      floor_id:
+      - downstairs
+      - middle_level
+      area_id:
+      - ab042805f82011ea8f6093da0125181c
+      - d24af84ef82011eaaba7cf30c521d99e
+      - cb8b6c78f82011ea806cff2b924024ae
     data: {}
     action: homeassistant.turn_off
   - data: {}
@@ -261,71 +265,81 @@ scene_good_night:
 scene_leaving_home:
   alias: Scene - Leaving Home
   sequence:
-  - service: alarm_control_panel.alarm_arm_away
-    data: {}
+  - data: {}
     entity_id: alarm_control_panel.home_alarm
-  - service: homeassistant.turn_off
-    target:
+    action: alarm_control_panel.alarm_arm_away
+  - target:
       entity_id:
-      - switch.downstairs
-      - switch.upstairs
-      - switch.back_yard
-      - switch.garage
       - light.kitchen_overhead_light
-      - light.far_black_lamp
-      - light.near_black_lamp
-      - light.white_lamp
-      - switch.living_room_tv
-      - light.dining_room_overhead_light
-      - light.deck_lights
+      - switch.office_heater_plug
+      - switch.god_damn_humidifier
+      - switch.mike_desk_strip_plug_4_humidifier
+      - switch.mercury_unlocked
+      - switch.venus_unlocked
+      floor_id:
+      - downstairs
+      - upstairs
+      area_id:
+      - ab042805f82011ea8f6093da0125181c
+      - d24af84ef82011eaaba7cf30c521d99e
+      - 3b7166b7080111ebb90b2dcfb4bec3f3
+      - e578c331f75a11ea8934e9d0c5b82a8b
+      - b3ca852cf82011ea847d350a45336799
+      label_id: tvs
     data: {}
+    action: homeassistant.turn_off
   mode: single
   icon: mdi:exit-run
 scene_movie_time:
   alias: Scene - Movie Time
   sequence:
-  - service: homeassistant.turn_on
-    target:
+  - target:
       entity_id:
       - switch.christmas_tree
-  - service: homeassistant.turn_off
-    target:
+    action: homeassistant.turn_on
+    data: {}
+  - target:
       entity_id:
-      - switch.middle_level
       - light.hallway_light
-      - light.den_overhead_light
-      - light.laundry_room_light
       - light.three_headed_lamp
       - light.god_damn_light
+      floor_id: middle_level
+      area_id:
+      - 9bcddcf8037011eb8a568f2315fbbf92
+      - laundry_room
+    action: homeassistant.turn_off
+    data: {}
   mode: single
   icon: mdi:movie
 scene_night_night:
   alias: Scene - Night Night
   sequence:
-  - service: alarm_control_panel.alarm_arm_home
-    data: {}
+  - data: {}
     target:
       entity_id: alarm_control_panel.home_alarm
-  - service: homeassistant.turn_off
-    target:
+    action: alarm_control_panel.alarm_arm_home
+    continue_on_error: true
+  - target:
       entity_id:
       - fan.bedroom_fan
-      - light.bedroom_fan_light
-      - light.dresser_lamp
       - fan.office_fan
-      - light.hallway_light
-      - switch.hall_bath
-      - switch.office
-      - switch.downstairs
-      - switch.middle_level
-      - switch.back_yard
-      - switch.garage
-      - light.front_porch_light
       - light.mantle_lights
+      - light.dining_room_christmas_lights
+      - switch.god_damn_humidifier
+      - switch.mike_desk_strip_plug_4_humidifier
+      - switch.office_heater_plug
       area_id: ab042805f82011ea8f6093da0125181c
-  - service: cover.close_cover
+      floor_id:
+      - upstairs
+      - downstairs
+      - middle_level
+      - outside
+      label_id: tvs
+    action: homeassistant.turn_off
     data: {}
+  - data: {}
     entity_id: cover.garage_door
+    action: cover.close_cover
   mode: single
   icon: mdi:moon-waning-crescent
 home_thermostat_up:
@@ -378,14 +392,13 @@ fix_in_bed_sensors:
 scene_turn_off_the_office:
   alias: Scene - Turn off the Office
   sequence:
-  - service: homeassistant.turn_off
+  - action: homeassistant.turn_off
+    data: {}
     target:
-      entity_id: switch.office
-  - service: homeassistant.turn_on
-    target:
+      label_id: office
       entity_id:
-      - switch.mercury_screensaver
-      - switch.venus_screensaver
+      - switch.mercury_unlocked
+      - switch.venus_unlocked
   mode: single
   icon: mdi:desk
 fix_3_way_lights:
@@ -771,3 +784,20 @@ security_change_control_panel_to_home_view:
       command_string: cmd=loadStartUrl
   alias: Security - Change Control Panel to Home View
   description: ''
+fkb_load_camera:
+  sequence:
+  - action: rest_command.fkb_command
+    data:
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras%3Fadvanced-camera-card-action.camera_select={{
+        camera | default("camera.front_door") }}
+  - action: rest_command.fkb_command
+    data:
+      command_string: cmd=stopScreensaver
+  alias: FKB Load Camera
+  description: ''
+  fields:
+    camera:
+      selector:
+        text:
+      name: Camera
+      default: camera.front_door

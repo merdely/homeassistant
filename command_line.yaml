@@ -239,22 +239,22 @@
     command: "bin/get_ssl_expire.py"
 
 - switch:
-    unique_id: mercury_screensaver
-    name: Mercury Screensaver
+    unique_id: mercury_unlocked
+    name: Mercury Unlocked
     #command_on: '/bin/true'
     #command_off: '/bin/true'
     #command_state: '/bin/true'
-    command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_lock'
-    command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_unlock'
+    command_on: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_unlock'
+    command_off: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_lock'
     command_state: '/usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant mike@mercury.erdely.in screensaver_status'
-    value_template: '{{ value == "Screensaver is running" }}'
+    value_template: '{{ value != "Screensaver is running" }}'
     # command_off: '/bin/false'
 
 - switch:
-    unique_id: venus_screensaver
-    name: Venus Screensaver
-    command_on: '/bin/ping -c2 venus.erdely.in > /dev/null && /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock || /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus-wired.erdely.in screensaver_lock'
-    command_off: '/bin/true'
+    unique_id: venus_unlocked
+    name: Venus Unlocked
+    command_on: '/bin/true'
+    command_off: '/bin/ping -c2 venus.erdely.in > /dev/null && /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_lock || /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus-wired.erdely.in screensaver_lock'
     command_state: '/bin/ping -c2 venus.erdely.in > /dev/null && /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus.erdely.in screensaver_status || /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant holly@venus-wired.erdely.in screensaver_status'
-    value_template: '{{ value == "Screensaver is running" }}'
+    value_template: '{{ value != "Screensaver is running" }}'
 
