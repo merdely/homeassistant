@@ -750,7 +750,7 @@
                           "name": "Cleaners",
                           "styles": {
                             "color": "var(--cleaners-color)",
-                            "width": "45px"
+                            "width": "55px"
                           }
                         },
                         {
@@ -773,7 +773,7 @@
                           "name": "Recycle",
                           "styles": {
                             "color": "var(--recycle-color)",
-                            "width": "45px"
+                            "width": "55px"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -1118,11 +1118,11 @@
                     {
                       "graph": "line",
                       "type": "sensor",
-                      "entity": "sensor.attic_multisensor_temperature",
-                      "name": "Attic",
+                      "entity": "sensor.master_bath_multisensor_humidity",
+                      "name": "MBath",
                       "detail": 1,
                       "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 59 %}dodgerblue{% elif states(config.entity) | int(69) >= 80 %}red{% endif %};\n}\n"
                       }
                     }
                   ]
@@ -1130,6 +1130,16 @@
                 {
                   "type": "horizontal-stack",
                   "cards": [
+                    {
+                      "graph": "line",
+                      "type": "sensor",
+                      "entity": "sensor.attic_multisensor_temperature",
+                      "name": "Attic",
+                      "detail": 1,
+                      "card_mod": {
+                        "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
+                      }
+                    },
                     {
                       "graph": "line",
                       "type": "sensor",
@@ -1158,16 +1168,6 @@
                       "detail": 1,
                       "card_mod": {
                         "style": ".value {\n  color: {% if states(config.entity)|int(69) <= 40 %}dodgerblue{% elif states(config.entity) | int(69) >= 90 %}orange{% endif %};\n}\n"
-                      }
-                    },
-                    {
-                      "graph": "line",
-                      "type": "sensor",
-                      "entity": "sensor.outside_multisensor_humidity",
-                      "name": "Outside",
-                      "detail": 1,
-                      "card_mod": {
-                        "style": ".value {\n  color: {% if states(config.entity) | int(45) <= 30 %}orange{% elif states(config.entity) | int(45) >= 65 %}red{% endif %};\n}\n"
                       }
                     }
                   ]
@@ -2265,27 +2265,6 @@
                       "position": "right",
                       "buttons": [
                         {
-                          "entity": "sensor.speedtest_download",
-                          "icon": "mdi:speedometer",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "homeassistant.update_entity",
-                            "target": {
-                              "entity_id": [
-                                "sensor.speedtest_download",
-                                "sensor.speedtest_upload",
-                                "sensor.speedtest_ping"
-                              ]
-                            },
-                            "data": {}
-                          },
-                          "show_state": true,
-                          "name": "SpeedTest",
-                          "hold_action": {
-                            "action": "none"
-                          }
-                        },
-                        {
                           "entity": "button.homeassistant_reload",
                           "tap_action": {
                             "action": "navigate",
@@ -2563,56 +2542,6 @@
                   "grid_options": {
                     "columns": 3,
                     "rows": "auto"
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "empty-column",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 1
-                  }
-                },
-                {
-                  "type": "gauge",
-                  "entity": "sensor.speedtest_download",
-                  "min": 0,
-                  "max": 1000,
-                  "severity": {
-                    "green": 600,
-                    "yellow": 300,
-                    "red": 0
-                  },
-                  "needle": true,
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
-                  },
-                  "name": "Download"
-                },
-                {
-                  "type": "gauge",
-                  "entity": "sensor.speedtest_upload",
-                  "min": 0,
-                  "max": 1000,
-                  "severity": {
-                    "green": 600,
-                    "yellow": 300,
-                    "red": 0
-                  },
-                  "needle": true,
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
-                  },
-                  "name": "Upload"
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "empty-column",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 1
                   }
                 }
               ]

@@ -26,8 +26,8 @@ async def get(host, oid, version, commstring='public', user=None, authpw=None, p
         authobject = UsmUserData(user, authpw, privpw, authProtocol=usmHMACSHAAuthProtocol, privProtocol=usmAesCfb128Protocol)
     else:
         authobject = CommunityData(commstring)
-    errorIndication,errorStatus,errorIndex,varBinds = await getCmd(SnmpEngine(),
-        authobject, UdpTransportTarget((host, 161)), ContextData(),
+    errorIndication,errorStatus,errorIndex,varBinds = await get_cmd(SnmpEngine(),
+        authobject, await UdpTransportTarget.create((host, 161)), ContextData(),
         ObjectType(ObjectIdentity(oid)), lexicographicMode=False)
     if errorIndication:
         print(errorIndication, file=sys.stderr)
@@ -53,8 +53,8 @@ async def walk(host, oid, version, commstring='public', user=None, authpw=None, 
         authobject = UsmUserData(user, authpw, privpw, authProtocol=usmHMACSHAAuthProtocol, privProtocol=usmAesCfb128Protocol)
     else:
         authobject = CommunityData(commstring)
-    async for (errorIndication,errorStatus,errorIndex,varBinds) in walkCmd(SnmpEngine(),
-        authobject, UdpTransportTarget((host, 161)), ContextData(),
+    async for (errorIndication,errorStatus,errorIndex,varBinds) in walk_cmd(SnmpEngine(),
+        authobject, await UdpTransportTarget.create((host, 161)), ContextData(),
         ObjectType(ObjectIdentity(oid)), lexicographicMode=False):
         if errorIndication:
             print(errorIndication, file=sys.stderr)
