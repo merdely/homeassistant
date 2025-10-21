@@ -10,29 +10,6 @@
     value_template: '{{ as_timestamp(states("sensor.date_time_iso"), 0) | timestamp_custom("%m-%d",
       True, "Unavailable")  != "10-31" }}'
   actions:
-  - alias: If LR Near Black Blub hasn't been seen in 12 hours, turn it on
-    if:
-    - condition: template
-      value_template: '{{ (as_timestamp(now()) - as_timestamp(state_attr(''light.near_black_bulb'',
-        ''last_seen''))) > (60 * 60 * 24 / 2) }}'
-    then:
-    - data:
-        qos: '0'
-        topic: zigbee2mqtt/bridge/request/permit_join
-        payload: '{"value": true, "time": 30}'
-      alias: Enable Zigbee2MQTT Permit Join for 30 seconds
-      action: mqtt.publish
-    - metadata: {}
-      data: {}
-      target:
-        entity_id: light.near_black_lamp
-      action: light.turn_on
-    - metadata: {}
-      data: {}
-      target:
-        entity_id: input_boolean.automatic_living_room_light
-      action: homeassistant.turn_on
-    enabled: false
   - alias: Turn on Outside Lights and/or Outside Christmas Lights
     if:
     - condition: state
@@ -109,11 +86,11 @@
 - id: '1602628290703'
   alias: Lighting - Laundry Room - Motion Light On
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.laundry_room_motion_sensor_occupancy
+  triggers:
+  - entity_id: binary_sensor.laundry_room_motion_sensor_occupancy
     to: 'on'
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: light.laundry_room_light
     state: 'off'
@@ -121,11 +98,11 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.bed_sensor_holly
-      state: 'off'
+      entity_id: sensor.holly_is_in_bed
+      state: Not In Bed
     - condition: state
-      entity_id: binary_sensor.bed_sensor_mike
-      state: 'off'
+      entity_id: sensor.mike_is_in_bed
+      state: Not In Bed
     - condition: state
       entity_id: light.hallway_light
       state: 'on'
@@ -135,15 +112,15 @@
     - condition: state
       entity_id: light.kitchen_overhead_light
       state: 'on'
-  action:
-  - service: mqtt.publish
-    data:
+  actions:
+  - data:
       topic: cmnd/laundry_room_light/backlog
       payload: SetOption73 1; Delay 30; SetOption73 0
-  - service: homeassistant.turn_on
-    target:
+    action: mqtt.publish
+  - target:
       entity_id: light.laundry_room_light
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1602628563183'
   alias: Lighting - Laundry Room - Motion Light Off
@@ -221,7 +198,7 @@
     for:
       hours: 0
       minutes: 0
-      seconds: 30
+      seconds: 5
     trigger: state
   conditions: []
   actions:
@@ -231,8 +208,20 @@
       entity_id: media_player.fkb_control_panel
       message: 'Alert: Water leak detected'
   - data:
-      message: Water leak detected on {{ trigger.to_state.name }}
-    action: notify.signal_security
+      message: '{{ trigger.to_state.attributes.friendly_name }}'
+      title: Water Leak Detected
+      data:
+        actions:
+        - action: RESET_MAILBOX
+          title: Reset Mail Delivery Notification
+    action: notify.notify
+  - action: ntfy.publish
+    metadata: {}
+    data:
+      title: Water Leak Detected
+      message: '{{ trigger.to_state.attributes.friendly_name }}'
+    target:
+      entity_id: notify.home_assistant_desktop_notifications
   - data:
       topic: cmnd/siren/backlog
       payload: TuyaSend4 102,15; TuyaSend2 103,10
@@ -259,8 +248,6 @@
       minutes: 0
       seconds: 30
       milliseconds: 0
-  - data: {}
-    action: script.fix_in_bed_sensors
   - action: script.fix_3_way_lights
     data: {}
   - data: {}
@@ -324,16 +311,26 @@
     action: input_boolean.turn_off
   - data:
       message: The washing machine is done
-    action: notify.signal_security
+      data:
+        actions:
+        - action: RESET_MAILBOX
+          title: Reset Mail Delivery Notification
+    action: notify.notify
+  - action: ntfy.publish
+    metadata: {}
+    data:
+      message: The washing machine is done
+    target:
+      entity_id: notify.home_assistant_desktop_notifications
   - if:
     - condition: and
       conditions:
       - condition: state
-        entity_id: binary_sensor.bed_sensor_holly
-        state: 'off'
+        entity_id: sensor.holly_is_in_bed
+        state: Not In Bed
       - condition: state
-        entity_id: binary_sensor.bed_sensor_mike
-        state: 'off'
+        entity_id: sensor.mike_is_in_bed
+        state: Not In Bed
     then:
     - data:
         entity_id: media_player.fkb_control_panel
@@ -376,7 +373,16 @@
   - data:
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
-    action: notify.signal_security
+      data:
+        actions:
+        - action: RESET_MAILBOX
+          title: Reset Mail Delivery Notification
+    action: notify.notify
+  - action: ntfy.publish
+    metadata: {}
+    data:
+      message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
+        == ''off'' %} closed{%- else %} open{% endif %}.'
   - data:
       entity_id: media_player.fkb_control_panel
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if     trigger.to_state.state
@@ -418,16 +424,26 @@
     action: input_boolean.turn_off
   - data:
       message: The dryer is done
-    action: notify.signal_security
+      data:
+        actions:
+        - action: RESET_MAILBOX
+          title: Reset Mail Delivery Notification
+    action: notify.notify
+  - action: ntfy.publish
+    metadata: {}
+    data:
+      message: The dryer is done
+    target:
+      entity_id: notify.home_assistant_desktop_notifications
   - if:
     - condition: and
       conditions:
       - condition: state
-        entity_id: binary_sensor.bed_sensor_holly
-        state: 'off'
+        entity_id: sensor.holly_is_in_bed
+        state: Not In Bed
       - condition: state
-        entity_id: binary_sensor.bed_sensor_mike
-        state: 'off'
+        entity_id: sensor.mike_is_in_bed
+        state: Not In Bed
     then:
     - data:
         entity_id: media_player.fkb_control_panel
@@ -781,9 +797,10 @@
     - data: {}
       action: script.computer_mercury_unlock
     else:
-    - data:
+    - action: notify.mobile_app_mike9p
+      metadata: {}
+      data:
         message: Someone scanned at Mike's Desk
-      action: notify.signal_mike
     - data:
         message: Someone (not Mike) scanned at Mike's Desk ({{ trigger.event.context.user_id
           }})
@@ -1082,15 +1099,19 @@
       action: homeassistant.turn_on
     - data:
         message: The mail's here, the mail's here!  Woo-hoo!
-      action: notify.signal_security
-    - data:
-        message: The mail's here, the mail's here!  Woo-hoo!
         title: The mail has been delivered
         data:
           actions:
           - action: RESET_MAILBOX
             title: Reset Mail Delivery Notification
       action: notify.notify
+    - action: ntfy.publish
+      metadata: {}
+      data:
+        title: The mail has been delivered
+        message: The mail's here, the mail's here!  Woo-hoo!
+      target:
+        entity_id: notify.home_assistant_desktop_notifications
     else:
     - target:
         entity_id: input_boolean.mail_delivered
@@ -1105,7 +1126,11 @@
       then:
       - data:
           message: Somebody retrieved the mail
-        action: notify.signal_security
+          data:
+            actions:
+            - action: RESET_MAILBOX
+              title: Reset Mail Delivery Notification
+        action: notify.notify
     - if:
       - condition: not
         conditions:
@@ -1113,9 +1138,10 @@
           entity_id: person.michael_erdely
           state: home
       then:
-      - data:
+      - action: notify.mobile_app_mike9p
+        metadata: {}
+        data:
           message: Somebody retrieved the mail
-        action: notify.signal_mike
   mode: single
 - id: '1615411227750'
   alias: Home Assistant - Mailbox State Reset
@@ -1149,11 +1175,11 @@
 - id: '1617059343081'
   alias: Lighting - Den - Motion Light On
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.den_motion_sensor_occupancy
+  triggers:
+  - entity_id: binary_sensor.den_motion_sensor_occupancy
     to: 'on'
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: light.den_overhead_light
     state: 'off'
@@ -1161,11 +1187,11 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.bed_sensor_holly
-      state: 'off'
+      entity_id: sensor.holly_is_in_bed
+      state: Not In Bed
     - condition: state
-      entity_id: binary_sensor.bed_sensor_mike
-      state: 'off'
+      entity_id: sensor.mike_is_in_bed
+      state: Not In Bed
     - condition: state
       entity_id: light.hallway_light
       state: 'on'
@@ -1175,15 +1201,15 @@
     - condition: state
       entity_id: light.kitchen_overhead_light
       state: 'on'
-  action:
-  - service: mqtt.publish
-    data:
+  actions:
+  - data:
       topic: cmnd/den_overhead_light/backlog
       payload: SetOption73 1; Delay 30; SetOption73 0
-  - service: homeassistant.turn_on
-    target:
+    action: mqtt.publish
+  - target:
       entity_id: light.den_overhead_light
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1617059380424'
   alias: Lighting - Den - Motion Light Off
@@ -1203,21 +1229,32 @@
   alias: Notifications - 1 - Water Leak Detected - All Sensors
   description: ''
   triggers:
-  - entity_id:
-    - binary_sensor.water_leak_sensors
-    to: 'on'
+  - trigger: template
+    value_template: "{{ states.binary_sensor \n   | selectattr('attributes.device_class',
+      'eq', 'moisture')\n   | selectattr('state', 'eq', 'on')\n   | list | count >
+      0 }}"
     for:
       hours: 0
       minutes: 0
       seconds: 10
-    trigger: state
+    alias: Water Leak Detected for 10 seconds
   conditions: []
   actions:
   - data:
-      message: "Water Leak Detected by the {% for entity_id in states.binary_sensor.water_leak_sensors.attributes.entity_id
-        -%} {% if states(entity_id) != \"off\" -%}\n  {{ state_attr(entity_id, 'friendly_name')
-        }}\n{% endif -%}{% endfor -%}"
-    action: notify.signal_security
+      message: '{{ trigger.to_state.attributes.friendly_name }}'
+      title: Water Leak Detected
+      data:
+        actions:
+        - action: RESET_MAILBOX
+          title: Reset Mail Delivery Notification
+    action: notify.notify
+  - action: ntfy.publish
+    metadata: {}
+    data:
+      message: '{{ trigger.to_state.attributes.friendly_name }}'
+      title: Water Leak Detected
+    target:
+      entity_id: notify.home_assistant_desktop_notifications
   mode: single
 - id: '1622222404078'
   alias: 20 - Home Assistant - Bedtime Tasks
@@ -1329,11 +1366,11 @@
 - id: '1632841431902'
   alias: Fan - Master Bath Humidity - Fan On
   description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(0)
+  triggers:
+  - value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(0)
       > states(''input_number.master_bath_fan_on'') | float(100) }}'
-  condition:
+    trigger: template
+  conditions:
   - condition: state
     entity_id: light.master_bath_light
     state: 'on'
@@ -1342,35 +1379,35 @@
       minutes: 0
       seconds: 0
       milliseconds: 0
-  - condition: or
+  - alias: Holly is not in bed OR the TV is on
+    condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.bed_sensor_holly
-      state: 'off'
+      entity_id: sensor.holly_is_in_bed
+      state: Not In Bed
     - condition: state
       entity_id: switch.bedroom_tv
       state: 'on'
-    alias: Holly is not in bed OR the TV is on
-  - condition: or
+  - alias: Mike is not in bed OR the TV is on
+    condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.bed_sensor_mike
-      state: 'off'
+      entity_id: sensor.mike_is_in_bed
+      state: Not In Bed
     - condition: state
       entity_id: switch.bedroom_tv
       state: 'on'
-    alias: Mike is not in bed OR the TV is on
   - condition: state
     entity_id: switch.master_bath_fan
     state: 'off'
   - condition: state
     entity_id: input_boolean.master_bath_fan_auto
     state: 'on'
-  action:
-  - service: homeassistant.turn_on
-    target:
+  actions:
+  - target:
       entity_id: switch.master_bath_fan
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1632841500873'
   alias: Fan - Master Bath Humidity - Fan Off
@@ -1387,65 +1424,6 @@
   - service: homeassistant.turn_off
     target:
       entity_id: switch.master_bath_fan
-  mode: single
-- id: '1635775206466'
-  alias: Controls - Save Holly In Bed State
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.bed_sensor_holly
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bed_sensor_holly
-        state: 'on'
-      sequence:
-      - service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.holly_is_in_bed
-        data: {}
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bed_sensor_holly
-        state: 'off'
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.holly_is_in_bed
-        data: {}
-    default: []
-  mode: single
-- id: '1635775250461'
-  alias: Controls - Save Mike In Bed State
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.bed_sensor_mike
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bed_sensor_mike
-        state: 'on'
-      sequence:
-      - service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.mike_is_in_bed
-        data: {}
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bed_sensor_mike
-        state: 'off'
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.mike_is_in_bed
-        data: {}
-    default: []
   mode: single
 - id: '1637383119311'
   alias: Actionable Notifications - RUN_GOODNIGHT
@@ -1539,7 +1517,11 @@
   - data:
       message: The oven is on and nobody is home
       title: Security Alert
-    action: notify.signal_security
+      data:
+        actions:
+        - action: RESET_MAILBOX
+          title: Reset Mail Delivery Notification
+    action: notify.notify
   mode: single
 - id: '1638997594019'
   alias: Home Assistant - Monitor Earth / HA Entities
@@ -1623,12 +1605,6 @@
       seconds: 30
     trigger: state
   - entity_id: binary_sensor.nginxproxymgr_add_on_running
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
-    trigger: state
-  - entity_id: binary_sensor.signal_add_on_running
     for:
       hours: 0
       minutes: 0
@@ -1879,49 +1855,60 @@
 - id: '1644246652989'
   alias: Notifications - Fridge Door Open
   description: Send an alert if the Fridge or Freezer doors have been open for 5 minutes
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.dining_room_freezer_door_contact
+  triggers:
+  - entity_id: binary_sensor.dining_room_freezer_door_contact
     for:
       hours: 0
       minutes: 5
       seconds: 0
     from: 'off'
-  - platform: state
-    entity_id: binary_sensor.dining_room_refrigerator_door_contact
+    trigger: state
+  - entity_id: binary_sensor.dining_room_refrigerator_door_contact
     for:
       hours: 0
       minutes: 5
       seconds: 0
     from: 'off'
-  - platform: state
-    entity_id: binary_sensor.kitchen_freezer_door_contact
+    trigger: state
+  - entity_id: binary_sensor.kitchen_freezer_door_contact
     for:
       hours: 0
       minutes: 5
       seconds: 0
     from: 'off'
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - binary_sensor.kitchen_refrigerator_door_contact
     for:
       hours: 0
       minutes: 5
       seconds: 0
     from: 'off'
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       entity_id: '{{ trigger.entity_id | regex_replace("binary_sensor\.(.*)_contact$",
         "input_boolean.\\1_open_alert") }}'
-  - service: notify.signal_security
+    action: homeassistant.turn_on
+  - data:
+      message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been open
+        for 5 minutes.
+      data:
+        actions:
+        - action: RESET_MAILBOX
+          title: Reset Mail Delivery Notification
+    action: notify.notify
+  - action: ntfy.publish
+    metadata: {}
     data:
       message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been open
         for 5 minutes.
+    target:
+      entity_id: notify.home_assistant_desktop_notifications
   mode: single
 - id: '1645068726044'
-  alias: Security - 40 Armed - Disarm Security System in the morning after 6:30
+  alias: Security - 40 Armed - Disarm Security System in the morning
   description: ''
   triggers:
   - at: input_datetime.automatic_security_disarm
@@ -2105,11 +2092,11 @@
 - id: '1671217553135'
   alias: Fan - Hall Bath Humidity - Fan On
   description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ states(''sensor.hall_bath_multisensor_humidity'') | float(0)
+  triggers:
+  - value_template: '{{ states(''sensor.hall_bath_multisensor_humidity'') | float(0)
       > states(''input_number.hall_bath_fan_on'') | float(100) }}'
-  condition:
+    trigger: template
+  conditions:
   - condition: state
     entity_id: light.hall_bath_light
     state: 'on'
@@ -2118,35 +2105,35 @@
       minutes: 0
       seconds: 0
       milliseconds: 0
-  - condition: or
+  - alias: Holly is not in bed OR the TV is on
+    condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.bed_sensor_holly
-      state: 'off'
+      entity_id: sensor.holly_is_in_bed
+      state: Not In Bed
     - condition: state
       entity_id: switch.bedroom_tv
       state: 'on'
-    alias: Holly is not in bed OR the TV is on
-  - condition: or
+  - alias: Mike is not in bed OR the TV is on
+    condition: or
     conditions:
     - condition: state
-      entity_id: binary_sensor.bed_sensor_mike
-      state: 'off'
+      entity_id: sensor.mike_is_in_bed
+      state: Not In Bed
     - condition: state
       entity_id: switch.bedroom_tv
       state: 'on'
-    alias: Mike is not in bed OR the TV is on
   - condition: state
     entity_id: switch.hall_bath_fan
     state: 'off'
   - condition: state
     entity_id: input_boolean.hall_bath_fan_auto
     state: 'on'
-  action:
-  - service: homeassistant.turn_on
-    target:
+  actions:
+  - target:
       entity_id: switch.hall_bath_fan
     data: {}
+    action: homeassistant.turn_on
   mode: single
 - id: '1671217825195'
   alias: Fan - Hall Bath Humidity - Fan Off
@@ -2169,54 +2156,65 @@
   alias: Notifications - Fridge Door Closed
   description: Notify when the Fridge or Freezer Doors close after having been opened
     for 5 mintues
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - binary_sensor.dining_room_freezer_door_contact
     for:
       hours: 0
       minutes: 0
       seconds: 0
     to: 'off'
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - binary_sensor.dining_room_refrigerator_door_contact
     for:
       hours: 0
       minutes: 0
       seconds: 0
     to: 'off'
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - binary_sensor.kitchen_freezer_door_contact
     for:
       hours: 0
       minutes: 0
       seconds: 0
     to: 'off'
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - binary_sensor.kitchen_refrigerator_door_contact
     for:
       hours: 0
       minutes: 0
       seconds: 0
     to: 'off'
-  condition: []
-  action:
+    trigger: state
+  conditions: []
+  actions:
   - if:
     - condition: template
       value_template: '{{ states(trigger.entity_id | regex_replace("binary_sensor\.(.*)_contact$",
         "input_boolean.\\1_open_alert")) != "off" }}'
     then:
-    - service: notify.signal_security
+    - data:
+        message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been
+          closed.
+        data:
+          actions:
+          - action: RESET_MAILBOX
+            title: Reset Mail Delivery Notification
+      action: notify.notify
+    - action: ntfy.publish
+      metadata: {}
       data:
         message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been
           closed.
-  - service: homeassistant.turn_off
-    data:
+      target:
+        entity_id: notify.home_assistant_desktop_notifications
+  - data:
       entity_id: '{{ trigger.entity_id | regex_replace("binary_sensor\.(.*)_contact$",
         "input_boolean.\\1_open_alert") }}'
+    action: homeassistant.turn_off
   mode: single
 - id: '1671648815254'
   alias: Lighting - Holly Nightstand Light
@@ -2257,48 +2255,48 @@
 - id: '1671832619134'
   alias: Lighting - Bedroom - Holly in Bed LEDs off
   description: Disable the LEDs on the light switches when Holly is in bed.
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.bed_sensor_holly
-    to: 'on'
-  condition: []
-  action:
-  - service: mqtt.publish
-    data:
+  triggers:
+  - entity_id:
+    - sensor.holly_is_in_bed
+    to: In Bed
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       topic: cmnd/dresser_lamp/ledpower
       payload: '1'
-  - service: mqtt.publish
-    data:
+    action: mqtt.publish
+  - data:
       topic: cmnd/master_bath_light/ledpower
       payload: '1'
-  - service: mqtt.publish
-    data:
+    action: mqtt.publish
+  - data:
       topic: cmnd/master_bath_fan/ledpower
       payload: '1'
+    action: mqtt.publish
   mode: single
 - id: '1671832783300'
   alias: Lighting - Bedroom - Holly out of Bed LEDs on
   description: Enable the LEDs on the light switches when Holly is out of bed.
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.bed_sensor_holly
-    to: 'off'
-  condition: []
-  action:
-  - service: mqtt.publish
-    data:
+  triggers:
+  - entity_id:
+    - sensor.holly_is_in_bed
+    to: Not In Bed
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       topic: cmnd/dresser_lamp/ledstate
       payload: '1'
-  - service: mqtt.publish
-    data:
+    action: mqtt.publish
+  - data:
       topic: cmnd/master_bath_light/ledstate
       payload: '1'
-  - service: mqtt.publish
-    data:
+    action: mqtt.publish
+  - data:
       topic: cmnd/master_bath_fan/ledstate
       payload: '1'
+    action: mqtt.publish
   mode: single
 - id: '1673482501074'
   alias: Security - Lock Front Door when Arming
@@ -2520,24 +2518,6 @@
     target:
       entity_id: '{{ trigger.id }}'
     alias: Set Bulb Color
-  mode: single
-- id: '1735499752877'
-  alias: Humidifier - Turn off Office Humidifier at 50%
-  description: ''
-  triggers:
-  - trigger: numeric_state
-    entity_id:
-    - sensor.office_multisensor_humidity
-    above: 50
-  - trigger: time
-    at: 02:00:00
-  conditions: []
-  actions:
-  - action: switch.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id: switch.mike_desk_strip_plug_4_humidifier
   mode: single
 - id: '1735518229397'
   alias: Home Assistant - Lock front door when out of sync
@@ -2778,7 +2758,7 @@
   conditions:
   - condition: time
     after: 09:00:00
-    before: '23:00:00'
+    before: '21:59:00'
   actions:
   - action: switch.turn_off
     metadata: {}
@@ -2813,7 +2793,10 @@
       hours: 0
       minutes: 0
       seconds: 30
-  conditions: []
+  conditions:
+  - condition: time
+    after: 09:00:00
+    before: '21:59:00'
   actions:
   - action: shell_command.ssh_command
     data:
@@ -3010,4 +2993,133 @@
   - action: script.fkb_load_camera
     data:
       camera: camera.front_door
+  mode: single
+- id: '1758668884916'
+  alias: Lighting - Sunrise Lights On at Dawn
+  description: ''
+  triggers:
+  - at: input_datetime.turn_on_sunrise_lights
+    trigger: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  conditions: []
+  actions:
+  - action: homeassistant.turn_on
+    target:
+      entity_id:
+      - light.front_porch_light
+      - light.outside_garage_lights
+    data: {}
+  - if:
+    - condition: state
+      entity_id: input_boolean.christmas_lights_are_out
+      state: 'on'
+    then:
+    - action: homeassistant.turn_on
+      target:
+        entity_id: switch.outside_christmas_lights
+      data: {}
+    alias: Turn on Outside Christmas Lights if Christmas Lights are Out
+  mode: single
+- id: '1758669178829'
+  alias: Lighting - Sunrise Lights Off at Sunrise
+  description: ''
+  triggers:
+  - event: sunrise
+    offset: +00:15:00
+    trigger: sun
+  conditions: []
+  actions:
+  - action: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.outside_garage_lights
+      - light.front_porch_light
+      - switch.outside_christmas_lights
+  mode: single
+- id: '1758716522977'
+  alias: Controls - Turn on Picframe at Sunrise
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: +00:30:00
+  conditions: []
+  actions:
+  - action: homeassistant.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.sinope_plug
+  mode: single
+- id: '1758716781871'
+  alias: Controls - Turn off Picframe at Night
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.holly_is_in_bed
+    to: In Bed
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  - trigger: state
+    entity_id:
+    - sensor.mike_is_in_bed
+    to: In Bed
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  - trigger: time
+    at: '23:00:00'
+  conditions:
+  - condition: state
+    entity_id: switch.sinope_plug
+    state: 'on'
+  - condition: time
+    after: '21:30:00'
+    before: 06:00:00
+  actions:
+  - action: homeassistant.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.sinope_plug
+  mode: single
+- id: '1758848750795'
+  alias: Lighting - Turn on Living Room Lights
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - light.near_black_lamp
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: light.near_black_lamp
+      state: 'on'
+    then:
+    - action: homeassistant.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - light.far_black_lamp
+        - light.white_lamp
+    else:
+    - action: homeassistant.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - light.far_black_lamp
+        - light.white_lamp
   mode: single
