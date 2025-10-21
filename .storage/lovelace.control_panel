@@ -396,13 +396,6 @@
                             "type": "button",
                             "entity": "switch.office_heater_plug",
                             "name": "Heater"
-                          },
-                          {
-                            "show_name": true,
-                            "show_icon": true,
-                            "type": "button",
-                            "entity": "switch.mike_desk_strip_plug_4_humidifier",
-                            "name": "Humidifier"
                           }
                         ]
                       }
@@ -2683,23 +2676,6 @@
             {
               "type": "grid",
               "cards": [
-                {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "show_current": true,
-                      "show_forecast": false,
-                      "type": "weather-forecast",
-                      "entity": "weather.home",
-                      "forecast_type": "daily",
-                      "grid_options": {
-                        "columns": 12,
-                        "rows": 2
-                      },
-                      "forecast_slots": 5
-                    }
-                  ]
-                },
                 {
                   "type": "custom:local-conditional-card",
                   "id": "tab-doors-windows-buttons",
@@ -5274,23 +5250,6 @@
                       "type": "button",
                       "tap_action": {
                         "action": "perform-action",
-                        "perform_action": "script.fix_in_bed_sensors",
-                        "target": {}
-                      },
-                      "entity": "script.fix_in_bed_sensors",
-                      "name": "Reset Bed Sensors",
-                      "show_state": false,
-                      "hold_action": {
-                        "action": "none"
-                      },
-                      "icon_height": "50px"
-                    },
-                    {
-                      "show_name": true,
-                      "show_icon": true,
-                      "type": "button",
-                      "tap_action": {
-                        "action": "perform-action",
                         "perform_action": "script.fix_3_way_lights",
                         "target": {}
                       },
@@ -5353,6 +5312,14 @@
                           "action": "none"
                         },
                         "entities": [
+                          {
+                            "entity": "sensor.holly_is_in_bed",
+                            "name": "Holly"
+                          },
+                          {
+                            "entity": "sensor.mike_is_in_bed",
+                            "name": "Mike"
+                          },
                           {
                             "entity": "binary_sensor.all_security_devices",
                             "name": "Devices",

@@ -104,11 +104,6 @@
                           "name": false,
                           "icon": "mdi:television",
                           "layout": "name|icon"
-                        },
-                        {
-                          "entity": "switch.mike_desk_strip_plug_4_humidifier",
-                          "name": false,
-                          "layout": "name|icon"
                         }
                       ]
                     },
@@ -450,6 +445,22 @@
                       },
                       "entities": [
                         {
+                          "entity": "sensor.holly_is_in_bed",
+                          "name": "Holly",
+                          "styles": {
+                            "color": "var(--holly-bed-color)",
+                            "width": "75px"
+                          }
+                        },
+                        {
+                          "entity": "sensor.mike_is_in_bed",
+                          "name": "Mike",
+                          "styles": {
+                            "color": "var(--mike-bed-color)",
+                            "width": "75px"
+                          }
+                        },
+                        {
                           "entity": "binary_sensor.all_security_devices",
                           "name": "Devices",
                           "styles": {
@@ -466,7 +477,7 @@
                       ],
                       "show_state": false,
                       "card_mod": {
-                        "style": ".entity {\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n}\n"
+                        "style": ".entity {\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                       }
                     },
                     {
@@ -1882,6 +1893,9 @@
                     },
                     {
                       "entity": "input_datetime.turn_off_sunset_lights"
+                    },
+                    {
+                      "entity": "input_datetime.turn_on_sunrise_lights"
                     },
                     {
                       "type": "section",
@@ -4175,6 +4189,35 @@
                       }
                     ]
                   }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:tabbed-card",
+                  "options": {},
+                  "tabs": [
+                    {
+                      "card": {
+                        "type": "entity",
+                        "entity": "sun.sun"
+                      },
+                      "attributes": {
+                        "label": "Sun"
+                      }
+                    },
+                    {
+                      "card": {
+                        "type": "entity",
+                        "entity": "sun.sun"
+                      },
+                      "attributes": {
+                        "label": "Sun2"
+                      }
+                    }
+                  ]
                 }
               ]
             }
