@@ -14,6 +14,15 @@
       - list
 
 - binary_sensor:
+    name: Home ntfy Server
+    unique_id: home_ntfy_server
+    command: "curl --connect-timeout 0.5 -fso/dev/null https://notify.erdely.co && echo on || echo off"
+    payload_on: "on"
+    payload_off: "off"
+    scan_interval: 1
+    device_class: connectivity
+
+- binary_sensor:
     name: Earth Nginx/PHP Working
     unique_id: earth_nginx_php_working
     command: "curl -m 2 -s https://earth.erdely.in/phptest.php | grep '^PHP is working!' || echo 'PHP is not working!'"
@@ -173,7 +182,7 @@
 - sensor:
     name: Jellyfin Sessions
     unique_id: jellyfin_sessions
-    icon: mdi:television-play
+    icon: cbi:jellyfin
     command: "/config/bin/jellyfin_sessions"
     json_attributes:
       - sessions

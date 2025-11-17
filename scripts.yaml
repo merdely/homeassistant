@@ -180,7 +180,7 @@ home_thermostat_down:
   icon: mdi:thermometer-minus
   description: ''
 scene_good_night:
-  alias: Scene - Good Night
+  alias: Good Night
   sequence:
   - choose:
     - conditions:
@@ -262,8 +262,9 @@ scene_good_night:
     continue_on_error: true
   mode: single
   icon: mdi:weather-night
+  description: ''
 scene_leaving_home:
-  alias: Scene - Leaving Home
+  alias: Leaving Home
   sequence:
   - data: {}
     entity_id: alarm_control_panel.home_alarm
@@ -289,6 +290,7 @@ scene_leaving_home:
     action: homeassistant.turn_off
   mode: single
   icon: mdi:exit-run
+  description: ''
 scene_movie_time:
   alias: Scene - Movie Time
   sequence:
@@ -646,11 +648,11 @@ security_trigger_siren:
       - condition: state
         entity_id: sensor.fully_kiosk_browser
         attribute: currentPageUrl
-        state: https://ha.erdely.in:38123/control-panel/security
+        state: https://ha.erdely.in:38123/lovelace/security
     then:
     - action: rest_command.fkb_command
       data:
-        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/lovelace/security
     alias: Redirect to Security Panel if not already there
   - action: tts.cloud_say
     data:
@@ -683,11 +685,11 @@ security_cannot_arm_security_system:
       - condition: state
         entity_id: sensor.fully_kiosk_browser
         attribute: currentPageUrl
-        state: https://ha.erdely.in:38123/control-panel/security
+        state: https://ha.erdely.in:38123/lovelace/security
     then:
     - action: rest_command.fkb_command
       data:
-        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/lovelace/security
     alias: Redirect to Security Panel if not already there
   - action: tts.cloud_say
     data:
@@ -704,11 +706,11 @@ security_45_seconds_to_exit:
       - condition: state
         entity_id: sensor.fully_kiosk_browser
         attribute: currentPageUrl
-        state: https://ha.erdely.in:38123/control-panel/security
+        state: https://ha.erdely.in:38123/lovelace/security
     then:
     - action: rest_command.fkb_command
       data:
-        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/lovelace/security
     alias: Redirect to Security Panel if not already there
   - action: tts.cloud_say
     data:
@@ -725,11 +727,11 @@ security_45_seconds_to_enter_code:
       - condition: state
         entity_id: sensor.fully_kiosk_browser
         attribute: currentPageUrl
-        state: https://ha.erdely.in:38123/control-panel/security
+        state: https://ha.erdely.in:38123/lovelace/security
     then:
     - action: rest_command.fkb_command
       data:
-        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+        command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/lovelace/security
     alias: Redirect to Security Panel if not already there
   - action: tts.cloud_say
     data:
@@ -744,7 +746,7 @@ security_change_control_panel_to_security_view:
   - action: rest_command.fkb_command
     metadata: {}
     data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/security
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/lovelace/security
   alias: Security - Change Control Panel to Security View
   description: ''
 security_change_control_panel_to_home_view:
@@ -759,7 +761,7 @@ fkb_load_camera:
   sequence:
   - action: rest_command.fkb_command
     data:
-      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/control-panel/cameras%3Fadvanced-camera-card-action.camera_select={{
+      command_string: cmd=loadUrl&url=https://ha.erdely.in:38123/lovelace/cameras%3Fadvanced-camera-card-action.camera_select={{
         camera | default("camera.front_door") }}
   - action: rest_command.fkb_command
     data:
@@ -772,3 +774,205 @@ fkb_load_camera:
         text:
       name: Camera
       default: camera.front_door
+sent_ntfy_notification_to_mike:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.home_ntfy_server
+      state: 'on'
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 5
+    then:
+    - action: ntfy.publish
+      metadata: {}
+      data:
+        title: '{{ title | default("Home Assistant Notification") }} via home notify
+          server'
+        message: '{{ message | default("Test Message") }}'
+      target:
+        entity_id: notify.mike_notifications
+    else:
+    - action: ntfy.publish
+      metadata: {}
+      data:
+        title: '{{ title | default("Home Assistant Notification") }} via ntfy.sh'
+        message: '{{ message | default("Test Message") }}'
+      target:
+        entity_id: notify.mike_notifications_via_ntfy_sh
+  fields:
+    title:
+      selector:
+        text:
+      name: Title
+      required: false
+    message:
+      selector:
+        text:
+      name: Message
+      required: true
+  alias: Sent ntfy Notification to Mike
+  description: ''
+sent_ntfy_notification:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.home_ntfy_server
+      state: 'on'
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 5
+    then:
+    - action: ntfy.publish
+      metadata: {}
+      data:
+        title: '{{ title | default("Home Assistant Notification") }}'
+        message: '{{ message | default("Test Message") }}'
+      target:
+        entity_id: notify.notifications
+    else:
+    - action: ntfy.publish
+      metadata: {}
+      data:
+        title: '{{ title | default("Home Assistant Notification") }}'
+        message: '{{ message | default("Test Message") }}'
+      target:
+        entity_id: notify.notifications_via_ntfy_sh
+  fields:
+    title:
+      selector:
+        text:
+      name: Title
+      required: false
+    message:
+      selector:
+        text:
+      name: Message
+      required: true
+  alias: Sent ntfy Notification
+  description: ''
+tv_volume_up:
+  sequence:
+  - alias: Choose TV
+    if:
+    - condition: template
+      value_template: '{{ tv == "Bedroom TV" }}'
+      alias: If Bedroom TV
+    then:
+    - action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        topic: cmnd/bedroom_tv_remote/backlog
+        payload: "irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0E01F\",\"DataLSB\":\"0x070707F8\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0E01F\",\"DataLSB\":\"0x070707F8\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0E01F\",\"DataLSB\":\"0x070707F8\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0E01F\",\"DataLSB\":\"0x070707F8\",\"Repeat\":0}"
+      alias: Send MQTT Codes for Bedroom TV
+    else:
+    - action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        payload: "irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x240C\",\"DataLSB\":\"0x2430\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x240C\",\"DataLSB\":\"0x2430\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x240C\",\"DataLSB\":\"0x2430\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x240C\",\"DataLSB\":\"0x2430\",\"Repeat\":0}\n"
+        topic: cmnd/god_damn_tv_remote/backlog
+      alias: Send MQTT Codes for God Damn TV
+  fields:
+    tv:
+      selector:
+        select:
+          options:
+          - Bedroom TV
+          - God Damn TV
+      default: Bedroom TV
+  alias: TV Volume Up
+  description: ''
+tv_volume_down:
+  sequence:
+  - alias: Choose TV
+    if:
+    - condition: template
+      value_template: '{{ tv == "Bedroom TV" }}'
+      alias: If Bedroom TV
+    then:
+    - alias: Send MQTT Codes for Bedroom TV
+      action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        topic: cmnd/bedroom_tv_remote/backlog
+        payload: "irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0D02F\",\"DataLSB\":\"0x07070BF4\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0D02F\",\"DataLSB\":\"0x07070BF4\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0D02F\",\"DataLSB\":\"0x07070BF4\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0D02F\",\"DataLSB\":\"0x07070BF4\",\"Repeat\":0}"
+    else:
+    - alias: Send MQTT Codes for God Damn TV
+      action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        payload: "irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x640C\",\"DataLSB\":\"0x2630\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x640C\",\"DataLSB\":\"0x2630\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x640C\",\"DataLSB\":\"0x2630\",\"Repeat\":0};\n
+          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x640C\",\"DataLSB\":\"0x2630\",\"Repeat\":0}\n"
+        topic: cmnd/god_damn_tv_remote/backlog
+  fields:
+    tv:
+      selector:
+        select:
+          options:
+          - Bedroom TV
+          - God Damn TV
+      default: Bedroom TV
+  alias: TV Volume Down
+  description: ''
+tv_volume_mute:
+  sequence:
+  - alias: Choose TV
+    if:
+    - alias: If Bedroom TV
+      condition: template
+      value_template: '{{ tv == "Bedroom TV" }}'
+    then:
+    - alias: Send MQTT Codes for Bedroom TV
+      action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        topic: cmnd/bedroom_tv_remote/backlog
+        payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0F00F","DataLSB":"0x07070FF0","Repeat":0}
+    else:
+    - alias: Send MQTT Codes for God Damn TV
+      action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x140C","DataLSB":"0x2830","Repeat":0}
+        topic: cmnd/god_damn_tv_remote/backlog
+  fields:
+    tv:
+      selector:
+        select:
+          options:
+          - Bedroom TV
+          - God Damn TV
+      default: Bedroom TV
+  alias: TV Volume Mute
+  description: ''

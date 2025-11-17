@@ -14,11 +14,28 @@ tmpfile=$(mktemp)
 # Get mimugmail repo info
 cp /dev/null $tmpfile
 if [ -n "$sys_abi" ]; then
-  http_status_code=$(curl -w %{http_code} -sfo $tmpfile "https://opn-repo.routerperformance.net/repo/$sys_abi/packagesite.txz")
-  tmpdir=$(mktemp -d)
-  tar -C $tmpdir -xf $tmpfile
-  mimugmail=$(cat $tmpdir/packagesite.yaml|jq -r .|awk '/^  "name":/{n=$2;if(substr(n,2,3)!="os-")n=""}/^  "version":/&&n!=""{printf "    %s: %s\n",substr(n,1,length(n)-1),$2}')
-  rm -Rf $tmpdir
+  unset name version
+  http_status_code=$(curl -w %{http_code} -sfo $tmpfile "https://opn-repo.routerperformance.net/repo/$sys_abi/packagesite.pkg")
+  if [ $http_status_code = 200 ] && which zstd > /dev/null 2>&1; then
+    tmpdir=$(mktemp -d)
+    zstd -d $tmpfile -o $tmpdir/data.tar > /dev/null 2>&1
+    tar -C $tmpdir -xf $tmpdir/data.tar
+
+    # eval $(jq -r '.[].[] | select(.name=="os-adguardhome-maxit") | "name=\(.name) version=\(.version)"' $tmpdir/data)
+    #if [ -n "$name" -a -n "$version" ]; then
+    #  mimugmail="    \"$name\": \"$version\","
+    #else
+    #  mimugmail="    \"os-adguardhome-maxit\": \"0.00\","
+    #fi
+
+    mimugmail=$(jq -r '. | select(.name|startswith("os-")) | "    \"\(.name)\": \"\(.version)\","' $tmpdir/packagesite.yaml)
+
+    #mimugmail=$(cat $tmpdir/packagesite.yaml|jq -r .|awk '/^  "name":/{n=$2;if(substr(n,2,3)!="os-")n=""}/^  "version":/&&n!=""{printf "    %s: %s\n",substr(n,1,length(n)-1),$2}')
+    rm -Rf $tmpdir
+  fi
+  if [ -z "$mimugmail" ]; then
+    mimugmail="    \"os-adguardhome-maxit\": \"error $http_status_code\","
+  fi
 fi
 
 # Get opnsense repo info

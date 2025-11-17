@@ -195,14 +195,16 @@
   entities:
     light.front_porch_bulb:
       min_color_temp_kelvin: 2000
-      max_color_temp_kelvin: 6666
-      min_mireds: 150
+      max_color_temp_kelvin: 6493
+      min_mireds: 154
       max_mireds: 500
       supported_color_modes:
       - color_temp
       - xy
       color_mode: xy
-      brightness: 127
+      brightness: 199
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 133.882
       - 100
@@ -213,18 +215,6 @@
       xy_color:
       - 0.1704
       - 0.709
-      color:
-        x: 0.1704
-        y: 0.709
-      energy: 0.04
-      last_seen: '2022-12-13T19:18:16-05:00'
-      linkquality: 105
-      power: 0.8
-      power_on_behavior:
-      update:
-        installed_version: unknown
-        state: idle
-      update_available: false
       friendly_name: Front Porch Bulb
       supported_features: 40
       state: 'on'
@@ -354,3 +344,95 @@
       state: 'on'
   metadata: {}
   icon: mdi:lamp
+- id: '1761850767994'
+  name: Front Porch Halloween
+  entities:
+    light.front_porch_bulb:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6493
+      min_mireds: 154
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: xy
+      brightness: 199
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 36.667
+      - 84.706
+      rgb_color:
+      - 255
+      - 171
+      - 39
+      xy_color:
+      - 0.547
+      - 0.417
+      friendly_name: Front Porch Bulb
+      supported_features: 40
+      state: 'on'
+  icon: mdi:coach-lamp
+  metadata: {}
+- id: '1761851314990'
+  name: Back Porch Halloween
+  entities:
+    light.deck_lights:
+      effect_list:
+      - Solid
+      - Wake up
+      - Cycle up
+      - Cycle down
+      - Random
+      supported_color_modes:
+      - hs
+      effect: Solid
+      color_mode: hs
+      brightness: 196
+      hs_color:
+      - 115
+      - 87
+      rgb_color:
+      - 52
+      - 255
+      - 33
+      xy_color:
+      - 0.19
+      - 0.718
+      icon: mdi:led-strip-variant
+      friendly_name: Deck Lights
+      supported_features: 36
+      state: 'on'
+  icon: mdi:string-lights
+  metadata: {}
+- id: '1761851373674'
+  name: Back Porch Normal
+  entities:
+    light.deck_lights:
+      effect_list:
+      - Solid
+      - Wake up
+      - Cycle up
+      - Cycle down
+      - Random
+      supported_color_modes:
+      - hs
+      effect: Solid
+      color_mode: hs
+      brightness: 189
+      hs_color:
+      - 48
+      - 2
+      rgb_color:
+      - 255
+      - 254
+      - 250
+      xy_color:
+      - 0.326
+      - 0.333
+      icon: mdi:led-strip-variant
+      friendly_name: Deck Lights
+      supported_features: 36
+      state: 'on'
+  icon: mdi:string-lights
+  metadata: {}
