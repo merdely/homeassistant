@@ -28,22 +28,50 @@ headers = {
     'Authorization': f'MediaBrowser Token={jellyfin_apikey}'
     }
 
-response = requests.get(f"{jellyfin_url}/Sessions", headers=headers, proxies=proxies)
-data = response.json()
-sessions = {}
+sessions = []
 count = 0
-for session in data:
-    if "NowPlayingItem" in session.keys():
-        if session['PlayState']['IsPaused'] == True:
-            continue
-        count = count + 1
-        if "SeriesName" in session["NowPlayingItem"].keys():
-            season = session['NowPlayingItem']['SeasonName'].replace("Season ", "")
-            episode = session['NowPlayingItem']['IndexNumber']
-            sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['SeriesName']} - s{int(season):02d}e{int(episode):02d} - {session['NowPlayingItem']['Name']}" }
-        elif "AlbumArtist" in session["NowPlayingItem"].keys():
-            sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['AlbumArtist']} - {session['NowPlayingItem']['Album']} - {session['NowPlayingItem']['Name']}" }
-        else:
-            sessions = sessions | { f"{session['UserName']} - {session['Client']}":  session["NowPlayingItem"]["Name"] }
+
+try:
+    response = requests.get(f"{jellyfin_url}/Sessions", headers=headers, proxies=proxies)
+except:
+    count=-1
+
+#print(json.dumps(data))
+#quit()
+
+if count != -1:
+    try:
+        data = response.json()
+    except:
+        count=-1
+
+if count != -1:
+    for session in data:
+        if "NowPlayingItem" in session.keys():
+            user = session['UserName']
+            client = session['Client']
+            # type = session['NowPlayingItem']['Type']
+            if session['PlayState']['IsPaused'] == True:
+                continue
+            count = count + 1
+            if "SeriesName" in session["NowPlayingItem"].keys():
+                season = session['NowPlayingItem']['SeasonName'].replace("Season ", "")
+                episode = session['NowPlayingItem']['IndexNumber']
+                item = f"{session['NowPlayingItem']['SeriesName']} - s{int(season):02d}e{int(episode):02d} - {session['NowPlayingItem']['Name']}"
+                media_type = "Show"
+                media_icon = "mdi:television-classic"
+
+                # sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['SeriesName']} - s{int(season):02d}e{int(episode):02d} - {session['NowPlayingItem']['Name']}" }
+            elif "AlbumArtist" in session["NowPlayingItem"].keys():
+                item = f"{session['NowPlayingItem']['AlbumArtist']} - {session['NowPlayingItem']['Album']} - {session['NowPlayingItem']['Name']}"
+                media_type = "Music"
+                media_icon = "mdi:music"
+                # sessions = sessions | { f"{session['UserName']} - {session['Client']}":  f"{session['NowPlayingItem']['AlbumArtist']} - {session['NowPlayingItem']['Album']} - {session['NowPlayingItem']['Name']}" }
+            else:
+                item = session["NowPlayingItem"]["Name"]
+                media_type = "Movie"
+                media_icon = "mdi:movie-roll"
+                # sessions = sessions | { f"{session['UserName']} - {session['Client']}":  session["NowPlayingItem"]["Name"] }
+            sessions.extend([ { "user": user, "client": client, "type": media_type, "icon": media_icon, "item": item } ])
 
 print(json.dumps({ 'count': count, 'sessions': sessions }))

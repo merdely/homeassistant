@@ -198,15 +198,3 @@
       battery_level: '{{ state_attr("binary_sensor.wyzesense_77ca81b4", "battery_level") }}'
       parent_entity: "binary_sensor.wyzesense_77ca81b4"
 
-# Storage for Bubble Card Modules
-- trigger:
-    - trigger: event
-      event_type: bubble_card_update_modules
-  sensor:
-    - name: "Bubble Card Modules"
-      state: "saved"
-      icon: "mdi:puzzle"
-      attributes:
-        modules: "{{ trigger.event.data.modules }}"
-        last_updated: "{{ trigger.event.data.last_updated }}"
-

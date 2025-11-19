@@ -855,37 +855,61 @@ sent_ntfy_notification:
   description: ''
 tv_volume_up:
   sequence:
-  - alias: Choose TV
-    if:
-    - condition: template
-      value_template: '{{ tv == "Bedroom TV" }}'
-      alias: If Bedroom TV
-    then:
-    - action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        topic: cmnd/bedroom_tv_remote/backlog
-        payload: "irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0E01F\",\"DataLSB\":\"0x070707F8\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0E01F\",\"DataLSB\":\"0x070707F8\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0E01F\",\"DataLSB\":\"0x070707F8\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0E01F\",\"DataLSB\":\"0x070707F8\",\"Repeat\":0}"
-      alias: Send MQTT Codes for Bedroom TV
-    else:
-    - action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        payload: "irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x240C\",\"DataLSB\":\"0x2430\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x240C\",\"DataLSB\":\"0x2430\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x240C\",\"DataLSB\":\"0x2430\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x240C\",\"DataLSB\":\"0x2430\",\"Repeat\":0}\n"
-        topic: cmnd/god_damn_tv_remote/backlog
-      alias: Send MQTT Codes for God Damn TV
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ tv == "Bedroom TV" }}'
+        alias: Bedroom TV
+      sequence:
+      - alias: Send MQTT Codes for Bedroom TV
+        action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          topic: cmnd/bedroom_tv_remote/backlog
+          payload: 'irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0};
+
+            delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0};
+
+            delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0}'
+    - conditions:
+      - alias: God Damn TV
+        condition: template
+        value_template: '{{ tv == "God Damn TV" }}'
+      sequence:
+      - alias: Send MQTT Codes for God Damn TV
+        action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          payload: 'irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0};
+
+            delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0E01F","DataLSB":"0x070707F8","Repeat":0}'
+          topic: cmnd/god_damn_tv_remote/backlog
+    - conditions:
+      - alias: Office TV
+        condition: template
+        value_template: '{{ tv == "Office TV" }}'
+      sequence:
+      - action: media_player.volume_up
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.office_roku_tv
+    - conditions:
+      - alias: Living Room TV
+        condition: template
+        value_template: '{{ tv == "Living Room TV" }}'
+      sequence:
+      - action: media_player.volume_up
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.living_room_roku_tv
   fields:
     tv:
       selector:
@@ -893,42 +917,68 @@ tv_volume_up:
           options:
           - Bedroom TV
           - God Damn TV
+          - Living Room TV
+          - Office TV
       default: Bedroom TV
   alias: TV Volume Up
   description: ''
 tv_volume_down:
   sequence:
-  - alias: Choose TV
-    if:
-    - condition: template
-      value_template: '{{ tv == "Bedroom TV" }}'
-      alias: If Bedroom TV
-    then:
-    - alias: Send MQTT Codes for Bedroom TV
-      action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        topic: cmnd/bedroom_tv_remote/backlog
-        payload: "irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0D02F\",\"DataLSB\":\"0x07070BF4\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0D02F\",\"DataLSB\":\"0x07070BF4\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0D02F\",\"DataLSB\":\"0x07070BF4\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SAMSUNG\",\"Bits\":32,\"Data\":\"0xE0E0D02F\",\"DataLSB\":\"0x07070BF4\",\"Repeat\":0}"
-    else:
-    - alias: Send MQTT Codes for God Damn TV
-      action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        payload: "irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x640C\",\"DataLSB\":\"0x2630\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x640C\",\"DataLSB\":\"0x2630\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x640C\",\"DataLSB\":\"0x2630\",\"Repeat\":0};\n
-          \       delay 2; irsend {\"Protocol\":\"SONY\",\"Bits\":15,\"Data\":\"0x640C\",\"DataLSB\":\"0x2630\",\"Repeat\":0}\n"
-        topic: cmnd/god_damn_tv_remote/backlog
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ tv == "Bedroom TV" }}'
+        alias: Bedroom TV
+      sequence:
+      - alias: Send MQTT Codes for Bedroom TV
+        action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          topic: cmnd/bedroom_tv_remote/backlog
+          payload: 'irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
+
+            delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
+
+            delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0}'
+    - conditions:
+      - alias: God Damn TV
+        condition: template
+        value_template: '{{ tv == "God Damn TV" }}'
+      sequence:
+      - alias: Send MQTT Codes for God Damn TV
+        action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          payload: 'irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0};
+
+            delay 2; irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0D02F","DataLSB":"0x07070BF4","Repeat":0}'
+          topic: cmnd/god_damn_tv_remote/backlog
+    - conditions:
+      - alias: Office TV
+        condition: template
+        value_template: '{{ tv == "Office TV" }}'
+      sequence:
+      - action: media_player.volume_down
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.office_roku_tv
+    - conditions:
+      - alias: Living Room TV
+        condition: template
+        value_template: '{{ tv == "Living Room TV" }}'
+      sequence:
+      - action: media_player.volume_down
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.living_room_roku_tv
   fields:
     tv:
       selector:
@@ -936,36 +986,64 @@ tv_volume_down:
           options:
           - Bedroom TV
           - God Damn TV
+          - Living Room TV
+          - Office TV
       default: Bedroom TV
   alias: TV Volume Down
   description: ''
 tv_volume_mute:
   sequence:
-  - alias: Choose TV
-    if:
-    - alias: If Bedroom TV
-      condition: template
-      value_template: '{{ tv == "Bedroom TV" }}'
-    then:
-    - alias: Send MQTT Codes for Bedroom TV
-      action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        topic: cmnd/bedroom_tv_remote/backlog
-        payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0F00F","DataLSB":"0x07070FF0","Repeat":0}
-    else:
-    - alias: Send MQTT Codes for God Damn TV
-      action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        payload: irsend {"Protocol":"SONY","Bits":15,"Data":"0x140C","DataLSB":"0x2830","Repeat":0}
-        topic: cmnd/god_damn_tv_remote/backlog
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ tv == "Bedroom TV" }}'
+        alias: Bedroom TV
+      sequence:
+      - alias: Send MQTT Codes for Bedroom TV
+        action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          topic: cmnd/bedroom_tv_remote/backlog
+          payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0F00F","DataLSB":"0x07070FF0","Repeat":0}
+    - conditions:
+      - alias: God Damn TV
+        condition: template
+        value_template: '{{ tv == "God Damn TV" }}'
+      sequence:
+      - alias: Send MQTT Codes for God Damn TV
+        action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          payload: irsend {"Protocol":"SAMSUNG","Bits":32,"Data":"0xE0E0F00F","DataLSB":"0x07070FF0","Repeat":0}
+          topic: cmnd/god_damn_tv_remote/backlog
+    - conditions:
+      - alias: Office TV
+        condition: template
+        value_template: '{{ tv == "Office TV" }}'
+      sequence:
+      - action: media_player.volume_mute
+        metadata: {}
+        data:
+          is_volume_muted: false
+        target:
+          entity_id: media_player.office_roku_tv
+    - conditions:
+      - alias: Living Room TV
+        condition: template
+        value_template: '{{ tv == "Living Room TV" }}'
+      sequence:
+      - action: media_player.volume_mute
+        metadata: {}
+        data:
+          is_volume_muted: false
+        target:
+          entity_id: media_player.living_room_roku_tv
   fields:
     tv:
       selector:
@@ -973,6 +1051,8 @@ tv_volume_mute:
           options:
           - Bedroom TV
           - God Damn TV
+          - Living Room TV
+          - Office TV
       default: Bedroom TV
   alias: TV Volume Mute
   description: ''

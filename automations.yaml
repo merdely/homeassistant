@@ -1,4 +1,6 @@
 - id: '1600528964920'
+  trace:
+    stored_traces: 20
   alias: Lighting - Sunset Lights On
   description: ''
   triggers:
@@ -72,6 +74,8 @@
     alias: Turn on Deck Lights at Christmas-Time and October
   mode: single
 - id: '1600529040720'
+  trace:
+    stored_traces: 20
   alias: Lighting - Sunset Lights Off at Night
   description: ''
   triggers:
@@ -90,6 +94,8 @@
     action: homeassistant.turn_off
   mode: single
 - id: '1602628290703'
+  trace:
+    stored_traces: 20
   alias: Lighting - Laundry Room - Motion Light On
   description: ''
   triggers:
@@ -129,6 +135,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1602628563183'
+  trace:
+    stored_traces: 20
   alias: Lighting - Laundry Room - Motion Light Off
   description: ''
   trigger:
@@ -143,6 +151,8 @@
       entity_id: light.laundry_room_light
   mode: single
 - id: '1602683085874'
+  trace:
+    stored_traces: 20
   alias: Notifications - Battery Low Notification
   description: ''
   trigger:
@@ -159,6 +169,8 @@
       message: '{{ state_attr(''sensor.low_battery'', ''entity_list'') }}'
   mode: single
 - id: '1602887078304'
+  trace:
+    stored_traces: 20
   alias: Lighting - Shed - Shed/Flood Light Toggle
   description: ''
   triggers:
@@ -195,6 +207,8 @@
         entity_id: light.shed_lamp
   mode: single
 - id: '1602952724393'
+  trace:
+    stored_traces: 20
   alias: Notifications - 0 - Water Leak Detected - Water Heater
   description: ''
   triggers:
@@ -232,6 +246,8 @@
     data: {}
   mode: single
 - id: '1603148838343'
+  trace:
+    stored_traces: 20
   alias: 00 - Home Assistant - Startup
   description: ''
   triggers:
@@ -285,6 +301,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1603407121485'
+  trace:
+    stored_traces: 20
   alias: Notifications - Laundry Room Washer Started
   description: ''
   trigger:
@@ -305,6 +323,8 @@
     entity_id: input_boolean.laundry_room_washer_running
   mode: single
 - id: '1603407289385'
+  trace:
+    stored_traces: 20
   alias: Notifications - Laundry Room Washer Stopped
   description: ''
   triggers:
@@ -345,6 +365,8 @@
       action: tts.cloud_say
   mode: single
 - id: '1604378332593'
+  trace:
+    stored_traces: 20
   alias: Security - 90 Triggered - Alert of Always Monitored Door Open (Always)
   description: ''
   triggers:
@@ -395,6 +417,8 @@
         == ''off'' %} closed{%- else %} open{% endif %}.'
   mode: single
 - id: '1604856519122'
+  trace:
+    stored_traces: 20
   alias: Notifications - Laundry Room Dryer Started
   description: ''
   trigger:
@@ -412,6 +436,8 @@
     entity_id: input_boolean.laundry_room_dryer_running
   mode: single
 - id: '1604856580927'
+  trace:
+    stored_traces: 20
   alias: Notifications - Laundry Room Dryer Stopped
   description: ''
   triggers:
@@ -452,6 +478,8 @@
       action: tts.cloud_say
   mode: single
 - id: '1606835846142'
+  trace:
+    stored_traces: 20
   alias: Security - 10 All - Update alarm.state File
   description: ''
   triggers:
@@ -469,6 +497,8 @@
       entity_id: notify.alarm_state_file
   mode: single
 - id: '1607035454754'
+  trace:
+    stored_traces: 20
   alias: Lighting - Office - Mike Desk Lamp Toggle
   description: ''
   triggers:
@@ -482,6 +512,8 @@
       entity_id: light.mike_desk_lamp
   mode: single
 - id: '1607093471372'
+  trace:
+    stored_traces: 20
   alias: Notifications - Presence - Holly
   description: ''
   triggers:
@@ -529,6 +561,8 @@
       action: notify.gmail_to_mike
   mode: single
 - id: '1607095172887'
+  trace:
+    stored_traces: 20
   alias: Notifications - Presence - Mike
   description: ''
   triggers:
@@ -566,6 +600,8 @@
       action: tts.cloud_say
   mode: single
 - id: '1607118334187'
+  trace:
+    stored_traces: 20
   alias: TV - Family Room - Change Input
   description: ''
   trigger:
@@ -672,6 +708,8 @@
     entity_id: input_select.god_damn_input
   mode: single
 - id: '1607196620269'
+  trace:
+    stored_traces: 20
   alias: TV - Bedroom - Power Off
   description: ''
   trigger:
@@ -701,6 +739,8 @@
       entity_id: media_player.bedroom_roku
   mode: single
 - id: '1607196736782'
+  trace:
+    stored_traces: 20
   alias: TV - Family Room - Power Off
   description: ''
   trigger:
@@ -722,6 +762,8 @@
       entity_id: media_player.god_damn_roku
   mode: single
 - id: '1607717328639'
+  trace:
+    stored_traces: 20
   alias: Lighting - Automatic Lights When We Come Home
   description: ''
   triggers:
@@ -768,6 +810,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1608699279426'
+  trace:
+    stored_traces: 20
   alias: Tag - Mike Desk - Unlock Mercury
   description: ''
   triggers:
@@ -809,6 +853,8 @@
       action: system_log.write
   mode: single
 - id: '1608701107067'
+  trace:
+    stored_traces: 20
   alias: Tag - Disarm Security System and Unlock Front Door
   description: If the tag scanned is used by Mike or Holly and is at one of the designated
     places
@@ -907,6 +953,8 @@
       80ad218b0cf54379b5ee622fbb721c6b: Mike
       3109b2f6d085440f92db502bc4e30a3b: Holly
 - id: '1609607242283'
+  trace:
+    stored_traces: 20
   alias: 21 - Home Assistant - Nightly Tasks
   description: ''
   triggers:
@@ -1012,6 +1060,8 @@
       - button.range_extender_ping
   mode: single
 - id: '1610231390167'
+  trace:
+    stored_traces: 20
   alias: Notifications - Nobody Home - Alarm Disarmed
   description: ''
   triggers:
@@ -1056,6 +1106,8 @@
     action: notify.notify
   mode: single
 - id: '1613160102079'
+  trace:
+    stored_traces: 20
   alias: Lighting - Mantle Lights On
   description: ''
   trigger:
@@ -1068,6 +1120,8 @@
       entity_id: light.mantle_lights
   mode: single
 - id: '1613160122811'
+  trace:
+    stored_traces: 20
   alias: Lighting - Mantle Lights Off
   description: ''
   trigger:
@@ -1080,6 +1134,8 @@
       entity_id: light.mantle_lights
   mode: single
 - id: '1614981790208'
+  trace:
+    stored_traces: 20
   alias: Notifications - Mailbox Notify
   description: ''
   triggers:
@@ -1139,6 +1195,8 @@
           message: Somebody retrieved the mail
   mode: single
 - id: '1615411227750'
+  trace:
+    stored_traces: 20
   alias: Home Assistant - Mailbox State Reset
   description: ''
   triggers:
@@ -1158,6 +1216,8 @@
     action: python_script.set_state
   mode: single
 - id: '1616344353322'
+  trace:
+    stored_traces: 20
   alias: 03-Save Home Assistant Logfile
   description: ''
   trigger:
@@ -1168,6 +1228,8 @@
   - service: shell_command.save_homeassistant_log
   mode: single
 - id: '1617059343081'
+  trace:
+    stored_traces: 20
   alias: Lighting - Den - Motion Light On
   description: ''
   triggers:
@@ -1207,6 +1269,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1617059380424'
+  trace:
+    stored_traces: 20
   alias: Lighting - Den - Motion Light Off
   description: ''
   trigger:
@@ -1221,6 +1285,8 @@
       entity_id: light.den_overhead_light
   mode: single
 - id: '1617741916452'
+  trace:
+    stored_traces: 20
   alias: Notifications - 1 - Water Leak Detected - All Sensors
   description: ''
   triggers:
@@ -1246,6 +1312,8 @@
       message: '{{ trigger.to_state.attributes.friendly_name }}'
   mode: single
 - id: '1622222404078'
+  trace:
+    stored_traces: 20
   alias: 20 - Home Assistant - Bedtime Tasks
   description: ''
   triggers:
@@ -1338,6 +1406,8 @@
         entity_id: input_select.cleaners_weekday
   mode: single
 - id: '1632841431902'
+  trace:
+    stored_traces: 20
   alias: Fan - Master Bath Humidity - Fan On
   description: ''
   triggers:
@@ -1384,6 +1454,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1632841500873'
+  trace:
+    stored_traces: 20
   alias: Fan - Master Bath Humidity - Fan Off
   description: ''
   trigger:
@@ -1400,6 +1472,8 @@
       entity_id: switch.master_bath_fan
   mode: single
 - id: '1637383119311'
+  trace:
+    stored_traces: 20
   alias: Actionable Notifications - RUN_GOODNIGHT
   description: ''
   triggers:
@@ -1422,6 +1496,8 @@
       title: Good Night
   mode: single
 - id: '1637383160091'
+  trace:
+    stored_traces: 20
   alias: Actionable Notifications - ARM_HOME
   description: ''
   triggers:
@@ -1445,6 +1521,8 @@
       title: Security Alert
   mode: single
 - id: '1637383181288'
+  trace:
+    stored_traces: 20
   alias: Actionable Notifications - ARM_AWAY
   description: ''
   triggers:
@@ -1469,6 +1547,8 @@
       title: Security Alert
   mode: single
 - id: '1637383883544'
+  trace:
+    stored_traces: 20
   alias: Notifications - Nobody Home - Oven On
   description: ''
   triggers:
@@ -1517,6 +1597,8 @@
       title: Home Assistant Alert
   mode: single
 - id: '1638997594019'
+  trace:
+    stored_traces: 20
   alias: Home Assistant - Monitor Earth / HA Entities
   description: ''
   triggers:
@@ -1782,6 +1864,8 @@
     alias: Determine context for sending alert (bad, good, unknown)
   mode: single
 - id: '1641590686089'
+  trace:
+    stored_traces: 20
   alias: Actionable Notifications - RESET_MAILBOX
   description: ''
   trigger:
@@ -1796,6 +1880,8 @@
       entity_id: input_boolean.mail_delivered
   mode: single
 - id: '1642193974045'
+  trace:
+    stored_traces: 20
   alias: Actionable Notifications - TRASH_IS_OUT
   description: ''
   trigger:
@@ -1811,6 +1897,8 @@
       - input_boolean.trash_is_out
   mode: single
 - id: '1642194163380'
+  trace:
+    stored_traces: 20
   alias: Actionable Notifications - RECYCLE_IS_OUT
   description: ''
   trigger:
@@ -1825,6 +1913,8 @@
       entity_id: input_boolean.recycle_is_out
   mode: single
 - id: '1644094351525'
+  trace:
+    stored_traces: 20
   alias: Heater - Turn Off Office Heater After Set Amount of Time
   description: ''
   triggers:
@@ -1846,6 +1936,8 @@
     action: homeassistant.turn_off
   mode: single
 - id: '1644246652989'
+  trace:
+    stored_traces: 20
   alias: Notifications - Fridge Door Open
   description: Send an alert if the Fridge or Freezer doors have been open for 5 minutes
   triggers:
@@ -1900,6 +1992,8 @@
       title: Home Assistant Alert
   mode: single
 - id: '1645068726044'
+  trace:
+    stored_traces: 20
   alias: Security - 40 Armed - Disarm Security System in the morning
   description: ''
   triggers:
@@ -1921,6 +2015,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1650048811718'
+  trace:
+    stored_traces: 20
   alias: Lighting - Fix 3-way Lights
   description: ''
   triggers:
@@ -1951,6 +2047,8 @@
     data: {}
   mode: single
 - id: '1650211137772'
+  trace:
+    stored_traces: 20
   alias: Home Assistant - Fix Nginx Proxy Manager (NPM)
   description: ''
   triggers:
@@ -1984,6 +2082,8 @@
     action: notify.gmail_to_mike
   mode: single
 - id: '1670901378517'
+  trace:
+    stored_traces: 20
   alias: Lighting - Turn Den Lights Off
   description: Turn Den Lights Off when turning off Laundry Room Lights
   trigger:
@@ -1999,6 +2099,8 @@
       entity_id: light.den_overhead_light
   mode: single
 - id: '1670901378518'
+  trace:
+    stored_traces: 20
   alias: Lighting - Turn Den Lights Off
   description: Turn Den Lights Off when turning off Laundry Room Lights
   trigger:
@@ -2014,6 +2116,8 @@
       entity_id: light.den_overhead_light
   mode: single
 - id: '1671061951151'
+  trace:
+    stored_traces: 20
   alias: Lighting - Shed Lamp Auto On
   description: Turn on Shed Lamp when Shed Door opens
   trigger:
@@ -2034,6 +2138,8 @@
       entity_id: light.shed_lamp
   mode: single
 - id: '1671062103330'
+  trace:
+    stored_traces: 20
   alias: Lighting - Shed Lamp Auto Off
   description: ''
   trigger:
@@ -2053,6 +2159,8 @@
       entity_id: light.shed_lamp
   mode: single
 - id: '1671213044073'
+  trace:
+    stored_traces: 20
   alias: Lighting - Reset Crappy Christmas Lights
   description: The timer on the green tree lights sucks and automatically turns off
     after 6 hours.  So twice during the time we want them on, turn them off and then
@@ -2082,6 +2190,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1671217553135'
+  trace:
+    stored_traces: 20
   alias: Fan - Hall Bath Humidity - Fan On
   description: ''
   triggers:
@@ -2128,6 +2238,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1671217825195'
+  trace:
+    stored_traces: 20
   alias: Fan - Hall Bath Humidity - Fan Off
   description: ''
   trigger:
@@ -2145,6 +2257,8 @@
     data: {}
   mode: single
 - id: '1671565614293'
+  trace:
+    stored_traces: 20
   alias: Notifications - Fridge Door Closed
   description: Notify when the Fridge or Freezer Doors close after having been opened
     for 5 mintues
@@ -2204,6 +2318,8 @@
     action: homeassistant.turn_off
   mode: single
 - id: '1671648815254'
+  trace:
+    stored_traces: 20
   alias: Lighting - Holly Nightstand Light
   description: ''
   triggers:
@@ -2240,6 +2356,8 @@
       data: {}
   mode: single
 - id: '1671832619134'
+  trace:
+    stored_traces: 20
   alias: Lighting - Bedroom - Holly in Bed LEDs off
   description: Disable the LEDs on the light switches when Holly is in bed.
   triggers:
@@ -2263,6 +2381,8 @@
     action: mqtt.publish
   mode: single
 - id: '1671832783300'
+  trace:
+    stored_traces: 20
   alias: Lighting - Bedroom - Holly out of Bed LEDs on
   description: Enable the LEDs on the light switches when Holly is out of bed.
   triggers:
@@ -2286,6 +2406,8 @@
     action: mqtt.publish
   mode: single
 - id: '1673482501074'
+  trace:
+    stored_traces: 20
   alias: Security - Lock Front Door when Arming
   description: ''
   triggers:
@@ -2328,6 +2450,8 @@
     continue_on_error: true
   mode: single
 - id: '1679241143151'
+  trace:
+    stored_traces: 20
   alias: Lighting - Turn on Nighttime Stairway/Hallway Lights
   description: Add extra lighting over stairs at night
   trigger:
@@ -2360,6 +2484,8 @@
       - light.foyer_light
   mode: single
 - id: '1679241221562'
+  trace:
+    stored_traces: 20
   alias: Lighting - Turn off extra lights over stairway/hallway at night
   description: Add extra lighting over stairs at night
   trigger:
@@ -2388,6 +2514,8 @@
       - light.foyer_light
   mode: single
 - id: '1704658454909'
+  trace:
+    stored_traces: 20
   alias: Lighting - Toggle Garage Door Light
   description: ''
   triggers:
@@ -2438,6 +2566,8 @@
         action: light.toggle
   mode: single
 - id: '1705879584394'
+  trace:
+    stored_traces: 20
   alias: Lighting - Ensure switches stay on for Smart Bulbs
   description: ''
   triggers:
@@ -2467,6 +2597,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1720882109923'
+  trace:
+    stored_traces: 20
   alias: Lighting - Living Room - White Lamp
   description: ''
   trigger:
@@ -2489,6 +2621,8 @@
       data: {}
   mode: single
 - id: '1732810938168'
+  trace:
+    stored_traces: 20
   alias: Lighting - Set the Living Room Light Color
   description: ''
   triggers:
@@ -2507,6 +2641,8 @@
     alias: Set Bulb Color
   mode: single
 - id: '1735518229397'
+  trace:
+    stored_traces: 20
   alias: Home Assistant - Lock front door when out of sync
   description: ''
   triggers:
@@ -2532,6 +2668,8 @@
       entity_id: lock.front_door_zwave
   mode: single
 - id: '1737680625031'
+  trace:
+    stored_traces: 20
   alias: Turn on God Damn Switch LEDs when Bulb Turns Off
   description: ''
   triggers:
@@ -2551,6 +2689,8 @@
     action: mqtt.publish
   mode: single
 - id: '1737680666624'
+  trace:
+    stored_traces: 20
   alias: Turn Off God Damn Switch LEDs When Bulb Turns On
   description: ''
   triggers:
@@ -2570,6 +2710,8 @@
     action: mqtt.publish
   mode: single
 - id: '1738787365600'
+  trace:
+    stored_traces: 20
   alias: Ping Zwave when not seen for a while
   description: ''
   triggers:
@@ -2600,6 +2742,8 @@
       - button.range_extender_ping
   mode: single
 - id: '1740420538290'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Arm Alarm (Home)'
   description: ''
   triggers:
@@ -2630,6 +2774,8 @@
         entity_id: alarm_control_panel.home_alarm
   mode: single
 - id: '1740421539865'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Where is person'
   description: ''
   triggers:
@@ -2651,6 +2797,8 @@
         | title }}
   mode: single
 - id: '1740423183500'
+  trace:
+    stored_traces: 20
   alias: 'Assist: What is the value in the room'
   description: ''
   triggers:
@@ -2664,6 +2812,8 @@
       text: What is the {{ room }} {{ value }}
   mode: single
 - id: '1740424929450'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Good night'
   description: ''
   triggers:
@@ -2681,6 +2831,8 @@
   - set_conversation_response: Good night
   mode: single
 - id: '1740683605204'
+  trace:
+    stored_traces: 20
   alias: Assist - Leaving Home
   description: ''
   triggers:
@@ -2704,6 +2856,8 @@
   - set_conversation_response: Have a good day
   mode: single
 - id: '1741888508340'
+  trace:
+    stored_traces: 20
   alias: Controls - Picframe (timebased)
   description: ''
   triggers:
@@ -2731,6 +2885,8 @@
         command: picframe
   mode: single
 - id: '1743533561078'
+  trace:
+    stored_traces: 20
   alias: Home Assistant - Restart - PicFrame Unavailable
   description: ''
   triggers:
@@ -2769,6 +2925,8 @@
       title: Picture Frame restarted
   mode: single
 - id: '1743534633370'
+  trace:
+    stored_traces: 20
   alias: Home Assistant - Reload - Picframe Unknown
   description: ''
   triggers:
@@ -2791,6 +2949,8 @@
       command: reload
   mode: single
 - id: '1745466993579'
+  trace:
+    stored_traces: 20
   alias: Temp Automation - Charge Mike's Phone
   description: ''
   triggers:
@@ -2804,6 +2964,8 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1745467026998'
+  trace:
+    stored_traces: 20
   alias: Temp Automation - Turn off Charging Mike's Phone
   description: ''
   triggers:
@@ -2817,6 +2979,8 @@
     action: homeassistant.turn_off
   mode: single
 - id: '1752607917440'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn on the Bedroom'
   description: ''
   triggers:
@@ -2831,6 +2995,8 @@
       entity_id: light.dresser_lamp
   mode: single
 - id: '1752607968560'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn off the Bedroom'
   description: ''
   triggers:
@@ -2846,6 +3012,8 @@
       label_id: bedroom
   mode: single
 - id: '1752608140881'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn on the Office'
   description: ''
   triggers:
@@ -2861,6 +3029,8 @@
       entity_id: light.office_fan_light
   mode: single
 - id: '1752608188802'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn off the Office'
   description: ''
   triggers:
@@ -2876,6 +3046,8 @@
       label_id: office
   mode: single
 - id: '1752609581971'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn off the Upstairs'
   description: ''
   triggers:
@@ -2891,6 +3063,8 @@
       label_id: upstairs
   mode: single
 - id: '1752609637701'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn on the Upstairs'
   description: ''
   triggers:
@@ -2906,6 +3080,8 @@
       floor_id: upstairs
   mode: single
 - id: '1752610803004'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn off the Downstairs'
   description: ''
   triggers:
@@ -2921,6 +3097,8 @@
       label_id: downstairs
   mode: single
 - id: '1752610886378'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn on the Downstairs'
   description: ''
   triggers:
@@ -2938,6 +3116,8 @@
       - light.god_damn_light
   mode: single
 - id: '1752612402761'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn of the God Damn Light'
   description: ''
   triggers:
@@ -2953,6 +3133,8 @@
       entity_id: light.god_damn_light
   mode: single
 - id: '1752612440753'
+  trace:
+    stored_traces: 20
   alias: 'Assist: Turn on the God Damn Light'
   description: ''
   triggers:
@@ -2968,6 +3150,8 @@
       entity_id: light.god_damn_light
   mode: single
 - id: '1752695879335'
+  trace:
+    stored_traces: 20
   alias: Control Panel - Show Front Door Camera
   description: ''
   triggers:
@@ -2982,6 +3166,8 @@
       camera: camera.front_door
   mode: single
 - id: '1758668884916'
+  trace:
+    stored_traces: 20
   alias: Lighting - Sunrise Lights On at Dawn
   description: ''
   triggers:
@@ -3013,6 +3199,8 @@
     alias: Turn on Outside Christmas Lights if Christmas Lights are Out
   mode: single
 - id: '1758669178829'
+  trace:
+    stored_traces: 20
   alias: Lighting - Sunrise Lights Off at Sunrise
   description: ''
   triggers:
@@ -3030,6 +3218,8 @@
       - switch.outside_christmas_lights
   mode: single
 - id: '1758716522977'
+  trace:
+    stored_traces: 20
   alias: Controls - Turn on Picframe at Sunrise
   description: ''
   triggers:
@@ -3045,6 +3235,8 @@
       entity_id: switch.sinope_plug
   mode: single
 - id: '1758716781871'
+  trace:
+    stored_traces: 20
   alias: Controls - Turn off Picframe at Night
   description: ''
   triggers:
@@ -3081,6 +3273,8 @@
       entity_id: switch.sinope_plug
   mode: single
 - id: '1758848750795'
+  trace:
+    stored_traces: 20
   alias: Lighting - Turn on Living Room Lights
   description: ''
   triggers:
@@ -3111,6 +3305,8 @@
         - light.white_lamp
   mode: single
 - id: '1761851092517'
+  trace:
+    stored_traces: 20
   alias: Handle Front Porch Light Color
   description: ''
   triggers:
@@ -3148,6 +3344,8 @@
         entity_id: scene.front_porch_normal
   mode: single
 - id: '1761851448417'
+  trace:
+    stored_traces: 20
   alias: Handle Color for Deck Lights
   description: ''
   triggers:
@@ -3186,6 +3384,8 @@
         entity_id: scene.back_porch_normal
   mode: single
 - id: '1762342099701'
+  trace:
+    stored_traces: 20
   alias: Frigate Notifications for Mike's Phone
   description: ''
   use_blueprint:
@@ -3206,6 +3406,8 @@
       android_auto: true
       group: frigate-notification
 - id: '1762447315675'
+  trace:
+    stored_traces: 20
   alias: Bedroom Humidifier - Low Water
   description: ''
   triggers:
@@ -3232,6 +3434,8 @@
       message: The Bedroom Humidifier is low on water
   mode: single
 - id: '1762447395016'
+  trace:
+    stored_traces: 20
   alias: Bedroom Humidifier - Tank Lifted
   description: ''
   triggers:
@@ -3258,6 +3462,8 @@
       message: The Bedroom Humidifier water tank has been lifted
   mode: single
 - id: '1763248233200'
+  trace:
+    stored_traces: 20
   alias: Frigate Notifications for Holly's Phone
   description: ''
   use_blueprint:
@@ -3277,3 +3483,57 @@
       title: Frigate Notification
       android_auto: true
       group: frigate-notification
+- id: '1763388084637'
+  trace:
+    stored_traces: 20
+  alias: Sync TV Power State
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.bedroom_tv_wifi_ping
+    - binary_sensor.bedroom_tv_wired_ping
+    - binary_sensor.god_damn_tv_ping
+  conditions: []
+  actions:
+  - if:
+    - condition: template
+      value_template: '{{ trigger.entity_id == "binary_sensor.god_damn_tv_ping" }}'
+      alias: God Damn TV
+    then:
+    - if:
+      - condition: template
+        value_template: '{{ states(trigger.entity_id) == "on" }}'
+        alias: Trigger turned on
+      then:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.god_damn_tv_state
+      else:
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.god_damn_tv_state
+      alias: Handle God Damn TV
+    else:
+    - if:
+      - condition: template
+        value_template: '{{ states(trigger.entity_id) == "on" }}'
+        alias: Trigger turned on
+      then:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.bedroom_tv_state
+      else:
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.bedroom_tv_state
+      alias: Handle Bedroom TV
+  mode: single

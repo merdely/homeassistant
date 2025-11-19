@@ -96,9 +96,6 @@
               "icon": "mdi:door",
               "color": "{% if states('binary_sensor.front_door_contact') == 'on' or states('lock.front_door_zwave') == 'unlocked' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "entity": "lock.front_door_zwave",
-              "tap_action": {
-                "action": "more-info"
-              },
               "visibility": [
                 {
                   "condition": "or",
@@ -116,6 +113,17 @@
                   ]
                 }
               ],
+              "tap_action": {
+                "action": "perform-action",
+                "perform_action": "lock.lock",
+                "target": {
+                  "entity_id": [
+                    "lock.front_door_zwave",
+                    "lock.front_door"
+                  ]
+                },
+                "data": {}
+              },
               "card_mod": {
                 "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
               }
@@ -214,7 +222,7 @@
               "cards": [
                 {
                   "type": "custom:mushroom-template-card",
-                  "primary": "{{ state_attr(entity, 'friendly_name') }}",
+                  "primary": "Good",
                   "icon": "{{ state_attr(entity, 'icon') }}",
                   "features_position": "bottom",
                   "color": "var(--state-icon-color)",
@@ -228,7 +236,11 @@
                     "perform_action": "script.scene_good_night",
                     "target": {}
                   },
-                  "entity": "script.scene_good_night"
+                  "entity": "script.scene_good_night",
+                  "secondary": "Night",
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\nha-tile-icon {\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "thermostat",
@@ -278,7 +290,10 @@
                     "columns": 3,
                     "rows": 2
                   },
-                  "vertical": true
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\nha-tile-icon {\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -319,7 +334,10 @@
                     "columns": 3,
                     "rows": 2
                   },
-                  "vertical": true
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\nha-tile-icon {\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -363,7 +381,10 @@
                     "columns": 3,
                     "rows": 2
                   },
-                  "vertical": true
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\nha-tile-icon {\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -382,7 +403,10 @@
                     "target": {}
                   },
                   "secondary": "{{ state_attr(entity, 'friendly_name').split()[-1] }}",
-                  "entity": "script.scene_leaving_home"
+                  "entity": "script.scene_leaving_home",
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 20px;\n  --tile-info-secondary-font-size: 15px;\n}\nha-tile-icon {\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -401,7 +425,130 @@
                     "action": "navigate",
                     "navigation_path": "/lovelace/temperatures"
                   },
-                  "multiline_secondary": true
+                  "multiline_secondary": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\nha-tile-icon {\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ states(entity) | round(1) }} °F",
+                  "secondary": "Bedroom",
+                  "features_position": "bottom",
+                  "entity": "sensor.bedroom_multisensor_temperature",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ states(entity) | round(1) }} %",
+                  "secondary": "Bedroom",
+                  "features_position": "bottom",
+                  "entity": "sensor.bedroom_multisensor_humidity",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ states(entity) | round(1) }} %",
+                  "secondary": "Mstr Bath",
+                  "features_position": "bottom",
+                  "entity": "sensor.master_bath_multisensor_humidity",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ states(entity) | round(1) }} %",
+                  "secondary": "Outside",
+                  "features_position": "bottom",
+                  "entity": "sensor.outside_multisensor_humidity",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ states(entity) | round(1) }} °F",
+                  "secondary": "Office",
+                  "features_position": "bottom",
+                  "entity": "sensor.office_multisensor_temperature",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ states(entity) | round(1) }} °F",
+                  "secondary": "Kitchen",
+                  "features_position": "bottom",
+                  "entity": "sensor.kitchen_multisensor_temperature",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ states(entity) | round(1) }} °F",
+                  "secondary": "Living Rm",
+                  "features_position": "bottom",
+                  "entity": "sensor.living_room_multisensor_temperature",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ states(entity) | round(1) }} °F",
+                  "secondary": "Family Rm",
+                  "features_position": "bottom",
+                  "entity": "sensor.god_damn_multisensor_temperature",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 14px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -418,7 +565,10 @@
                     "action": "navigate",
                     "navigation_path": "/lovelace/upstairs"
                   },
-                  "vertical": true
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -435,7 +585,10 @@
                     "action": "navigate",
                     "navigation_path": "/lovelace/middle-level"
                   },
-                  "vertical": true
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -452,7 +605,10 @@
                     "action": "navigate",
                     "navigation_path": "/lovelace/downstairs"
                   },
-                  "vertical": true
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -469,40 +625,46 @@
                     "action": "navigate",
                     "navigation_path": "/lovelace/outside"
                   },
-                  "vertical": true
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
-                  "icon": "mdi:home-lock",
+                  "icon": "mdi:security",
                   "features_position": "bottom",
                   "color": "var(--state-icon-color)",
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": 1
                   },
-                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/lovelace/security"
                   },
-                  "secondary": "Security",
-                  "primary": "Home"
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
-                  "icon": "mdi:video",
+                  "icon": "mdi:cctv",
                   "features_position": "bottom",
                   "color": "var(--state-icon-color)",
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": 1
                   },
                   "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/lovelace/cameras"
                   },
-                  "primary": "Cameras"
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -511,14 +673,16 @@
                   "color": "var(--state-icon-color)",
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": 1
                   },
                   "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/lovelace/utilities"
                   },
-                  "primary": "Utilities"
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -527,9 +691,8 @@
                   "color": "var(--state-icon-color)",
                   "grid_options": {
                     "columns": 3,
-                    "rows": 2
+                    "rows": 1
                   },
-                  "vertical": true,
                   "tap_action": {
                     "action": "perform-action",
                     "perform_action": "conversation.process",
@@ -538,18 +701,21 @@
                       "text": "Turn off the Bedroom TV in 30 minutes"
                     }
                   },
-                  "secondary": "Bedroom TV",
-                  "primary": "Sleep"
+                  "secondary": "MBR TV",
+                  "multiline_secondary": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  margin-left: -12px !important;\n  --tile-icon-size: 40px;\n  --mdc-icon-size: 35px;\n}\n"
+                  }
                 },
                 {
-                  "show_current": true,
+                  "show_current": false,
                   "show_forecast": true,
                   "type": "weather-forecast",
                   "entity": "weather.home_2",
                   "forecast_type": "daily",
                   "grid_options": {
                     "columns": 12,
-                    "rows": 3
+                    "rows": 2
                   }
                 }
               ]
@@ -1273,7 +1439,7 @@
                           },
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "/lovelace/software-updates"
+                            "navigation_path": "/lovelace/homeassistant"
                           },
                           "double_tap_action": {
                             "action": "more-info"
@@ -1360,13 +1526,31 @@
                 {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table>{% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td><span style=\"color: var(--state-icon-color)\"><ha-icon icon='cbi:jellyfin'/></span></td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "unknown"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "unavailable"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "0"
+                    }
+                  ],
+                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  th {\n    text-align: left;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> <tr><th><span style=\"color: var(--state-icon-color)\"><ha-icon icon=\"cbi:jellyfin\"></span></th> <th>User</th><th>Jellyfin Media</th></tr> {% for session in states.sensor.jellyfin_sessions.attributes.sessions -%} <tr><td><span style=\"color: var(--state-icon-color)\"><ha-icon icon='{{ session['icon'] }}'/></span></td><td>{{ session['user'] }}</td><td> {{ session['item'] }}</td></tr> {% endfor -%} </table>\n"
                 }
               ]
             }
           ],
           "max_columns": 4,
-          "dense_section_placement": false
+          "dense_section_placement": false,
+          "theme": "tablet_ui"
         },
         {
           "type": "sections",
@@ -1382,7 +1566,7 @@
                 {
                   "type": "heading",
                   "heading": "Bedroom",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -1410,6 +1594,15 @@
                   "name": "Dresser",
                   "use_light_color": true,
                   "show_color_control": true
+                },
+                {
+                  "type": "humidifier",
+                  "entity": "humidifier.bedroom_humidifier",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 4
+                  },
+                  "name": "Humidifier"
                 },
                 {
                   "type": "custom:mushroom-light-card",
@@ -1469,18 +1662,10 @@
                   "icon": ""
                 },
                 {
-                  "type": "humidifier",
-                  "entity": "humidifier.bedroom_humidifier",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 4
-                  }
-                },
-                {
                   "type": "custom:mushroom-template-card",
                   "icon": "mdi:power",
                   "features_position": "bottom",
-                  "color": "var(--state-icon-color)",
+                  "color": "{% if states(\"input_boolean.bedroom_tv_state\") == \"on\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
                   "grid_options": {
                     "columns": 2,
                     "rows": 1
@@ -1571,7 +1756,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Master Bathroom",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -1611,7 +1796,7 @@
                 {
                   "type": "heading",
                   "heading": "Office",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -1710,7 +1895,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Guest Room",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -1730,7 +1915,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Hallway",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -1798,7 +1983,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Hall Bath",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -1848,7 +2033,7 @@
                 {
                   "type": "heading",
                   "heading": "Kitchen",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -1924,7 +2109,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Dining Room",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -1979,7 +2164,7 @@
                 {
                   "type": "heading",
                   "heading": "Living Room",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -2107,7 +2292,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Foyer",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -2164,7 +2349,7 @@
                 {
                   "type": "heading",
                   "heading": "Family Room",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -2191,38 +2376,10 @@
                   "show_brightness_control": true
                 },
                 {
-                  "type": "custom:mushroom-template-card",
-                  "icon": "{{ state_attr(entity, 'icon') }}",
-                  "features_position": "bottom",
-                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
-                  "vertical": true,
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "entity": "light.fireplace_light",
-                  "primary": "Fireplace",
-                  "secondary": "Light"
+                  "type": "custom:mushroom-empty-card"
                 },
                 {
-                  "type": "custom:mushroom-template-card",
-                  "icon": "{{ state_attr(entity, 'icon') }}",
-                  "features_position": "bottom",
-                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
-                  "vertical": true,
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "entity": "light.mantle_lights",
-                  "primary": "Mantle",
-                  "secondary": "Lights"
+                  "type": "custom:mushroom-empty-card"
                 },
                 {
                   "type": "custom:mushroom-media-player-card",
@@ -2236,43 +2393,9 @@
                 },
                 {
                   "type": "custom:mushroom-template-card",
-                  "icon": "{{ state_attr(entity, 'icon') }}",
-                  "features_position": "bottom",
-                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
-                  "vertical": true,
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "entity": "light.three_headed_lamp",
-                  "secondary": "Lamp",
-                  "primary": "3-Headed"
-                },
-                {
-                  "type": "custom:mushroom-template-card",
-                  "icon": "{{ state_attr(entity, 'icon') }}",
-                  "features_position": "bottom",
-                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
-                  "vertical": true,
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "entity": "switch.christmas_tree",
-                  "secondary": "Tree",
-                  "primary": "Christmas"
-                },
-                {
-                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power",
                   "features_position": "bottom",
-                  "color": "var(--state-icon-color)",
+                  "color": "{% if states(\"input_boolean.god_damn_tv_state\") == \"on\" %}var(--state-active-icon{% else %}var(--state-icon-color){% endif %}",
                   "grid_options": {
                     "columns": 2,
                     "rows": 1
@@ -2301,9 +2424,6 @@
                       "text": "Turn off the God Damn TV in 30 minutes"
                     }
                   }
-                },
-                {
-                  "type": "custom:mushroom-empty-card"
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -2363,7 +2483,72 @@
                   }
                 },
                 {
-                  "type": "custom:mushroom-empty-card"
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(entity, 'icon') }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  },
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "light.fireplace_light",
+                  "primary": "Fireplace",
+                  "secondary": "Light"
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(entity, 'icon') }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  },
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "light.three_headed_lamp",
+                  "secondary": "Lamp",
+                  "primary": "3-Headed"
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(entity, 'icon') }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  },
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "light.mantle_lights",
+                  "primary": "Mantle",
+                  "secondary": "Lights"
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(entity, 'icon') }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  },
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "switch.christmas_tree",
+                  "secondary": "Tree",
+                  "primary": "Christmas"
                 }
               ]
             },
@@ -2373,7 +2558,7 @@
                 {
                   "type": "heading",
                   "heading": "Laundry Room",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -2449,7 +2634,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Powder Room",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -2469,7 +2654,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Den",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -2545,11 +2730,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "cards": []
         },
         {
           "type": "sections",
-          "max_columns": 2,
+          "max_columns": 3,
           "title": "Outside",
           "path": "outside",
           "icon": "mdi:tree",
@@ -2824,24 +3010,6 @@
                 {
                   "graph": "line",
                   "type": "sensor",
-                  "entity": "sensor.guest_room_multisensor_temperature",
-                  "detail": 1,
-                  "name": {
-                    "type": "area"
-                  }
-                },
-                {
-                  "graph": "line",
-                  "type": "sensor",
-                  "entity": "sensor.guest_room_multisensor_humidity",
-                  "detail": 1,
-                  "name": {
-                    "type": "area"
-                  }
-                },
-                {
-                  "graph": "line",
-                  "type": "sensor",
                   "entity": "sensor.hall_bath_multisensor_temperature",
                   "detail": 1,
                   "name": {
@@ -2852,6 +3020,24 @@
                   "graph": "line",
                   "type": "sensor",
                   "entity": "sensor.hall_bath_multisensor_humidity",
+                  "detail": 1,
+                  "name": {
+                    "type": "area"
+                  }
+                },
+                {
+                  "graph": "line",
+                  "type": "sensor",
+                  "entity": "sensor.guest_room_multisensor_temperature",
+                  "detail": 1,
+                  "name": {
+                    "type": "area"
+                  }
+                },
+                {
+                  "graph": "line",
+                  "type": "sensor",
+                  "entity": "sensor.guest_room_multisensor_humidity",
                   "detail": 1,
                   "name": {
                     "type": "area"
@@ -3010,7 +3196,9 @@
                 }
               ]
             }
-          ]
+          ],
+          "theme": "tablet_ui",
+          "cards": []
         },
         {
           "type": "panel",
@@ -3074,14 +3262,14 @@
                   "entity": "button.homeassistant_reload",
                   "tap_action": {
                     "action": "navigate",
-                    "navigation_path": "/lovelace/software-updates"
+                    "navigation_path": "/lovelace/homeassistant"
                   },
                   "grid_options": {
                     "columns": 3,
                     "rows": 2
                   },
-                  "name": "Updates",
-                  "icon": "mdi:briefcase-download"
+                  "icon": "mdi:home-assistant",
+                  "name": "HA Info"
                 },
                 {
                   "show_name": true,
@@ -3264,7 +3452,6 @@
                   "type": "custom:mushroom-template-card",
                   "icon": "mdi:image-frame",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3288,7 +3475,6 @@
                   "type": "custom:mushroom-template-card",
                   "icon": "mdi:clock",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3312,7 +3498,6 @@
                   "type": "custom:mushroom-template-card",
                   "icon": "mdi:reload",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3336,7 +3521,6 @@
                   "type": "custom:mushroom-template-card",
                   "icon": "mdi:square-outline",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3359,7 +3543,6 @@
                 {
                   "type": "custom:mushroom-template-card",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3383,7 +3566,6 @@
                 {
                   "type": "custom:mushroom-template-card",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3407,7 +3589,6 @@
                 {
                   "type": "custom:mushroom-template-card",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3431,7 +3612,6 @@
                 {
                   "type": "custom:mushroom-template-card",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3455,7 +3635,6 @@
                 {
                   "type": "custom:mushroom-template-card",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3479,7 +3658,6 @@
                 {
                   "type": "custom:mushroom-template-card",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3503,7 +3681,6 @@
                 {
                   "type": "custom:mushroom-template-card",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3527,7 +3704,6 @@
                 {
                   "type": "custom:mushroom-template-card",
                   "features_position": "bottom",
-                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
                   "grid_options": {
                     "columns": 3,
                     "rows": 1
@@ -3731,7 +3907,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3747,7 +3923,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3763,7 +3939,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3779,7 +3955,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3795,7 +3971,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3811,7 +3987,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if as_timestamp(states(\"this.entity_id\"), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2) %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if as_timestamp(states(\"this.entity_id\"), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2) %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3827,7 +4003,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"on\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"on\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3843,7 +4019,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if state_attr(\"this.entity_id\", \"days_string\") == \"Tomorrow\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: var(--state-active-color);\n  {% elif state_attr(\"this.entity_id\", \"days_string\") == \"Today\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red\n  {% else %}\n  color: var(--primary-text-color)\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if state_attr(\"this.entity_id\", \"days_string\") == \"Tomorrow\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: var(--state-active-color);\n  {% elif state_attr(\"this.entity_id\", \"days_string\") == \"Today\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red\n  {% else %}\n  color: var(--primary-text-color)\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3889,14 +4065,15 @@
               ]
             }
           ],
-          "cards": []
+          "cards": [],
+          "theme": "tablet_ui"
         },
         {
           "type": "sections",
           "max_columns": 4,
-          "title": "Software Updates",
-          "path": "software-updates",
-          "icon": "mdi:briefcase-download",
+          "title": "Home Assistant Info",
+          "path": "homeassistant",
+          "icon": "mdi:home-assistant",
           "subview": true,
           "sections": [
             {
@@ -3983,6 +4160,108 @@
                     "columns": 4,
                     "rows": 1
                   }
+                },
+                {
+                  "type": "heading",
+                  "heading": "Notifications Triggered",
+                  "heading_style": "subtitle",
+                  "badges": []
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "input_boolean.earth_triggered",
+                          "name": "Earth"
+                        },
+                        {
+                          "entity": "input_boolean.earth_nginx_php_working_triggered",
+                          "name": "Earth PHP"
+                        },
+                        {
+                          "entity": "input_boolean.nginx_proxy_manager_working_triggered",
+                          "name": "NPM"
+                        },
+                        {
+                          "entity": "input_boolean.software_updates_available_count_triggered",
+                          "name": "Software"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "input_boolean.ood_wyze_entities_triggered",
+                          "name": "Wyze"
+                        },
+                        {
+                          "entity": "input_boolean.ood_zigbee_entities_triggered",
+                          "name": "Zigbee"
+                        },
+                        {
+                          "entity": "input_boolean.ood_zwave_entities_triggered",
+                          "name": "Zwave"
+                        },
+                        {
+                          "entity": "input_boolean.unavailable_entities_triggered",
+                          "name": "Unavailable"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "section"
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "input_boolean.bitwarden_add_on_running_triggered",
+                          "name": "Bitwarden"
+                        },
+                        {
+                          "entity": "input_boolean.frigate_add_on_running_triggered",
+                          "name": "Frigate"
+                        },
+                        {
+                          "entity": "input_boolean.mqtt_add_on_running_triggered",
+                          "name": "MQTT"
+                        },
+                        {
+                          "entity": "input_boolean.ssh_add_on_running_triggered",
+                          "name": "SSH"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:paper-buttons-row",
+                      "position": "right",
+                      "buttons": [
+                        {
+                          "entity": "input_boolean.signal_add_on_running_triggered",
+                          "name": "Signal"
+                        },
+                        {
+                          "entity": "input_boolean.tasmota_devices_triggered",
+                          "name": "Tasmota"
+                        },
+                        {
+                          "entity": "input_boolean.unifi_add_on_running_triggered",
+                          "name": "Unifi"
+                        },
+                        {
+                          "entity": "input_boolean.zigbee2mqtt_add_on_running_triggered",
+                          "name": "Z2M"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -4008,7 +4287,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "cards": []
         },
         {
           "title": "Plugs",
@@ -4150,7 +4430,8 @@
               ]
             }
           ],
-          "subview": true
+          "subview": true,
+          "theme": "tablet_ui"
         },
         {
           "type": "sections",
@@ -4353,7 +4634,9 @@
                 }
               ]
             }
-          ]
+          ],
+          "theme": "tablet_ui",
+          "cards": []
         },
         {
           "type": "sections",
@@ -4370,7 +4653,7 @@
                   "type": "heading",
                   "icon": "",
                   "heading": "Frontyard Cameras",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -4430,7 +4713,7 @@
                 {
                   "type": "heading",
                   "heading": "Backyard Cameras",
-                  "heading_style": "title",
+                  "heading_style": "subtitle",
                   "badges": [
                     {
                       "type": "entity",
@@ -4488,563 +4771,8 @@
               ]
             }
           ],
-          "cards": []
-        },
-        {
-          "type": "sections",
-          "max_columns": 4,
-          "title": "Jellyfin",
-          "path": "jellyfin",
-          "icon": "mdi:play-box",
-          "subview": true,
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "Jellyfin",
-                  "heading_style": "subtitle",
-                  "badges": [
-                    {
-                      "type": "entity",
-                      "show_state": true,
-                      "show_icon": true,
-                      "entity": "sensor.jellyfin_sessions",
-                      "name": "Viewers",
-                      "state_content": [
-                        "state",
-                        "name"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:html-template-card",
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table>{% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td><ha-icon icon='mdi:play-box'/></td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "sections",
-          "max_columns": 4,
-          "title": "Upstairs2",
-          "path": "upstairs2",
-          "icon": "mdi:backup-restore",
-          "subview": true,
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "Bedroom",
-                  "heading_style": "title",
-                  "badges": [
-                    {
-                      "type": "entity",
-                      "entity": "sensor.bedroom_multisensor_temperature"
-                    },
-                    {
-                      "type": "entity",
-                      "entity": "sensor.bedroom_multisensor_humidity"
-                    },
-                    {
-                      "type": "entity",
-                      "entity": "binary_sensor.bedroom_slider_contact"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.dresser_lamp",
-                  "show_brightness_control": true,
-                  "secondary_info": "none",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
-                  },
-                  "name": "Dresser",
-                  "use_light_color": false,
-                  "show_color_control": true
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.holly_nightstand_lamp",
-                  "secondary_info": "none",
-                  "use_light_color": false,
-                  "show_color_control": true,
-                  "show_brightness_control": true,
-                  "name": "Nitestand",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
-                  }
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.bedroom_fan_light",
-                  "secondary_info": "none",
-                  "use_light_color": false,
-                  "show_brightness_control": true,
-                  "name": "Fan Lite",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
-                  },
-                  "show_color_temp_control": false,
-                  "show_color_control": false
-                },
-                {
-                  "type": "custom:mushroom-fan-card",
-                  "entity": "fan.bedroom_fan",
-                  "secondary_info": "none",
-                  "show_percentage_control": true,
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
-                  },
-                  "name": "Fan"
-                },
-                {
-                  "type": "custom:mushroom-media-player-card",
-                  "entity": "media_player.bedroom_roku",
-                  "name": "Bedroom TV",
-                  "use_media_info": true,
-                  "media_controls": [
-                    "play_pause_stop",
-                    "previous",
-                    "next"
-                  ],
-                  "volume_controls": [],
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
-                  },
-                  "show_volume_level": false,
-                  "fill_container": false,
-                  "icon": ""
-                },
-                {
-                  "type": "humidifier",
-                  "entity": "humidifier.bedroom_humidifier",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 4
-                  }
-                },
-                {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "entity",
-                      "entity": "switch.bedroom_tv",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "icon": "mdi:power",
-                      "content_info": "none"
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "condition": "state",
-                          "entity": "switch.bedroom_tv",
-                          "state": "on"
-                        }
-                      ],
-                      "chip": {
-                        "type": "action",
-                        "tap_action": {
-                          "action": "perform-action",
-                          "perform_action": "conversation.process",
-                          "target": {},
-                          "data": {
-                            "text": "Turn off the Bedroom TV in 30 minutes"
-                          }
-                        },
-                        "icon": "mdi:sleep"
-                      }
-                    }
-                  ],
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": "auto"
-                  },
-                  "alignment": "center"
-                },
-                {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "action",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.tv_volume_mute",
-                        "target": {},
-                        "data": {
-                          "tv": "Bedroom TV"
-                        }
-                      },
-                      "icon": "mdi:volume-off"
-                    },
-                    {
-                      "type": "action",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.tv_volume_down",
-                        "target": {},
-                        "data": {
-                          "tv": "Bedroom TV"
-                        }
-                      },
-                      "icon": "mdi:volume-minus"
-                    },
-                    {
-                      "type": "action",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.tv_volume_up",
-                        "target": {},
-                        "data": {
-                          "tv": "Bedroom TV"
-                        }
-                      },
-                      "icon": "mdi:volume-plus"
-                    }
-                  ],
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": "auto"
-                  },
-                  "alignment": "center",
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "switch.bedroom_tv",
-                      "state": "on"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "entity",
-                      "entity": "switch.sinope_plug",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "icon": "mdi:power",
-                      "name": "🖼️",
-                      "content_info": "none",
-                      "icon_color": "accent"
-                    },
-                    {
-                      "type": "action",
-                      "icon": "mdi:image-frame",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "shell_command.ssh_command",
-                        "target": {},
-                        "service_data": {
-                          "server": "picframe@sinope.erdely.in",
-                          "command": "load_picframe"
-                        }
-                      }
-                    },
-                    {
-                      "type": "action",
-                      "icon": "mdi:clock",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "shell_command.ssh_command",
-                        "target": {},
-                        "service_data": {
-                          "server": "picframe@sinope.erdely.in",
-                          "command": "load_clock"
-                        }
-                      }
-                    },
-                    {
-                      "type": "action",
-                      "icon": "mdi:reload",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "shell_command.ssh_command",
-                        "target": {},
-                        "service_data": {
-                          "server": "picframe@sinope.erdely.in",
-                          "command": "reload"
-                        }
-                      }
-                    },
-                    {
-                      "type": "action",
-                      "icon": "mdi:square-outline",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "shell_command.ssh_command",
-                        "target": {},
-                        "service_data": {
-                          "server": "picframe@sinope.erdely.in",
-                          "command": "blank"
-                        }
-                      }
-                    },
-                    {
-                      "type": "action",
-                      "icon": "mdi:tree",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "shell_command.ssh_command",
-                        "target": {},
-                        "service_data": {
-                          "server": "picframe@sinope.erdely.in",
-                          "command": "backyardcam"
-                        }
-                      }
-                    },
-                    {
-                      "type": "action",
-                      "icon": "mdi:home-roof",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "shell_command.ssh_command",
-                        "target": {},
-                        "service_data": {
-                          "server": "picframe@sinope.erdely.in",
-                          "command": "chimneycam"
-                        }
-                      }
-                    },
-                    {
-                      "type": "action",
-                      "icon": "mdi:gate",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "shell_command.ssh_command",
-                        "target": {},
-                        "service_data": {
-                          "server": "picframe@sinope.erdely.in",
-                          "command": "shedcam"
-                        }
-                      }
-                    }
-                  ],
-                  "alignment": "center"
-                },
-                {
-                  "type": "heading",
-                  "icon": "",
-                  "heading": "Master Bathroom",
-                  "heading_style": "title",
-                  "badges": [
-                    {
-                      "type": "entity",
-                      "entity": "sensor.master_bath_multisensor_temperature"
-                    },
-                    {
-                      "type": "entity",
-                      "entity": "sensor.master_bath_multisensor_humidity"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.master_bath_light",
-                  "secondary_info": "none"
-                },
-                {
-                  "type": "custom:mushroom-fan-card",
-                  "entity": "fan.master_bath_fan",
-                  "secondary_info": "none"
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "Office",
-                  "heading_style": "title",
-                  "badges": [
-                    {
-                      "type": "entity",
-                      "entity": "sensor.office_multisensor_temperature"
-                    },
-                    {
-                      "type": "entity",
-                      "entity": "sensor.office_multisensor_humidity"
-                    },
-                    {
-                      "type": "entity",
-                      "show_state": true,
-                      "show_icon": true,
-                      "entity": "binary_sensor.office_presence_sensor_presence",
-                      "icon": "mdi:motion-sensor"
-                    },
-                    {
-                      "type": "entity",
-                      "show_state": true,
-                      "show_icon": true,
-                      "entity": "binary_sensor.wyzesense_778e716f",
-                      "icon": "mdi:door"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.office_fan_light",
-                  "secondary_info": "none",
-                  "show_brightness_control": true
-                },
-                {
-                  "type": "custom:mushroom-fan-card",
-                  "entity": "fan.office_fan",
-                  "secondary_info": "none",
-                  "show_percentage_control": true
-                },
-                {
-                  "type": "custom:mushroom-media-player-card",
-                  "entity": "media_player.office_roku_tv",
-                  "show_volume_level": true,
-                  "media_controls": [
-                    "on_off",
-                    "play_pause_stop"
-                  ],
-                  "volume_controls": [
-                    "volume_mute",
-                    "volume_set",
-                    "volume_buttons"
-                  ],
-                  "use_media_info": false,
-                  "tap_action": {
-                    "action": "more-info"
-                  }
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.mike_desk_lamp",
-                  "secondary_info": "none"
-                },
-                {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "entity",
-                      "entity": "media_player.office_roku_tv",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "conversation.process",
-                        "target": {},
-                        "data": {
-                          "text": "Turn off the Office Roku TV in 30 minutes"
-                        }
-                      },
-                      "content_info": "name",
-                      "name": "TV Sleep",
-                      "icon": "mdi:sleep"
-                    },
-                    {
-                      "type": "entity",
-                      "entity": "switch.office_heater_plug",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "content_info": "name",
-                      "name": "Heater",
-                      "icon_color": "accent"
-                    }
-                  ],
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": "auto"
-                  },
-                  "alignment": "center"
-                },
-                {
-                  "type": "heading",
-                  "icon": "",
-                  "heading": "Guest Room / Hallway",
-                  "heading_style": "title",
-                  "badges": [
-                    {
-                      "type": "entity",
-                      "entity": "sensor.guest_room_multisensor_temperature"
-                    },
-                    {
-                      "type": "entity",
-                      "entity": "sensor.guest_room_multisensor_humidity"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.guest_room_light",
-                  "secondary_info": "none",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
-                  }
-                },
-                {
-                  "type": "thermostat",
-                  "entity": "climate.thermostat",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 3
-                  },
-                  "name": " ",
-                  "show_current_as_primary": true
-                },
-                {
-                  "type": "custom:mushroom-empty-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
-                  }
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.hallway_light",
-                  "secondary_info": "none"
-                },
-                {
-                  "type": "heading",
-                  "icon": "",
-                  "heading": "Hall Bath",
-                  "heading_style": "title",
-                  "badges": [
-                    {
-                      "type": "entity",
-                      "entity": "sensor.hall_bath_multisensor_temperature"
-                    },
-                    {
-                      "type": "entity",
-                      "entity": "sensor.hall_bath_multisensor_humidity"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.hall_bath_light",
-                  "secondary_info": "none"
-                },
-                {
-                  "type": "custom:mushroom-fan-card",
-                  "entity": "fan.hall_bath_fan",
-                  "secondary_info": "none"
-                }
-              ]
-            }
-          ],
-          "cards": []
+          "cards": [],
+          "theme": "tablet_ui"
         },
         {
           "title": "Schedules",
@@ -5057,11 +4785,14 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Configuration Settings",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "entities",
                   "entities": [
-                    {
-                      "type": "section"
-                    },
                     {
                       "entity": "input_boolean.bedroom_motion_enabled"
                     },
@@ -5111,7 +4842,6 @@
                       "entity": "input_number.office_heater_auto_off_temperature"
                     }
                   ],
-                  "title": "Configuration Settings",
                   "show_header_toggle": false
                 }
               ]
@@ -5120,12 +4850,14 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Daily Schedules",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "entities",
                   "entities": [
-                    {
-                      "type": "section",
-                      "label": "Security"
-                    },
                     {
                       "entity": "input_datetime.automatic_security_disarm"
                     },
@@ -5165,7 +4897,6 @@
                       "entity": "input_datetime.mike_presence_notifications_off"
                     }
                   ],
-                  "title": "Daily Schedules",
                   "show_header_toggle": false
                 }
               ]
@@ -5174,12 +4905,14 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Weekly Schedule",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "entities",
                   "entities": [
-                    {
-                      "type": "section",
-                      "label": "Trash Collection"
-                    },
                     {
                       "entity": "input_select.trash_day_1"
                     },
@@ -5219,7 +4952,6 @@
                       "entity": "input_datetime.home_assistant_nightly_tasks"
                     }
                   ],
-                  "title": "Weekly Schedule",
                   "show_header_toggle": false
                 }
               ]
@@ -5227,7 +4959,8 @@
           ],
           "max_columns": 3,
           "subview": true,
-          "path": "schedules"
+          "path": "schedules",
+          "theme": "tablet_ui"
         },
         {
           "title": "Zigbee",
@@ -5241,10 +4974,26 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Zigbee Devices",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}\n<ol> {% set ns = namespace(count = 0) %} {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count <= (state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length | int(0) / 2) + 1 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n{% endif %} {% endfor -%} </ol> {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}\n<h1>All WyzeSense Devices</h1>\nCount: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}\n<ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list') | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
-                  "title": "Zigbee Devices"
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}\n<ol> {% set ns = namespace(count = 0) %} {% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count <= (state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length | int(0) / 2) + 1 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n{% endif %} {% endfor -%} </ol> {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}"
+                },
+                {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "All WyzeSense Devices",
+                  "heading_style": "subtitle"
+                },
+                {
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style>  Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}\n<ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list') | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>"
                 }
               ]
             },
@@ -5252,10 +5001,26 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Zigbee Devices",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
-                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}\n<ol start=  {{ (state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length / 2) | int(0) }}> {% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count > state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n{% endif %} {% endfor -%} </ol> {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}\n<h1>All Zwave Devices</h1>\nCount: {{ state_attr('sensor.zwave_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zwave_entities') }}\n<ol>\n{% for entity in state_attr('sensor.zwave_entities', 'entity_list') | sort(attribute=iif(states('input_select.zwave_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zwave_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_zwave_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_zwave_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>",
-                  "title": "Zigbee Devices"
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style> Count: {{ state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length }} ; Sensor Updated: {{ states('sensor.zigbee_entities') }}\n<ol start=  {{ (state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length / 2) | int(0) }}> {% set ns = namespace(count = 0) %}\n{% for entity in state_attr('sensor.zigbee_entities', 'entity_list') | sort(attribute='timediff',reverse=true) -%} {% set ns.count = ns.count + 1 -%} {% if ns.count > state_attr('sensor.zigbee_entities', 'entity_list') | default([]) | length / 2 %}\n<li {% if (entity['timediff'] >= states(\"input_number.ood_zigbee_seconds\")|int(0) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0)) and \"button\" in entity['entity_id']) %} class=\"error\"{% elif (entity['timediff'] >= (states(\"input_number.ood_zigbee_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" not in entity['entity_id'] and \"button\" not in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_bulb_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"bulb\" in entity['entity_id']) or (entity['timediff'] >= (states(\"input_number.ood_zigbee_button_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) and \"button\" in entity['entity_id']) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li>\n{% endif %} {% endfor -%} </ol> {% set ns.count = ns.count + 1 -%} {% if ns.count <= state_attr('sensor.zigbee_entities', 'count') | int(0) / 2 %} {% endif %}"
+                },
+                {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "All Zwave Devices",
+                  "heading_style": "subtitle"
+                },
+                {
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style>Count: {{ state_attr('sensor.zwave_entities', 'count') }} ; Sensor Updated: {{ states('sensor.zwave_entities') }}\n<ol>\n{% for entity in state_attr('sensor.zwave_entities', 'entity_list') | sort(attribute=iif(states('input_select.zwave_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.zwave_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_zwave_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_zwave_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>"
                 }
               ]
             },
@@ -5328,7 +5093,8 @@
             }
           ],
           "path": "zigbee",
-          "subview": true
+          "subview": true,
+          "theme": "tablet_ui"
         },
         {
           "icon": "mdi:help-rhombus",
@@ -5342,14 +5108,20 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Unavailable/Unknown Entities",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "custom:auto-entities",
                   "card": {
-                    "type": "entities",
-                    "title": "Unavailable/Unknown Sensors"
+                    "type": "entities"
                   },
                   "filter": {
                     "include": [
                       {
+                        "options": {},
                         "state": "/(unavailable|unknown)/",
                         "name": "/^[^I-Zi-z]/"
                       }
@@ -5367,12 +5139,12 @@
                 {
                   "type": "custom:auto-entities",
                   "card": {
-                    "type": "entities",
-                    "title": "Unavailable/Unknown Entities"
+                    "type": "entities"
                   },
                   "filter": {
                     "include": [
                       {
+                        "options": {},
                         "state": "/(unavailable|unknown)/",
                         "name": "/^[J-Oj-o]/"
                       }
@@ -5390,12 +5162,12 @@
                 {
                   "type": "custom:auto-entities",
                   "card": {
-                    "type": "entities",
-                    "title": "Unavailable/Unknown Entities"
+                    "type": "entities"
                   },
                   "filter": {
                     "include": [
                       {
+                        "options": {},
                         "state": "/(unavailable|unknown)/",
                         "name": "/^[P-Zp-z]/"
                       }
@@ -5409,7 +5181,8 @@
             }
           ],
           "path": "unavailable-entities",
-          "subview": true
+          "subview": true,
+          "theme": "tablet_ui"
         },
         {
           "title": "Batteries",
@@ -5423,47 +5196,55 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "A-G Other Sensors",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "custom:auto-entities",
                   "card": {
-                    "type": "entities",
-                    "title": "A-G Other Sensors"
+                    "type": "entities"
                   },
                   "filter": {
                     "include": [
                       {
+                        "options": {
+                          "secondary_info": "last-changed"
+                        },
                         "domain": "sensor",
                         "entity_id": "*battery*",
-                        "name": "[^H-Zh-z]*",
-                        "options": {
-                          "secondary_info": "last-changed"
-                        }
+                        "name": "[^H-Zh-z]*"
                       },
                       {
-                        "domain": "sensor",
-                        "entity_id": "*fkb*_control_panel*",
                         "options": {
                           "secondary_info": "last-changed"
-                        }
+                        },
+                        "domain": "sensor",
+                        "entity_id": "*fkb*_control_panel*"
                       }
                     ],
                     "exclude": [
                       {
+                        "options": {},
                         "entity_id": "sensor.low_battery"
                       },
                       {
+                        "options": {},
                         "entity_id": ".*(door|gate|slider)_battery(_level)?(_[0-9])?"
                       },
                       {
+                        "options": {},
                         "entity_id": ".*battery_(health|power|state|temperature)(_[0-9])?"
                       },
                       {
+                        "options": {},
                         "entity_id": "*pixel*"
                       }
                     ]
                   },
                   "sort": {
-                    "method": "state",
-                    "numeric": true
+                    "method": "name"
                   }
                 }
               ]
@@ -5472,40 +5253,48 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "H-Z Other Sensors",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "custom:auto-entities",
                   "card": {
-                    "type": "entities",
-                    "title": "H-Z Other Sensors"
+                    "type": "entities"
                   },
                   "filter": {
                     "include": [
                       {
-                        "domain": "sensor",
-                        "entity_id": "*battery*",
-                        "name": "[H-Zh-z]*",
                         "options": {
                           "secondary_info": "last-changed"
-                        }
+                        },
+                        "domain": "sensor",
+                        "entity_id": "*battery*",
+                        "name": "[H-Zh-z]*"
                       }
                     ],
                     "exclude": [
                       {
+                        "options": {},
                         "entity_id": "sensor.low_battery"
                       },
                       {
+                        "options": {},
                         "entity_id": ".*(door|gate|slider)_battery(_level)?(_[0-9])?"
                       },
                       {
+                        "options": {},
                         "entity_id": ".*battery_(health|power|state|temperature)(_[0-9])?"
                       },
                       {
+                        "options": {},
                         "entity_id": "*pixel*"
                       }
                     ]
                   },
                   "sort": {
-                    "method": "state",
-                    "numeric": true
+                    "method": "name"
                   }
                 }
               ]
@@ -5514,10 +5303,15 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Phones",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "custom:auto-entities",
                   "card": {
-                    "type": "entities",
-                    "title": "Phones"
+                    "type": "entities"
                   },
                   "filter": {
                     "include": [
@@ -5549,37 +5343,47 @@
                   }
                 },
                 {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Doors/Windows",
+                  "heading_style": "subtitle"
+                },
+                {
                   "type": "custom:auto-entities",
                   "card": {
-                    "type": "entities",
-                    "title": "Doors"
+                    "type": "entities"
                   },
                   "filter": {
                     "include": [
                       {
-                        "domain": "sensor",
                         "options": {
                           "secondary_info": "last-changed"
                         },
-                        "entity_id": ".*(door|gate)_battery(_[0-9])?"
+                        "domain": "sensor",
+                        "entity_id": ".*(door|gate|window)_battery(_[0-9])?"
                       }
                     ],
                     "exclude": [
                       {
+                        "options": {},
                         "name": "/(Back) Door/"
                       }
                     ]
                   },
                   "sort": {
-                    "method": "state",
-                    "numeric": true
+                    "method": "name"
                   }
+                },
+                {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Sliders",
+                  "heading_style": "subtitle"
                 },
                 {
                   "type": "custom:auto-entities",
                   "card": {
-                    "type": "entities",
-                    "title": "Sliders"
+                    "type": "entities"
                   },
                   "filter": {
                     "include": [
@@ -5594,15 +5398,15 @@
                     "method": "name"
                   },
                   "sort": {
-                    "method": "state",
-                    "numeric": true
+                    "method": "name"
                   }
                 }
               ]
             }
           ],
           "path": "batteries",
-          "subview": true
+          "subview": true,
+          "theme": "tablet_ui"
         }
       ]
     }

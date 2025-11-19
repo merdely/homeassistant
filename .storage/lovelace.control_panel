@@ -23,13 +23,16 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "none"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -78,24 +81,39 @@
                   "forecast_type": "daily"
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "input_boolean.mail_delivered",
-                  "name": "Mail",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == \"on\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:mailbox",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"input_boolean.mail_delivered\") == \"on\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
                   "grid_options": {
-                    "columns": 2
+                    "columns": 2,
+                    "rows": 1.34
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "input_boolean.toggle",
+                    "target": {
+                      "entity_id": "input_boolean.mail_delivered"
+                    }
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "vertical": true,
+                  "primary": "Mail",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.days_until_cleaners",
-                  "name": "[[[ return entity.state ]]]",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:broom",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"sensor.days_until_cleaners\") == \"Today\" %}green{% elif states(\"sensor.days_until_cleaners\") == \"Tomorrow\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "call-service",
                     "service": "input_select.select_next",
@@ -103,21 +121,24 @@
                       "entity_id": "input_select.cleaners_weekday"
                     }
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == \"Today\") return \"green\";\n    else if (entity.state == \"Tomorrow\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "hold_action": {
+                    "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "primary": "{{ states(\"sensor.days_until_cleaners\") }}\n",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.trash",
-                  "name": "[[[ return entity.state ]]]",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:trash-can",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"sensor.trash\") == \"Today\" and states(\"input_boolean.trash_is_out\") == \"off\" %}red{% elif states(\"sensor.trash\") == \"Tomorrow\" and states(\"input_boolean.trash_is_out\") == \"off\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "call-service",
                     "service": "input_boolean.toggle",
@@ -125,21 +146,24 @@
                       "entity_id": "input_boolean.trash_is_out"
                     }
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == \"Today\" && states['input_boolean.trash_is_out'].state == \"off\") return \"red\";\n    else if (entity.state == \"Tomorrow\" && states['input_boolean.trash_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "hold_action": {
+                    "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "primary": "{{ states('sensor.trash') }}",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.moco_recycle_day",
-                  "name": "[[[ return entity.attributes.days_string ]]]",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:recycle",
+                  "features_position": "bottom",
+                  "color": "{% if state_attr(\"sensor.moco_recycle_day\", \"days_string\") == \"Today\" and states(\"input_boolean.recycle_is_out\") == \"off\" %}red{% elif state_attr(\"sensor.moco_recycle_day\", \"days_string\") == \"Tomorrow\" and states(\"input_boolean.recycle_is_out\") == \"off\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "call-service",
                     "service": "input_boolean.toggle",
@@ -147,22 +171,24 @@
                       "entity_id": "input_boolean.recycle_is_out"
                     }
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.attributes.days_string == \"Today\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"red\";\n    else if (entity.attributes.days_string == \"Tomorrow\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "hold_action": {
+                    "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "primary": "{{ state_attr('sensor.moco_recycle_day', 'days_string') }}",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
-                  "name": "Cameras",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:cctv",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/cameras"
@@ -170,22 +196,21 @@
                   "hold_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "primary": "Cameras",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "binary_sensor.all_security_devices",
-                  "name": "[[[ if (states['alarm_control_panel.home_alarm'].state != 'disarmed') return states['sensor.alarm_state_pretty'].state; else if (entity.state == \"off\") return \"Closed\"; else return \"Open\"; ]]]\n",
-                  "icon": "[[[ if (entity.state == \"off\") return \"mdi:shield-lock-outline\"; else return \"mdi:shield-lock-open-outline\"; ]]]\n",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{% if states(\"binary_sensor.all_security_devices\") == \"off\"\n%}mdi:shield-lock-outline{% else %}mdi:shield-lock-open-outline{% endif\n%}\n",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"alarm_control_panel.home_alarm\") != \"disarmed\" %}red{% elif states(\"binary_sensor.all_security_devices\") != \"off\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/security"
@@ -193,15 +218,10 @@
                   "hold_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (states['alarm_control_panel.home_alarm'].state != 'disarmed') return 'red'; else if (entity.state != 'off') return 'var(--state-active-color)'; else return 'var(--state-icon-color)' ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "primary": "{% if states(\"alarm_control_panel.home_alarm\") != \"disarmed\" %}{{ states(\"sensor.alarm_state_pretty\") }}{% elif states(\"binary_sensor.all_security_devices\") == \"off\" %}Closed{% else %}Open{% endif %}\n",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -214,7 +234,7 @@
                         {
                           "entity": "sensor.jellyfin_sessions",
                           "layout": "icon|state",
-                          "icon": "mdi:triangle-outline",
+                          "icon": "cbi:jellyfin",
                           "state": "{{ states('sensor.jellyfin_sessions') | default(0) }} watching Jellyfin",
                           "tap_action": {
                             "action": "more-info",
@@ -255,17 +275,34 @@
                       "card_mod": {
                         "style": "ha-card {\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-icon-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--state-icon-color){% endif %};\n}\n"
                       }
-                    },
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n    font-size: 20px;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> {% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td><span style=\"color: var(--state-icon-color)\"><ha-icon icon='cbi:jellyfin'/></span></td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td>{% if value | length > 55 -%}{% set pieces = value.split(\" - \") -%}{% for i in range(pieces | length) %}{{ pieces[i] | title | truncate(20, True, \"‥\") }}{% if i < (pieces | length) - 1 %} - {% endif %}{% endfor -%}{% else -%}{{value}}{% endif -%}</td></tr> {% endfor -%}{% endif -%} </table>\n"
                     }
                   ],
                   "state_color": true,
                   "card_mod": {
                     "style": "ha-card {\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-icon-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--state-icon-color){% endif %};\n}\n"
                   }
+                },
+                {
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "unknown"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "unavailable"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "0"
+                    }
+                  ],
+                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  th {\n    text-align: left;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> <tr><th><span style=\"color: var(--state-icon-color)\"><ha-icon icon=\"cbi:jellyfin\"></span></th> <th>User</th><th>Jellyfin Media</th></tr> {% for session in states.sensor.jellyfin_sessions.attributes.sessions -%} <tr><td><span style=\"color: var(--state-icon-color)\"><ha-icon icon='{{ session['icon'] }}'/></span></td><td>{{ session['user'] }}</td><td> {{ session['item'] }}</td></tr> {% endfor -%} </table>\n"
                 }
               ]
             },
@@ -273,149 +310,118 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.upstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-up",
-                  "name": "Upstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.upstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/upstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.middle_level_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:format-align-middle",
-                  "name": "Middle",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.middle_level_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/middle-level"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.downstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-down",
-                  "name": "Downstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.downstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/downstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.outside_plus_garage_lights_on",
-                  "icon": "mdi:image",
-                  "name": "Outside",
-                  "show_state": true,
-                  "size": "35px",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:tree",
+                  "features_position": "bottom",
+                  "entity": "sensor.outside_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/outside"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:tools",
-                  "name": "Utilities",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
@@ -530,125 +536,140 @@
                   ]
                 },
                 {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "custom:button-card",
-                  "tap_action": {
-                    "action": "toggle"
-                  },
+                  "type": "custom:mushroom-template-card",
                   "entity": "lock.front_door_zwave",
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "name": "Front Door",
+                  "icon": "mdi:lock",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) != \"locked\" %}red{% else %}green{% endif %}\n",
                   "grid_options": {
-                    "columns": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "custom:button-card",
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "toggle"
                   },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "vertical": true,
+                  "primary": "Front Door",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
                   "entity": "lock.garage_entry_door",
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "name": "Garage Entry",
+                  "icon": "mdi:lock",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) != \"locked\" %}red{% else %}green{% endif %}\n",
                   "grid_options": {
-                    "columns": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "custom:button-card",
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "toggle"
                   },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "vertical": true,
+                  "primary": "Garage Entry",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
                   "entity": "cover.garage_door",
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "name": "Garage Door",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == \"open\") return \"rgb(244,67,54)\";\n    else return \"rgb(76,175,80)\"; ]]]"
-                      }
-                    ]
-                  },
+                  "icon": "mdi:garage",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) != \"closed\" %}red{% else %}green{% endif %}\n",
                   "grid_options": {
-                    "columns": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "custom:button-card",
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "toggle"
                   },
-                  "entity": "switch.petcam_plug",
-                  "name": "PetCam",
                   "hold_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == 'on') return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "primary": "Garage",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "custom:button-card",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:dog",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"switch.petcam_plug\") != \"off\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.34
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "switch.toggle",
+                    "target": {
+                      "entity_id": "switch.petcam_plug"
+                    }
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "vertical": true,
+                  "primary": "Pet Cam",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:exit-run",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "perform-action",
                     "perform_action": "script.scene_leaving_home",
                     "target": {}
                   },
-                  "entity": "script.scene_leaving_home",
-                  "name": "Leaving",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == 'on') return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "hold_action": {
+                    "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "primary": "Leaving",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "custom:button-card",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:weather-night",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "perform-action",
                     "perform_action": "script.scene_good_night",
                     "target": {}
                   },
-                  "entity": "script.scene_good_night",
-                  "name": "Good Night",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == 'on') return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "hold_action": {
+                    "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "primary": "Good Night",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 }
               ]
@@ -673,13 +694,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -721,51 +746,38 @@
               "type": "grid",
               "cards": [
                 {
-                  "show_name": true,
-                  "show_icon": true,
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:door",
-                  "layout": "icon_name",
-                  "type": "custom:button-card",
-                  "name": "Doors/Windows",
+                  "primary": "Doors/Windows",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1.5
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-left: 32px !important;\n  --tile-icon-size: 55px;\n  --mdc-icon-size: 55px;\n}\nha-tile-info {\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "show_name": true,
-                  "show_icon": true,
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:motion-sensor",
-                  "layout": "icon_name",
-                  "type": "custom:button-card",
-                  "name": "Other Sensors",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1.5
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/security2"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6
+                  "primary": "Security Sensors",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-left: 32px !important;\n  --tile-icon-size: 55px;\n  --mdc-icon-size: 55px;\n}\nha-tile-info {\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -1025,13 +1037,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -1084,139 +1100,116 @@
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:information",
-                  "name": "Info",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Info",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Temps",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities2"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:cloud-question",
-                  "name": "Issues",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Issues",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities3"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 1",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 1",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities4"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 2",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 2",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities5"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 3",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 3",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities6"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -1976,13 +1969,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -2037,7 +2034,7 @@
                 {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  td {\n    padding-top: 0px !important;\n    padding-bottom: 0px !important;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n</style> <table> {% for software in states | default([]) | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'title') != None and state_attr(software, 'device_class') != 'firmware' %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\"> {{ state_attr(software, 'title') | replace('Home Assistant', '') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('Google Drive Backup', 'Google Backup') | replace('UniFi Network Application', 'UniFi') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') | replace(' (Bitwarden)', '') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr>{% endif -%}{% endfor -%} </table>"
+                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  td {\n    padding-top: 0px !important;\n    padding-bottom: 0px !important;\n  }\n  td.left {\n    text-align: left;\n  }\n  td.right {\n    text-align: right;\n    border: none;\n  }\n  .on-icon {\n    color: var(--state-active-color);\n  }\n  .on-text {\n    color: var(--state-active-color);\n  }\n  .off-icon {\n    color: var(--state-icon-color);\n  }\n  .off-text {\n    color: var(--primary-text-color);\n  }\n</style> <table> {% for software in states | default([]) | selectattr('domain', 'equalto', 'update') | rejectattr('entity_id', 'match', '^update\\.home_assistant_(core|operating_system|supervisor)_update$') | map(attribute='entity_id') | list -%} {% if state_attr(software, 'title') != None and state_attr(software, 'title') != \"\" and state_attr(software, 'device_class') != 'firmware' %} <tr> <td class=\"{{'off-icon' if states(software) == 'off' else 'on-icon'}}\"><ha-icon icon=\"mdi:briefcase-{{ 'check' if states(software) == 'off' else 'download'}}\" /></td> <td class=\"left {{'off-text' if states(software) == 'off' else 'on-text'}}\"> {{ state_attr(software, 'title') | replace('Home Assistant', '') | replace('Advanced SSH & Web Terminal', 'Advanced SSH') | replace('Google Drive Backup', 'Google Backup') | replace('UniFi Network Application', 'UniFi') | replace('Nginx Proxy Manager', 'Nginx Proxy') | replace('ESPHome Device Builder', 'ESPHome') | replace(' (Bitwarden)', '') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'installed_version') }}</td> <td class=\"right {{'off-text' if states(software) == 'off' else 'on-text'}}\">{{ state_attr(software, 'latest_version') }}</td> </tr>{% endif -%}{% endfor -%} </table>"
                 }
               ]
             },
@@ -2071,13 +2068,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -2358,13 +2359,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -2407,83 +2412,45 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "background": "none"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
-                  }
+                  "type": "custom:mushroom-empty-card"
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity_picture": "https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512",
-                  "show_entity_picture": true,
-                  "size": "50px",
+                  "type": "custom:mushroom-template-card",
+                  "picture": "https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1.5
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity_picture": "https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512",
-                  "show_entity_picture": true,
-                  "show_state": false,
-                  "size": "50px",
+                  "type": "custom:mushroom-template-card",
+                  "picture": "https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1.5
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/locations2"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "background": "none"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
-                  }
+                  "type": "custom:mushroom-empty-card"
                 },
                 {
                   "type": "map",
@@ -2522,13 +2489,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -2627,67 +2598,72 @@
                   "text_only": true
                 },
                 {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "entity": "light.dresser_lamp",
-                  "name": "Dresser",
-                  "grid_options": {
-                    "columns": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "entity": "light.holly_nightstand_lamp",
-                  "name": "Nitestand",
-                  "grid_options": {
-                    "columns": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "entity": "light.bedroom_fan_light",
-                  "name": "Fan Lite",
-                  "grid_options": {
-                    "columns": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "entity": "fan.bedroom_fan",
-                  "name": "Fan",
-                  "grid_options": {
-                    "columns": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "entity": "switch.bedroom_tv",
-                  "name": "TV",
-                  "grid_options": {
-                    "columns": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "entity": "humidifier.bedroom_humidifier",
-                  "name": "Humidifier",
-                  "tap_action": {
-                    "action": "more-info"
-                  },
-                  "grid_options": {
-                    "columns": 2
-                  }
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "light.dresser_lamp",
+                      "name": "Dresser",
+                      "grid_options": {
+                        "columns": 2
+                      }
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "light.holly_nightstand_lamp",
+                      "name": "Nitestand",
+                      "grid_options": {
+                        "columns": 2
+                      }
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "light.bedroom_fan_light",
+                      "name": "Fan Lite",
+                      "grid_options": {
+                        "columns": 2
+                      }
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "fan.bedroom_fan",
+                      "name": "Fan",
+                      "grid_options": {
+                        "columns": 2
+                      }
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "switch.bedroom_tv",
+                      "name": "TV",
+                      "grid_options": {
+                        "columns": 2
+                      }
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "humidifier.bedroom_humidifier",
+                      "name": "Humidifier",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "grid_options": {
+                        "columns": 2
+                      }
+                    }
+                  ]
                 },
                 {
                   "type": "markdown",
@@ -2740,149 +2716,118 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
-                    "navigation_path": "/control-panel/home"
+                    "navigation_path": "/control-panel"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.upstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-up",
-                  "name": "Upstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.upstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.middle_level_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:format-align-middle",
-                  "name": "Middle",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.middle_level_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/middle-level"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.downstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-down",
-                  "name": "Downstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.downstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/downstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.outside_plus_garage_lights_on",
-                  "icon": "mdi:image",
-                  "name": "Outside",
-                  "show_state": true,
-                  "size": "35px",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:tree",
+                  "features_position": "bottom",
+                  "entity": "sensor.outside_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/outside"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:tools",
-                  "name": "Utilities",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
@@ -2997,13 +2942,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -3155,149 +3104,118 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
-                    "navigation_path": "/control-panel/home"
+                    "navigation_path": "/control-panel"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.upstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-up",
-                  "name": "Upstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.upstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/upstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.middle_level_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:format-align-middle",
-                  "name": "Middle",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.middle_level_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.downstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-down",
-                  "name": "Downstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.downstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/downstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.outside_plus_garage_lights_on",
-                  "icon": "mdi:image",
-                  "name": "Outside",
-                  "show_state": true,
-                  "size": "35px",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:tree",
+                  "features_position": "bottom",
+                  "entity": "sensor.outside_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/outside"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:tools",
-                  "name": "Utilities",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
@@ -3412,13 +3330,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -3579,149 +3501,118 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
-                    "navigation_path": "/control-panel/home"
+                    "navigation_path": "/control-panel"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.upstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-up",
-                  "name": "Upstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.upstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/upstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.middle_level_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:format-align-middle",
-                  "name": "Middle",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.middle_level_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/middle-level"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.downstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-down",
-                  "name": "Downstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.downstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.outside_plus_garage_lights_on",
-                  "icon": "mdi:image",
-                  "name": "Outside",
-                  "show_state": true,
-                  "size": "35px",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:tree",
+                  "features_position": "bottom",
+                  "entity": "sensor.outside_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/outside"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:tools",
-                  "name": "Utilities",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
@@ -3775,46 +3666,29 @@
                   "text_only": true
                 },
                 {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "show_name": false,
-                      "show_icon": false,
-                      "type": "custom:button-card",
-                      "styles": {
-                        "card": [
-                          {
-                            "border": "none"
-                          },
-                          {
-                            "background": "none"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "show_name": true,
-                      "show_icon": true,
-                      "type": "button",
-                      "entity": "switch.furnace_switch",
-                      "icon_height": "40px"
-                    },
-                    {
-                      "show_name": false,
-                      "show_icon": false,
-                      "type": "custom:button-card",
-                      "styles": {
-                        "card": [
-                          {
-                            "border": "none"
-                          },
-                          {
-                            "background": "none"
-                          }
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "custom:mushroom-empty-card",
+                  "grid_options": {
+                    "columns": 4,
+                    "rows": 1
+                  }
+                },
+                {
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
+                  "entity": "switch.furnace_switch",
+                  "icon_height": "40px",
+                  "grid_options": {
+                    "columns": 4,
+                    "rows": 2
+                  }
+                },
+                {
+                  "type": "custom:mushroom-empty-card",
+                  "grid_options": {
+                    "columns": 4,
+                    "rows": 1
+                  }
                 }
               ]
             }
@@ -3838,13 +3712,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -3994,149 +3872,118 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
-                    "navigation_path": "/control-panel/home"
+                    "navigation_path": "/control-panel"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.upstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-up",
-                  "name": "Upstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.upstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/upstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.middle_level_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:format-align-middle",
-                  "name": "Middle",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.middle_level_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/middle-level"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.downstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-down",
-                  "name": "Downstairs",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "entity": "sensor.downstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/downstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.outside_plus_garage_lights_on",
-                  "icon": "mdi:image",
-                  "name": "Outside",
-                  "show_state": true,
-                  "size": "35px",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:tree",
+                  "features_position": "bottom",
+                  "entity": "sensor.outside_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:tools",
-                  "name": "Utilities",
-                  "show_state": true,
-                  "size": "35px",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ],
-                    "state": [
-                      {
-                        "color": "var(--card-background-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
@@ -4252,13 +4099,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -4300,51 +4151,38 @@
               "type": "grid",
               "cards": [
                 {
-                  "show_name": true,
-                  "show_icon": true,
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:door",
-                  "layout": "icon_name",
-                  "type": "custom:button-card",
-                  "name": "Doors/Windows",
+                  "primary": "Doors/Windows",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1.5
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/security"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-left: 32px !important;\n  --tile-icon-size: 55px;\n  --mdc-icon-size: 55px;\n}\nha-tile-info {\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "show_name": true,
-                  "show_icon": true,
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:motion-sensor",
-                  "layout": "icon_name",
-                  "type": "custom:button-card",
-                  "name": "Other Sensors",
+                  "primary": "Security Sensors",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1.5
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-left: 32px !important;\n  --tile-icon-size: 55px;\n  --mdc-icon-size: 55px;\n}\nha-tile-info {\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -4464,13 +4302,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -4523,139 +4365,116 @@
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:information",
-                  "name": "Info",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Info",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Temps",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:cloud-question",
-                  "name": "Issues",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Issues",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities3"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 1",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 1",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities4"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 2",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 2",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities5"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 3",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 3",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities6"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -5021,13 +4840,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -5080,139 +4903,116 @@
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:information",
-                  "name": "Info",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Info",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Temps",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities2"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:cloud-question",
-                  "name": "Issues",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Issues",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 1",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 1",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities4"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 2",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 2",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities5"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 3",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 3",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities6"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -5445,13 +5245,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -5504,139 +5308,116 @@
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:information",
-                  "name": "Info",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Info",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Temps",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities2"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:cloud-question",
-                  "name": "Issues",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Issues",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities3"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 1",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 1",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 2",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 2",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities5"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 3",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 3",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities6"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -5860,13 +5641,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -5919,139 +5704,116 @@
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:information",
-                  "name": "Info",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Info",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Temps",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities2"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:cloud-question",
-                  "name": "Issues",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Issues",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities3"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 1",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 1",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities4"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 2",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 2",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 3",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 3",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities6"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -6276,13 +6038,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -6335,139 +6101,116 @@
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:information",
-                  "name": "Info",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Info",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:thermometer",
-                  "name": "Temps",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Temps",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities2"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:cloud-question",
-                  "name": "Issues",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Issues",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities3"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 1",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 1",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities4"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 2",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 2",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/utilities5"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:power-plug",
-                  "name": "Plugs 3",
-                  "show_state": false,
-                  "size": "35px",
+                  "primary": "Plugs 3",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1.2
+                  },
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 2
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
@@ -6684,13 +6427,17 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:html-template-card",
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 2
+                  "type": "custom:mushroom-template-card",
+                  "primary": "{{ now().timestamp() | timestamp_custom('%-I:%M') }} {{ now().timestamp() | timestamp_custom('%p')\n  }}",
+                  "features_position": "bottom",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/control-panel"
                   },
-                  "ignore_line_breaks": true,
-                  "content": "<style>\n  ha-card:has(.clock) {\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n  }\n  .clock {\n    text-align: center;\n    line-height: 1.0;\n    font-family: var(--ha-font-family-body);\n    font-weight: var(--ha-font-weight-medium);\n  }\n  .time {\n    font-size: 5rem;\n  }\n  .ampm {\n    font-size: var(--ha-font-size-l);\n    opacity: 0.6;\n  }\n</style> <div class=\"clock\"><div><span class=\"time\">{{ now().timestamp() | timestamp_custom('%-I:%M') }}</span>\n<span class=\"ampm\">{{ now().timestamp() | timestamp_custom('%p') }}</span></div></div>\n"
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  --tile-info-primary-font-size: 64px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:html-template-card",
@@ -6733,83 +6480,45 @@
               "column_span": 2,
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "background": "none"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
-                  }
+                  "type": "custom:mushroom-empty-card"
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity_picture": "https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512",
-                  "show_entity_picture": true,
-                  "size": "50px",
+                  "type": "custom:mushroom-template-card",
+                  "picture": "https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1.5
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/control-panel/locations"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity_picture": "https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512",
-                  "show_entity_picture": true,
-                  "show_state": false,
-                  "size": "50px",
+                  "type": "custom:mushroom-template-card",
+                  "picture": "https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1.5
+                  },
+                  "vertical": true,
                   "tap_action": {
                     "action": "none"
                   },
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "1px solid dimgrey"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6
+                  "card_mod": {
+                    "style": "ha-card {\n  border: 1px solid dimgrey;\n}\nha-tile-icon {\n  margin-top: -14px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "styles": {
-                    "card": [
-                      {
-                        "border": "none"
-                      },
-                      {
-                        "background": "none"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
-                  }
+                  "type": "custom:mushroom-empty-card"
                 },
                 {
                   "type": "map",

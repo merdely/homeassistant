@@ -33,17 +33,13 @@
                   "content": "<style>\n  * {\n     padding-top: 1px !important;\n     padding-bottom: 1px !important;\n  }\n  ha-card:has(.location-laundry) {\n    height: 100%;\n    // padding-top: 5px !important;\n    // display: flex;\n    // justify-content: center;\n    // align-items: center;\n  }\n table {\n   width: 100%;\n }\n table, th, tr, td {\n   border: none;\n   // border: 1px solid white;\n }\n ha-icon, ha-svg-icon, svg {\n   // width: 20px !important;\n   // height: 20px !important;\n   // display: block !important;\n }\n td.left {\n   width: 20;\n   text-align: left;\n   color: var(--state-icon-color);\n }\n td.right {\n   text-align: right;\n   font-size: 16px;\n }\n .laundry-status {\n   {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' -%}\n   color: var(--state-active-color);\n   {% endif %}\n }\n </style>\n <table class=\"location-laundry\">\n <tr>\n <td class=left><ha-icon\n icon=\"mdi:face-woman\"></ha-icon></td></td>\n <td class=right>{{ states('person.holly_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title\n }}</td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:face-man\"></ha-icon></font></td>\n <td class=right>{{ states('person.michael_erdely') |\n replace ('not_home', 'away') | replace('_', ' ') | title }}</font></td></tr>\n <tr><td class=left><ha-icon icon=\"mdi:washing-machine\"></ha-icon></td>\n <td class=right><span class=laundry-status>{{\n states('sensor.washer_and_dryer_state') }}</td></tr>\n </table>\n"
                 },
                 {
-                  "type": "custom:button-card",
-                  "show_name": true,
-                  "show_icon": true,
-                  "name": "Utils",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:tools",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
                   },
                   "tap_action": {
                     "action": "navigate",
@@ -52,23 +48,21 @@
                   "hold_action": {
                     "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
+                  "vertical": true,
+                  "primary": "Utils",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "show_name": true,
-                  "show_icon": true,
-                  "name": "[[[ return states[\"sensor.jellyfin_sessions\"].state + \" viewers\" ]]]",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:television-play",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (states[\"sensor.jellyfin_sessions\"].state > 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "features_position": "bottom",
+                  "entity": "sensor.jellyfin_sessions",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
                   },
                   "tap_action": {
                     "action": "navigate",
@@ -77,23 +71,21 @@
                   "hold_action": {
                     "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
+                  "vertical": true,
+                  "primary": "{{ states(entity) }} Viewers\n",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "show_name": true,
-                  "show_icon": true,
-                  "name": "Good Night",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:weather-night",
+                  "features_position": "bottom",
                   "entity": "script.scene_good_night",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
                   },
                   "tap_action": {
                     "action": "toggle"
@@ -101,21 +93,20 @@
                   "hold_action": {
                     "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
+                  "vertical": true,
+                  "primary": "Good Night",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "show_name": true,
-                  "show_icon": true,
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "green"
-                      }
-                    ]
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:home-lock",
+                  "features_position": "bottom",
+                  "color": "green",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
                   },
                   "tap_action": {
                     "action": "call-service",
@@ -124,15 +115,13 @@
                       "entity_id": "alarm_control_panel.home_alarm"
                     }
                   },
-                  "entity": "alarm_control_panel.home_alarm",
-                  "icon": "mdi:home-lock",
-                  "name": "Arm",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
-                  },
                   "hold_action": {
                     "action": "none"
+                  },
+                  "vertical": true,
+                  "primary": "Arm",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   },
                   "visibility": [
                     {
@@ -158,15 +147,13 @@
                   ]
                 },
                 {
-                  "type": "custom:button-card",
-                  "show_name": true,
-                  "show_icon": true,
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-active-color)"
-                      }
-                    ]
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:home-lock",
+                  "features_position": "bottom",
+                  "color": "var(--state-active-color)",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
                   },
                   "tap_action": {
                     "action": "call-service",
@@ -175,12 +162,13 @@
                       "entity_id": "alarm_control_panel.home_alarm"
                     }
                   },
-                  "entity": "alarm_control_panel.home_alarm",
-                  "icon": "mdi:home-lock",
-                  "name": "Arm",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "vertical": true,
+                  "primary": "Arm",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   },
                   "visibility": [
                     {
@@ -203,31 +191,28 @@
                       "entity": "binary_sensor.all_security_devices",
                       "state_not": "off"
                     }
-                  ],
-                  "hold_action": {
-                    "action": "none"
-                  }
+                  ]
                 },
                 {
-                  "type": "custom:button-card",
-                  "show_name": true,
-                  "show_icon": true,
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "red"
-                      }
-                    ]
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:home-lock-open",
+                  "features_position": "bottom",
+                  "color": "red",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
                   },
                   "tap_action": {
                     "action": "toggle"
                   },
                   "entity": "script.security_disarm_system",
-                  "icon": "mdi:home-lock-open",
-                  "name": "Disarm",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": "auto"
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "vertical": true,
+                  "primary": "Disarm",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   },
                   "visibility": [
                     {
@@ -250,10 +235,7 @@
                       "entity": "alarm_control_panel.home_alarm",
                       "state_not": "pending"
                     }
-                  ],
-                  "hold_action": {
-                    "action": "none"
-                  }
+                  ]
                 },
                 {
                   "square": true,
@@ -347,127 +329,112 @@
                   ]
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.upstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-up",
-                  "name": "Upstairs",
-                  "show_state": false,
-                  "show_name": false,
+                  "features_position": "bottom",
+                  "entity": "sensor.upstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/mbr-panel/upstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.middle_level_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:format-align-middle",
-                  "name": "Middle",
-                  "show_state": false,
-                  "show_name": false,
+                  "features_position": "bottom",
+                  "entity": "sensor.middle_level_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/mbr-panel/middle-level"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.downstairs_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:stairs-down",
-                  "name": "Downstairs",
-                  "show_state": false,
-                  "show_name": false,
+                  "features_position": "bottom",
+                  "entity": "sensor.downstairs_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/mbr-panel/downstairs"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.outside_plus_garage_lights_on",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:tree",
-                  "name": "Outside",
-                  "show_state": false,
-                  "show_name": false,
+                  "features_position": "bottom",
+                  "entity": "sensor.outside_lights_on",
+                  "color": "{% if states(entity) != \"0\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "badge_text": "{% if states(entity) != \"0\" %}{{ states(entity) }}{% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/mbr-panel/outside"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state != 0) return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "switch.bedroom_tv",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == \"on\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:television",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"switch.bedroom_tv\") == \"on\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
                   },
-                  "show_state": false,
-                  "show_name": false,
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/mbr-panel/tvs"
                   },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "button.homeassistant_reload",
-                  "name": "Sleep",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:sleep",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "var(--state-icon-color)"
-                      }
-                    ]
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
                   },
-                  "show_state": false,
-                  "show_name": false,
                   "tap_action": {
                     "action": "perform-action",
                     "perform_action": "conversation.process",
@@ -476,71 +443,81 @@
                       "text": "Turn off Bedroom TV in 30 minutes"
                     }
                   },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "person.holly_erdely",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:face-woman",
-                  "show_state": false,
-                  "show_name": false,
+                  "features_position": "bottom",
+                  "color": "{% if states(\"sensor.holly_is_in_bed\") == \"In Bed\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/mbr-panel/holly"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (states['sensor.holly_is_in_bed'].state == \"In Bed\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "person.michael_erdely",
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:face-man",
-                  "show_state": false,
-                  "show_name": false,
+                  "features_position": "bottom",
+                  "color": "{% if states(\"sensor.mike_is_in_bed\") == \"In Bed\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/mbr-panel/mike"
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (states['sensor.mike_is_in_bed'].state == \"In Bed\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "input_boolean.mail_delivered",
-                  "name": "Mail",
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == \"on\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
-                  },
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:mailbox",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"input_boolean.mail_delivered\") == \"on\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
                   "grid_options": {
-                    "columns": 3
+                    "columns": 3,
+                    "rows": 1.34
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "input_boolean.toggle",
+                    "target": {
+                      "entity_id": "input_boolean.mail_delivered"
+                    }
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "vertical": true,
+                  "primary": "Mail",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.days_until_cleaners",
-                  "name": "[[[ return entity.state ]]]",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:broom",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"sensor.days_until_cleaners\") == \"Today\" %}green{% elif states(\"sensor.days_until_cleaners\") == \"Tomorrow\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "call-service",
                     "service": "input_select.select_next",
@@ -548,21 +525,24 @@
                       "entity_id": "input_select.cleaners_weekday"
                     }
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == \"Today\") return \"green\";\n    else if (entity.state == \"Tomorrow\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "hold_action": {
+                    "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "primary": "{{ states(\"sensor.days_until_cleaners\") }}\n",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.trash",
-                  "name": "[[[ return entity.state ]]]",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:trash-can",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"sensor.trash\") == \"Today\" and states(\"input_boolean.trash_is_out\") == \"off\" %}red{% elif states(\"sensor.trash\") == \"Tomorrow\" and states(\"input_boolean.trash_is_out\") == \"off\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "call-service",
                     "service": "input_boolean.toggle",
@@ -570,21 +550,24 @@
                       "entity_id": "input_boolean.trash_is_out"
                     }
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.state == \"Today\" && states['input_boolean.trash_is_out'].state == \"off\") return \"red\";\n    else if (entity.state == \"Tomorrow\" && states['input_boolean.trash_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "hold_action": {
+                    "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "primary": "{{ states('sensor.trash') }}",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "entity": "sensor.moco_recycle_day",
-                  "name": "[[[ return entity.attributes.days_string ]]]",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:recycle",
+                  "features_position": "bottom",
+                  "color": "{% if state_attr(\"sensor.moco_recycle_day\", \"days_string\") == \"Today\" and states(\"input_boolean.recycle_is_out\") == \"off\" %}red{% elif state_attr(\"sensor.moco_recycle_day\", \"days_string\") == \"Tomorrow\" and states(\"input_boolean.recycle_is_out\") == \"off\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1.34
+                  },
                   "tap_action": {
                     "action": "call-service",
                     "service": "input_boolean.toggle",
@@ -592,73 +575,20 @@
                       "entity_id": "input_boolean.recycle_is_out"
                     }
                   },
-                  "styles": {
-                    "icon": [
-                      {
-                        "color": "[[[ if (entity.attributes.days_string == \"Today\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"red\";\n    else if (entity.attributes.days_string == \"Tomorrow\" && states['input_boolean.recycle_is_out'].state == \"off\") return \"var(--state-active-color)\";\n    else return \"var(--state-icon-color)\" ]]]"
-                      }
-                    ]
+                  "hold_action": {
+                    "action": "none"
                   },
-                  "grid_options": {
-                    "columns": 3
+                  "vertical": true,
+                  "primary": "{{ state_attr('sensor.moco_recycle_day', 'days_string') }}",
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
                 },
                 {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "type": "custom:paper-buttons-row",
-                      "position": "right",
-                      "buttons": [
-                        {
-                          "entity": "script.home_thermostat_down",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.home_thermostat_down"
-                          },
-                          "name": false,
-                          "styles": {
-                            "icon": {
-                              "--mdc-icon-size": "40px"
-                            }
-                          }
-                        },
-                        {
-                          "entity": "sensor.thermostat_temperature",
-                          "layout": "icon|state",
-                          "icon": "mdi:thermostat",
-                          "state": "Set: {{ states(\"sensor.thermostat_setpoints\") }}°F ({{ states('climate.thermostat') | capitalize | replace(\"_cool\",\"/Cool\") }} · {{ state_attr('climate.thermostat', 'current_temperature') }}°F)",
-                          "tap_action": {
-                            "action": "more-info",
-                            "entity": "climate.thermostat"
-                          },
-                          "styles": {
-                            "icon": {
-                              "--mdc-icon-size": "40px",
-                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--state-icon-color){% endif %}\n"
-                            },
-                            "button": {
-                              "font-size": "18px",
-                              "color": "{% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}var(--state-climate-heat-color){% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}var(--state-climate-cool-color){% else %}var(--primary-text-color){% endif %}\n"
-                            }
-                          }
-                        },
-                        {
-                          "entity": "script.home_thermostat_up",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.home_thermostat_up"
-                          },
-                          "name": false,
-                          "styles": {
-                            "icon": {
-                              "--mdc-icon-size": "40px"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "custom:mushroom-climate-card",
+                  "entity": "climate.thermostat",
+                  "show_temperature_control": true,
+                  "layout": "horizontal"
                 }
               ]
             }
@@ -2046,6 +1976,13 @@
                       },
                       "entities": [
                         {
+                          "entity": "sensor.jellyfin_sessions",
+                          "name": "Jellyfin",
+                          "styles": {
+                            "color": "var(--jellyfin-color)"
+                          }
+                        },
+                        {
                           "entity": "sensor.software_updates_available_count",
                           "name": "Updates",
                           "styles": {
@@ -2087,13 +2024,10 @@
                           }
                         },
                         {
-                          "entity": "sensor.office_shelf_motion_sensor_days_since_seen",
-                          "name": "Office MS",
-                          "unit": false,
-                          "format": "precision1",
+                          "entity": "sensor.ood_zigbee_entities",
+                          "name": "Zwave",
                           "styles": {
-                            "color": "var(--office-shelf-motion-sensor-days-color)",
-                            "width": "50px"
+                            "color": "var(--zwave-color)"
                           },
                           "tap_action": {
                             "action": "perform-action",
@@ -2101,41 +2035,29 @@
                             "target": {},
                             "data": {
                               "entity_id": [
-                                "sensor.ood_wyze_entities"
-                              ]
-                            }
-                          }
-                        },
-                        {
-                          "entity": "sensor.mailbox_sensor_days_since_seen",
-                          "name": "Mailbox",
-                          "unit": false,
-                          "format": "precision1",
-                          "styles": {
-                            "color": "var(--mailbox-sensor-days-color)"
-                          },
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "homeassistant.update_entity",
-                            "target": {},
-                            "data": {
-                              "entity_id": [
-                                "sensor.ood_wyze_entities"
+                                "sensor.ood_zwave_entities"
                               ]
                             }
                           }
                         }
                       ]
-                    },
-                    {
-                      "type": "custom:html-template-card",
-                      "ignore_line_breaks": true,
-                      "content": "<style>\n  table {\n    width: 100%;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table>{% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td>⟁</td><td>{{ client | regex_replace('(_+)? - .*$', '') }}</td><td> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
                     }
                   ],
                   "card_mod": {
-                    "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.holly_is_in_bed') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.mike_is_in_bed') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --attic-temp-color: {% if states(\"sensor.attic_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.attic_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n  --bedroom-temp-color: {% if states(\"sensor.bedroom_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.bedroom_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --master-bath-temp-color: {% if states(\"sensor.master_bath_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.master_bath_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --office-temp-color: {% if states(\"sensor.office_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.office_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --living-room-temp-color: {% if states(\"sensor.living_room_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.living_room_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --god-damn-temp-color: {% if states(\"sensor.god_damn_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.god_damn_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --garage-temp-color: {% if states(\"sensor.garage_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.garage_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n  --outside-temp-color: {% if states(\"sensor.outside_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.outside_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n\n  --bedroom-humidity-color: {% if states(\"sensor.bedroom_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.bedroom_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --master-bath-humidity-color: {% if states(\"sensor.master_bath_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.master_bath_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --hall-bath-humidity-color: {% if states(\"sensor.hall_bath_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.hall_bath_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --office-humidity-color: {% if states(\"sensor.office_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.office_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --outside-humidity-color: {% if states(\"sensor.outside_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.outside_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('sensor.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('sensor.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --earth-ping-color: {% if states('binary_sensor.earth') == 'off' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --earth-web-color: {% if states('binary_sensor.earth_nginx_php_working') == 'off' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_active_clients') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                    "style": "#states {\n  padding-top: 4px;\n  padding-bottom: 4px;\n}\n#states > * {\n  margin: 0px !important;\n}\nha-card {\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --holly-bed-color: {% if states('binary_sensor.holly_is_in_bed') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('binary_sensor.mike_is_in_bed') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n\n  --thermostat-color: {% if state_attr('climate.thermostat', 'hvac_action') == \"heating\" %}orange{% elif state_attr('climate.thermostat', 'hvac_action') == \"cooling\" %}dodgerblue{% else %}var(--primary-text-color){% endif %};\n  --attic-temp-color: {% if states(\"sensor.attic_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.attic_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n  --bedroom-temp-color: {% if states(\"sensor.bedroom_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.bedroom_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --master-bath-temp-color: {% if states(\"sensor.master_bath_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.master_bath_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --office-temp-color: {% if states(\"sensor.office_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.office_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --living-room-temp-color: {% if states(\"sensor.living_room_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.living_room_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --god-damn-temp-color: {% if states(\"sensor.god_damn_multisensor_temperature\") | int(69) <= 59 %}dodgerblue{% elif states(\"sensor.god_damn_multisensor_temperature\") | int(69) >= 80 %}orange{% endif %};\n  --garage-temp-color: {% if states(\"sensor.garage_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.garage_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n  --outside-temp-color: {% if states(\"sensor.outside_multisensor_temperature\") | int(69) <= 40 %}dodgerblue{% elif states(\"sensor.outside_multisensor_temperature\") | int(69) >= 90 %}orange{% endif %};\n\n  --bedroom-humidity-color: {% if states(\"sensor.bedroom_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.bedroom_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --master-bath-humidity-color: {% if states(\"sensor.master_bath_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.master_bath_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --hall-bath-humidity-color: {% if states(\"sensor.hall_bath_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.hall_bath_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --office-humidity-color: {% if states(\"sensor.office_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.office_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n  --outside-humidity-color: {% if states(\"sensor.outside_multisensor_humidity\") | int(45) <= 30 %}orange{% elif states(\"sensor.outside_multisensor_humidity\") | int(45) >= 50 %}orange{% endif %};\n\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --laundry-color: {% if states('sensor.washer_and_dryer_state') != 'Laundry Idle' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mercury-screensaver-color: {% if states('sensor.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('sensor.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --earth-ping-color: {% if states('binary_sensor.earth') == 'off' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --earth-web-color: {% if states('binary_sensor.earth_nginx_php_working') == 'off' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --office-shelf-motion-sensor-days-color: {% if states('sensor.office_shelf_motion_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
+                },
+                {
+                  "type": "custom:html-template-card",
+                  "ignore_line_breaks": true,
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "0"
+                    }
+                  ],
+                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  th {\n    text-align: left;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> <tr><th><span style=\"color: var(--state-icon-color)\"><ha-icon icon=\"cbi:jellyfin\"></span></th> <th>User</th><th>Jellyfin Media</th></tr> {% for session in states.sensor.jellyfin_sessions.attributes.sessions -%} <tr><td><span style=\"color: var(--state-icon-color)\"><ha-icon icon='{{ session['icon'] }}'/></span></td><td>{{ session['user'] }}</td><td> {{ session['item'] }}</td></tr> {% endfor -%} </table>\n"
                 }
               ]
             }

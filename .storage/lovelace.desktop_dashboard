@@ -1058,7 +1058,24 @@
                 {
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
-                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table>{% if states.sensor.jellyfin_sessions != None -%}{% for client, value in states.sensor.jellyfin_sessions.attributes.sessions.items() -%} <tr><td style=\"width: 5%\"><span style=\"color: var(--state-icon-color)\"><ha-icon icon='cbi:jellyfin'/></span></td><td style=\"width: 10%\">{{ client | regex_replace('(_+)? - .*$', '') }}</td><td width=\"98%\"> {{ value }}</td></tr> {% endfor -%}{% endif -%} </table>\n"
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "unknown"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "unavailable"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.jellyfin_sessions",
+                      "state_not": "0"
+                    }
+                  ],
+                  "content": "<style>\n  table {\n    width: 100%;\n  }\n  th {\n    text-align: left;\n  }\n  tr:nth-child(odd) {\n    background-color: var(--secondary-background-color);\n</style> <table> <tr><th><span style=\"color: var(--state-icon-color)\"><ha-icon icon=\"cbi:jellyfin\"></span></th> <th>User</th><th>Jellyfin Media</th></tr> {% for session in states.sensor.jellyfin_sessions.attributes.sessions -%} <tr><td><span style=\"color: var(--state-icon-color)\"><ha-icon icon='{{ session['icon'] }}'/></span></td><td>{{ session['user'] }}</td><td> {{ session['item'] }}</td></tr> {% endfor -%} </table>\n"
                 }
               ]
             },
@@ -2349,7 +2366,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -2365,7 +2382,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -2381,7 +2398,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -2397,7 +2414,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -2413,7 +2430,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -2429,7 +2446,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if as_timestamp(states(\"this.entity_id\"), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2) %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if as_timestamp(states(\"this.entity_id\"), 0) - as_timestamp(now(), 0) <= (3600 * 24 * 7 * 2) %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -2445,7 +2462,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if states(\"this.entity_id\") != \"on\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"on\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -2461,7 +2478,7 @@
                       {
                         "options": {
                           "card_mod": {
-                            "style": "* {\n  margin-top: -15px !important;\n  margin-bottom: -15px  !important;\n  {% if state_attr(\"this.entity_id\", \"days_string\") == \"Tomorrow\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: var(--state-active-color);\n  {% elif state_attr(\"this.entity_id\", \"days_string\") == \"Today\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red\n  {% else %}\n  color: var(--primary-text-color)\n  {% endif %}\n}\n"
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if state_attr(\"this.entity_id\", \"days_string\") == \"Tomorrow\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: var(--state-active-color);\n  {% elif state_attr(\"this.entity_id\", \"days_string\") == \"Today\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red\n  {% else %}\n  color: var(--primary-text-color)\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
                             "action": "call-service",
@@ -3654,89 +3671,6 @@
                 }
               ],
               "column_span": 10
-            }
-          ],
-          "cards": []
-        },
-        {
-          "type": "sections",
-          "max_columns": 3,
-          "title": "Test",
-          "path": "test",
-          "icon": "mdi:test-tube",
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "New section"
-                },
-                {
-                  "show_current": true,
-                  "show_forecast": true,
-                  "type": "weather-forecast",
-                  "entity": "weather.home",
-                  "forecast_type": "daily"
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "New section"
-                },
-                {
-                  "show_current": true,
-                  "show_forecast": true,
-                  "type": "weather-forecast",
-                  "entity": "weather.home_2",
-                  "forecast_type": "daily"
-                }
-              ]
-            }
-          ],
-          "cards": []
-        },
-        {
-          "type": "sections",
-          "max_columns": 4,
-          "title": "Tabs2",
-          "path": "tabs2",
-          "icon": "mdi:tab-plus",
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "New section"
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "entity": "light.white_switch",
-                  "tap_action": {
-                    "action": "perform-action",
-                    "perform_action": "homeassistant.update_entity",
-                    "target": {},
-                    "data": {
-                      "entity_id": [
-                        "sensor.jellyfin_sessions",
-                        "sensor.software_updates_available",
-                        "sensor.unavailable_entities",
-                        "sensor.unavailable_entities_list",
-                        "sensor.ood_wyze_entities",
-                        "sensor.ood_zigbee_entities",
-                        "sensor.ood_zwave_entities"
-                      ]
-                    }
-                  }
-                }
-              ]
             }
           ],
           "cards": []
