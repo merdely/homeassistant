@@ -72,6 +72,25 @@
             },
             {
               "type": "custom:mushroom-template-badge",
+              "entity": "input_boolean.mail_delivered",
+              "icon": "mdi:mail",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "input_boolean.mail_delivered",
+                  "state_not": "off"
+                }
+              ],
+              "tap_action": {
+                "action": "toggle"
+              },
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
               "content": "{{ states(entity).replace('_', ' ') | title }}",
               "color": "{% if states(entity) == 'disarmed' %}green{% elif states(entity) == 'disarming' or states(entity) == 'arming' or states(entity) == 'pending' %}var(--state-active-color){% else %}red{% endif %}\n",
               "entity": "alarm_control_panel.home_alarm",
@@ -81,9 +100,34 @@
               "icon": "{% if states(entity) == 'disarmed' %}mdi:shield-off{% elif states(entity) == 'disarming' or states(entity) == 'arming' or states(entity) == 'pending' %}mdi:shield-outline{% else %}mdi:shield-home-outline{% endif %}\n",
               "visibility": [
                 {
-                  "condition": "state",
-                  "entity": "alarm_control_panel.home_alarm",
-                  "state_not": "disarmed"
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "alarm_control_panel.home_alarm",
+                      "state_not": "disarmed"
+                    },
+                    {
+                      "condition": "and",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "alarm_control_panel.home_alarm",
+                          "state_not": "armed_home"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "alarm_control_panel.home_alarm",
+                          "state_not": "armed_away"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "schedule.nighttime",
+                          "state": "on"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ],
               "card_mod": {
@@ -93,7 +137,7 @@
             {
               "type": "custom:mushroom-template-badge",
               "content": "Front Door {{ states(\"sensor.front_door_status\") }}",
-              "icon": "mdi:door",
+              "icon": "{% if states(entity) == \"locked\" %}mdi:lock{% elif states(\"binary_sensor.front_door_contact\") == 'on' %}mdi:door-open{% elif states(entity) == \"unlocked\" %}mdi:lock-open-alert{% else %}mdi:door{% endif %}\n",
               "color": "{% if states('binary_sensor.front_door_contact') == 'on' or states('lock.front_door_zwave') == 'unlocked' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "entity": "lock.front_door_zwave",
               "visibility": [
@@ -124,30 +168,6 @@
                 },
                 "data": {}
               },
-              "card_mod": {
-                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
-              }
-            },
-            {
-              "type": "custom:mushroom-template-badge",
-              "content": "{% if states(\"binary_sensor.all_security_devices\") == 'off' %}Closed{% else %}Open{%endif%}",
-              "entity": "alarm_control_panel.home_alarm",
-              "icon": "mdi:home",
-              "color": "{% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
-              "tap_action": {
-                "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
-              },
-              "hold_action": {
-                "action": "more-info"
-              },
-              "visibility": [
-                {
-                  "condition": "state",
-                  "entity": "binary_sensor.all_security_devices",
-                  "state_not": "off"
-                }
-              ],
               "card_mod": {
                 "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
               }
@@ -209,6 +229,851 @@
                   "above": 0
                 }
               ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{{ states(entity) }}",
+              "entity": "sensor.trash",
+              "icon": "mdi:trash-can",
+              "color": "{% if states(entity) == 'Today' %}red{% elif states(entity) == \"Tomorrow\" %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "call-service",
+                "service": "input_boolean.toggle",
+                "service_data": {
+                  "entity_id": "input_boolean.trash_is_out"
+                }
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "and",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "sensor.trash",
+                          "state": "Today"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "input_boolean.trash_is_out",
+                          "state": "off"
+                        }
+                      ]
+                    },
+                    {
+                      "condition": "and",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "sensor.trash",
+                          "state": "Tomorrow"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "input_boolean.trash_is_out",
+                          "state": "off"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "schedule.nighttime",
+                          "state": "on"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{{ states(entity) }}",
+              "entity": "sensor.moco_recycle_days_string",
+              "icon": "mdi:recycle",
+              "color": "{% if states(entity) == 'Today' %}red{% elif states(entity) == \"Tomorrow\" %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "call-service",
+                "service": "input_boolean.toggle",
+                "service_data": {
+                  "entity_id": "input_boolean.recycle_is_out"
+                }
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "and",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "sensor.moco_recycle_days_string",
+                          "state": "Today"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "input_boolean.recycle_is_out",
+                          "state": "off"
+                        }
+                      ]
+                    },
+                    {
+                      "condition": "and",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "sensor.moco_recycle_days_string",
+                          "state": "Tomorrow"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "input_boolean.recycle_is_out",
+                          "state": "off"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "schedule.nighttime",
+                          "state": "on"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Kit Freezer Closed{% else %}Kit Freezer{% endif %}\n",
+              "entity": "binary_sensor.kitchen_freezer_door_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:fridge-outline{% else %}mdi:fridge-bottom{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.kitchen_freezer_door_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Kit Fridge Closed{% else %}Kit Fridge{% endif %}\n",
+              "entity": "binary_sensor.kitchen_refrigerator_door_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:fridge-outline{% else %}mdi:fridge-top{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.kitchen_refrigerator_door_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}DR Freezer Closed{% else %}DR Freezer{% endif %}\n",
+              "entity": "binary_sensor.dining_room_freezer_door_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:fridge-outline{% else %}mdi:fridge-bottom{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.dining_room_freezer_door_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}DR Fridge Closed{% else %}DR Fridge{% endif %}\n",
+              "entity": "binary_sensor.dining_room_refrigerator_door_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:fridge-outline{% else %}mdi:fridge-top{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.dining_room_refrigerator_door_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Powder Window Closed{% else %}Powder Window{% endif %}\n",
+              "entity": "binary_sensor.powder_room_window_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:window-closed{% else %}mdi:window-open{% endif %}\n",
+              "color": "{% if states(entity) == 'on' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.powder_room_window_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Den Window Closed{% else %}Den Window{% endif %}\n",
+              "entity": "binary_sensor.den_window_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:window-closed{% else %}mdi:window-open{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.den_window_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Back Door Closed{% else %}Back Door{% endif %}\n",
+              "entity": "binary_sensor.back_door_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:door-sliding{% else %}mdi:door-sliding-open{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.back_door_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}DR Slider Closed{% else %}DR Slider{% endif %}\n",
+              "entity": "binary_sensor.dining_room_slider_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:door-sliding{% else %}mdi:door-sliding-open{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.dining_room_slider_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}LR Slider Closed{% else %}LR Slider{% endif %}\n",
+              "entity": "binary_sensor.living_room_slider_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:door-sliding{% else %}mdi:door-sliding-open{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.living_room_slider_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}FR Slider Closed{% else %}FR Slider{% endif %}\n",
+              "entity": "binary_sensor.god_damn_slider_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:door-sliding{% else %}mdi:door-sliding-open{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.god_damn_slider_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}MBR Slider Closed{% else %}MBR Slider{% endif %}\n",
+              "entity": "binary_sensor.bedroom_slider_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:door-sliding{% else %}mdi:door-sliding-open{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.bedroom_slider_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'closed' %}Garage Closed{% else %}Garage{% endif %}\n",
+              "entity": "cover.garage_door",
+              "icon": "{% if states(entity) == 'closed' %}mdi:garage{% else %}mdi:garage-open{% endif %}\n",
+              "color": "{% if states(entity) != 'closed' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "cover.garage_door",
+                  "state_not": "closed"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Garage Entry Closed{% else %}Garage Entry{% endif %}\n",
+              "entity": "binary_sensor.garage_entry_door_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:door{% else %}mdi:door-open{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.garage_entry_door_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}MBath Dry{% else %}MBath{% endif %}\n",
+              "entity": "binary_sensor.master_bath_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.master_bath_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}HBath Sink Dry{% else %}HBath Sink{% endif %}\n",
+              "entity": "binary_sensor.hall_bath_sink_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.hall_bath_sink_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}HBath Dry{% else %}HBath{% endif %}\n",
+              "entity": "binary_sensor.hall_bath_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.hall_bath_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Kit Sink Dry{% else %}Kit Sink{% endif %}\n",
+              "entity": "binary_sensor.kitchen_sink_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.kitchen_sink_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Kit Fridge Dry{% else %}Kit Fridge{% endif %}\n",
+              "entity": "binary_sensor.kitchen_refrigerator_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.kitchen_refrigerator_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}DR Dry{% else %}DR{% endif %}\n",
+              "entity": "binary_sensor.dining_room_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.dining_room_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}DR Fridge Dry{% else %}DR Fridge{% endif %}\n",
+              "entity": "binary_sensor.dining_room_refrigerator_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.dining_room_refrigerator_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}LR Dry{% else %}LR{% endif %}\n",
+              "entity": "binary_sensor.living_room_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.living_room_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}FR Dry{% else %}FR{% endif %}\n",
+              "entity": "binary_sensor.god_damn_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.god_damn_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Washer Dry{% else %}Washer{% endif %}\n",
+              "entity": "binary_sensor.washer_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.washer_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Water Heater Dry{% else %}Water Heater{% endif %}\n",
+              "entity": "binary_sensor.water_heater_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.water_heater_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Powder Dry{% else %}Powder{% endif %}\n",
+              "entity": "binary_sensor.powder_room_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.powder_room_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Den Dry{% else %}Den{% endif %}\n",
+              "entity": "binary_sensor.den_water_leak_sensor",
+              "icon": "{% if states(entity) == 'off' %}mdi:water-off{% else %}mdi:water-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.den_water_leak_sensor",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Shed Closed{% else %}Shed{% endif %}\n",
+              "entity": "binary_sensor.shed_door_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:door{% else %}mdi:door-open{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.shed_door_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Shed Gate Closed{% else %}Shed Gate{% endif %}\n",
+              "entity": "binary_sensor.shed_gate_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:gate{% else %}mdi:gate-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.shed_gate_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{% if states(entity) == 'off' %}Chimney Gate Closed{% else %}Chimney Gate{% endif %}\n",
+              "entity": "binary_sensor.chimney_gate_contact",
+              "icon": "{% if states(entity) == 'off' %}mdi:gate{% else %}mdi:gate-alert{% endif %}\n",
+              "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/alarm-panel"
+              },
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.chimney_gate_contact",
+                  "state_not": "off"
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "Furance {{ states(entity) | title }}",
+              "entity": "switch.furnace_switch",
+              "icon": "{% if states(entity) == \"on\" %}mdi:hvac{% else %}mdi:hvac-off{% endif %}\n",
+              "color": "{% if states(entity) != 'on' %}red{% else %}var(--primary-color){% endif %}\n",
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "switch.furnace_switch",
+                  "state_not": "on"
+                }
+              ],
+              "tap_action": {
+                "action": "perform-action",
+                "perform_action": "switch.turn_on",
+                "target": {
+                  "entity_id": "switch.furnace_switch"
+                },
+                "data": {}
+              },
               "card_mod": {
                 "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
               }
@@ -3425,7 +4290,7 @@
                   "show_name": true,
                   "show_icon": true,
                   "type": "button",
-                  "entity": "switch.front_door_cam_2_plug",
+                  "entity": "switch.garage_door_cam_plug",
                   "name": "GrgDrCam",
                   "icon": "mdi:power-plug",
                   "grid_options": {
