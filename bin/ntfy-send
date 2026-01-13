@@ -2,23 +2,24 @@
 
 usage() {
   echo "usage: $(basename $0) [-h] -t TOPIC -m MESSAGE"
-  echo "          [-p 1-5] [-g TAGS] [-A ACTIONS] [-T TITLE] [-c CLICKURL] [-i ICONURL]"
+  echo "          [-p 1-5] [-T TITLE] [-c CLICKURL] [-i ICONURL]"
+  echo "          [-g TAGS] [-a ATTACHMENT] [-A ACTIONS]"
   echo "    TOPIC and MESSAGE are required"
   echo "    Default priority (-p) is 3"
   exit $1
 }
 
-unset topic title message tags actions click icon
+unset actions title attach click tags icon message topic
 headers=()
 priority=3
-while getopts ":hg:A:c:i:t:T:m:p:s" opt; do
+while getopts ":hA:T:a:c:g:i:m:p:t:" opt; do
   case $opt in
-    g) tags=$OPTARG ;;
     A) actions=$OPTARG ;;
-    c) click=$OPTARG ;;
-    i) icon=$OPTARG ;;
-    t) topic=$OPTARG ;;
     T) title=$OPTARG ;;
+    a) attach=$OPTARG ;;
+    c) click=$OPTARG ;;
+    g) tags=$OPTARG ;;
+    i) icon=$OPTARG ;;
     m) message=$OPTARG ;;
     p)
       if [[ $OPTARG =~ ^[1-5]$ ]]; then
@@ -28,17 +29,19 @@ while getopts ":hg:A:c:i:t:T:m:p:s" opt; do
         exit 1
       fi
       ;;
+    t) topic=$OPTARG ;;
     *) usage ;;
   esac
 done
 shift $((OPTIND -1))
 
-[ -n "$title" ]    && headers+=(--header "X-Title: $title")
-[ -n "$tags" ]     && headers+=(--header "X-Tags: $tags")
-[ -n "$priority" ] && headers+=(--header "X-Priority: $priority")
 [ -n "$actions" ]  && headers+=(--header "X-Actions: $actions")
+[ -n "$title" ]    && headers+=(--header "X-Title: $title")
+[ -n "$attach" ]   && headers+=(--header "X-Attach: $attach")
 [ -n "$click" ]    && headers+=(--header "X-Click: $click")
+[ -n "$tags" ]     && headers+=(--header "X-Tags: $tags")
 [ -n "$icon" ]     && headers+=(--header "X-Icon: $icon")
+[ -n "$priority" ] && headers+=(--header "X-Priority: $priority")
 
 curl -n --netrc-file /config/.netrc \
   -X POST \
