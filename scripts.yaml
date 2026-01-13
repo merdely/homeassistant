@@ -597,17 +597,6 @@ restart_octoprint:
     data: {}
   mode: single
   icon: mdi:restart
-test_action_notification_to_pixel_9_pro:
-  alias: Test Action Notification to Pixel 9 Pro
-  sequence:
-  - data:
-      message: Trash collection is tomorrow and Trash is not out!
-      data:
-        actions:
-        - action: TRASH_IS_OUT
-          title: Trash Is Already Out
-    action: notify.mobile_app_pixel_9_pro
-  description: ''
 tv_bedroom_sleep:
   sequence:
   - action: conversation.process
@@ -1055,4 +1044,54 @@ tv_volume_mute:
           - Office TV
       default: Bedroom TV
   alias: TV Volume Mute
+  description: ''
+soundbar_family_room_power:
+  sequence:
+  - data:
+      topic: cmnd/god_damn_tv_remote/backlog
+      payload: irsend {"Protocol":"NEC","Bits":32,"Data":"0x212EFF00","DataLSB":"0x8474FF00","Repeat":0}
+    action: mqtt.publish
+  alias: SoundBar - Family Room - Power
+  mode: single
+  icon: mdi:power
+  description: ''
+sent_ntfy_notification_to_mike_phone:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.home_ntfy_server
+      state: 'on'
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 5
+    then:
+    - action: ntfy.publish
+      metadata: {}
+      data:
+        title: '{{ title | default("Home Assistant Notification") }} via home notify
+          server'
+        message: '{{ message | default("Test Message") }}'
+      target:
+        device_id: 59f766104130873374c0ff3e37ba3374
+    else:
+    - action: ntfy.publish
+      metadata: {}
+      data:
+        title: '{{ title | default("Home Assistant Notification") }} via ntfy.sh'
+        message: '{{ message | default("Test Message") }}'
+      target:
+        device_id: 384ae5344dc25400a920150821bcf74e
+  fields:
+    title:
+      selector:
+        text:
+      name: Title
+      required: false
+    message:
+      selector:
+        text:
+      name: Message
+      required: true
+  alias: Sent ntfy Notification to Mike (Phone)
   description: ''

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+usage() {
+  echo "usage: $(basename $0) [-h] -t TOPIC -m MESSAGE"
+  echo "          [-p 1-5] [-g TAGS] [-A ACTIONS] [-T TITLE] [-c CLICKURL] [-i ICONURL]"
+  echo "    TOPIC and MESSAGE are required"
+  echo "    Default priority (-p) is 3"
+  exit $1
+}
+
+unset topic title message tags actions click icon
+headers=()
+priority=3
+while getopts ":hg:A:c:i:t:T:m:p:s" opt; do
+  case $opt in
+    g) tags=$OPTARG ;;
+    A) actions=$OPTARG ;;
+    c) click=$OPTARG ;;
+    i) icon=$OPTARG ;;
+    t) topic=$OPTARG ;;
+    T) title=$OPTARG ;;
+    m) message=$OPTARG ;;
+    p)
+      if [[ $OPTARG =~ ^[1-5]$ ]]; then
+        priority=$OPTARG
+      else
+        echo "Error: -p must be between 1 & 5"
+        exit 1
+      fi
+      ;;
+    *) usage ;;
+  esac
+done
+shift $((OPTIND -1))
+
+[ -n "$title" ]    && headers+=(--header "X-Title: $title")
+[ -n "$tags" ]     && headers+=(--header "X-Tags: $tags")
+[ -n "$priority" ] && headers+=(--header "X-Priority: $priority")
+[ -n "$actions" ]  && headers+=(--header "X-Actions: $actions")
+[ -n "$click" ]    && headers+=(--header "X-Click: $click")
+[ -n "$icon" ]     && headers+=(--header "X-Icon: $icon")
+
+curl -n --netrc-file /config/.netrc \
+  -X POST \
+  --url "https://notify.erdely.co/$topic" \
+  --data "$message" \
+  "${headers[@]}"
+

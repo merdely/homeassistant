@@ -1,6 +1,4 @@
 - id: '1600528964920'
-  trace:
-    stored_traces: 20
   alias: Lighting - Sunset Lights On
   description: ''
   triggers:
@@ -12,11 +10,39 @@
     value_template: '{{ as_timestamp(states("sensor.date_time_iso"), 0) | timestamp_custom("%m-%d",
       True, "Unavailable")  != "10-31" }}'
   actions:
-  - action: homeassistant.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: light.front_porch_light
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.christmas_lights_are_out
+        state:
+        - 'on'
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id:
+          - scene.front_porch_christmas
+          - scene.back_porch_christmas
+        data: {}
+    - conditions:
+      - condition: template
+        value_template: '{{ now().month == 10 }}'
+        alias: If it's October
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id:
+          - scene.front_porch_halloween
+          - scene.back_porch_halloween
+        data: {}
+    default:
+    - action: homeassistant.turn_on
+      metadata: {}
+      target:
+        entity_id: light.front_porch_light
+      data: {}
+    alias: Handle Front Porch Light and Deck Lights (if October or December)
   - alias: Turn on Outside Lights and/or Outside Christmas Lights
     if:
     - condition: state
@@ -56,26 +82,10 @@
       - light.dining_room_christmas_lights
     data: {}
     action: homeassistant.turn_on
-  - if:
-    - condition: or
-      conditions:
-      - condition: state
-        entity_id: input_boolean.christmas_lights_are_out
-        state: ''
-      - condition: template
-        value_template: '{{ now().month == 10 }}'
-        alias: If it's October
-    then:
-    - action: homeassistant.turn_on
-      metadata: {}
-      data: {}
-      target:
-        entity_id: light.deck_lights
-    alias: Turn on Deck Lights at Christmas-Time and October
-  mode: single
-- id: '1600529040720'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1600529040720'
   alias: Lighting - Sunset Lights Off at Night
   description: ''
   triggers:
@@ -90,8 +100,11 @@
       - switch.outside_christmas_lights
       - light.dining_room_christmas_lights
       - light.near_black_lamp
+      - light.deck_lights
     data: {}
     action: homeassistant.turn_off
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1602628290703'
   trace:
@@ -478,8 +491,6 @@
       action: tts.cloud_say
   mode: single
 - id: '1606835846142'
-  trace:
-    stored_traces: 20
   alias: Security - 10 All - Update alarm.state File
   description: ''
   triggers:
@@ -494,7 +505,10 @@
         endif -%}'
     action: notify.send_message
     target:
-      entity_id: notify.alarm_state_file
+      entity_id:
+      - notify.alarm_state_file
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1607035454754'
   trace:
@@ -810,8 +824,6 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1608699279426'
-  trace:
-    stored_traces: 20
   alias: Tag - Mike Desk - Unlock Mercury
   description: ''
   triggers:
@@ -842,15 +854,24 @@
     - data: {}
       action: script.computer_mercury_unlock
     else:
-    - action: notify.mobile_app_mike9p
+    - action: script.sent_ntfy_notification_to_mike
       metadata: {}
       data:
-        message: Someone scanned at Mike's Desk
+        title: Mercury Desk Tag
+        message: Someone (not Mike) attempted to unlock Mercury ({{ trigger.event.context.uiser_id
+          }})
+    - action: script.sent_ntfy_notification_to_mike
+      metadata: {}
+      data:
+        title: Mercury Desk Tag
+        message: Someone (not Mike) attempted to unlock Mercury
     - data:
         message: Someone (not Mike) scanned at Mike's Desk ({{ trigger.event.context.user_id
           }})
         level: error
       action: system_log.write
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1608701107067'
   trace:
@@ -1134,8 +1155,6 @@
       entity_id: light.mantle_lights
   mode: single
 - id: '1614981790208'
-  trace:
-    stored_traces: 20
   alias: Notifications - Mailbox Notify
   description: ''
   triggers:
@@ -1182,17 +1201,19 @@
       - data:
           message: Somebody retrieved the mail
         action: notify.notify
-    - if:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: person.michael_erdely
-          state: home
-      then:
-      - action: notify.mobile_app_mike9p
-        metadata: {}
-        data:
-          message: Somebody retrieved the mail
+      - if:
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: person.michael_erdely
+            state: home
+        then:
+        - action: script.sent_ntfy_notification_to_mike_phone
+          metadata: {}
+          data:
+            message: Somebody retrieved the mail
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1615411227750'
   trace:
@@ -1454,22 +1475,26 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1632841500873'
-  trace:
-    stored_traces: 20
   alias: Fan - Master Bath Humidity - Fan Off
   description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(0)
+  triggers:
+  - value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(0)
       < states(''input_number.master_bath_fan_off'') | float(100) }}'
-  condition:
+    trigger: template
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  conditions:
   - condition: state
     entity_id: switch.master_bath_fan
     state: 'on'
-  action:
-  - service: homeassistant.turn_off
-    target:
+  actions:
+  - target:
       entity_id: switch.master_bath_fan
+    action: homeassistant.turn_off
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1637383119311'
   trace:
@@ -2238,23 +2263,27 @@
     action: homeassistant.turn_on
   mode: single
 - id: '1671217825195'
-  trace:
-    stored_traces: 20
   alias: Fan - Hall Bath Humidity - Fan Off
   description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ states(''sensor.hall_bath_multisensor_humidity'') | float(0)
+  triggers:
+  - value_template: '{{ states(''sensor.hall_bath_multisensor_humidity'') | float(0)
       < states(''input_number.hall_bath_fan_off'') | float(100) }}'
-  condition:
+    trigger: template
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  conditions:
   - condition: state
     entity_id: switch.hall_bath_fan
     state: 'on'
-  action:
-  - service: homeassistant.turn_off
-    target:
+  actions:
+  - target:
       entity_id: switch.hall_bath_fan
     data: {}
+    action: homeassistant.turn_off
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1671565614293'
   trace:
@@ -2925,8 +2954,6 @@
       title: Picture Frame restarted
   mode: single
 - id: '1743534633370'
-  trace:
-    stored_traces: 20
   alias: Home Assistant - Reload - Picframe Unknown
   description: ''
   triggers:
@@ -2946,7 +2973,9 @@
   - action: shell_command.ssh_command
     data:
       server: picframe@sinope.erdely.in
-      command: reload
+      command: picframe
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1745466993579'
   trace:
@@ -3166,9 +3195,7 @@
       camera: camera.front_door
   mode: single
 - id: '1758668884916'
-  trace:
-    stored_traces: 20
-  alias: Lighting - Sunrise Lights On at Dawn
+  alias: Lighting - Sunrise Lights On at Dawn (Holly to see)
   description: ''
   triggers:
   - at: input_datetime.turn_on_sunrise_lights
@@ -3187,7 +3214,8 @@
       - light.front_porch_light
       - light.outside_garage_lights
     data: {}
-  - if:
+  - alias: Turn on Outside Christmas Lights if Christmas Lights are Out
+    if:
     - condition: state
       entity_id: input_boolean.christmas_lights_are_out
       state: 'on'
@@ -3196,12 +3224,16 @@
       target:
         entity_id: switch.outside_christmas_lights
       data: {}
-    alias: Turn on Outside Christmas Lights if Christmas Lights are Out
-  mode: single
-- id: '1758669178829'
+    - action: scene.turn_on
+      metadata: {}
+      target:
+        entity_id: scene.front_porch_christmas
+      data: {}
   trace:
     stored_traces: 20
-  alias: Lighting - Sunrise Lights Off at Sunrise
+  mode: single
+- id: '1758669178829'
+  alias: Lighting - Sunrise Lights Off at Sunrise (Holly to see)
   description: ''
   triggers:
   - event: sunrise
@@ -3216,6 +3248,8 @@
       - light.outside_garage_lights
       - light.front_porch_light
       - switch.outside_christmas_lights
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1758716522977'
   trace:
@@ -3405,10 +3439,7 @@
       title: Frigate Notification
       android_auto: true
       group: frigate-notification
-      silence_timer: 0
 - id: '1762447315675'
-  trace:
-    stored_traces: 20
   alias: Bedroom Humidifier - Low Water
   description: ''
   triggers:
@@ -3423,20 +3454,19 @@
       seconds: 30
   conditions: []
   actions:
-  - action: notify.notify
-    metadata: {}
-    data:
+  - data:
       title: Bedroom Humidifier
       message: The Bedroom Humidifier is low on water
+    action: notify.notify
   - action: script.sent_ntfy_notification
     metadata: {}
     data:
       title: Bedroom Humidifier
       message: The Bedroom Humidifier is low on water
-  mode: single
-- id: '1762447395016'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1762447395016'
   alias: Bedroom Humidifier - Tank Lifted
   description: ''
   triggers:
@@ -3448,25 +3478,49 @@
     for:
       hours: 0
       minutes: 0
-      seconds: 30
+      seconds: 15
+  - trigger: state
+    entity_id:
+    - binary_sensor.bedroom_humidifier_water_tank_lifted
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 15
+    from:
+    - 'on'
   conditions: []
   actions:
-  - action: notify.notify
-    metadata: {}
-    data:
-      title: Bedroom Humidifier
-      message: The Bedroom Humidifier water tank has been lifted
-  - action: script.sent_ntfy_notification
-    metadata: {}
-    data:
-      title: Bedroom Humidifier
-      message: The Bedroom Humidifier water tank has been lifted
-  mode: single
-- id: '1763248233200'
+  - if:
+    - condition: template
+      value_template: '{{ trigger.to_state.state == "on" }}'
+    then:
+    - data:
+        title: Bedroom Humidifier
+        message: The Bedroom Humidifier water tank has been lifted
+      action: notify.notify
+    - action: script.sent_ntfy_notification
+      metadata: {}
+      data:
+        title: Bedroom Humidifier
+        message: The Bedroom Humidifier water tank has been lifted
+    else:
+    - data:
+        title: Bedroom Humidifier
+        message: The Bedroom Humidifier water tank has been restored
+      action: notify.notify
+    - action: script.sent_ntfy_notification
+      metadata: {}
+      data:
+        title: Bedroom Humidifier
+        message: The Bedroom Humidifier water tank has been restored
   trace:
     stored_traces: 20
+  mode: single
+- id: '1763248233200'
   alias: Frigate Notifications for Holly's Phone
   description: ''
+  trace:
+    stored_traces: 20
   use_blueprint:
     path: SgtBatten/FrigateNotificationsStable.yaml
     input:
@@ -3484,6 +3538,7 @@
       title: Frigate Notification
       android_auto: true
       group: frigate-notification
+      timeout: 2
 - id: '1763388084637'
   trace:
     stored_traces: 20
@@ -3538,3 +3593,40 @@
           entity_id: input_boolean.bedroom_tv_state
       alias: Handle Bedroom TV
   mode: single
+- id: '1764419813842'
+  alias: Master Bathroom Humidity Exhaust Fan
+  description: ''
+  use_blueprint:
+    path: Blackshome/bathroom-humidity-exhaust-fan.yaml
+    input:
+      trigger: sensor.master_bath_humidity_derivative
+      bathroom_humidity_sensor: sensor.master_bath_multisensor_humidity
+      fan_switch:
+        entity_id: fan.master_bath_fan
+      include_winter_mode: winter_mode_enabled
+      month_winter_mode:
+      - '1'
+      - '2'
+      - '11'
+      - '12'
+      by_pass: binary_sensor.bed_presence_ac5c48_bed_occupied_either
+      include_bypass: bypass_enabled_stop
+- id: '1764419912231'
+  alias: Hall Bathroom Humidity Exhaust Fan
+  description: ''
+  use_blueprint:
+    path: Blackshome/bathroom-humidity-exhaust-fan.yaml
+    input:
+      trigger: sensor.hall_bath_humidity_derivative
+      bathroom_humidity_sensor: sensor.hall_bath_multisensor_humidity
+      fan_switch:
+        entity_id: fan.hall_bath_fan
+      include_winter_mode: winter_mode_enabled
+      month_winter_mode:
+      - '1'
+      - '2'
+      - '11'
+      - '12'
+      include_bypass: bypass_enabled_stop
+      by_pass: binary_sensor.bed_presence_ac5c48_bed_occupied_either
+      include_bypass_auto_off: bypass_auto_off_disabled

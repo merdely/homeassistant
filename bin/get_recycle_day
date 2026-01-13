@@ -79,6 +79,8 @@ default_day=$(awk '$1=="recycle_default_day:"{gsub(/(^"|"$)/,"",$2);print $2}' $
 [ $debug = 1 ] && echo street_type=$street_type > /dev/stderr
 [ $debug = 1 ] && echo default_day=$default_day > /dev/stderr
 
+#    --data-urlencode "__VIEWSTATE=/wEPDwUKLTc2NTM3NDM5OWQYAQUVY3RsMDAkTWFpbkNvbnRlbnQkZ3JkD2dkzG6rMq9Oe3SlNEEn83idpUe2bm4=" \
+#    --data-urlencode "__EVENTVALIDATION=/wEWJALy6NTSBQLliZf0AwLr0My5DgKAuJmLBAKc4sQ6ApDkoY8FAvqJiKgHAo217/sLAuzc6OQGAo7k1eQLAt3Xw/sIAo21k/oLAt3Xy/sIAtzX+/sIApOjvtAGAvHK4+UCAtWCy80PAoq16/kFAqXi6DoCpZGhzgEC5Ner+wgC89y4igkCmqPGzgUCn5GJ3AoCk/iHuQkCp6PW3gwC8Nej+wgCyPvizQoC7teD+wgC4sPy5A0C7df/+wgC7dfD+wgCnLXf+wsCqpGlzgECpuLQOgLT8MqYCGNN2N4JsdjbNorRg/UXq/4G7ovh" \
 county_code=200
 if [ -z "$county_collection_file" ]; then
   err_tmpfile=$(mktemp)
@@ -87,9 +89,9 @@ if [ -z "$county_collection_file" ]; then
   county_code=$(curl -w %{http_code} -Lo $county_collection_file \
     -X GET \
     -G \
-    --data-urlencode "__VIEWSTATE=/wEPDwUKLTc2NTM3NDM5OWQYAQUVY3RsMDAkTWFpbkNvbnRlbnQkZ3JkD2dkzG6rMq9Oe3SlNEEn83idpUe2bm4=" \
+    --data-urlencode "__VIEWSTATE=/wEPDwUKMTk5MzUxNzQ1N2QYAQUVY3RsMDAkTWFpbkNvbnRlbnQkZ3JkD2dkQD/mu+JlwZtvqK9Ir9OhDWR5Jr0=" \
     --data-urlencode "__VIEWSTATEGENERATOR=23FD2674" \
-    --data-urlencode "__EVENTVALIDATION=/wEWJALy6NTSBQLliZf0AwLr0My5DgKAuJmLBAKc4sQ6ApDkoY8FAvqJiKgHAo217/sLAuzc6OQGAo7k1eQLAt3Xw/sIAo21k/oLAt3Xy/sIAtzX+/sIApOjvtAGAvHK4+UCAtWCy80PAoq16/kFAqXi6DoCpZGhzgEC5Ner+wgC89y4igkCmqPGzgUCn5GJ3AoCk/iHuQkCp6PW3gwC8Nej+wgCyPvizQoC7teD+wgC4sPy5A0C7df/+wgC7dfD+wgCnLXf+wsCqpGlzgECpuLQOgLT8MqYCGNN2N4JsdjbNorRg/UXq/4G7ovh" \
+    --data-urlencode "__EVENTVALIDATION=/wEWJALPypb4BALliZf0AwLr0My5DgKAuJmLBAKc4sQ6ApDkoY8FAvqJiKgHAo217/sLAuzc6OQGAo7k1eQLAt3Xw/sIAo21k/oLAt3Xy/sIAtzX+/sIApOjvtAGAvHK4+UCAtWCy80PAoq16/kFAqXi6DoCpZGhzgEC5Ner+wgC89y4igkCmqPGzgUCn5GJ3AoCk/iHuQkCp6PW3gwC8Nej+wgCyPvizQoC7teD+wgC4sPy5A0C7df/+wgC7dfD+wgCnLXf+wsCqpGlzgECpuLQOgLT8MqYCF6yNm2yUYwc1dIKNmxJM6kQjyiy" \
     --data-urlencode "ctl00\$MainContent\$txtStreetNumber=$street_number" \
     --data-urlencode "ctl00\$MainContent\$txtStreet=$street_name" \
     --data-urlencode "ctl00\$MainContent\$DropDownList1=$street_type" \

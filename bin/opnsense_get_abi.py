@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # URL of the webpage
+requests.packages.urllib3.util.connection.HAS_IPV6 = False
 url = 'https://opnsense.org/download/'
 
 # Download the webpage

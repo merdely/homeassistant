@@ -1,0 +1,30 @@
+#!/bin/bash
+
+secrets_file="$(readlink -f $(dirname "$0")/../secrets.yaml)"
+
+usage () {
+  ret=$1
+  [ -z "$ret" ] && ret=0
+  echo "usage: $(basename $0) [-h]"
+  echo "           -h               : This help text"
+  exit $ret
+}
+
+while getopts ":h" opt; do
+  case $opt in
+    *)
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+[ ! -f "$secrets_file" ] && echo "Error: Could not find secrets.yaml" && exit 1
+
+# Read settings from secrets.yaml file
+frigate_url=$(awk '$1=="frigate_url:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+[ -z "$frigate_url" ] && echo "Error: Secrets file does not have 'frigate_url'" > /dev/stderr && exit 1
+
+[ $debug = 1 ] && echo frigate_url=$frigate_url > /dev/stderr
+
+curl -L -X POST "${frigate_url}/api/restart" -H "Accept: application/json"

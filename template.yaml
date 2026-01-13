@@ -6,7 +6,10 @@
     attributes:
       entity_list: |
         {{ states | selectattr('state', 'in', ['unavailable', 'unknown'])
-           | rejectattr('entity_id', 'match', states('sensor.unavailable_entities_filter') | default(''))
+           | rejectattr('entity_id', 'match', states('sensor.unavailable_entities_filter_0') | default(''))
+           | rejectattr('entity_id', 'match', states('sensor.unavailable_entities_filter_1') | default(''))
+           | rejectattr('entity_id', 'match', states('sensor.unavailable_entities_filter_2') | default(''))
+           | rejectattr('entity_id', 'match', states('sensor.unavailable_entities_filter_3') | default(''))
            | map(attribute='entity_id') | list | join(', ') }}
 
 - trigger:

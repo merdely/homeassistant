@@ -27,6 +27,55 @@
             {
               "type": "custom:mushroom-template-badge",
               "content": "{{ states(\"sensor.holly_location\") }}",
+              "picture": "https://ha.erdely.in:38123/local/images/hollymike512.png",
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/lovelace/hollymike"
+              },
+              "entity": "person.holly_erdely",
+              "hold_action": {
+                "action": "more-info"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "sensor.holly_location",
+                  "state_not": "Home"
+                },
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.holly_mike_are_together",
+                  "state": "on"
+                },
+                {
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "not",
+                      "conditions": [
+                        {
+                          "condition": "user",
+                          "users": [
+                            "674f6dd5846044bfacb82473d8848924"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.holly_location",
+                      "state_not": "In Bed"
+                    }
+                  ]
+                }
+              ],
+              "card_mod": {
+                "style": ".badge {\n  height: 48px !important;\n}\nimg {\n  width: 32px !important;\n  height: 32px !important;\n}\nha-state-icon {\n  --mdc-icon-size: 32px;\n}\n.content {\n  font-size: 32px !important;\n}\n@media (min-width: 1279px) and (max-width: 1281px){\n  .badge {\n    height: 64px !important;\n  }\n  img {\n    width: 48px !important;\n    height: 48px !important;\n  }\n  ha-state-icon {\n    --mdc-icon-size: 48px;\n  }\n  .content {\n    font-size: 48px !important;\n  }\n}\n"
+              }
+            },
+            {
+              "type": "custom:mushroom-template-badge",
+              "content": "{{ states(\"sensor.holly_location\") }}",
               "picture": "https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512",
               "tap_action": {
                 "action": "navigate",
@@ -41,6 +90,32 @@
                   "condition": "state",
                   "entity": "sensor.holly_location",
                   "state_not": "Home"
+                },
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.holly_mike_are_together",
+                  "state": "off"
+                },
+                {
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "not",
+                      "conditions": [
+                        {
+                          "condition": "user",
+                          "users": [
+                            "674f6dd5846044bfacb82473d8848924"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.holly_location",
+                      "state_not": "In Bed"
+                    }
+                  ]
                 }
               ],
               "card_mod": {
@@ -64,6 +139,32 @@
                   "condition": "state",
                   "entity": "sensor.mike_location",
                   "state_not": "Home"
+                },
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.holly_mike_are_together",
+                  "state": "off"
+                },
+                {
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "not",
+                      "conditions": [
+                        {
+                          "condition": "user",
+                          "users": [
+                            "674f6dd5846044bfacb82473d8848924"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "sensor.mike_location",
+                      "state_not": "In Bed"
+                    }
+                  ]
                 }
               ],
               "card_mod": {
@@ -74,6 +175,7 @@
               "type": "custom:mushroom-template-badge",
               "entity": "input_boolean.mail_delivered",
               "icon": "mdi:mail",
+              "content": "You've Got Mail!",
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "visibility": [
                 {
@@ -126,6 +228,27 @@
                           "state": "on"
                         }
                       ]
+                    }
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "conditions": [
+                    {
+                      "condition": "not",
+                      "conditions": [
+                        {
+                          "condition": "user",
+                          "users": [
+                            "674f6dd5846044bfacb82473d8848924"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "alarm_control_panel.home_alarm",
+                      "state_not": "armed_home"
                     }
                   ]
                 }
@@ -365,7 +488,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -389,7 +512,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -413,7 +536,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -437,7 +560,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -461,7 +584,7 @@
               "color": "{% if states(entity) == 'on' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -485,7 +608,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -509,7 +632,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -533,7 +656,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -557,7 +680,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -581,7 +704,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -605,7 +728,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -629,7 +752,7 @@
               "color": "{% if states(entity) != 'closed' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -653,7 +776,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -677,7 +800,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -701,7 +824,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -725,7 +848,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -749,7 +872,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -773,7 +896,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -797,7 +920,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -821,7 +944,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -845,7 +968,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -869,7 +992,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -893,7 +1016,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -917,7 +1040,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -941,7 +1064,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -965,7 +1088,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -989,7 +1112,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -1013,7 +1136,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -1037,7 +1160,7 @@
               "color": "{% if states(entity) != 'off' %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
                 "action": "navigate",
-                "navigation_path": "/lovelace/alarm-panel"
+                "navigation_path": "/lovelace/security"
               },
               "hold_action": {
                 "action": "more-info"
@@ -1108,13 +1231,55 @@
                   }
                 },
                 {
-                  "type": "thermostat",
-                  "entity": "climate.thermostat",
+                  "type": "tile",
                   "grid_options": {
                     "columns": 6,
                     "rows": 4
                   },
-                  "show_current_as_primary": true
+                  "entity": "climate.thermostat",
+                  "vertical": true,
+                  "features": [
+                    {
+                      "type": "target-temperature"
+                    },
+                    {
+                      "type": "climate-hvac-modes"
+                    }
+                  ],
+                  "features_position": "bottom"
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:security",
+                  "entity": "alarm_control_panel.home_alarm",
+                  "features_position": "bottom",
+                  "color": "{%if states(entity) == \"armed_home\" or states(entity) == \"armed_away\" %}red{% elif states(entity) == \"disarmed\" %}green{% else %}var(--state-active-color){% endif %}\n",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/security"
+                  },
+                  "vertical": true,
+                  "visibility": [
+                    {
+                      "condition": "not",
+                      "conditions": [
+                        {
+                          "condition": "user",
+                          "users": [
+                            "674f6dd5846044bfacb82473d8848924"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "primary": "{{ states(\"sensor.alarm_state_pretty\") }}",
+                  "card_mod": {
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\nha-tile-icon {\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -1128,6 +1293,10 @@
                     "target": {
                       "entity_id": "alarm_control_panel.home_alarm"
                     }
+                  },
+                  "hold_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/security"
                   },
                   "visibility": [
                     {
@@ -1149,6 +1318,12 @@
                       "condition": "state",
                       "entity": "binary_sensor.all_security_devices",
                       "state": "off"
+                    },
+                    {
+                      "condition": "user",
+                      "users": [
+                        "674f6dd5846044bfacb82473d8848924"
+                      ]
                     }
                   ],
                   "grid_options": {
@@ -1173,6 +1348,10 @@
                       "entity_id": "alarm_control_panel.home_alarm"
                     }
                   },
+                  "hold_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/security"
+                  },
                   "visibility": [
                     {
                       "condition": "or",
@@ -1193,6 +1372,12 @@
                       "condition": "state",
                       "entity": "binary_sensor.all_security_devices",
                       "state_not": "off"
+                    },
+                    {
+                      "condition": "user",
+                      "users": [
+                        "674f6dd5846044bfacb82473d8848924"
+                      ]
                     }
                   ],
                   "grid_options": {
@@ -1220,16 +1405,15 @@
                       "code": "7747897"
                     }
                   },
+                  "hold_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/security"
+                  },
                   "visibility": [
                     {
                       "condition": "state",
                       "entity": "alarm_control_panel.home_alarm",
                       "state_not": "disarmed"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "alarm_control_panel.home_alarm",
-                      "state_not": "arming"
                     },
                     {
                       "condition": "state",
@@ -1240,6 +1424,12 @@
                       "condition": "state",
                       "entity": "alarm_control_panel.home_alarm",
                       "state_not": "pending"
+                    },
+                    {
+                      "condition": "user",
+                      "users": [
+                        "674f6dd5846044bfacb82473d8848924"
+                      ]
                     }
                   ],
                   "grid_options": {
@@ -1280,7 +1470,7 @@
                   "icon": "mdi:home-thermometer",
                   "features_position": "bottom",
                   "entity": "sensor.outside_multisensor_temperature",
-                  "color": "var(--state-icon-color)",
+                  "color": "{% if states(entity)|float <= 45 %}deepskyblue{% \nelif states(entity)|float > 60 and states(entity)|float <= 89 %}orange{% \nelif states(entity)|float > 89 %}red{% else %}var(--state-icon-color){% endif %}\n",
                   "grid_options": {
                     "columns": 3,
                     "rows": 2
@@ -1291,6 +1481,8 @@
                     "navigation_path": "/lovelace/temperatures"
                   },
                   "multiline_secondary": true,
+                  "badge_icon": "{% if states(entity)|float <= 32 %}mdi:snowflake{% \nelif states(entity)|float > 99 %}mdi:heat-wave{% endif %}\n",
+                  "badge_color": "{% if states(entity)|float <= 32 %}navy{% \nelif states(entity)|float > 99 %}red{% endif %}\n",
                   "card_mod": {
                     "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\nha-tile-icon {\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
                   }
@@ -1307,7 +1499,7 @@
                   },
                   "vertical": true,
                   "card_mod": {
-                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n  --tile-info-primary-color: {% if states(\"sensor.bedroom_multisensor_temperature\") | float < 65 %}deepskyblue{% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -1367,7 +1559,7 @@
                   },
                   "vertical": true,
                   "card_mod": {
-                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n  --tile-info-primary-color: {% if states(\"sensor.office_multisensor_temperature\") | float < 65 %}deepskyblue{% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -1382,7 +1574,7 @@
                   },
                   "vertical": true,
                   "card_mod": {
-                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n  --tile-info-primary-color: {% if states(\"sensor.kitchen_multisensor_temperature\") | float < 65 %}deepskyblue{% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -1397,7 +1589,7 @@
                   },
                   "vertical": true,
                   "card_mod": {
-                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 15px;\n  --tile-info-primary-color: {% if states(\"sensor.living_room_multisensor_temperature\") | float < 65 %}deepskyblue{% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -1412,7 +1604,7 @@
                   },
                   "vertical": true,
                   "card_mod": {
-                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 14px;\n}\n"
+                    "style": "ha-tile-info {\n  margin-top: -13px;\n  --tile-info-primary-font-size: 22px;\n  --tile-info-secondary-font-size: 14px;\n  --tile-info-primary-color: {% if states(\"sensor.god_damn_multisensor_temperature\") | float < 65 %}deepskyblue{% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -1497,24 +1689,6 @@
                 },
                 {
                   "type": "custom:mushroom-template-card",
-                  "icon": "mdi:security",
-                  "features_position": "bottom",
-                  "color": "var(--state-icon-color)",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 1
-                  },
-                  "tap_action": {
-                    "action": "navigate",
-                    "navigation_path": "/lovelace/security"
-                  },
-                  "vertical": true,
-                  "card_mod": {
-                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
-                  }
-                },
-                {
-                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:cctv",
                   "features_position": "bottom",
                   "color": "var(--state-icon-color)",
@@ -1551,6 +1725,58 @@
                 },
                 {
                   "type": "custom:mushroom-template-card",
+                  "icon": "mdi:music-note",
+                  "features_position": "bottom",
+                  "color": "var(--state-icon-color)",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/music"
+                  },
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(\"switch.petcam_plug\", \"icon\") }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(\"switch.petcam_plug\") == \"on\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "homeassistant.toggle",
+                    "target": {
+                      "entity_id": "switch.petcam_plug"
+                    }
+                  },
+                  "card_mod": {
+                    "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  --tile-icon-size: 45px;\n  --mdc-icon-size: 40px;\n}\n"
+                  },
+                  "visibility": [
+                    {
+                      "condition": "not",
+                      "conditions": [
+                        {
+                          "condition": "user",
+                          "users": [
+                            "674f6dd5846044bfacb82473d8848924"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:sleep",
                   "features_position": "bottom",
                   "color": "var(--state-icon-color)",
@@ -1566,8 +1792,16 @@
                       "text": "Turn off the Bedroom TV in 30 minutes"
                     }
                   },
-                  "secondary": "MBR TV",
+                  "secondary": "TV",
                   "multiline_secondary": true,
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "674f6dd5846044bfacb82473d8848924"
+                      ]
+                    }
+                  ],
                   "card_mod": {
                     "style": "ha-tile-icon {\n  margin-top: -10px !important;\n  margin-left: -12px !important;\n  --tile-icon-size: 40px;\n  --mdc-icon-size: 35px;\n}\n"
                   }
@@ -1606,6 +1840,34 @@
                         "action": "none"
                       },
                       "entities": [
+                        {
+                          "entity": "sensor.holly_location",
+                          "name": "Holly",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/lovelace/holly"
+                          },
+                          "double_tap_action": {
+                            "action": "none"
+                          },
+                          "hold_action": {
+                            "action": "none"
+                          }
+                        },
+                        {
+                          "entity": "sensor.mike_location",
+                          "name": "Mike",
+                          "tap_action": {
+                            "action": "navigate",
+                            "navigation_path": "/lovelace/mike"
+                          },
+                          "double_tap_action": {
+                            "action": "none"
+                          },
+                          "hold_action": {
+                            "action": "none"
+                          }
+                        },
                         {
                           "entity": "binary_sensor.all_security_devices",
                           "name": "Devices",
@@ -2458,7 +2720,10 @@
                   },
                   "name": "Dresser",
                   "use_light_color": true,
-                  "show_color_control": true
+                  "show_color_control": true,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "humidifier",
@@ -2480,6 +2745,9 @@
                   "grid_options": {
                     "columns": 6,
                     "rows": 2
+                  },
+                  "hold_action": {
+                    "action": "more-info"
                   }
                 },
                 {
@@ -2494,7 +2762,10 @@
                     "rows": 2
                   },
                   "show_color_temp_control": false,
-                  "show_color_control": false
+                  "show_color_control": false,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-fan-card",
@@ -2505,7 +2776,10 @@
                     "columns": 6,
                     "rows": 2
                   },
-                  "name": "Fan"
+                  "name": "Fan",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-media-player-card",
@@ -2524,7 +2798,10 @@
                   },
                   "show_volume_level": false,
                   "fill_container": false,
-                  "icon": ""
+                  "icon": "",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -2641,7 +2918,10 @@
                     "columns": 6,
                     "rows": 2
                   },
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-fan-card",
@@ -2651,7 +2931,10 @@
                     "columns": 6,
                     "rows": 2
                   },
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 }
               ]
             },
@@ -2691,13 +2974,19 @@
                   "type": "custom:mushroom-light-card",
                   "entity": "light.office_fan_light",
                   "secondary_info": "none",
-                  "show_brightness_control": true
+                  "show_brightness_control": true,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-fan-card",
                   "entity": "fan.office_fan",
                   "secondary_info": "none",
-                  "show_percentage_control": true
+                  "show_percentage_control": true,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-media-player-card",
@@ -2712,15 +3001,21 @@
                     "volume_set",
                     "volume_buttons"
                   ],
-                  "use_media_info": false,
+                  "use_media_info": true,
                   "tap_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
                     "action": "more-info"
                   }
                 },
                 {
                   "type": "custom:mushroom-light-card",
                   "entity": "light.mike_desk_lamp",
-                  "secondary_info": "none"
+                  "secondary_info": "none",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -2754,7 +3049,13 @@
                   "tap_action": {
                     "action": "toggle"
                   },
-                  "entity": "switch.office_heater_plug"
+                  "entity": "switch.office_heater_plug",
+                  "hold_action": {
+                    "action": "more-info"
+                  },
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "heading",
@@ -2770,10 +3071,33 @@
                       "type": "entity",
                       "entity": "sensor.guest_room_multisensor_humidity"
                     }
+                  ]
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.guest_room_light",
+                  "secondary_info": "none",
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-media-player-card",
+                  "entity": "media_player.guest_room_tv",
+                  "show_volume_level": false,
+                  "media_controls": [
+                    "play_pause_stop",
+                    "previous",
+                    "next"
                   ],
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
+                  "volume_controls": [],
+                  "use_media_info": true,
+                  "tap_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
                   }
                 },
                 {
@@ -2790,58 +3114,28 @@
                       "type": "entity",
                       "entity": "sensor.hallway_humidity"
                     }
-                  ],
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
-                  }
-                },
-                {
-                  "type": "custom:mushroom-empty-card",
-                  "grid_options": {
-                    "columns": 1,
-                    "rows": 2
-                  }
-                },
-                {
-                  "type": "custom:mushroom-light-card",
-                  "entity": "light.guest_room_light",
-                  "secondary_info": "none",
-                  "grid_options": {
-                    "columns": 4,
-                    "rows": 2
-                  },
-                  "layout": "vertical"
-                },
-                {
-                  "type": "custom:mushroom-empty-card",
-                  "grid_options": {
-                    "columns": 1,
-                    "rows": 2
-                  }
-                },
-                {
-                  "type": "custom:mushroom-empty-card",
-                  "grid_options": {
-                    "columns": 1,
-                    "rows": 2
-                  }
+                  ]
                 },
                 {
                   "type": "custom:mushroom-light-card",
                   "entity": "light.hallway_light",
                   "secondary_info": "none",
-                  "grid_options": {
-                    "columns": 4,
-                    "rows": 2
-                  },
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
-                  "type": "custom:mushroom-empty-card",
+                  "type": "custom:mushroom-climate-card",
+                  "entity": "climate.thermostat",
                   "grid_options": {
-                    "columns": 1,
+                    "columns": 6,
                     "rows": 2
+                  },
+                  "fill_container": true,
+                  "show_temperature_control": true,
+                  "hold_action": {
+                    "action": "more-info"
                   }
                 },
                 {
@@ -2868,7 +3162,10 @@
                     "columns": 6,
                     "rows": 2
                   },
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-fan-card",
@@ -2878,7 +3175,10 @@
                     "columns": 6,
                     "rows": 2
                   },
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 }
               ]
             }
@@ -2943,7 +3243,13 @@
                   },
                   "entity": "light.kitchen_table_light",
                   "primary": "Kitchen",
-                  "secondary": "Table"
+                  "secondary": "Table",
+                  "hold_action": {
+                    "action": "more-info"
+                  },
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -2960,15 +3266,27 @@
                   },
                   "entity": "light.kitchen_overhead_light",
                   "primary": "Kitchen",
-                  "secondary": "Overhead"
+                  "secondary": "Overhead",
+                  "hold_action": {
+                    "action": "more-info"
+                  },
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-entity-card",
-                  "entity": "binary_sensor.kitchen_refrigerator_door_contact"
+                  "entity": "binary_sensor.kitchen_refrigerator_door_contact",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-entity-card",
-                  "entity": "binary_sensor.kitchen_freezer_door_contact"
+                  "entity": "binary_sensor.kitchen_freezer_door_contact",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "heading",
@@ -2976,6 +3294,14 @@
                   "heading": "Dining Room",
                   "heading_style": "subtitle",
                   "badges": [
+                    {
+                      "type": "entity",
+                      "entity": "sensor.dining_room_multisensor_temperature"
+                    },
+                    {
+                      "type": "entity",
+                      "entity": "sensor.dining_room_multisensor_humidity"
+                    },
                     {
                       "type": "entity",
                       "show_state": true,
@@ -3000,7 +3326,10 @@
                   "entity": "light.dining_room_overhead_light",
                   "secondary_info": "none",
                   "show_brightness_control": true,
-                  "name": "Overhead Light"
+                  "name": "Overhead Light",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-light-card",
@@ -3011,15 +3340,24 @@
                     "columns": 6,
                     "rows": 2
                   },
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-entity-card",
-                  "entity": "binary_sensor.dining_room_refrigerator_door_contact"
+                  "entity": "binary_sensor.dining_room_refrigerator_door_contact",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-entity-card",
-                  "entity": "binary_sensor.dining_room_freezer_door_contact"
+                  "entity": "binary_sensor.dining_room_freezer_door_contact",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 }
               ]
             },
@@ -3071,7 +3409,13 @@
                   },
                   "entity": "light.near_black_lamp",
                   "primary": "Near Black",
-                  "secondary": "Lamp"
+                  "secondary": "Lamp",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -3088,7 +3432,13 @@
                   },
                   "entity": "light.far_black_lamp",
                   "primary": "Far Black",
-                  "secondary": "Lamp"
+                  "secondary": "Lamp",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-light-card",
@@ -3096,7 +3446,10 @@
                   "show_brightness_control": true,
                   "show_color_control": true,
                   "secondary_info": "none",
-                  "use_light_color": true
+                  "use_light_color": true,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-media-player-card",
@@ -3113,6 +3466,9 @@
                     "play_pause_stop"
                   ],
                   "tap_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
                     "action": "more-info"
                   }
                 },
@@ -3151,7 +3507,13 @@
                   },
                   "entity": "light.living_room_cabinet_light",
                   "primary": "Cabinet",
-                  "secondary": "Light"
+                  "secondary": "Light",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "heading",
@@ -3184,7 +3546,10 @@
                     "columns": 6,
                     "rows": 2
                   },
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-lock-card",
@@ -3192,6 +3557,9 @@
                   "name": "Front Door",
                   "tap_action": {
                     "action": "toggle"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
                   }
                 }
               ]
@@ -3238,7 +3606,10 @@
                   "type": "custom:mushroom-light-card",
                   "entity": "light.god_damn_light",
                   "secondary_info": "none",
-                  "show_brightness_control": true
+                  "show_brightness_control": true,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-empty-card"
@@ -3254,7 +3625,10 @@
                     "previous",
                     "play_pause_stop",
                     "next"
-                  ]
+                  ],
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -3362,7 +3736,13 @@
                   },
                   "entity": "light.fireplace_light",
                   "primary": "Fireplace",
-                  "secondary": "Light"
+                  "secondary": "Light",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -3379,7 +3759,13 @@
                   },
                   "entity": "light.three_headed_lamp",
                   "secondary": "Lamp",
-                  "primary": "3-Headed"
+                  "primary": "3-Headed",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -3396,7 +3782,13 @@
                   },
                   "entity": "light.mantle_lights",
                   "primary": "Mantle",
-                  "secondary": "Lights"
+                  "secondary": "Lights",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -3413,7 +3805,13 @@
                   },
                   "entity": "switch.christmas_tree",
                   "secondary": "Tree",
-                  "primary": "Christmas"
+                  "primary": "Christmas",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 }
               ]
             },
@@ -3463,7 +3861,13 @@
                   },
                   "entity": "light.laundry_room_light",
                   "primary": "Laundry",
-                  "secondary": "Room"
+                  "secondary": "Room",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -3483,17 +3887,29 @@
                   "secondary": "Switch",
                   "icon_tap_action": {
                     "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
+                  },
+                  "icon_hold_action": {
+                    "action": "more-info"
                   }
                 },
                 {
                   "type": "custom:mushroom-entity-card",
                   "entity": "binary_sensor.washer_running",
-                  "icon": "mdi:washing-machine"
+                  "icon": "mdi:washing-machine",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-entity-card",
                   "entity": "binary_sensor.dryer_running",
-                  "icon": "mdi:tumble-dryer"
+                  "icon": "mdi:tumble-dryer",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "heading",
@@ -3509,10 +3925,25 @@
                       "type": "entity",
                       "entity": "binary_sensor.powder_room_window_contact"
                     }
-                  ],
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
+                  ]
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(entity, 'icon') }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "light.powder_room_light",
+                  "primary": "Powder",
+                  "secondary": "Room",
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "hold_action": {
+                    "action": "more-info"
                   }
                 },
                 {
@@ -3528,70 +3959,34 @@
                     {
                       "type": "entity",
                       "entity": "binary_sensor.den_window_contact"
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "binary_sensor.den_motion_sensor_occupancy",
+                      "icon": "mdi:motion-sensor"
                     }
-                  ],
-                  "grid_options": {
-                    "columns": 6,
-                    "rows": 1
-                  }
+                  ]
                 },
                 {
                   "type": "custom:mushroom-template-card",
                   "icon": "{{ state_attr(entity, 'icon') }}",
                   "features_position": "bottom",
                   "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
-                  "vertical": true,
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "entity": "light.powder_room_light",
-                  "primary": "Powder",
-                  "secondary": "Room"
-                },
-                {
-                  "type": "custom:mushroom-empty-card",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  }
-                },
-                {
-                  "type": "custom:mushroom-template-card",
-                  "icon": "{{ state_attr(entity, 'icon') }}",
-                  "features_position": "bottom",
-                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
                   "vertical": true,
                   "tap_action": {
                     "action": "toggle"
                   },
                   "entity": "light.den_overhead_light",
                   "primary": "Den",
-                  "secondary": "Overhead"
-                },
-                {
-                  "type": "custom:mushroom-template-card",
-                  "icon": "mdi:motion-sensor",
-                  "features_position": "bottom",
-                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
-                  },
-                  "vertical": true,
-                  "tap_action": {
+                  "secondary": "Overhead",
+                  "icon_hold_action": {
                     "action": "more-info"
                   },
-                  "entity": "binary_sensor.den_motion_sensor_occupancy",
-                  "primary": "Den Motion",
-                  "secondary": "{% if states(entity) == \"off\" %}Clear{% else %}Detected{% endif %}"
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 }
               ]
             }
@@ -3632,7 +4027,10 @@
                     "rows": 2
                   },
                   "secondary_info": "none",
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-light-card",
@@ -3642,7 +4040,10 @@
                     "rows": 2
                   },
                   "secondary_info": "none",
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-light-card",
@@ -3652,13 +4053,19 @@
                     "rows": 2
                   },
                   "secondary_info": "none",
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-cover-card",
                   "entity": "cover.garage_door",
                   "show_position_control": false,
-                  "show_buttons_control": true
+                  "show_buttons_control": true,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "heading",
@@ -3683,7 +4090,10 @@
                   "entity": "light.front_porch_light",
                   "use_light_color": true,
                   "show_brightness_control": true,
-                  "show_color_control": true
+                  "show_color_control": true,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-light-card",
@@ -3694,7 +4104,10 @@
                   },
                   "secondary_info": "none",
                   "layout": "vertical",
-                  "name": "Garage Lights"
+                  "name": "Garage Lights",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -3711,7 +4124,13 @@
                   },
                   "entity": "switch.outside_christmas_lights",
                   "primary": "Christmas",
-                  "secondary": "Lights"
+                  "secondary": "Lights",
+                  "hold_action": {
+                    "action": "more-info"
+                  },
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  }
                 }
               ]
             },
@@ -3741,14 +4160,20 @@
                     "rows": 2
                   },
                   "secondary_info": "none",
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-light-card",
                   "entity": "light.deck_lights",
                   "use_light_color": true,
                   "show_brightness_control": true,
-                  "show_color_control": true
+                  "show_color_control": true,
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "heading",
@@ -3764,7 +4189,10 @@
                     "rows": 2
                   },
                   "secondary_info": "none",
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 },
                 {
                   "type": "custom:mushroom-light-card",
@@ -3774,7 +4202,10 @@
                     "rows": 2
                   },
                   "secondary_info": "none",
-                  "layout": "vertical"
+                  "layout": "vertical",
+                  "hold_action": {
+                    "action": "more-info"
+                  }
                 }
               ]
             }
@@ -4104,6 +4535,28 @@
           ]
         },
         {
+          "type": "panel",
+          "path": "hollymike",
+          "subview": true,
+          "cards": [
+            {
+              "type": "map",
+              "entities": [
+                {
+                  "entity": "person.holly_erdely"
+                },
+                {
+                  "entity": "person.michael_erdely"
+                }
+              ],
+              "theme_mode": "light",
+              "default_zoom": 15
+            }
+          ],
+          "title": "Holly & Mike's Location",
+          "icon": "mdi:account-multiple"
+        },
+        {
           "type": "sections",
           "max_columns": 3,
           "title": "Utilities",
@@ -4134,7 +4587,7 @@
                     "rows": 2
                   },
                   "icon": "mdi:home-assistant",
-                  "name": "HA Info"
+                  "name": "Home Assistant"
                 },
                 {
                   "show_name": true,
@@ -4157,13 +4610,29 @@
                   "show_icon": true,
                   "type": "button",
                   "entity": "button.homeassistant_reload",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/servers"
+                  },
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 2
+                  },
+                  "icon": "mdi:server-network",
+                  "name": "Servers"
+                },
+                {
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
+                  "entity": "button.homeassistant_reload",
                   "name": "Plugs",
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/lovelace/plugs"
                   },
                   "grid_options": {
-                    "columns": 3,
+                    "columns": 2,
                     "rows": 2
                   },
                   "icon": "mdi:power-plug"
@@ -4178,7 +4647,7 @@
                     "navigation_path": "/lovelace/batteries"
                   },
                   "grid_options": {
-                    "columns": 3,
+                    "columns": 2,
                     "rows": 2
                   },
                   "icon": "mdi:battery",
@@ -4308,6 +4777,13 @@
                       "type": "entity",
                       "show_state": true,
                       "show_icon": true,
+                      "entity": "sensor.picture_frame_status",
+                      "icon": "mdi:image-frame"
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
                       "entity": "switch.sinope_plug",
                       "icon": "mdi:power-plug"
                     }
@@ -4361,29 +4837,6 @@
                 },
                 {
                   "type": "custom:mushroom-template-card",
-                  "icon": "mdi:reload",
-                  "features_position": "bottom",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 1
-                  },
-                  "tap_action": {
-                    "action": "perform-action",
-                    "perform_action": "shell_command.ssh_command",
-                    "target": {},
-                    "data": {
-                      "server": "picframe@sinope.erdely.in",
-                      "command": "reload"
-                    }
-                  },
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "vertical": true,
-                  "color": "var(--state-icon-color)"
-                },
-                {
-                  "type": "custom:mushroom-template-card",
                   "icon": "mdi:square-outline",
                   "features_position": "bottom",
                   "grid_options": {
@@ -4397,6 +4850,29 @@
                     "data": {
                       "server": "picframe@sinope.erdely.in",
                       "command": "blank"
+                    }
+                  },
+                  "hold_action": {
+                    "action": "none"
+                  },
+                  "vertical": true,
+                  "color": "var(--state-icon-color)"
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:reload",
+                  "features_position": "bottom",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 1
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "shell_command.ssh_command",
+                    "target": {},
+                    "data": {
+                      "server": "picframe@sinope.erdely.in",
+                      "command": "reload"
                     }
                   },
                   "hold_action": {
@@ -4843,7 +5319,10 @@
                             "service": "homeassistant.update_entity",
                             "service_data": {},
                             "target": {
-                              "entity_id": "sensor.unavailable_entities_list"
+                              "entity_id": [
+                                "sensor.unavailable_entities",
+                                "sensor.unavailable_entities_list"
+                              ]
                             }
                           }
                         },
@@ -4926,6 +5405,52 @@
                       "icon": " "
                     }
                   ]
+                },
+                {
+                  "type": "heading",
+                  "icon": "",
+                  "heading": "Batteries Under 50%",
+                  "heading_style": "subtitle",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/batteries"
+                  }
+                },
+                {
+                  "type": "custom:auto-entities",
+                  "card": {
+                    "type": "entities"
+                  },
+                  "filter": {
+                    "include": [
+                      {
+                        "options": {
+                          "card_mod": {
+                            "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if state_attr(\"this.entity_id\", \"days_string\") == \"Tomorrow\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: var(--state-active-color);\n  {% elif state_attr(\"this.entity_id\", \"days_string\") == \"Today\" and is_state('input_boolean.recycle_is_out', 'off') %}\n  color: red\n  {% else %}\n  color: var(--primary-text-color)\n  {% endif %}\n}\n"
+                          }
+                        },
+                        "domain": "sensor",
+                        "entity_id": "*battery*",
+                        "state": "<50"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "options": {},
+                        "entity_id": "sensor.low_battery"
+                      },
+                      {
+                        "options": {},
+                        "entity_id": ".*battery_(health|power|state|temperature)(_[0-9])?"
+                      }
+                    ]
+                  },
+                  "sort": {
+                    "method": "state",
+                    "attribute": {},
+                    "reverse": false,
+                    "numeric": true
+                  }
                 }
               ]
             }
@@ -5524,15 +6049,40 @@
                       "type": "entity",
                       "show_state": true,
                       "show_icon": true,
-                      "entity": "sensor.alarm_state_pretty",
-                      "icon": "mdi:security"
+                      "entity": "button.homeassistant_reload",
+                      "icon": "mdi:home",
+                      "name": "Home",
+                      "state_content": "name",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace"
+                      }
                     },
                     {
                       "type": "entity",
                       "show_state": true,
                       "show_icon": true,
-                      "entity": "binary_sensor.all_security_devices",
-                      "icon": "mdi:home"
+                      "entity": "button.homeassistant_reload",
+                      "icon": "mdi:cctv",
+                      "state_content": "name",
+                      "name": "Front",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace/front-cameras"
+                      }
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "button.homeassistant_reload",
+                      "icon": "mdi:cctv",
+                      "state_content": "name",
+                      "name": "Back",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace/back-cameras"
+                      }
                     }
                   ]
                 },
@@ -5550,58 +6100,10 @@
                     },
                     {
                       "camera_entity": "camera.garage_door"
-                    }
-                  ],
-                  "live": {
-                    "preload": true,
-                    "auto_play": [
-                      "visible"
-                    ],
-                    "lazy_load": false
-                  },
-                  "menu": {
-                    "buttons": {
-                      "media_player": {
-                        "enabled": false
-                      },
-                      "timeline": {
-                        "enabled": false
-                      }
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "Backyard Cameras",
-                  "heading_style": "subtitle",
-                  "badges": [
-                    {
-                      "type": "entity",
-                      "show_state": true,
-                      "show_icon": true,
-                      "entity": "binary_sensor.shed_gate_contact"
                     },
                     {
-                      "type": "entity",
-                      "entity": "binary_sensor.shed_door_contact"
+                      "camera_entity": "camera.shed"
                     },
-                    {
-                      "type": "entity",
-                      "show_state": true,
-                      "show_icon": true,
-                      "entity": "binary_sensor.chimney_gate_contact",
-                      "icon": "game-icons:chimney"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:advanced-camera-card",
-                  "cameras": [
                     {
                       "camera_entity": "camera.backyard"
                     },
@@ -5610,9 +6112,6 @@
                     },
                     {
                       "camera_entity": "camera.chimney"
-                    },
-                    {
-                      "camera_entity": "camera.shed"
                     }
                   ],
                   "live": {
@@ -5624,10 +6123,10 @@
                   },
                   "menu": {
                     "buttons": {
-                      "timeline": {
+                      "media_player": {
                         "enabled": false
                       },
-                      "media_player": {
+                      "timeline": {
                         "enabled": false
                       }
                     }
@@ -5638,6 +6137,348 @@
           ],
           "cards": [],
           "theme": "tablet_ui"
+        },
+        {
+          "type": "panel",
+          "path": "front-cameras",
+          "title": "Front Cameras",
+          "icon": "mdi:cctv",
+          "subview": true,
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "heading",
+                  "icon": "mdi:cctv",
+                  "heading": "Front Cameras",
+                  "heading_style": "subtitle",
+                  "badges": [
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "button.homeassistant_reload",
+                      "name": "Home",
+                      "icon": "mdi:home",
+                      "state_content": "name",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace"
+                      }
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "button.homeassistant_reload",
+                      "name": "Single",
+                      "icon": "mdi:video",
+                      "state_content": "name",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace/cameras"
+                      }
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "button.homeassistant_reload",
+                      "name": "Back",
+                      "icon": "mdi:cctv",
+                      "state_content": "name",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace/back-cameras"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.garage"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ],
+                        "lazy_load": false
+                      },
+                      "menu": {
+                        "buttons": {
+                          "media_player": {
+                            "enabled": false
+                          },
+                          "timeline": {
+                            "enabled": false
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.front_door"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ],
+                        "lazy_load": false
+                      },
+                      "menu": {
+                        "buttons": {
+                          "media_player": {
+                            "enabled": false
+                          },
+                          "timeline": {
+                            "enabled": false
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.front_door_2"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ],
+                        "lazy_load": false
+                      },
+                      "menu": {
+                        "buttons": {
+                          "media_player": {
+                            "enabled": false
+                          },
+                          "timeline": {
+                            "enabled": false
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.garage_door"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ],
+                        "lazy_load": false
+                      },
+                      "menu": {
+                        "buttons": {
+                          "media_player": {
+                            "enabled": false
+                          },
+                          "timeline": {
+                            "enabled": false
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "path": "back-cameras",
+          "title": "Back Cameras",
+          "icon": "mdi:cctv",
+          "subview": true,
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "heading",
+                  "icon": "mdi:cctv",
+                  "heading": "Back Cameras",
+                  "heading_style": "subtitle",
+                  "badges": [
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "button.homeassistant_reload",
+                      "name": "Home",
+                      "icon": "mdi:home",
+                      "state_content": "name",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace"
+                      }
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "button.homeassistant_reload",
+                      "name": "Single",
+                      "icon": "mdi:video",
+                      "state_content": "name",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace/cameras"
+                      }
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "button.homeassistant_reload",
+                      "name": "Front",
+                      "icon": "mdi:cctv",
+                      "state_content": "name",
+                      "tap_action": {
+                        "action": "navigate",
+                        "navigation_path": "/lovelace/front-cameras"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.backyard"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ],
+                        "lazy_load": false
+                      },
+                      "menu": {
+                        "buttons": {
+                          "media_player": {
+                            "enabled": false
+                          },
+                          "timeline": {
+                            "enabled": false
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.backyard_2"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ],
+                        "lazy_load": false
+                      },
+                      "menu": {
+                        "buttons": {
+                          "media_player": {
+                            "enabled": false
+                          },
+                          "timeline": {
+                            "enabled": false
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.chimney"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ],
+                        "lazy_load": false
+                      },
+                      "menu": {
+                        "buttons": {
+                          "media_player": {
+                            "enabled": false
+                          },
+                          "timeline": {
+                            "enabled": false
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "custom:advanced-camera-card",
+                      "cameras": [
+                        {
+                          "camera_entity": "camera.shed"
+                        }
+                      ],
+                      "live": {
+                        "preload": true,
+                        "auto_play": [
+                          "visible"
+                        ],
+                        "lazy_load": false
+                      },
+                      "menu": {
+                        "buttons": {
+                          "media_player": {
+                            "enabled": false
+                          },
+                          "timeline": {
+                            "enabled": false
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "title": "Schedules",
@@ -6079,14 +6920,7 @@
                         },
                         "domain": "sensor",
                         "entity_id": "*battery*",
-                        "name": "[^H-Zh-z]*"
-                      },
-                      {
-                        "options": {
-                          "secondary_info": "last-changed"
-                        },
-                        "domain": "sensor",
-                        "entity_id": "*fkb*_control_panel*"
+                        "name": "[^K-Zk-z]*"
                       }
                     ],
                     "exclude": [
@@ -6104,12 +6938,15 @@
                       },
                       {
                         "options": {},
-                        "entity_id": "*pixel*"
+                        "entity_id": "/sensor\\.(((holly|mike).*(phone|9p|p9|duet))|pixel).*battery.*/"
                       }
                     ]
                   },
                   "sort": {
-                    "method": "name"
+                    "method": "state",
+                    "attribute": {},
+                    "reverse": false,
+                    "numeric": true
                   }
                 }
               ]
@@ -6136,13 +6973,17 @@
                         },
                         "domain": "sensor",
                         "entity_id": "*battery*",
-                        "name": "[H-Zh-z]*"
+                        "name": "[K-Zk-z]*"
                       }
                     ],
                     "exclude": [
                       {
                         "options": {},
                         "entity_id": "sensor.low_battery"
+                      },
+                      {
+                        "options": {},
+                        "entity_id": "sensor.low_battery_list"
                       },
                       {
                         "options": {},
@@ -6154,12 +6995,15 @@
                       },
                       {
                         "options": {},
-                        "entity_id": "*pixel*"
+                        "entity_id": "/sensor\\.(((holly|mike).*(phone|9p|p9|duet))|pixel).*battery.*/"
                       }
                     ]
                   },
                   "sort": {
-                    "method": "name"
+                    "method": "state",
+                    "attribute": {},
+                    "reverse": false,
+                    "numeric": true
                   }
                 }
               ]
@@ -6185,7 +7029,7 @@
                           "secondary_info": "last-changed"
                         },
                         "domain": "sensor",
-                        "entity_id": "/sensor\\.(holly|mike).*battery.*/"
+                        "entity_id": "/sensor\\.(holly|mike|pixel).*battery.*/"
                       }
                     ],
                     "exclude": [
@@ -6204,7 +7048,10 @@
                     ]
                   },
                   "sort": {
-                    "method": "name"
+                    "method": "state",
+                    "attribute": {},
+                    "reverse": false,
+                    "numeric": true
                   }
                 },
                 {
@@ -6236,7 +7083,10 @@
                     ]
                   },
                   "sort": {
-                    "method": "name"
+                    "method": "state",
+                    "attribute": {},
+                    "reverse": false,
+                    "numeric": true
                   }
                 },
                 {
@@ -6263,7 +7113,10 @@
                     "method": "name"
                   },
                   "sort": {
-                    "method": "name"
+                    "method": "state",
+                    "attribute": {},
+                    "reverse": false,
+                    "numeric": true
                   }
                 }
               ]
@@ -6272,6 +7125,207 @@
           "path": "batteries",
           "subview": true,
           "theme": "tablet_ui"
+        },
+        {
+          "type": "sections",
+          "max_columns": 3,
+          "title": "Servers",
+          "path": "servers",
+          "icon": "mdi:server-network",
+          "subview": true,
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Jupiter",
+                  "heading_style": "subtitle",
+                  "icon": "mdi:server"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "switch.jupiter_plug"
+                    },
+                    {
+                      "entity": "switch.jupiter_usb_hub_plug"
+                    },
+                    {
+                      "entity": "switch.jupiter_nasdata50_plug"
+                    },
+                    {
+                      "entity": "switch.jupiter_nasdata32_plug"
+                    },
+                    {
+                      "entity": "switch.jupiter_backups_disk_plug"
+                    },
+                    {
+                      "entity": "switch.jupiter_tv_disk_plug"
+                    },
+                    {
+                      "entity": "switch.jupiter_tv2_disk_plug"
+                    },
+                    {
+                      "entity": "switch.jupiter_tv3_disk_plug"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Earth",
+                  "heading_style": "subtitle",
+                  "icon": "mdi:server"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "switch.earth_plug"
+                    },
+                    {
+                      "entity": "switch.earth_usb_hub_plug"
+                    },
+                    {
+                      "entity": "switch.earth_nasdata11_plug"
+                    },
+                    {
+                      "entity": "switch.earth_backups_disk_plug"
+                    },
+                    {
+                      "entity": "switch.earth_backups2_disk_plug"
+                    },
+                    {
+                      "entity": "switch.earth_backups3_disk_plug"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Other Servers",
+                  "heading_style": "subtitle"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "switch.mars_plug"
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "entity": "switch.carme_plug"
+                    },
+                    {
+                      "entity": "switch.carme_kvm_plug"
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "entity": "switch.metis_plug"
+                    },
+                    {
+                      "entity": "switch.metis_kvm_plug"
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "entity": "switch.ata_plug"
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "entity": "switch.tarvos_plug"
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "entity": "switch.sinope_plug"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sections",
+          "max_columns": 2,
+          "title": "Music",
+          "path": "music",
+          "icon": "mdi:music-note",
+          "subview": true,
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:mass-player-card",
+                  "entities": [
+                    "media_player.downstairs_speakers",
+                    "media_player.sinope",
+                    "media_player.metis_erdely_in",
+                    "media_player.tarvos_erdely_in",
+                    "media_player.office_roku_tv_2",
+                    "media_player.mercury",
+                    "media_player.upstairs_speakers"
+                  ],
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "media_browser": {
+                    "columns": 4,
+                    "favorites": {
+                      "audiobooks": {
+                        "enabled": false
+                      },
+                      "podcasts": {
+                        "enabled": false
+                      },
+                      "radios": {
+                        "enabled": false
+                      }
+                    },
+                    "recommendations": {
+                      "providers": [
+                        "youtube"
+                      ],
+                      "enabled": false
+                    },
+                    "recents": {
+                      "radios": {
+                        "enabled": false
+                      },
+                      "podcasts": {
+                        "enabled": false
+                      },
+                      "audiobooks": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                }
+              ],
+              "column_span": 2
+            }
+          ],
+          "cards": []
         }
       ]
     }

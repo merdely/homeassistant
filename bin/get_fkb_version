@@ -1,11 +1,32 @@
-#!/bin/sh
+#!/bin/bash
 
-ver=$(curl -fs https://www.fully-kiosk.com/en/ | awk '
-  /<a href="https:\/\/www.fully-kiosk.com\/files\/[0-9]{4}\/[0-9]{2}\/.*\.apk"><img/ {
-    print gensub(/.*<a href="https:\/\/www.fully-kiosk.com\/files\/[0-9]{4}\/[0-9]{2}\/Fully-Kiosk-Browser-v(.*)\.apk"><img.*/,
-    "\\1", "g", $0);
-    exit}
-  ')
+hours=8
+outfile=/tmp/fkb_web.txt
+
+if [ -r "$outfile" ]; then
+  hours_old=$(( ($(date +%s) - $(stat -c %Y "$outfile")) / 3600 ))
+  link_count=$(grep -E '<a href="https:\/\/www.fully-kiosk.com\/files\/[0-9]{4}\/[0-9]{2}\/.*\.apk"><img' "$outfile" 2> /dev/null | wc -l)
+else
+  hours_old=$((hours + 1))
+  link_count=0
+fi
+
+# If hours_old is not numeric or link_count is not numeric or hours_old is greater than $hours or the file is not valid
+if ! [[ $hours_old =~ ^[0-9]+$ ]] || ! [[ $link_count =~ ^[0-9]+$ ]] || [ $hours_old -gt $hours ] || [ $link_count -eq 0 ]; then
+  echo Downloading version information from fully-kiosk.com > /dev/stderr
+  curl -fsLo $outfile https://www.fully-kiosk.com/en/
+else
+  # echo Downloaded file is valid and less than $hours hours old > /dev/stderr
+  true
+fi
+
+ver=$(awk '
+  /<a href="https:\/\/www.fully-kiosk.com\/files\/[0-9]{4}\/[0-9]{2}\/Fully-Kiosk-Browser-v.*\.apk"><img/ && ! /[0-9]-emm\.apk/ {
+    sub(/.*<a href="https:\/\/www.fully-kiosk.com\/files\/[0-9]{4}\/[0-9]{2}\/Fully-Kiosk-Browser-v/,"");
+    sub(/\.apk"><img.*$/,"");
+    print $0;
+  }' $outfile | sort -Vr | head -n 1)
+
 err=$?
 if [ $err != 0 ]; then
   echo "error ($ver)"
