@@ -1,0 +1,218 @@
+#!/usr/bin/env bash
+
+for f in curl jq; do
+  ! command -v $f &> /dev/null && echo "Error: The '$f' command is required" > /dev/stderr && exit 1
+done
+
+use_local=${use_local:-true}
+use_mistral=${use_mistral:-true}
+use_claude=${use_claude:-true}
+use_chatgpt=${use_chatgpt:-true}
+debug=${debug:-false}
+debug_exit=${debug_exit:-false}
+output_json=${output_json:-false}
+
+secrets_file="${secrets_file:-$(readlink -f $(dirname "$0")/../secrets.yaml)}"
+
+declare -A answers count
+
+[ ! -r "$secrets_file" ] && echo "Error: Cannot open secrets file" && exit 1
+! grep -q "^recycle_day_" "$secrets_file" && echo "Error: No recycle_day secrets in secrets file" && exit 1
+
+for var in home_assistant_base_url recycle_url_main recycle_default_day; do
+  [[ ! "${!var}" ]] && declare "$var=$(awk "/^$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print}" "$secrets_file")"
+  [[ $var == home_assistant_base_url ]] && [[ ! $home_assistant_base_url ]] && home_assistant_base_url=http://localhost:8123
+  [[ $var == recycle_url_main ]] && [[ ! $recycle_url_main ]] && recycle_url_main=https://www.montgomerycountymd.gov/DEP/trash-recycling/index.html
+  [[ $var == recycle_default_day ]] && [[ ! $recycle_default_day ]] && recycle_default_day=Friday
+done
+for var in min_agree local_model local_url claude_api_key mistral_api_key mistral_agent_id openai_api_key hass_api_key; do
+  [[ ! "${!var}" ]] && declare "$var=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print}" "$secrets_file")"
+  [[ $var == min_agree ]] && [[ ! $min_agree ]] && min_agree=2
+done
+[[ $answer ]] && min_agree=1 && answers[manual]=$answer
+
+usage() {
+  echo "usage: $(basename $0) [-h] [-d|-D] [-j] [-a ANSWER] [-m MIN_AGREE]"
+  echo "  -d           : Print debug information"
+  echo "  -D           : Print debug information and exit"
+  echo "  -j           : Output using JSON"
+  echo "  -J           : Output simple response (i.e. 'Friday')"
+  echo "  -a ANSWER    : Hardcode an answer"
+  echo "  -m MIN_AGREE : Minimum number of LLMs must agree on answer (default: $min_agree)"
+  exit $1
+}
+
+while getopts ":hdDJja:m:" opt; do
+  case $opt in
+    d) debug=true ;;
+    D) debug=true ; debug_exit=true ;;
+    j) output_json=true ;;
+    J) output_json=false ;;
+    a) answer=$OPTARG ;;
+    m)
+       [[ ! $OPTARG =~ ^[0-9]+$ ]] && echo "Error: MIN_AGREE must be a number" && exit 1
+       min_agree=$OPTARG ;;
+    *) usage ;;
+  esac
+done
+shift $((OPTIND -1))
+
+[[ ! $hass_api_key ]] && echo "Error: Cannot determine hass_api_key from $secrets_file" && exit 1
+
+use_ai=$(curl -skSL -H "Authorization: Bearer $hass_api_key" $home_assistant_base_url/api/states/input_boolean.use_ai_for_recycle_day | jq -r .state)
+if [ "${use_ai,,}" != "on" ]; then
+  $debug && echo "Warning: Use AI for Recycle Day is not 'on' in Home Assistant" > /dev/stderr
+  exit
+fi
+normal_recycle_day=$(curl -skSL -H "Authorization: Bearer $hass_api_key" $home_assistant_base_url/api/states/input_select.recycle_day | jq -r .state)
+[[ ! $normal_recycle_day ]] && normal_recycle_day=$recycle_default_day
+
+if [ "$(date +%A)" = Sunday ]; then
+  reference_date="${reference_date:-$(date "+%A, %B %_d, %Y")}"
+else
+  reference_date="${reference_date:-$(date -d "@$(( $(date +%s) - $(date +%w)*86400 ))" "+%A, %B %_d, %Y")}"
+fi
+reference_date=${reference_date//  / }
+
+xmllint=false
+command -v xmllint &> /dev/null && xmllint=true
+if $xmllint; then
+  county_alert_url=$(curl -sL $recycle_url_main | \
+    xmllint --html --xpath 'string(//div[@id="alert"]/following-sibling::script)' - 2>/dev/null | \
+    sed -n 's/.*load("\([^"]*\)".*/\1/p')
+else
+  county_alert_url=$(curl -sL $recycle_url_main | \
+    sed -n 's/.*$("#alert").load("\([^"]*\)".*/\1/p')
+fi
+
+if $xmllint && [[ $county_alert_url =~ ^https?://.*montgomerycountymd.gov ]]; then
+  county_alert_text=$(curl -sL $county_alert_url | xmllint --html --xpath 'string(//body)' - 2> /dev/null | \
+    sed -r 's/^\s*//;/^\s*$/d' | paste -sd " ")
+elif [[ $county_alert_url =~ ^https?://.*montgomerycountymd.gov ]]; then
+  county_alert_text=$(curl -sL "$county_alert_url" | \
+    sed -r ':a;N;$!ba;s/\n/ /g;s/(&nbsp;|\r)/ /g;s/<!--.*-->//g;s/ +/ /g;s/<[^>]*>//g;s/^ +//')
+else
+  echo "Warning: Invalid MoCo Alert/Warning URL ($county_alert_url)" > /dev/stderr
+fi
+
+prompt="My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Without explaining how you arrived at your conclusion, what weekday will the county come to pick up my recycle this week?"
+
+if $debug; then
+  for var in home_assistant_base_url recycle_url_main county_alert_url recycle_default_day normal_recycle_day reference_date min_agree local_url local_model claude_api_key mistral_api_key mistral_agent_id openai_api_key hass_api_key prompt; do
+    $debug && printf '%s=%s\n' "$var" "${!var}"
+  done
+  $debug_exit && exit
+fi
+
+check_agreement() {
+  #set -o xtrace
+  [[ $min_agree = 1 ]] && [[ ${#answers[@]} = 1 ]] && echo ${answers[@]} && return 0
+
+  local count
+  local max=0
+  local answer=""
+  declare -A count
+
+  $debug && echo "methods = ${!answers[@]}" > /dev/stderr
+  $debug && echo "answers = ${answers[@]}" > /dev/stderr
+  for v in "${answers[@]}"; do [[ $v ]] && ((count["$v"]++)); done
+  for v in "${!count[@]}"; do (( count[$v] > max )) && max=${count[$v]} && answer=$v; done
+  (( $max < $min_agree )) && return 1
+  [[ ! $answer ]] && return 1
+  echo $answer
+}
+
+if [[ ! $answer ]] && $use_local && [[ $local_model ]] && [[ $local_url ]]; then
+  tmpanswer=$(curl -s $local_url/api/generate \
+    -d "{ 
+          \"model\": \"$local_model\",
+          \"prompt\": \"$prompt\",
+          \"stream\": false
+    }" | jq -r '.response' | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
+  if [[ $tmpanswer ]]; then
+    answers[local]=$tmpanswer
+    answer=$(check_agreement)
+    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
+  fi
+fi
+
+if [[ ! $answer ]] && $use_mistral && [[ $mistral_api_key ]] && [[ $mistral_agent_id ]]; then
+  tmpanswer=$(curl -s https://api.mistral.ai/v1/conversations \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $mistral_api_key" \
+    -d "{
+          \"agent_id\": \"$mistral_agent_id\",
+          \"inputs\": [
+            {\"role\":\"user\",\"content\":\"$prompt\"}
+          ]
+    }" | jq -r '.outputs[0].content' | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
+
+  if [[ $tmpanswer ]]; then
+    answers[mistral]=$tmpanswer
+    answer=$(check_agreement)
+    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
+  fi
+fi
+
+if [[ ! $answer ]] && $use_claude && [[ $claude_api_key ]]; then
+  tmpanswer=$(curl -s https://api.anthropic.com/v1/messages \
+    -H "x-api-key: $claude_api_key" \
+    -H "anthropic-version: 2023-06-01" \
+    -H "content-type: application/json" \
+    -d "{
+          \"model\": \"claude-sonnet-4-20250514\",
+          \"max_tokens\": 100,
+          \"messages\": [
+            {\"role\": \"user\", \"content\": \"$prompt\"}
+          ]
+    }" | jq -r '.content[0].text' | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
+
+  if [[ $tmpanswer ]]; then
+    answers[claude]=$tmpanswer
+    answer=$(check_agreement)
+    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
+  fi
+fi
+
+if [[ ! $answer ]] && $use_chatgpt && [[ $openai_api_key ]]; then
+  tmpanswer=$(curl -s https://api.openai.com/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $openai_api_key" \
+    -d "{
+          \"model\": \"gpt-5-mini\",
+          \"input\": \"$prompt\"
+    }" | jq -r '.output[0].content[0].text' | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
+
+  if [[ $tmpanswer ]]; then
+    answers[chatgpt]=$tmpanswer
+    answer=$(check_agreement)
+    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
+  fi
+fi
+
+if [[ $answer ]]; then
+  if $output_json; then
+    echo "{"
+    if [ ${#answers[@]} != 0 ]; then
+      comma=,
+      count=0
+      echo "  \"answers\": {"
+      for v in "${!answers[@]}"; do
+        ((count++))
+        (( count >= ${#answers[@]} )) && unset comma
+        echo "    \"$v\": \"${answers[$v]}\"$comma"
+      done
+      echo "  },"
+    fi
+    echo "  \"answer\": \"$answer\""
+    echo "}"
+  else
+    echo $answer
+  fi
+elif [ ${#answers[@]} = 0 ]; then
+  echo "Error: No LLMs were used to determine date (none configured?)"
+else
+  echo "Error: Could not determine answer"
+  exit 1
+fi
+
