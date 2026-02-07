@@ -5,13 +5,18 @@ secrets_file="$(readlink -f $(dirname "$0")/../secrets.yaml)"
 usage () {
   ret=$1
   [ -z "$ret" ] && ret=0
-  echo "usage: $(basename $0) [-h]"
+  echo "usage: $(basename $0) [-h] [-d]"
   echo "           -h               : This help text"
+  echo "           -d               : Print debug text"
   exit $ret
 }
 
-while getopts ":h" opt; do
+debug=${debug:-false}
+while getopts ":hd" opt; do
   case $opt in
+    d)
+      debug=true
+      ;;
     *)
       usage
       ;;
@@ -25,6 +30,7 @@ shift $((OPTIND -1))
 frigate_url=$(awk '$1=="frigate_url:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
 [ -z "$frigate_url" ] && echo "Error: Secrets file does not have 'frigate_url'" > /dev/stderr && exit 1
 
-[ $debug = 1 ] && echo frigate_url=$frigate_url > /dev/stderr
+$debug && echo frigate_url=$frigate_url > /dev/stderr
 
-curl -L -X POST "${frigate_url}/api/restart" -H "Accept: application/json"
+curl -sfL -X POST "${frigate_url}/api/restart" -H "Accept: application/json"
+

@@ -228,6 +228,16 @@
       - exception_code
 
 - sensor:
+    name: MoCo Recycle Day Adjustment
+    command: bin/get_recycle_day_adjustment -j
+    unique_id: moco_recycle_day_adjustment
+    # Request every 24 hours
+    scan_interval: 86400
+    value_template: "{{ value_json.answer }}"
+    json_attributes:
+      - answers
+
+- sensor:
     name: Fully Kiosk Browser Version Latest
     unique_id: fully_kiosk_browser_version_latest
     command: bin/get_fkb_version

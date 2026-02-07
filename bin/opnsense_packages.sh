@@ -15,7 +15,7 @@ tmpfile=$(mktemp)
 cp /dev/null $tmpfile
 if [ -n "$sys_abi" ]; then
   unset name version
-  http_status_code=$(curl -w %{http_code} -sfo $tmpfile "https://opn-repo.routerperformance.net/repo/$sys_abi/packagesite.pkg")
+  http_status_code=$(curl -w %{http_code} -sfo $tmpfile "https://opn-repo.routerperformance.net/repo-single/$sys_abi/packagesite.pkg")
   if [ $http_status_code = 200 ] && which zstd > /dev/null 2>&1; then
     tmpdir=$(mktemp -d)
     zstd -d $tmpfile -o $tmpdir/data.tar > /dev/null 2>&1

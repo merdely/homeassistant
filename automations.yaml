@@ -10,7 +10,8 @@
     value_template: '{{ as_timestamp(states("sensor.date_time_iso"), 0) | timestamp_custom("%m-%d",
       True, "Unavailable")  != "10-31" }}'
   actions:
-  - choose:
+  - alias: Handle Front Porch Light and Deck Lights (if October or December)
+    choose:
     - conditions:
       - condition: state
         entity_id: input_boolean.christmas_lights_are_out
@@ -37,29 +38,27 @@
           - scene.back_porch_halloween
         data: {}
     default:
-    - action: homeassistant.turn_on
+    - action: light.turn_on
       metadata: {}
       target:
         entity_id: light.front_porch_light
       data: {}
-    alias: Handle Front Porch Light and Deck Lights (if October or December)
   - alias: Turn on Outside Lights and/or Outside Christmas Lights
     if:
     - condition: state
       entity_id: input_boolean.christmas_lights_are_out
       state: 'on'
     then:
-    - target:
-        entity_id:
-        - switch.outside_christmas_lights
+    - action: homeassistant.turn_on
+      target:
+        entity_id: switch.outside_christmas_lights
       data: {}
-      action: homeassistant.turn_on
     else:
-    - target:
+    - action: light.turn_on
+      target:
         entity_id:
         - light.outside_garage_lights
       data: {}
-      action: homeassistant.turn_on
   - alias: Turn on Kitchen Table Light if Holly & Mike are not home
     if:
     - condition: not
@@ -77,11 +76,11 @@
       target:
         entity_id: light.kitchen_table_light
       action: light.turn_on
-  - target:
+  - action: light.turn_on
+    target:
       entity_id:
       - light.dining_room_christmas_lights
     data: {}
-    action: homeassistant.turn_on
   trace:
     stored_traces: 20
   mode: single
@@ -93,22 +92,24 @@
     trigger: time
   conditions: []
   actions:
-  - target:
+  - action: light.turn_off
+    target:
       entity_id:
       - light.front_porch_light
       - light.outside_garage_lights
-      - switch.outside_christmas_lights
       - light.dining_room_christmas_lights
       - light.near_black_lamp
       - light.deck_lights
+    data: {}
+  - target:
+      entity_id:
+      - switch.outside_christmas_lights
     data: {}
     action: homeassistant.turn_off
   trace:
     stored_traces: 20
   mode: single
 - id: '1602628290703'
-  trace:
-    stored_traces: 20
   alias: Lighting - Laundry Room - Motion Light On
   description: ''
   triggers:
@@ -142,26 +143,31 @@
       topic: cmnd/laundry_room_light/backlog
       payload: SetOption73 1; Delay 30; SetOption73 0
     action: mqtt.publish
-  - target:
-      entity_id: light.laundry_room_light
+  - action: light.turn_on
+    target:
+      entity_id:
+      - light.laundry_room_light
     data: {}
-    action: homeassistant.turn_on
-  mode: single
-- id: '1602628563183'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1602628563183'
   alias: Lighting - Laundry Room - Motion Light Off
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.laundry_room_motion_sensor_occupancy
+  triggers:
+  - entity_id: binary_sensor.laundry_room_motion_sensor_occupancy
     to: 'off'
     for: 00:30:00
-  condition: []
-  action:
-  - service: homeassistant.turn_off
+    trigger: state
+  conditions: []
+  actions:
+  - action: light.turn_off
     target:
-      entity_id: light.laundry_room_light
+      entity_id:
+      - light.laundry_room_light
+    data: {}
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1602683085874'
   trace:
@@ -182,8 +188,6 @@
       message: '{{ state_attr(''sensor.low_battery'', ''entity_list'') }}'
   mode: single
 - id: '1602887078304'
-  trace:
-    stored_traces: 20
   alias: Lighting - Shed - Shed/Flood Light Toggle
   description: ''
   triggers:
@@ -205,23 +209,26 @@
       condition: template
       value_template: '{{ trigger.payload == ''single'' }}'
     then:
-    - data: {}
-      entity_id: light.flood_light
-      action: homeassistant.toggle
+    - action: light.toggle
+      target:
+        entity_id:
+        - light.flood_light
+      data: {}
   - alias: If Double, Toggle Shed Lamp
     if:
     - alias: If Double
       condition: template
       value_template: '{{ trigger.payload == ''double'' }}'
     then:
-    - data: {}
-      action: homeassistant.toggle
+    - action: light.toggle
       target:
-        entity_id: light.shed_lamp
-  mode: single
-- id: '1602952724393'
+        entity_id:
+        - light.shed_lamp
+      data: {}
   trace:
     stored_traces: 20
+  mode: single
+- id: '1602952724393'
   alias: Notifications - 0 - Water Leak Detected - Water Heater
   description: ''
   triggers:
@@ -243,10 +250,15 @@
   - data:
       message: '{{ trigger.to_state.attributes.friendly_name }}'
       title: Water Leak Detected
-    action: notify.notify
-  - action: script.sent_ntfy_notification
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
     metadata: {}
     data:
+      topic:
+      - homeassistant
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
       title: Water Leak Detected
       message: '{{ trigger.to_state.attributes.friendly_name }}'
   - data:
@@ -257,10 +269,10 @@
       entity_id: switch.siren
     action: homeassistant.turn_on
     data: {}
-  mode: single
-- id: '1603148838343'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1603148838343'
   alias: 00 - Home Assistant - Startup
   description: ''
   triggers:
@@ -305,6 +317,18 @@
     target:
       label_id: startup
     action: homeassistant.turn_on
+  - if:
+    - condition: state
+      entity_id: input_boolean.christmas_tree_is_up
+      state:
+      - 'off'
+    then:
+    - action: homeassistant.turn_on
+      metadata: {}
+      target:
+        entity_id: switch.christmas_tree
+      data: {}
+    alias: Turn on Christmas Tree Plug when Christmas Tree not up
   - data: {}
     target:
       entity_id:
@@ -312,6 +336,8 @@
       - switch.ymir_plug
     enabled: false
     action: homeassistant.turn_on
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1603407121485'
   trace:
@@ -336,8 +362,6 @@
     entity_id: input_boolean.laundry_room_washer_running
   mode: single
 - id: '1603407289385'
-  trace:
-    stored_traces: 20
   alias: Notifications - Laundry Room Washer Stopped
   description: ''
   triggers:
@@ -356,10 +380,15 @@
   - data:
       message: The washing machine is done
       title: Laundry
-    action: notify.notify
-  - action: script.sent_ntfy_notification
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
     metadata: {}
     data:
+      topic:
+      - homeassistant
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
       message: The washing machine is done
       title: Laundry
   - if:
@@ -376,10 +405,10 @@
         entity_id: media_player.fkb_control_panel
         message: The washing machine is done
       action: tts.cloud_say
-  mode: single
-- id: '1604378332593'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1604378332593'
   alias: Security - 90 Triggered - Alert of Always Monitored Door Open (Always)
   description: ''
   triggers:
@@ -416,18 +445,39 @@
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
       title: Security Alert
-    action: notify.notify
-  - data:
-      entity_id: media_player.fkb_control_panel
-      message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if     trigger.to_state.state
-        == ''off'' %} closed{%- else %} open{% endif %}.'
-    action: tts.cloud_say
-  - action: script.sent_ntfy_notification
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
     metadata: {}
     data:
-      title: Security Alert
+      topic:
+      - homeassistant
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
       message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if trigger.to_state.state
         == ''off'' %} closed{%- else %} open{% endif %}.'
+      title: Security Alert
+  - alias: Notify with Text to Speech if Nobody is in Bed
+    if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.bed_presence_ac5c48_bed_occupied_either
+        state:
+        - 'on'
+        for:
+          hours: 0
+          minutes: 10
+          seconds: 0
+    then:
+    - data:
+        entity_id: media_player.fkb_control_panel
+        message: '{{ trigger.to_state.attributes.friendly_name }} is {%- if     trigger.to_state.state
+          == ''off'' %} closed{%- else %} open{% endif %}.'
+      action: tts.cloud_say
+      enabled: true
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1604856519122'
   trace:
@@ -449,8 +499,6 @@
     entity_id: input_boolean.laundry_room_dryer_running
   mode: single
 - id: '1604856580927'
-  trace:
-    stored_traces: 20
   alias: Notifications - Laundry Room Dryer Stopped
   description: ''
   triggers:
@@ -469,10 +517,15 @@
   - data:
       message: The dryer is done
       title: Laundry
-    action: notify.notify
-  - action: script.sent_ntfy_notification
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
     metadata: {}
     data:
+      topic:
+      - homeassistant
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
       message: The dryer is done
       title: Laundry
   - if:
@@ -489,6 +542,8 @@
         entity_id: media_player.fkb_control_panel
         message: The dryer is done
       action: tts.cloud_say
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1606835846142'
   alias: Security - 10 All - Update alarm.state File
@@ -776,8 +831,6 @@
       entity_id: media_player.god_damn_roku
   mode: single
 - id: '1607717328639'
-  trace:
-    stored_traces: 20
   alias: Lighting - Automatic Lights When We Come Home
   description: ''
   triggers:
@@ -806,22 +859,29 @@
       after: input_datetime.mantle_lights_on
       before: input_datetime.mantle_lights_off
     then:
-    - target:
-        entity_id: light.mantle_lights
+    - action: light.turn_on
+      target:
+        entity_id:
+        - light.mantle_lights
       data: {}
-      action: homeassistant.turn_on
   - condition: state
     entity_id: binary_sensor.christmas_tree_available
     state: 'on'
   - condition: state
     entity_id: input_boolean.christmas_tree_is_up
     state: 'on'
+  - action: light.turn_on
+    target:
+      entity_id:
+      - light.deck_lights
+    data: {}
   - target:
       entity_id:
       - switch.christmas_tree
-      - light.deck_lights
     data: {}
     action: homeassistant.turn_on
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1608699279426'
   alias: Tag - Mike Desk - Unlock Mercury
@@ -854,17 +914,15 @@
     - data: {}
       action: script.computer_mercury_unlock
     else:
-    - action: script.sent_ntfy_notification_to_mike
+    - action: script.send_ntfy_notification
       metadata: {}
       data:
-        title: Mercury Desk Tag
+        topic: homeassistant-mike
+        priority: 3
+        icon_url: '%ha%/local/images/homeassistant-icon.png'
         message: Someone (not Mike) attempted to unlock Mercury ({{ trigger.event.context.uiser_id
           }})
-    - action: script.sent_ntfy_notification_to_mike
-      metadata: {}
-      data:
         title: Mercury Desk Tag
-        message: Someone (not Mike) attempted to unlock Mercury
     - data:
         message: Someone (not Mike) scanned at Mike's Desk ({{ trigger.event.context.user_id
           }})
@@ -974,8 +1032,6 @@
       80ad218b0cf54379b5ee622fbb721c6b: Mike
       3109b2f6d085440f92db502bc4e30a3b: Holly
 - id: '1609607242283'
-  trace:
-    stored_traces: 20
   alias: 21 - Home Assistant - Nightly Tasks
   description: ''
   triggers:
@@ -1000,13 +1056,17 @@
   - alias: Reset Recycle Is Out if day after Recycle Day
     if:
     - condition: numeric_state
-      entity_id: sensor.moco_recycle_day
-      attribute: recycle_days
+      entity_id: sensor.moco_recycle_days_adjusted
       above: 2
     then:
     - action: input_boolean.turn_off
       target:
         entity_id: input_boolean.recycle_is_out
+      data: {}
+    - action: input_number.min
+      metadata: {}
+      target:
+        entity_id: input_number.recycle_bump
       data: {}
   - alias: Reset Trash is Out if day after Trash Day
     if:
@@ -1079,10 +1139,10 @@
       - button.front_door_zwave_ping
       - button.garage_entry_door_ping
       - button.range_extender_ping
-  mode: single
-- id: '1610231390167'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1610231390167'
   alias: Notifications - Nobody Home - Alarm Disarmed
   description: ''
   triggers:
@@ -1124,35 +1184,54 @@
           title: Arm Alarm (Away)
         - action: ARM_HOME
           title: Arm Alarm (Home)
-    action: notify.notify
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
+    metadata: {}
+    data:
+      topic:
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
+      message: The alarm is not armed
+      title: Security Alert
+      actions: http,Arm Alarm (Away),%ha%/api/events/ntfy,method=POST,headers.Authorization=Bearer
+        %token%,body={"action":"ARM_AWAY"},clear=true; http,Arm Alarm (Home),%ha%/api/events/ntfy,method=POST,headers.Authorization=Bearer
+        %token%,body={"action":"ARM_HOME"},clear=true;
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1613160102079'
+  alias: Lighting - Globe and Mantle Lights On
+  description: ''
+  triggers:
+  - at: input_datetime.mantle_lights_on
+    trigger: time
+  conditions: []
+  actions:
+  - action: light.turn_on
+    target:
+      entity_id:
+      - light.mantle_lights
+      - light.globe
+    data: {}
   trace:
     stored_traces: 20
-  alias: Lighting - Mantle Lights On
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.mantle_lights_on
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: light.mantle_lights
   mode: single
 - id: '1613160122811'
-  trace:
-    stored_traces: 20
   alias: Lighting - Mantle Lights Off
   description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.mantle_lights_off
-  condition: []
-  action:
-  - service: homeassistant.turn_off
+  triggers:
+  - at: input_datetime.mantle_lights_off
+    trigger: time
+  conditions: []
+  actions:
+  - action: light.turn_off
     target:
-      entity_id: light.mantle_lights
+      entity_id:
+      - light.mantle_lights
+    data: {}
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1614981790208'
   alias: Notifications - Mailbox Notify
@@ -1169,10 +1248,11 @@
       entity_id: input_boolean.mail_delivered
       state: 'off'
     then:
-    - target:
-        entity_id: input_boolean.mail_delivered
+    - action: input_boolean.toggle
+      target:
+        entity_id:
+        - input_boolean.mail_delivered
       data: {}
-      action: homeassistant.turn_on
     - data:
         message: The mail's here, the mail's here!  Woo-hoo!
         title: The mail has been delivered
@@ -1180,17 +1260,25 @@
           actions:
           - action: RESET_MAILBOX
             title: Reset Mail Delivery Notification
-      action: notify.notify
-    - action: script.sent_ntfy_notification
+      action: notify.ha_mobile_app_phones
+    - action: script.send_ntfy_notification
       metadata: {}
       data:
+        topic:
+        - homeassistant
+        - homeassistant-phones
+        priority: 3
+        icon_url: '%ha%/local/images/homeassistant-icon.png'
         title: The mail has been delivered
-        message: The mail's here, the mail's here!  Woo-hoo!
+        message: The mail''s here, the mail''s here!  Woo-hoo!
+        actions: http,Reset Mail Delivery Notification,%ha%/api/events/ntfy,method=POST,headers.Authorization=Bearer
+          %token%,body={"action":"RESET_MAILBOX"},clear=true;
     else:
-    - target:
-        entity_id: input_boolean.mail_delivered
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.mail_delivered
       data: {}
-      action: homeassistant.turn_off
     - if:
       - condition: not
         conditions:
@@ -1200,7 +1288,7 @@
       then:
       - data:
           message: Somebody retrieved the mail
-        action: notify.notify
+        action: notify.ha_mobile_app_phones
       - if:
         - condition: not
           conditions:
@@ -1208,10 +1296,15 @@
             entity_id: person.michael_erdely
             state: home
         then:
-        - action: script.sent_ntfy_notification_to_mike_phone
+        - action: script.send_ntfy_notification
           metadata: {}
           data:
+            topic:
+            - homeassistant-mike
+            priority: 3
+            icon_url: '%ha%/local/images/homeassistant-icon.png'
             message: Somebody retrieved the mail
+            title: Mailbox opened
   trace:
     stored_traces: 20
   mode: single
@@ -1249,8 +1342,6 @@
   - service: shell_command.save_homeassistant_log
   mode: single
 - id: '1617059343081'
-  trace:
-    stored_traces: 20
   alias: Lighting - Den - Motion Light On
   description: ''
   triggers:
@@ -1284,30 +1375,33 @@
       topic: cmnd/den_overhead_light/backlog
       payload: SetOption73 1; Delay 30; SetOption73 0
     action: mqtt.publish
-  - target:
-      entity_id: light.den_overhead_light
+  - action: light.turn_on
+    target:
+      entity_id:
+      - light.den_overhead_light
     data: {}
-    action: homeassistant.turn_on
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1617059380424'
-  trace:
-    stored_traces: 20
   alias: Lighting - Den - Motion Light Off
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.den_motion_sensor_occupancy
+  triggers:
+  - entity_id: binary_sensor.den_motion_sensor_occupancy
     to: 'off'
     for: 00:30:00
-  condition: []
-  action:
-  - service: homeassistant.turn_off
+    trigger: state
+  conditions: []
+  actions:
+  - action: light.turn_off
     target:
-      entity_id: light.den_overhead_light
-  mode: single
-- id: '1617741916452'
+      entity_id:
+      - light.den_overhead_light
+    data: {}
   trace:
     stored_traces: 20
+  mode: single
+- id: '1617741916452'
   alias: Notifications - 1 - Water Leak Detected - All Sensors
   description: ''
   triggers:
@@ -1325,16 +1419,21 @@
   - data:
       message: '{{ trigger.to_state.attributes.friendly_name }}'
       title: Water Leak Detected
-    action: notify.notify
-  - action: script.sent_ntfy_notification
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
     metadata: {}
     data:
+      topic:
+      - homeassistant
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
       title: Water Leak Detected
       message: '{{ trigger.to_state.attributes.friendly_name }}'
-  mode: single
-- id: '1622222404078'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1622222404078'
   alias: 20 - Home Assistant - Bedtime Tasks
   description: ''
   triggers:
@@ -1361,12 +1460,20 @@
           - action: RUN_GOODNIGHT
             title: Good Night
         title: Security Alert
-      action: notify.notify
-    - action: script.sent_ntfy_notification
+      action: notify.ha_mobile_app_phones
+    - action: script.send_ntfy_notification
       metadata: {}
       data:
+        topic:
+        - homeassistant
+        - homeassistant-phones
+        priority: 3
+        icon_url: '%ha%/local/images/homeassistant-icon.png'
+        actions: http,Arm Alarm (Home),%ha%/api/events/ntfy,method=POST,headers.Authorization=Bearer
+          %token%,body={"action":"ARM_HOME"},clear=true; http,Good Night,%ha%/api/events/ntfy,method=POST,headers.Authorization=Bearer
+          %token%,body={"action":"RUN_GOODNIGHT"},clear=true;
+        message: The Alarm is not armed
         title: Security Alert
-        message: The Alarm is not armed.
   - alias: Send Trash Notification if necessary
     if:
     - condition: or
@@ -1385,17 +1492,24 @@
           - action: TRASH_IS_OUT
             title: Trash Is Already Out
         title: Trash
-      action: notify.notify
-    - action: script.sent_ntfy_notification
+      action: notify.ha_mobile_app_phones
+    - action: script.send_ntfy_notification
       metadata: {}
       data:
-        message: Trash collection is tomorrow and Trash is not out!
+        topic:
+        - homeassistant
+        - homeassistant-phones
+        priority: 3
+        icon_url: '%ha%/local/images/homeassistant-icon.png'
+        actions: http,Trash Is Already Out,%ha%/api/events/ntfy,method=POST,headers.Authorization=Bearer
+          %token%,body={"action":"TRASH_IS_OUT"},clear=true;
         title: Trash
+        message: Trash collection is tomorrow and Trash is not out!
   - alias: Send Recycle Notification if necessary
     if:
     - condition: template
-      value_template: '{{ state_attr("sensor.moco_recycle_day", "recycle_days") |
-        int(7) < 1 and states("input_boolean.recycle_is_out") == "off" }}'
+      value_template: '{{ states("sensor.moco_recycle_days_adjusted") | int(7) < 1
+        and states("input_boolean.recycle_is_out") == "off" }}'
     then:
     - data:
         message: Recycling collection is tomorrow and Recycle is not out!
@@ -1404,10 +1518,17 @@
           - action: RECYCLE_IS_OUT
             title: Recycling Is Already Out
         title: Recycle
-      action: notify.notify
-    - action: script.sent_ntfy_notification
+      action: notify.ha_mobile_app_phones
+    - action: script.send_ntfy_notification
       metadata: {}
       data:
+        topic:
+        - homeassistant
+        - homeassistant-phones
+        priority: 3
+        icon_url: '%ha%/local/images/homeassistant-icon.png'
+        actions: http,Recycling Is Already Out,%ha%/api/events/ntfy,method=POST,headers.Authorization=Bearer
+          %token%,body={"action":"RECYCLE_IS_OUT"},clear=true;
         message: Recycling collection is tomorrow and Recycle is not out!
         title: Recycle
   - data:
@@ -1425,155 +1546,10 @@
         option: '{{ states("input_select.cleaners_weekday_default") }}'
       target:
         entity_id: input_select.cleaners_weekday
-  mode: single
-- id: '1632841431902'
   trace:
     stored_traces: 20
-  alias: Fan - Master Bath Humidity - Fan On
-  description: ''
-  triggers:
-  - value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(0)
-      > states(''input_number.master_bath_fan_on'') | float(100) }}'
-    trigger: template
-  conditions:
-  - condition: state
-    entity_id: light.master_bath_light
-    state: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  - alias: Holly is not in bed OR the TV is on
-    condition: or
-    conditions:
-    - condition: state
-      entity_id: sensor.holly_is_in_bed
-      state: Not In Bed
-    - condition: state
-      entity_id: switch.bedroom_tv
-      state: 'on'
-  - alias: Mike is not in bed OR the TV is on
-    condition: or
-    conditions:
-    - condition: state
-      entity_id: sensor.mike_is_in_bed
-      state: Not In Bed
-    - condition: state
-      entity_id: switch.bedroom_tv
-      state: 'on'
-  - condition: state
-    entity_id: switch.master_bath_fan
-    state: 'off'
-  - condition: state
-    entity_id: input_boolean.master_bath_fan_auto
-    state: 'on'
-  actions:
-  - target:
-      entity_id: switch.master_bath_fan
-    data: {}
-    action: homeassistant.turn_on
-  mode: single
-- id: '1632841500873'
-  alias: Fan - Master Bath Humidity - Fan Off
-  description: ''
-  triggers:
-  - value_template: '{{ states(''sensor.master_bath_multisensor_humidity'') | float(0)
-      < states(''input_number.master_bath_fan_off'') | float(100) }}'
-    trigger: template
-    for:
-      hours: 0
-      minutes: 10
-      seconds: 0
-  conditions:
-  - condition: state
-    entity_id: switch.master_bath_fan
-    state: 'on'
-  actions:
-  - target:
-      entity_id: switch.master_bath_fan
-    action: homeassistant.turn_off
-  trace:
-    stored_traces: 20
-  mode: single
-- id: '1637383119311'
-  trace:
-    stored_traces: 20
-  alias: Actionable Notifications - RUN_GOODNIGHT
-  description: ''
-  triggers:
-  - event_type: mobile_app_notification_action
-    event_data:
-      action: RUN_GOODNIGHT
-    trigger: event
-  conditions: []
-  actions:
-  - data: {}
-    action: script.scene_good_night
-  - data:
-      message: Good Night script run via Actionable Notification
-      title: Good Night
-    action: notify.notify
-  - action: script.sent_ntfy_notification
-    metadata: {}
-    data:
-      message: Good Night script run via Actionable Notification
-      title: Good Night
-  mode: single
-- id: '1637383160091'
-  trace:
-    stored_traces: 20
-  alias: Actionable Notifications - ARM_HOME
-  description: ''
-  triggers:
-  - event_type: mobile_app_notification_action
-    event_data:
-      action: ARM_HOME
-    trigger: event
-  conditions: []
-  actions:
-  - target:
-      entity_id: alarm_control_panel.home_alarm
-    action: alarm_control_panel.alarm_arm_home
-  - data:
-      message: Alarm Armed (Home) via Actionable Notification
-      title: Security Alert
-    action: notify.notify
-  - action: script.sent_ntfy_notification
-    metadata: {}
-    data:
-      message: Alarm Armed (Home) via Actionable Notification
-      title: Security Alert
-  mode: single
-- id: '1637383181288'
-  trace:
-    stored_traces: 20
-  alias: Actionable Notifications - ARM_AWAY
-  description: ''
-  triggers:
-  - event_type: mobile_app_notification_action
-    event_data:
-      action: ARM_AWAY
-    trigger: event
-  conditions: []
-  actions:
-  - data: {}
-    target:
-      entity_id: alarm_control_panel.home_alarm
-    action: alarm_control_panel.alarm_arm_away
-  - data:
-      message: Alarm Armed (Away) via Actionable Notification
-      title: Security Alert
-    action: notify.notify
-  - action: script.sent_ntfy_notification
-    metadata: {}
-    data:
-      message: Alarm Armed (Away) via Actionable Notification
-      title: Security Alert
   mode: single
 - id: '1637383883544'
-  trace:
-    stored_traces: 20
   alias: Notifications - Nobody Home - Oven On
   description: ''
   triggers:
@@ -1614,16 +1590,21 @@
   - data:
       message: The oven is on and nobody is home
       title: Home Assistant Alert
-    action: notify.notify
-  - action: script.sent_ntfy_notification
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
     metadata: {}
     data:
+      topic:
+      - homeassistant
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
       message: The oven is on and nobody is home
       title: Home Assistant Alert
-  mode: single
-- id: '1638997594019'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1638997594019'
   alias: Home Assistant - Monitor Earth / HA Entities
   description: ''
   triggers:
@@ -1809,7 +1790,8 @@
     - sun
     enabled: true
   actions:
-  - choose:
+  - alias: Determine context for sending alert (bad, good, unknown)
+    choose:
     - conditions:
       - condition: template
         value_template: '{{ trigger.to_state.state | int(-1) > 0 or trigger.to_state.state
@@ -1840,7 +1822,7 @@
       - target:
           entity_id: '{{ "input_boolean." + trigger.entity_id.split(".")[1] + "_triggered"
             }}'
-        action: homeassistant.turn_on
+        action: input_boolean.turn_on
         data: {}
     - conditions:
       - condition: template
@@ -1862,7 +1844,7 @@
       - target:
           entity_id: '{{ "input_boolean." + trigger.entity_id.split(".")[1] + "_triggered"
             }}'
-        action: homeassistant.turn_off
+        action: input_boolean.turn_off
         data: {}
     default:
     - data:
@@ -1886,56 +1868,8 @@
         title: '** UNKNOWN Issue Alert: {{ state_attr(trigger.entity_id, ''friendly_name'')
           }} is {{ states(trigger.entity_id) }} **'
       action: notify.gmail_to_mike
-    alias: Determine context for sending alert (bad, good, unknown)
-  mode: single
-- id: '1641590686089'
   trace:
     stored_traces: 20
-  alias: Actionable Notifications - RESET_MAILBOX
-  description: ''
-  trigger:
-  - platform: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: RESET_MAILBOX
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    target:
-      entity_id: input_boolean.mail_delivered
-  mode: single
-- id: '1642193974045'
-  trace:
-    stored_traces: 20
-  alias: Actionable Notifications - TRASH_IS_OUT
-  description: ''
-  trigger:
-  - platform: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: TRASH_IS_OUT
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id:
-      - input_boolean.trash_is_out
-  mode: single
-- id: '1642194163380'
-  trace:
-    stored_traces: 20
-  alias: Actionable Notifications - RECYCLE_IS_OUT
-  description: ''
-  trigger:
-  - platform: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: RECYCLE_IS_OUT
-  condition: []
-  action:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: input_boolean.recycle_is_out
   mode: single
 - id: '1644094351525'
   trace:
@@ -1961,8 +1895,6 @@
     action: homeassistant.turn_off
   mode: single
 - id: '1644246652989'
-  trace:
-    stored_traces: 20
   alias: Notifications - Fridge Door Open
   description: Send an alert if the Fridge or Freezer doors have been open for 5 minutes
   triggers:
@@ -2000,7 +1932,7 @@
   - data:
       entity_id: '{{ trigger.entity_id | regex_replace("binary_sensor\.(.*)_contact$",
         "input_boolean.\\1_open_alert") }}'
-    action: homeassistant.turn_on
+    action: input_boolean.turn_on
   - data:
       message: '{{ state_attr(trigger.entity_id, "friendly_name") }}'
       data:
@@ -2008,13 +1940,20 @@
         - action: RESET_MAILBOX
           title: Reset Mail Delivery Notification
       title: Door open for 5 minutes
-    action: notify.notify
-  - action: script.sent_ntfy_notification
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
     metadata: {}
     data:
+      topic:
+      - homeassistant
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
       message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been open
         for 5 minutes.
       title: Home Assistant Alert
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1645068726044'
   trace:
@@ -2107,81 +2046,67 @@
     action: notify.gmail_to_mike
   mode: single
 - id: '1670901378517'
-  trace:
-    stored_traces: 20
   alias: Lighting - Turn Den Lights Off
   description: Turn Den Lights Off when turning off Laundry Room Lights
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - light.laundry_room_light
     to: 'off'
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    data: {}
+    trigger: state
+  conditions: []
+  actions:
+  - action: light.turn_off
     target:
-      entity_id: light.den_overhead_light
-  mode: single
-- id: '1670901378518'
+      entity_id:
+      - light.den_overhead_light
+    data: {}
   trace:
     stored_traces: 20
-  alias: Lighting - Turn Den Lights Off
-  description: Turn Den Lights Off when turning off Laundry Room Lights
-  trigger:
-  - platform: state
-    entity_id:
-    - light.laundry_room_light
-    to: 'off'
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    data: {}
-    target:
-      entity_id: light.den_overhead_light
   mode: single
 - id: '1671061951151'
-  trace:
-    stored_traces: 20
   alias: Lighting - Shed Lamp Auto On
   description: Turn on Shed Lamp when Shed Door opens
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - binary_sensor.shed_door_contact
     to: 'on'
-  condition:
+    trigger: state
+  conditions:
   - condition: sun
     before: sunrise
     after: sunset
     after_offset: -00:30:00
     before_offset: +00:30:00
-  action:
-  - service: homeassistant.turn_on
-    data: {}
+  actions:
+  - action: light.turn_on
     target:
-      entity_id: light.shed_lamp
-  mode: single
-- id: '1671062103330'
+      entity_id:
+      - light.shed_lamp
+    data: {}
   trace:
     stored_traces: 20
+  mode: single
+- id: '1671062103330'
   alias: Lighting - Shed Lamp Auto Off
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - binary_sensor.shed_door_contact
     to: 'off'
     for:
       hours: 0
       minutes: 0
       seconds: 0
-  condition: []
-  action:
-  - service: homeassistant.turn_off
-    data: {}
+    trigger: state
+  conditions: []
+  actions:
+  - action: light.turn_off
     target:
-      entity_id: light.shed_lamp
+      entity_id:
+      - light.shed_lamp
+    data: {}
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1671213044073'
   trace:
@@ -2214,80 +2139,7 @@
       entity_id: switch.outdoor_strip_p2
     action: homeassistant.turn_on
   mode: single
-- id: '1671217553135'
-  trace:
-    stored_traces: 20
-  alias: Fan - Hall Bath Humidity - Fan On
-  description: ''
-  triggers:
-  - value_template: '{{ states(''sensor.hall_bath_multisensor_humidity'') | float(0)
-      > states(''input_number.hall_bath_fan_on'') | float(100) }}'
-    trigger: template
-  conditions:
-  - condition: state
-    entity_id: light.hall_bath_light
-    state: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  - alias: Holly is not in bed OR the TV is on
-    condition: or
-    conditions:
-    - condition: state
-      entity_id: sensor.holly_is_in_bed
-      state: Not In Bed
-    - condition: state
-      entity_id: switch.bedroom_tv
-      state: 'on'
-  - alias: Mike is not in bed OR the TV is on
-    condition: or
-    conditions:
-    - condition: state
-      entity_id: sensor.mike_is_in_bed
-      state: Not In Bed
-    - condition: state
-      entity_id: switch.bedroom_tv
-      state: 'on'
-  - condition: state
-    entity_id: switch.hall_bath_fan
-    state: 'off'
-  - condition: state
-    entity_id: input_boolean.hall_bath_fan_auto
-    state: 'on'
-  actions:
-  - target:
-      entity_id: switch.hall_bath_fan
-    data: {}
-    action: homeassistant.turn_on
-  mode: single
-- id: '1671217825195'
-  alias: Fan - Hall Bath Humidity - Fan Off
-  description: ''
-  triggers:
-  - value_template: '{{ states(''sensor.hall_bath_multisensor_humidity'') | float(0)
-      < states(''input_number.hall_bath_fan_off'') | float(100) }}'
-    trigger: template
-    for:
-      hours: 0
-      minutes: 10
-      seconds: 0
-  conditions:
-  - condition: state
-    entity_id: switch.hall_bath_fan
-    state: 'on'
-  actions:
-  - target:
-      entity_id: switch.hall_bath_fan
-    data: {}
-    action: homeassistant.turn_off
-  trace:
-    stored_traces: 20
-  mode: single
 - id: '1671565614293'
-  trace:
-    stored_traces: 20
   alias: Notifications - Fridge Door Closed
   description: Notify when the Fridge or Freezer Doors close after having been opened
     for 5 mintues
@@ -2334,17 +2186,24 @@
     - data:
         message: '{{ state_attr(trigger.entity_id, "friendly_name") }}'
         title: Door was closed
-      action: notify.notify
-    - action: script.sent_ntfy_notification
+      action: notify.ha_mobile_app_phones
+    - action: script.send_ntfy_notification
       metadata: {}
       data:
-        title: Home Assistant Alert
+        topic:
+        - homeassistant
+        - homeassistant-phones
+        priority: 3
+        icon_url: '%ha%/local/images/homeassistant-icon.png'
         message: The {{ state_attr(trigger.entity_id, "friendly_name") }} has been
           closed.
+        title: Home Assistant Alert
   - data:
       entity_id: '{{ trigger.entity_id | regex_replace("binary_sensor\.(.*)_contact$",
         "input_boolean.\\1_open_alert") }}'
-    action: homeassistant.turn_off
+    action: input_boolean.turn_off
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1671648815254'
   trace:
@@ -2479,16 +2338,14 @@
     continue_on_error: true
   mode: single
 - id: '1679241143151'
-  trace:
-    stored_traces: 20
   alias: Lighting - Turn on Nighttime Stairway/Hallway Lights
   description: Add extra lighting over stairs at night
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - light.hallway_light
     to: 'on'
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: sun.sun
     state: below_horizon
@@ -2504,25 +2361,25 @@
       hours: 0
       minutes: 0
       seconds: 5
-  action:
-  - service: homeassistant.turn_on
-    data: {}
+  actions:
+  - action: light.turn_on
     target:
       entity_id:
       - light.kitchen_table_light
       - light.foyer_light
-  mode: single
-- id: '1679241221562'
+    data: {}
   trace:
     stored_traces: 20
+  mode: single
+- id: '1679241221562'
   alias: Lighting - Turn off extra lights over stairway/hallway at night
   description: Add extra lighting over stairs at night
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - light.hallway_light
     to: 'off'
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: sun.sun
     state: below_horizon
@@ -2534,13 +2391,15 @@
   - condition: state
     entity_id: light.nighttime_hallway_lighting
     state: 'off'
-  action:
-  - service: homeassistant.turn_off
-    data: {}
+  actions:
+  - action: light.turn_off
     target:
       entity_id:
       - light.kitchen_table_light
       - light.foyer_light
+    data: {}
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1704658454909'
   trace:
@@ -2595,8 +2454,6 @@
         action: light.toggle
   mode: single
 - id: '1705879584394'
-  trace:
-    stored_traces: 20
   alias: Lighting - Ensure switches stay on for Smart Bulbs
   description: ''
   triggers:
@@ -2623,31 +2480,35 @@
     target:
       entity_id:
       - '{{ trigger.entity_id }}'
-    action: homeassistant.turn_on
-  mode: single
-- id: '1720882109923'
+    action: light.turn_on
   trace:
     stored_traces: 20
+  mode: single
+- id: '1720882109923'
   alias: Lighting - Living Room - White Lamp
   description: ''
-  trigger:
-  - platform: mqtt
-    topic: cmnd/white_lamp/power1
-  condition: []
-  action:
+  triggers:
+  - topic: cmnd/white_lamp/power1
+    trigger: mqtt
+  conditions: []
+  actions:
   - if:
     - condition: template
       value_template: '{{ trigger.payload.lower() == "on" }}'
     then:
-    - service: homeassistant.turn_on
+    - action: light.turn_on
       target:
-        entity_id: light.white_lamp
+        entity_id:
+        - light.white_lamp
       data: {}
     else:
-    - service: homeassistant.turn_off
+    - action: light.turn_off
       target:
-        entity_id: light.white_lamp
+        entity_id:
+        - light.white_lamp
       data: {}
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1732810938168'
   trace:
@@ -3008,8 +2869,6 @@
     action: homeassistant.turn_off
   mode: single
 - id: '1752607917440'
-  trace:
-    stored_traces: 20
   alias: 'Assist: Turn on the Bedroom'
   description: ''
   triggers:
@@ -3017,15 +2876,15 @@
     command: Turn on the Bedroom
   conditions: []
   actions:
-  - action: homeassistant.turn_on
+  - action: light.turn_on
     metadata: {}
     data: {}
     target:
       entity_id: light.dresser_lamp
-  mode: single
-- id: '1752607968560'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1752607968560'
   alias: 'Assist: Turn off the Bedroom'
   description: ''
   triggers:
@@ -3034,15 +2893,20 @@
     - Turn off the Bedroom
   conditions: []
   actions:
-  - action: homeassistant.turn_off
+  - action: light.turn_off
     metadata: {}
     data: {}
     target:
       label_id: bedroom
-  mode: single
-- id: '1752608140881'
+  - action: homeassistant.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.bedroom_tv
+    data: {}
   trace:
     stored_traces: 20
+  mode: single
+- id: '1752608140881'
   alias: 'Assist: Turn on the Office'
   description: ''
   triggers:
@@ -3051,15 +2915,15 @@
     - Turn on the Office
   conditions: []
   actions:
-  - action: homeassistant.turn_on
+  - action: light.turn_on
     metadata: {}
     data: {}
     target:
       entity_id: light.office_fan_light
-  mode: single
-- id: '1752608188802'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1752608188802'
   alias: 'Assist: Turn off the Office'
   description: ''
   triggers:
@@ -3068,15 +2932,24 @@
     - Turn off the Office
   conditions: []
   actions:
-  - action: homeassistant.turn_off
+  - action: light.turn_off
     metadata: {}
     data: {}
     target:
       label_id: office
-  mode: single
-- id: '1752609581971'
+  - action: homeassistant.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - sensor.mercury_screensaver
+      - sensor.venus_screensaver
+      - switch.office_heater_plug
+      - switch.office_tv
+    data: {}
   trace:
     stored_traces: 20
+  mode: single
+- id: '1752609581971'
   alias: 'Assist: Turn off the Upstairs'
   description: ''
   triggers:
@@ -3085,11 +2958,23 @@
     - Turn off the Upstairs
   conditions: []
   actions:
-  - action: homeassistant.turn_off
+  - action: light.turn_off
     metadata: {}
     data: {}
     target:
       label_id: upstairs
+  - action: homeassistant.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - sensor.mercury_screensaver
+      - sensor.venus_screensaver
+      - switch.office_heater_plug
+      - switch.office_tv
+      - switch.bedroom_tv
+    data: {}
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1752609637701'
   trace:
@@ -3109,8 +2994,6 @@
       floor_id: upstairs
   mode: single
 - id: '1752610803004'
-  trace:
-    stored_traces: 20
   alias: 'Assist: Turn off the Downstairs'
   description: ''
   triggers:
@@ -3119,15 +3002,22 @@
     - Turn off the Downstairs
   conditions: []
   actions:
-  - action: homeassistant.turn_off
+  - action: light.turn_off
     metadata: {}
     data: {}
     target:
       label_id: downstairs
-  mode: single
-- id: '1752610886378'
+  - action: homeassistant.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - switch.god_damn_tv
+      - switch.god_damn_humidifier
+    data: {}
   trace:
     stored_traces: 20
+  mode: single
+- id: '1752610886378'
   alias: 'Assist: Turn on the Downstairs'
   description: ''
   triggers:
@@ -3136,17 +3026,20 @@
     - Turn on the Downstairs
   conditions: []
   actions:
-  - action: homeassistant.turn_on
+  - action: light.turn_off
     metadata: {}
-    data: {}
     target:
-      entity_id:
-      - switch.god_damn_tv
-      - light.god_damn_light
-  mode: single
-- id: '1752612402761'
+      entity_id: light.god_damn_light
+    data: {}
+  - action: homeassistant.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.god_damn_tv
+    data: {}
   trace:
     stored_traces: 20
+  mode: single
+- id: '1752612402761'
   alias: 'Assist: Turn of the God Damn Light'
   description: ''
   triggers:
@@ -3155,15 +3048,15 @@
     - Turn off the God Damn Light
   conditions: []
   actions:
-  - action: homeassistant.turn_off
+  - action: light.turn_off
     metadata: {}
     data: {}
     target:
       entity_id: light.god_damn_light
-  mode: single
-- id: '1752612440753'
   trace:
     stored_traces: 20
+  mode: single
+- id: '1752612440753'
   alias: 'Assist: Turn on the God Damn Light'
   description: ''
   triggers:
@@ -3172,11 +3065,13 @@
     - Turn on the God Damn Light
   conditions: []
   actions:
-  - action: homeassistant.turn_on
+  - action: light.turn_on
     metadata: {}
     data: {}
     target:
       entity_id: light.god_damn_light
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1752695879335'
   trace:
@@ -3208,7 +3103,7 @@
     - fri
   conditions: []
   actions:
-  - action: homeassistant.turn_on
+  - action: light.turn_on
     target:
       entity_id:
       - light.front_porch_light
@@ -3241,12 +3136,16 @@
     trigger: sun
   conditions: []
   actions:
-  - action: homeassistant.turn_off
-    data: {}
+  - action: light.turn_off
     target:
       entity_id:
       - light.outside_garage_lights
       - light.front_porch_light
+    data: {}
+  - action: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id:
       - switch.outside_christmas_lights
   trace:
     stored_traces: 20
@@ -3307,8 +3206,6 @@
       entity_id: switch.sinope_plug
   mode: single
 - id: '1758848750795'
-  trace:
-    stored_traces: 20
   alias: Lighting - Turn on Living Room Lights
   description: ''
   triggers:
@@ -3322,21 +3219,21 @@
       entity_id: light.near_black_lamp
       state: 'on'
     then:
-    - action: homeassistant.turn_on
-      metadata: {}
-      data: {}
+    - action: light.turn_on
       target:
         entity_id:
         - light.far_black_lamp
         - light.white_lamp
+      data: {}
     else:
-    - action: homeassistant.turn_off
-      metadata: {}
-      data: {}
+    - action: light.turn_off
       target:
         entity_id:
         - light.far_black_lamp
         - light.white_lamp
+      data: {}
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1761851092517'
   trace:
@@ -3417,28 +3314,6 @@
       target:
         entity_id: scene.back_porch_normal
   mode: single
-- id: '1762342099701'
-  alias: Frigate Notifications for Mike's Phone
-  description: ''
-  trace:
-    stored_traces: 20
-  use_blueprint:
-    path: SgtBatten/FrigateNotificationsStable.yaml
-    input:
-      camera:
-      - camera.backyard
-      - camera.chimney
-      - camera.front_door
-      - camera.front_door_2
-      - camera.garage
-      - camera.garage_door
-      - camera.shed
-      - camera.backyard_2
-      notify_device: df55a9c4f9c27d40f6b907ef7ffee27c
-      base_url: https://ha.erdelynet.com:38123
-      title: Frigate Notification
-      android_auto: true
-      group: frigate-notification
 - id: '1762447315675'
   alias: Bedroom Humidifier - Low Water
   description: ''
@@ -3457,12 +3332,17 @@
   - data:
       title: Bedroom Humidifier
       message: The Bedroom Humidifier is low on water
-    action: notify.notify
-  - action: script.sent_ntfy_notification
+    action: notify.ha_mobile_app_phones
+  - action: script.send_ntfy_notification
     metadata: {}
     data:
-      title: Bedroom Humidifier
+      topic:
+      - homeassistant
+      - homeassistant-phones
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
       message: The Bedroom Humidifier is low on water
+      title: Bedroom Humidifier
   trace:
     stored_traces: 20
   mode: single
@@ -3497,22 +3377,32 @@
     - data:
         title: Bedroom Humidifier
         message: The Bedroom Humidifier water tank has been lifted
-      action: notify.notify
-    - action: script.sent_ntfy_notification
+      action: notify.ha_mobile_app_phones
+    - action: script.send_ntfy_notification
       metadata: {}
       data:
-        title: Bedroom Humidifier
+        topic:
+        - homeassistant
+        - homeassistant-phones
+        priority: 3
+        icon_url: '%ha%/local/images/homeassistant-icon.png'
         message: The Bedroom Humidifier water tank has been lifted
+        title: Bedroom Humidifier
     else:
     - data:
         title: Bedroom Humidifier
         message: The Bedroom Humidifier water tank has been restored
-      action: notify.notify
-    - action: script.sent_ntfy_notification
+      action: notify.ha_mobile_app_phones
+    - action: script.send_ntfy_notification
       metadata: {}
       data:
-        title: Bedroom Humidifier
+        topic:
+        - homeassistant
+        - homeassistant-phones
+        priority: 3
+        icon_url: '%ha%/local/images/homeassistant-icon.png'
         message: The Bedroom Humidifier water tank has been restored
+        title: Bedroom Humidifier
   trace:
     stored_traces: 20
   mode: single
@@ -3533,6 +3423,7 @@
       - camera.garage_door
       - camera.shed
       - camera.backyard_2
+      - camera.pet_cam
       notify_device: 2147acf2a7ba219c0f7edbf74d5901a3
       base_url: https://ha.erdelynet.com:38123
       title: Frigate Notification
@@ -3630,3 +3521,357 @@
       include_bypass: bypass_enabled_stop
       by_pass: binary_sensor.bed_presence_ac5c48_bed_occupied_either
       include_bypass_auto_off: bypass_auto_off_disabled
+- id: '1768347314889'
+  alias: Frigate Notifications w/ ntfy (0.15.0.0)
+  description: ''
+  use_blueprint:
+    path: mike/Stable.yaml
+    input:
+      notify_device: 0b7bec656fdb562f516c6ffea4829d6e
+      camera:
+      - camera.backyard
+      - camera.backyard_2
+      - camera.chimney
+      - camera.front_door
+      - camera.front_door_2
+      - camera.garage
+      - camera.garage_door
+      - camera.shed
+      - camera.pet_cam
+      ntfy_topic: homeassistant-mike-phone
+      base_url: https://ha.erdelynet.com:38123
+      title: Frigate Ntfy Notification
+      android_auto: true
+- id: '1768509142555'
+  alias: Test Toggle ntfy
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_boolean.test_toggle
+  conditions: []
+  actions:
+  - action: script.send_ntfy_notification
+    metadata: {}
+    data:
+      topic: testing-mike-phone
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
+      title: testing
+      message: The Test Toggle has changed. Toggle?
+      actions: http,Toggle,%ha%/api/events/ntfy,method=POST,headers.Authorization=Bearer
+        %token%,body={"action":"toggle_test_toggle"},clear=true;
+  mode: single
+- id: '1768516231488'
+  alias: Actionable Notification Handler
+  description: ''
+  triggers:
+  - alias: YES1
+    event_type: mobile_app_notification_action
+    event_data:
+      action: YES1
+    trigger: event
+    id: yes1
+  - alias: YES2
+    event_type: mobile_app_notification_action
+    event_data:
+      action: YES2
+    trigger: event
+    id: yes2
+  - event_type: mobile_app_notification_action
+    event_data:
+      action: ARM_AWAY
+    trigger: event
+    id: arm_away
+    alias: arm_away
+  - alias: arm_away_ntfy
+    event_type: ntfy
+    event_data:
+      action: ARM_AWAY
+    trigger: event
+    id: arm_away_ntfy
+  - event_type: mobile_app_notification_action
+    event_data:
+      action: ARM_HOME
+    trigger: event
+    id: arm_home
+    alias: arm_home
+  - alias: arm_home_ntfy
+    event_type: ntfy
+    event_data:
+      action: ARM_HOME
+    trigger: event
+    id: arm_home_ntfy
+  - event_type: mobile_app_notification_action
+    event_data:
+      action: RECYCLE_IS_OUT
+    trigger: event
+    id: recycle_is_out
+    alias: recycle_is_out
+  - alias: recycle_is_out_ntfy
+    event_type: ntfy
+    event_data:
+      action: RECYCLE_IS_OUT
+    trigger: event
+    id: recycle_is_out_ntfy
+  - event_type: mobile_app_notification_action
+    event_data:
+      action: TRASH_IS_OUT
+    trigger: event
+    id: trash_is_out
+    alias: trash_is_out
+  - alias: trash_is_out_ntfy
+    event_type: ntfy
+    event_data:
+      action: TRASH_IS_OUT
+    trigger: event
+    id: trash_is_out_ntfy
+  - event_type: mobile_app_notification_action
+    event_data:
+      action: RESET_MAILBOX
+    trigger: event
+    id: reset_mailbox
+    alias: reset_mailbox
+  - alias: reset_mailbox_ntfy
+    event_type: ntfy
+    event_data:
+      action: RESET_MAILBOX
+    trigger: event
+    id: reset_mailbox_ntfy
+  - event_type: mobile_app_notification_action
+    event_data:
+      action: RUN_GOODNIGHT
+    trigger: event
+    id: run_goodnight
+    alias: run_goodnight
+  - alias: run_goodnight_ntfy
+    event_type: ntfy
+    event_data:
+      action: RUN_GOODNIGHT
+    trigger: event
+    id: run_goodnight_ntfy
+  - trigger: event
+    event_type: ntfy
+    event_data:
+      action: toggle_test_toggle
+    id: toggle_test_toggle
+    alias: toggle_test_toggle
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - arm_away
+        - arm_away_ntfy
+      sequence:
+      - data: {}
+        target:
+          entity_id: alarm_control_panel.home_alarm
+        action: alarm_control_panel.alarm_arm_away
+      - data:
+          message: Alarm Armed (Away) via Actionable Notification
+          title: Security Alert
+        action: notify.ha_mobile_app_phones
+      - action: script.send_ntfy_notification
+        metadata: {}
+        data:
+          topic:
+          - homeassistant
+          - homeassistant-phones
+          priority: 3
+          icon_url: '%ha%/local/images/homeassistant-icon.png'
+          message: Alarm Armed (Away) via Actionable Notification
+          title: Security Alert
+    - conditions:
+      - condition: trigger
+        id:
+        - arm_home
+        - arm_home_ntfy
+      sequence:
+      - target:
+          entity_id: alarm_control_panel.home_alarm
+        action: alarm_control_panel.alarm_arm_home
+        data: {}
+      - data:
+          message: Alarm Armed (Home) via Actionable Notification
+          title: Security Alert
+        action: notify.ha_mobile_app_phones
+      - action: script.send_ntfy_notification
+        metadata: {}
+        data:
+          topic:
+          - homeassistant
+          - homeassistant-phones
+          priority: 3
+          icon_url: '%ha%/local/images/homeassistant-icon.png'
+          message: Alarm Armed (Home) via Actionable Notification
+          title: Security Alert
+    - conditions:
+      - condition: trigger
+        id:
+        - recycle_is_out
+        - recycle_is_out_ntfy
+      sequence:
+      - action: input_boolean.turn_on
+        target:
+          entity_id:
+          - input_boolean.recycle_is_out
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - trash_is_out
+        - trash_is_out_ntfy
+      sequence:
+      - action: input_boolean.turn_on
+        target:
+          entity_id:
+          - input_boolean.trash_is_out
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - reset_mailbox
+        - reset_mailbox_ntfy
+      sequence:
+      - action: input_boolean.turn_off
+        target:
+          entity_id:
+          - input_boolean.mail_delivered
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - run_goodnight
+        - run_goodnight_ntfy
+      sequence:
+      - data: {}
+        action: script.scene_good_night
+      - data:
+          message: Good Night script run via Actionable Notification
+          title: Good Night
+        action: notify.ha_mobile_app_phones
+      - action: script.send_ntfy_notification
+        metadata: {}
+        data:
+          topic:
+          - homeassistant
+          - homeassistant-phones
+          priority: 3
+          icon_url: '%ha%/local/images/homeassistant-icon.png'
+          message: Good Night script run via Actionable Notification
+          title: Good Night
+    - conditions:
+      - condition: trigger
+        id:
+        - toggle_test_toggle
+      sequence:
+      - action: input_boolean.toggle
+        metadata: {}
+        target:
+          entity_id: input_boolean.test_toggle
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - yes1
+      sequence:
+      - action: script.send_ntfy_notification
+        metadata: {}
+        data:
+          topic: homeassistant-mike
+          priority: 3
+          icon_url: '%ha%/local/images/homeassistant-icon.png'
+          message: She said "Yes"
+          title: She loves me!
+    - conditions:
+      - condition: trigger
+        id:
+        - yes2
+      sequence:
+      - action: script.send_ntfy_notification
+        metadata: {}
+        data:
+          topic: homeassistant-mike
+          priority: 3
+          icon_url: '%ha%/local/images/homeassistant-icon.png'
+          message: She said "YES!!!!"
+          title: She loves me!
+  mode: parallel
+  trace:
+    stored_traces: 20
+  max: 15
+- id: '1769550604359'
+  alias: Restart Frigate when PetCam Starts
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - switch.petcam_plug
+    to:
+    - 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 3
+    id: turned_on
+  - trigger: state
+    entity_id:
+    - switch.petcam_plug
+    to:
+    - 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 3
+    id: turned_off
+  conditions: []
+  actions:
+  - alias: If PetCam turned on
+    if:
+    - condition: trigger
+      id:
+      - turned_on
+    then:
+    - action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        topic: frigate/Pet_Cam/enabled/set
+        payload: 'OFF'
+      alias: Turn Pet_Cam Frigate Camera off (mqtt)
+      enabled: false
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 30
+        milliseconds: 0
+      enabled: false
+    - action: shell_command.restart_frigate
+      metadata: {}
+      data: {}
+    - action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        topic: frigate/Pet_Cam/enabled/set
+        payload: 'ON'
+      alias: Turn Pet_Cam Frigate Camera on (mqtt)
+      enabled: true
+    else:
+    - action: mqtt.publish
+      metadata: {}
+      data:
+        evaluate_payload: false
+        qos: 0
+        retain: false
+        topic: frigate/Pet_Cam/enabled/set
+        payload: 'OFF'
+      alias: Turn Pet_Cam Frigate Camera off (mqtt)
+      enabled: true
+  mode: single

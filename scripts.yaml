@@ -182,63 +182,83 @@ home_thermostat_down:
 scene_good_night:
   alias: Good Night
   sequence:
-  - choose:
-    - conditions:
-      - condition: and
-        conditions:
-        - condition: state
-          entity_id: light.dresser_lamp
-          state: 'off'
-        - condition: state
-          entity_id: light.bedroom_fan_light
-          state: 'off'
-        - condition: state
-          entity_id: light.office_fan_light
-          state: 'off'
-        - condition: state
-          entity_id: sensor.holly_is_in_bed
-          state: Not In Bed
-        - condition: state
-          entity_id: sensor.mike_is_in_bed
-          state: Not In Bed
-      sequence:
-      - target:
-          entity_id: light.hallway_light
-        data: {}
-        action: homeassistant.turn_on
-    default: []
+  - if:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: light.dresser_lamp
+        state: 'off'
+      - condition: state
+        entity_id: light.bedroom_fan_light
+        state: 'off'
+      - condition: state
+        entity_id: light.office_fan_light
+        state: 'off'
+      - condition: state
+        entity_id: sensor.holly_is_in_bed
+        state: Not In Bed
+      - condition: state
+        entity_id: sensor.mike_is_in_bed
+        state: Not In Bed
+    then:
+    - target:
+        entity_id: light.hallway_light
+      data: {}
+      action: light.turn_on
+      continue_on_error: true
   - data: {}
     target:
       entity_id: alarm_control_panel.home_alarm
     action: alarm_control_panel.alarm_arm_home
+    continue_on_error: true
   - action: button.press
     metadata: {}
     data: {}
     target:
       entity_id: button.front_door_zwave_ping
+    continue_on_error: true
   - action: lock.lock
     metadata: {}
     data: {}
     target:
       entity_id: lock.front_door_zwave
-  - target:
+    continue_on_error: true
+  - action: light.turn_off
+    target:
       entity_id:
       - light.mantle_lights
+      area_id:
+      - ab042805f82011ea8f6093da0125181c
+      floor_id:
+      - middle_level
+      - downstairs
+      - outside
+    data: {}
+  - action: homeassistant.turn_off
+    metadata: {}
+    target:
+      entity_id:
       - switch.god_damn_humidifier
       - switch.god_damn_tv
       - switch.living_room_tv
-      - switch.christmas_tree
-      floor_id:
-      - downstairs
-      - middle_level
-      area_id:
-      - ab042805f82011ea8f6093da0125181c
-      - d24af84ef82011eaaba7cf30c521d99e
     data: {}
-    action: homeassistant.turn_off
+  - alias: Turn off Christmas Tree  Plug if Christmas Tree is up
+    if:
+    - condition: state
+      entity_id: input_boolean.christmas_tree_is_up
+      state:
+      - 'on'
+    then:
+    - action: homeassistant.turn_off
+      metadata: {}
+      target:
+        entity_id: switch.christmas_tree
+      data: {}
+      continue_on_error: true
   - data: {}
     entity_id: cover.garage_door
     action: cover.close_cover
+    continue_on_error: true
   - condition: and
     conditions:
     - condition: state
@@ -269,22 +289,26 @@ scene_leaving_home:
   - data: {}
     entity_id: alarm_control_panel.home_alarm
     action: alarm_control_panel.alarm_arm_away
-  - target:
-      entity_id:
-      - light.kitchen_overhead_light
-      - switch.office_heater_plug
-      - switch.god_damn_humidifier
-      - switch.mercury_unlocked
-      - switch.venus_unlocked
+  - action: light.turn_off
+    metadata: {}
+    target:
       floor_id:
-      - downstairs
       - upstairs
+      - downstairs
       area_id:
       - ab042805f82011ea8f6093da0125181c
       - d24af84ef82011eaaba7cf30c521d99e
       - 3b7166b7080111ebb90b2dcfb4bec3f3
       - e578c331f75a11ea8934e9d0c5b82a8b
       - b3ca852cf82011ea847d350a45336799
+      entity_id: light.kitchen_overhead_light
+    data: {}
+  - target:
+      entity_id:
+      - switch.office_heater_plug
+      - switch.god_damn_humidifier
+      - switch.mercury_unlocked
+      - switch.venus_unlocked
       label_id: tvs
     data: {}
     action: homeassistant.turn_off
@@ -299,7 +323,9 @@ scene_movie_time:
       - switch.christmas_tree
     action: homeassistant.turn_on
     data: {}
-  - target:
+  - action: light.turn_off
+    metadata: {}
+    target:
       entity_id:
       - light.hallway_light
       - light.three_headed_lamp
@@ -308,38 +334,41 @@ scene_movie_time:
       area_id:
       - 9bcddcf8037011eb8a568f2315fbbf92
       - laundry_room
-    action: homeassistant.turn_off
     data: {}
   mode: single
   icon: mdi:movie
 scene_night_night:
   alias: Scene - Night Night
   sequence:
-  - data: {}
-    target:
-      entity_id: alarm_control_panel.home_alarm
-    action: alarm_control_panel.alarm_arm_home
-    continue_on_error: true
+  - action: script.scene_good_night
+    metadata: {}
+    data: {}
   - target:
       entity_id:
-      - fan.bedroom_fan
-      - fan.office_fan
-      - light.mantle_lights
-      - light.dining_room_christmas_lights
       - switch.god_damn_humidifier
       - switch.office_heater_plug
-      area_id: ab042805f82011ea8f6093da0125181c
-      floor_id:
-      - upstairs
-      - downstairs
-      - middle_level
-      - outside
       label_id: tvs
     action: homeassistant.turn_off
     data: {}
-  - data: {}
-    entity_id: cover.garage_door
-    action: cover.close_cover
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - light.mantle_lights
+      - light.dining_room_christmas_lights
+      floor_id:
+      - upstairs
+      - middle_level
+      - downstairs
+      - outside
+    data: {}
+  - action: fan.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - fan.bedroom_fan
+      - fan.office_fan
+    data: {}
   mode: single
   icon: mdi:moon-waning-crescent
 home_thermostat_up:
@@ -382,10 +411,14 @@ scene_turn_off_the_office:
   - action: homeassistant.turn_off
     data: {}
     target:
-      label_id: office
       entity_id:
       - switch.mercury_unlocked
       - switch.venus_unlocked
+  - action: light.turn_off
+    metadata: {}
+    target:
+      area_id: e0ed57d0f82011eaabf815b2224a559b
+    data: {}
   mode: single
   icon: mdi:desk
 fix_3_way_lights:
@@ -501,10 +534,11 @@ lighting_bedroom_sexy_time:
         - light.holly_nightstand_bulb
         - light.dresser_lamp
       action: light.turn_on
-    - data: {}
+    - action: light.turn_off
       target:
-        entity_id: light.bedroom_fan_light
-      action: homeassistant.turn_off
+        entity_id:
+        - light.bedroom_fan_light
+      data: {}
   mode: single
 lighting_bedroom_normal:
   alias: Lighting - Bedroom - Normal
@@ -763,85 +797,6 @@ fkb_load_camera:
         text:
       name: Camera
       default: camera.front_door
-sent_ntfy_notification_to_mike:
-  sequence:
-  - if:
-    - condition: state
-      entity_id: binary_sensor.home_ntfy_server
-      state: 'on'
-      for:
-        hours: 0
-        minutes: 0
-        seconds: 5
-    then:
-    - action: ntfy.publish
-      metadata: {}
-      data:
-        title: '{{ title | default("Home Assistant Notification") }} via home notify
-          server'
-        message: '{{ message | default("Test Message") }}'
-      target:
-        entity_id: notify.mike_notifications
-    else:
-    - action: ntfy.publish
-      metadata: {}
-      data:
-        title: '{{ title | default("Home Assistant Notification") }} via ntfy.sh'
-        message: '{{ message | default("Test Message") }}'
-      target:
-        entity_id: notify.mike_notifications_via_ntfy_sh
-  fields:
-    title:
-      selector:
-        text:
-      name: Title
-      required: false
-    message:
-      selector:
-        text:
-      name: Message
-      required: true
-  alias: Sent ntfy Notification to Mike
-  description: ''
-sent_ntfy_notification:
-  sequence:
-  - if:
-    - condition: state
-      entity_id: binary_sensor.home_ntfy_server
-      state: 'on'
-      for:
-        hours: 0
-        minutes: 0
-        seconds: 5
-    then:
-    - action: ntfy.publish
-      metadata: {}
-      data:
-        title: '{{ title | default("Home Assistant Notification") }}'
-        message: '{{ message | default("Test Message") }}'
-      target:
-        entity_id: notify.notifications
-    else:
-    - action: ntfy.publish
-      metadata: {}
-      data:
-        title: '{{ title | default("Home Assistant Notification") }}'
-        message: '{{ message | default("Test Message") }}'
-      target:
-        entity_id: notify.notifications_via_ntfy_sh
-  fields:
-    title:
-      selector:
-        text:
-      name: Title
-      required: false
-    message:
-      selector:
-        text:
-      name: Message
-      required: true
-  alias: Sent ntfy Notification
-  description: ''
 tv_volume_up:
   sequence:
   - choose:
@@ -1055,43 +1010,133 @@ soundbar_family_room_power:
   mode: single
   icon: mdi:power
   description: ''
-sent_ntfy_notification_to_mike_phone:
+send_ntfy_notification:
   sequence:
-  - if:
-    - condition: state
-      entity_id: binary_sensor.home_ntfy_server
-      state: 'on'
-      for:
-        hours: 0
-        minutes: 0
-        seconds: 5
-    then:
-    - action: ntfy.publish
-      metadata: {}
-      data:
-        title: '{{ title | default("Home Assistant Notification") }} via home notify
-          server'
-        message: '{{ message | default("Test Message") }}'
-      target:
-        device_id: 59f766104130873374c0ff3e37ba3374
-    else:
-    - action: ntfy.publish
-      metadata: {}
-      data:
-        title: '{{ title | default("Home Assistant Notification") }} via ntfy.sh'
-        message: '{{ message | default("Test Message") }}'
-      target:
-        device_id: 384ae5344dc25400a920150821bcf74e
+  - action: shell_command.ntfy_send
+    metadata: {}
+    data:
+      topic: '{{ topic }}'
+      message: '{{ message }}'
+      title: '{{ title | default('''') }}'
+      tags: '{{ tags | default('''') }}'
+      priority: '{{ priority | default(''3'') }}'
+      actions: '{{ actions | default('''') }}'
+      attach: '{{ attachment_url | default('''') }}'
+      click: '{{ click_url | default('''') }}'
+      icon: '{{ icon_url | default('''') }}'
   fields:
+    topic:
+      selector:
+        select:
+          options:
+          - homeassistant
+          - homeassistant-phones
+          - homeassistant-mike
+          - homeassistant-mike-phone
+          - testing
+          - testing-mike-desktop
+          - testing-mike-phone
+          multiple: true
+      default: homeassistant
     title:
       selector:
         text:
       name: Title
-      required: false
+      description: Message Title
     message:
       selector:
         text:
       name: Message
+      description: Message Body
       required: true
-  alias: Sent ntfy Notification to Mike (Phone)
+    priority:
+      selector:
+        number:
+          min: 1
+          max: 5
+          step: 1
+      default: 3
+      name: Priority
+      description: Message Priority (1=lowest, 5=highest)
+    click_url:
+      selector:
+        text:
+      name: Click URL
+      description: URL launched when notification is clicked
+    icon_url:
+      selector:
+        text:
+      default: '%ha%/local/images/homeassistant-icon.png'
+      name: Icon URL
+      description: URL to PNG or JPG image file
+    tags:
+      selector:
+        text:
+      name: Tags
+      description: Comma separated list of Message Tags/Emojis
+    attachment_url:
+      selector:
+        text:
+      name: Attachment URL
+      description: URL to file or image to attach to Message
+    actions:
+      selector:
+        text:
+      name: Actions
+      description: 'A semi-colon separated list of actions that take the form: view/http,button_label_text,url,clear=true/false'
+  alias: Send ntfy Notification
+  description: ''
+turn_on_all_lights_in_the_house:
+  sequence:
+  - action: light.turn_on
+    metadata: {}
+    target:
+      area_id:
+      - e578e8c2f75a11ea912663367f9be460
+      - d5a3f493f82011eab36aa3c3ed2ba75c
+      - db9adb0df82011eaa78b4964f6b4b378
+      - e0ed57d0f82011eaabf815b2224a559b
+      - b3ca852cf82011ea847d350a45336799
+      - bf2770bbf82011ea94db95c3e7a16ed1
+      - e578d9a3f75a11ea862a9d0abb876e2e
+      - e578c331f75a11ea8934e9d0c5b82a8b
+      - 9bcddcf8037011eb8a568f2315fbbf92
+      - b98ef399f82011eab9688f8a4035f84e
+      - laundry_room
+      entity_id:
+      - light.master_bath_light
+      - light.hall_bath_light
+      - light.powder_room_light
+    data: {}
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.holly_nightstand_lamp
+    data:
+      rgb_color:
+      - 255
+      - 251
+      - 246
+      brightness_pct: 84
+  alias: Turn on all lights in the house
+  description: ''
+bump_recycle_day:
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ states("input_number.recycle_bump") | int >= state_attr("input_number.recycle_bump",
+        "max") | int }}'
+    then:
+    - action: input_number.min
+      metadata: {}
+      target:
+        entity_id: input_number.recycle_bump
+      data: {}
+    else:
+    - action: input_number.increment
+      metadata: {}
+      target:
+        entity_id: input_number.recycle_bump
+      data: {}
+  alias: Bump Recycle Day
   description: ''

@@ -4,12 +4,13 @@ install_apk: /config/bin/install_apk {{ command }} {{ package }}
 ntfy_send: >
   /config/bin/ntfy-send -t '{{ topic | default("testing-mike-phone") }}'
     -m '{{ message }}'
-    {{ title | default("") }}
-    {{ tags | default("") }}
-    {{ priority | default("") }}
-    {{ actions | default("") }}
-    {{ click | default("") }}
-    {{ icon | default("") }}
+    {{ "-T '" + title | default("") | string + "'" if title else "" }}
+    {{ "-g '" + tags | default("") | string + "'" if tags else "" }}
+    {{ "-p '" + priority | default("") | string + "'" if priority else "" }}
+    {{ "-A '" + actions | default("") | string + "'" if actions else "" }}
+    {{ "-a '" + attach | default("") | string + "'" if attach else "" }}
+    {{ "-c '" + click | default("") | string + "'" if click else "" }}
+    {{ "-i '" + icon | default("") | string + "'" if icon else "" }}
 play_plex_on_roku: /config/bin/play_plex_on_roku "{{ roku }}" "{{ tvshow }}"
 restart_frigate: /config/bin/reboot_frigate
 restart_octoprint: /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in restart_octoprint

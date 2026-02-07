@@ -32,6 +32,14 @@ if [ $err != 0 ]; then
   echo "error ($ver)"
   exit $err
 else
+  secrets_file="$(readlink -f $(dirname "$0")/../secrets.yaml)"
+  if grep -q ^ntfy_send_long_lived_token: $secrets_file; then
+    token=$(awk '/ntfy_send_long_lived_token:/{print $2}' $secrets_file)
+    state=$(curl -skSL -H "Authorization: Bearer $token" https://localhost:38123/api/states/sensor.fully_kiosk_browser_version | jq -r .state)
+    # If the running version is #.# and $ver (latest available version) ends in a 0, chop off the 0
+    [[ $state =~ ^[0-9]\.[0-9]$ ]] && [[ $ver =~ 0$ ]] && ver=${ver%0}
+  fi
+
   echo "$ver"
   exit 0
 fi

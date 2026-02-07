@@ -1,23 +1,69 @@
 #!/usr/bin/env bash
 
+## ntfy-send is a script to be able to use complex ntfy-send messages using
+## Actions (which is something that Home Assistant's integration is lacking)
+## This script supports using a custom ntfy.sh server along with the
+## ntfy.sh server if the custom server is down
+
+## There is a hidden -d option to print debug messages to /config/ntfysend.txt
+
+secrets_file="$(readlink -f $(dirname "$0")/../secrets.yaml)"
+netrc_file="$(readlink -f $(dirname "$0")/../.netrc)"
+ntfysendrc_file="$(readlink -f $(dirname "$0")/../.ntfysendrc)"
+debug_file=/config/ntfysend.txt
+
+## Local Server/ntfy.sh Mappings
+# Given that topics on a custom server may not be available on the ntfy.sh
+# server, you can create a list of mappings
+# Example in /config/.ntfysendrc:
+#    ntfy_sh[my_local_server_topic]=my_unique_ntfy_sh_server_topic_here_RANDOM
+
+declare -A ntfy_sh
+[ -r $ntfysendrc_file ] && source $ntfysendrc_file
+
 usage() {
-  echo "usage: $(basename $0) [-h] -t TOPIC -m MESSAGE"
-  echo "          [-p 1-5] [-T TITLE] [-c CLICKURL] [-i ICONURL]"
-  echo "          [-g TAGS] [-a ATTACHMENT] [-A ACTIONS]"
+  echo "usage: $(basename $0) [-h] [-N] [-R] -t TOPIC -m MESSAGE"
+  echo "          [-s SERVERURL] [-p PRIORITY] [-T TITLE] [-c CLICKURL]"
+  echo "          [-i ICONURL] [-g TAGS] [-a ATTACHMENT] [-A ACTIONS]"
   echo "    TOPIC and MESSAGE are required"
-  echo "    Default priority (-p) is 3"
+  echo "    Default priority (-p) is 3 (range: 1-5)"
+  echo "    Default behavior is make string replacements to"
+  echo "      ACTIONS, ATTACHMENT, CLICKURL, ICONURL:"
+  echo "        - Replace %ha% with home_assistant_base_url secret"
+  echo "        - Replace %token% with ntfy_send_long_lived_token secret"
+  echo "    Using -R disables the replacement behavior"
+  echo "    Using -N disables using the netrc file ($netrc_file)"
   exit $1
 }
 
+[ ! -f "$secrets_file" ] && echo "Error: Could not find secrets.yaml" > /dev/stderr && exit 1
+ha_url=$(awk '$1=="home_assistant_base_url:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+server=$(awk '$1=="ntfy_local_server:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+token=$(awk '$1=="ntfy_send_long_lived_token:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+debug=$(awk '$1=="ntfy_send_debug:"{gsub(/(^"|"$)/,"",$2);print $2}' $secrets_file)
+[ -z "$ha_url" ] && echo "Error: Secrets file does not have 'home_assistant_base_url'" > /dev/stderr && exit 1
+[ -z "$server" ] && echo "Error: Secrets file does not have 'ntfy_local_server'" > /dev/stderr && exit 1
+[ -z "$token" ] && echo "Error: Secrets file does not have 'ntfy_send_long_lived_token'" > /dev/stderr && exit 1
+
 unset actions title attach click tags icon message topic
+debug=${debug:-false}
+run_cmd=true
 headers=()
 priority=3
-while getopts ":hA:T:a:c:g:i:m:p:t:" opt; do
+replace_strings=true
+test_fail=false
+use_netrc=true
+while getopts ":hA:FNRT:a:c:dDg:i:m:p:s:t:" opt; do
   case $opt in
     A) actions=$OPTARG ;;
+    F) test_fail=true ;;
+    N) use_netrc=false ;;
+    R) replace_strings=false ;;
     T) title=$OPTARG ;;
     a) attach=$OPTARG ;;
     c) click=$OPTARG ;;
+    d) debug=true ;;
+    D) debug=true ; run_cmd=false ;;
     g) tags=$OPTARG ;;
     i) icon=$OPTARG ;;
     m) message=$OPTARG ;;
@@ -29,23 +75,88 @@ while getopts ":hA:T:a:c:g:i:m:p:t:" opt; do
         exit 1
       fi
       ;;
+    s) server=$OPTARG ;;
     t) topic=$OPTARG ;;
     *) usage ;;
   esac
 done
 shift $((OPTIND -1))
 
-[ -n "$actions" ]  && headers+=(--header "X-Actions: $actions")
-[ -n "$title" ]    && headers+=(--header "X-Title: $title")
-[ -n "$attach" ]   && headers+=(--header "X-Attach: $attach")
-[ -n "$click" ]    && headers+=(--header "X-Click: $click")
-[ -n "$tags" ]     && headers+=(--header "X-Tags: $tags")
-[ -n "$icon" ]     && headers+=(--header "X-Icon: $icon")
-[ -n "$priority" ] && headers+=(--header "X-Priority: $priority")
+if $replace_strings && [ -n "$actions" -o -n "$attach" -o -n "$click" -o -n "$icon" ]; then
+  actions=${actions//\%ha\%/$ha_url}
+  actions=${actions//\%token\%/$token}
+  attach=${attach//\%ha\%/$ha_url}
+  attach=${attach//\%token\%/$token}
+  click=${click//\%ha\%/$ha_url}
+  click=${click//\%token\%/$token}
+  icon=${icon//\%ha\%/$ha_url}
+  icon=${icon//\%token\%/$token}
+fi
 
-curl -n --netrc-file /config/.netrc \
-  -X POST \
-  --url "https://notify.erdely.co/$topic" \
-  --data "$message" \
-  "${headers[@]}"
+[ -z "$message" ] && echo "Error: '-m MESSAGE' is required" > /dev/stderr && exit 1
+[ -z "$topic" ] && echo "Error: '-t TOPIC' is required" > /dev/stderr && exit 1
+
+[ -n "$priority" ] && headers+=(--header "X-Priority: $priority")
+[ -n "$title" ]    && headers+=(--header "X-Title: $title")
+[ -n "$click" ]    && headers+=(--header "X-Click: $click")
+[ -n "$icon" ]     && headers+=(--header "X-Icon: $icon")
+[ -n "$tags" ]     && headers+=(--header "X-Tags: $tags")
+[ -n "$attach" ]   && headers+=(--header "X-Attach: $attach")
+[ -n "$actions" ]  && headers+=(--header "X-Actions: $actions")
+
+topic=${topic#\[}
+topic=${topic%\]}
+IFS=',' read -ra topics <<< "$topic"
+
+if $debug; then
+  echo "$(date): topic string = '$topic'" >> $debug_file
+  echo "$(date): topics array = '${topics[@]}'" >> $debug_file
+  echo "$(date): test_fail = '$test_fail'" >> $debug_file
+  for var in server topic message priority title click icon tags attach actions; do
+    echo "$(date): $var = '${!var}'" >> $debug_file
+  done
+fi
+
+# If pre-defined server is down, switch to ntfy.sh
+# and substitute the topic
+unset error
+for topic in "${topics[@]}"; do
+  topic=${topic// /}
+  $debug && echo "$(date): Processing topic '$topic'" >> $debug_file
+  if $test_fail || [[ ! $server =~ ^https?://ntfy.sh ]]; then
+    if $test_fail || ! curl -sfo/dev/null $server; then
+      echo "Warning: $server is down, using ntfy.sh" > /dev/stderr
+      server=https://ntfy.sh
+      [ -n "${ntfy_sh[$topic]}" ] && topic=${ntfy_sh[$topic]}
+    fi
+  fi
+
+  if $debug; then
+    echo "$(date): headers =" >> $debug_file
+    for header in "${headers[@]}"; do
+      [[ $header == --header ]] && continue
+      echo "$(date):    - $header" >> $debug_file
+    done
+  fi
+
+  unset netrc
+  if $use_netrc and [ -r $netrc_file ]; then
+    netrc="-n --netrc-file $netrc_file"
+  fi
+
+  if $debug; then
+    txt="Command"
+    ! $run_cmd && txt="Command that would have run"
+    echo "$(date): $txt: curl $netrc --silent -X POST --url \"$server/$topic\" --data \"$message\" \"${headers[@]}\"" >> $debug_file
+  fi
+  if $run_cmd; then
+    curl $netrc --fail --silent -X POST \
+      --url "$server/$topic" --data "$message" "${headers[@]}"
+    ret=$?
+    [ $ret != 0 ] && error="$topic=$ret"
+  fi
+done
+$debug && echo "$(date): done" >> $debug_file
+[[ $error ]] && echo $error && echo "$(date): $error" >> $debug_file && exit 1
+exit 0
 
