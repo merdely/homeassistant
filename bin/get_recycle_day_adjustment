@@ -4,34 +4,71 @@ for f in curl jq; do
   ! command -v $f &> /dev/null && echo "Error: The '$f' command is required" > /dev/stderr && exit 1
 done
 
-debug=${debug:-false}
-debug_exit=${debug_exit:-false}
-verbose=${verbose:-false}
-output_json=${output_json:-false}
-today_date=$(date "+%Y-%m-%d")
+supported_engines="localai|ollama|chatgpt|claude|mistral"
+debug="${debug:-false}"
+debug_exit="${debug_exit:-false}"
+verbose="${verbose:-false}"
+output_json="${output_json:-false}"
+today_date="$(date "+%Y-%m-%d")"
+chatgpt_url="${chatgpt_url:-https://api.openai.com/v1/responses}"
+claude_url="${claude_url:-https://api.anthropic.com/v1/messages}"
+claude_max_tokens="${claude_max_tokens:-100}"
+mistral_url="${mistral_url:-https://api.mistral.ai/v1/conversations}"
+anthropic_version="${anthropic_version:-2023-06-01}"
+engine_order="${engine_order:-localai ollama chatgpt claude mistral}"
 
 secrets_file="${secrets_file:-$(readlink -f $(dirname "$0")/../secrets.yaml)}"
 
 declare -A answers count
 
+# Validate secrets file
 [ ! -r "$secrets_file" ] && echo "Error: Cannot open secrets file" && exit 1
 ! grep -q "^recycle_day_" "$secrets_file" && echo "Error: No recycle_day secrets in secrets file" && exit 1
 
-for var in home_assistant_base_url recycle_url_main recycle_default_day; do
-  [[ ! "${!var}" ]] && declare "$var=$(awk "/^$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print}" "$secrets_file")"
+# Get common settings
+for var in home_assistant_base_url recycle_url_main recycle_default_day ; do
+  [[ ! "${!var}" ]] && declare "$var=$(awk "/^$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")"
+  declare "$var=${!var# }"  # Trim space
+  declare "$var=${!var% }"  # Trim space
+  declare "$var=${!var#\"}"  # Trim quote
+  declare "$var=${!var%\"}"  # Trim quote
+  declare "$var=${!var#\'}"  # Trim quote
+  declare "$var=${!var%\'}"  # Trim quote
   [[ $var == home_assistant_base_url ]] && [[ ! $home_assistant_base_url ]] && home_assistant_base_url=http://localhost:8123
   [[ $var == recycle_url_main ]] && [[ ! $recycle_url_main ]] && recycle_url_main=https://www.montgomerycountymd.gov/DEP/trash-recycling/index.html
   [[ $var == recycle_default_day ]] && [[ ! $recycle_default_day ]] && recycle_default_day=Friday
 done
-for var in min_agree ollama_enabled ollama_model ollama_url ollama_api_key localai_enabled localai_model localai_prompt localai_url localai_api_key claude_enabled claude_model claude_api_key mistral_enabled mistral_api_key mistral_agent_id chatgpt_enabled chatgpt_model chatgpt_api_key hass_api_key; do
-  [[ ! "${!var}" ]] && declare "$var=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print}" "$secrets_file")"
+
+# Get program settings that do not overwrite previous values
+for var in hass_api_key min_agree engine_order localai_enabled localai_url localai_model localai_prompt localai_api_key ollama_enabled ollama_url ollama_model ollama_api_key chatgpt_enabled chatgpt_model chatgpt_api_key claude_enabled claude_model claude_api_key mistral_enabled mistral_api_key mistral_agent_id ; do
+  [[ ! "${!var}" ]] && declare "$var=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")"
+  declare "$var=${!var# }"  # Trim space
+  declare "$var=${!var% }"  # Trim space
+  declare "$var=${!var#\"}"  # Trim quote
+  declare "$var=${!var%\"}"  # Trim quote
+  declare "$var=${!var#\'}"  # Trim quote
+  declare "$var=${!var%\'}"  # Trim quote
   [[ $var =~ _enabled$ ]] && [[ ${!var} != true || ! "${!var}" ]] && declare "$var=false"
   [[ $var == min_agree ]] && [[ ! $min_agree ]] && min_agree=2
 done
 [[ $answer ]] && min_agree=1 && answers[manual]=$answer
 
+# Get program settings that do overwrite previous values
+for var in localai_max_tokens localai_match ollama_max_tokens ollama_match chatgpt_url chatgpt_max_tokens chatgpt_match claude_max_tokens claude_url claude_match mistral_url mistral_max_tokens mistral_match ; do
+  tmpval=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")
+  [[ $tmpval ]] && declare "$var=$tmpval"
+  declare "$var=${!var# }"  # Trim space
+  declare "$var=${!var% }"  # Trim space
+  declare "$var=${!var#\"}"  # Trim quote
+  declare "$var=${!var%\"}"  # Trim quote
+  declare "$var=${!var#\'}"  # Trim quote
+  declare "$var=${!var%\'}"  # Trim quote
+  unset tmpval
+done
+
 usage() {
-  echo "usage: $(basename $0) [-h] [-d|-D] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-m MIN_AGREE] [ENGINE] [MODEL]"
+  echo "usage: $(basename $0) [-h] [-d|-D] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-m MIN_AGREE]"
+  echo "                      [ENGINELIST] [MODELLIST]"
   echo "  -d           : Print debug information"
   echo "  -D           : Print debug information and exit"
   echo "  -v           : Be verbose"
@@ -40,8 +77,16 @@ usage() {
   echo "  -t TESTDATE  : Use a test date instead of today (must be YYYY-mm-dd)"
   echo "  -a ANSWER    : Hardcode an answer"
   echo "  -m MIN_AGREE : Minimum number of LLMs must agree on answer (default: $min_agree)"
-  echo "  ENGINE can one of: localai, ollama, mistral, claude, or chatgpt"
-  echo "  MODEL has not been implemented yet"
+  echo
+  echo "  ENGINELIST can one or more of: ${supported_engines[@]//|/ }"
+  echo "  If specified, MODELLIST must be: A list of models that would have to match the ENGINE list"
+  echo "  The first engine given would be matched with the first model given"
+  echo "  ENGINELIST and MODELLIST are space separated on the command line"
+  echo "  If MODELLIST is empty and ENGINELIST is set, models will be used from $secrets_file"
+  echo "  Examples:"
+  echo "    $(basename $0) -j ollama gemma3:4b localai gemma-3-4b-it"
+  echo "    $(basename $0) -j ollama localai gemma3:4b gemma-3-4b-it"
+  echo "    $(basename $0) -j gemma3:4b gemma-3-4b-it ollama localai"
   exit $1
 }
 
@@ -52,7 +97,7 @@ while getopts ":hdDvJjt:a:m:" opt; do
     v) verbose=true ;;
     j) output_json=true ;;
     J) output_json=false ;;
-    a) answer=$OPTARG ;;
+    a) answer=$OPTARG ; answers[commandline]=$answer; answers[given]=$answer;;
     t)
        if [[ $OPTARG =~ ^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$ ]]; then
          today_date=$(date -d "$OPTARG" "+%Y-%m-%d")
@@ -70,43 +115,99 @@ while getopts ":hdDvJjt:a:m:" opt; do
 done
 shift $((OPTIND -1))
 
-if [ -n "$1" ]; then
-  localai_enabled=false
-  ollama_enabled=false
-  mistral_enabled=false
-  claude_enabled=false
-  chatgpt_enabled=false
+engines=()
+models=()
+while [ -n "$1" ]; do
+  if [[ $1 =~ ^($supported_engines)$ ]]; then
+    engines+=($1)
+  else
+    models+=($1)
+  fi
+  shift
+done
+if [ ${#engines[@]} -gt 0 ]; then
+  for engine in ${supported_engines//|/ }; do
+    declare "${engine}_enabled=false"
+  done
+  for engine in "${engines[@]}"; do
+    declare "${engine}_enabled=true"
+  done
+  engine_order="${engines[@]}"
+fi
+if [ ${#engines[@]} -gt 1 ]; then
+  if [ ${#models[@]} -eq 1 ]; then
+    for engine in "${engines[@]}"; do
+      echo "${engine}_model=${models[0]}"
+      declare "${engine}_model=${models[0]}"
+    done
+  elif [ ${#engines[@]} -eq ${#models[@]} ]; then
+    for i in $(seq 0 $((${#engines[@]} - 1))); do
+      echo "${engines[$i]}_model=${models[$i]}"
+      declare "${engines[$i]}_model=${models[$i]}"
+    done
+  else
+    if [ ${#models[@]} -ne 0 ]; then
+      echo "Error: Engine/Model mismatch. The same number of engines and models must be passed." > /dev/stderr
+      echo > /dev/stderr
+      usage 1
+    fi
+  fi
+elif [ ${#engines[@]} -eq 1 ]; then
   min_agree=1
-  case "$1" in
-    localai) localai_enabled=true ;;
-    ollama)  ollama_enabled=true ;;
-    mistral) mistral_enabled=true ;;
-    claude)  claude_enabled=true ;;
-    chatgpt) chatgpt_enabled=true ;;
-    * ) echo "Error: Invalid AI engine (must be: localai, ollama, mistral, claude, or chatgpt" && exit 1 ;;
-  esac
+  if [ ${#models[@]} -eq 1 ]; then
+    declare "${engine}_model=${models[0]}"
+  else
+    if [ ${#models[@]} -ne 0 ]; then
+      echo "Error: Engine/Model mismatch. The same number of engines and models must be passed." > /dev/stderr
+      echo > /dev/stderr
+      usage 1
+    fi
+  fi
 fi
 
-unset use_model
-[ -n "$2" ] && use_model=$2
+## If a single engine is passed on the command line, disable the rest
+#if [ -n "$1" ]; then
+#  localai_enabled=false
+#  ollama_enabled=false
+#  mistral_enabled=false
+#  claude_enabled=false
+#  chatgpt_enabled=false
+#  min_agree=1
+#  case "$1" in
+#    localai) localai_enabled=true ;;
+#    ollama)  ollama_enabled=true ;;
+#    mistral) mistral_enabled=true ;;
+#    claude)  claude_enabled=true ;;
+#    chatgpt) chatgpt_enabled=true ;;
+#    * ) echo "Error: Invalid AI engine (must be: localai, ollama, mistral, claude, or chatgpt" && exit 1 ;;
+#  esac
+#fi
+#
+# If a model was passed on the command line, use it
+#unset use_model
+#[ -n "$2" ] && use_model=$2
 
+# Get whether Home Assistant toggle for using AI is enabled
 [[ ! $hass_api_key ]] && echo "Error: Cannot determine hass_api_key from $secrets_file" && exit 1
-
 use_ai=$(curl -skSL -H "Authorization: Bearer $hass_api_key" $home_assistant_base_url/api/states/input_boolean.use_ai_for_recycle_day | jq -r .state)
 if [ "${use_ai,,}" != "on" ]; then
   $debug && echo "Warning: Use AI for Recycle Day is not 'on' in Home Assistant" > /dev/stderr
   exit
 fi
+
+# Get normal recycle day from Home Assistant
 normal_recycle_day=$(curl -skSL -H "Authorization: Bearer $hass_api_key" $home_assistant_base_url/api/states/input_select.recycle_day | jq -r .state)
 [[ ! $normal_recycle_day ]] && normal_recycle_day=$recycle_default_day
+$verbose && echo "Normal recycle day: $normal_recycle_day" > /dev/stderr
 
-if [ "$(date -d "$today_date" +%A)" = Sunday ]; then
-  reference_date="${reference_date:-$(date -d "$today_date" "+%A, %B %_d, %Y")}"
-else
-  reference_date="${reference_date:-$(date -d "@$(( $(date -d "$today_date" +%s) - $(date -d "$today_date" +%w)*86400 ))" "+%A, %B %_d, %Y")}"
-fi
-reference_date=${reference_date//  / }
+# Set reference day to the normal recycle day for this week (or of the passed week)
+epoch=$(date ${today_date:+-d $today_date} +%s)
+dow=$(date ${today_date:+-d $today_date} +%w)
+reference_date=$(date -d "@$(( epoch + (5 - dow) * 86400 ))" +"%A, %B %-d")
+reference_ymd=$(date -d "@$(( epoch + (5 - dow) * 86400 ))" +"%Y-%m-%d")
+$verbose && echo "Reference date: $reference_date ($reference_ymd)" > /dev/stderr
 
+# Determine the URL for the county's alert text on the recycle URL
 xmllint=false
 command -v xmllint &> /dev/null && xmllint=true
 if $xmllint; then
@@ -117,7 +218,9 @@ else
   county_alert_url=$(curl -sL $recycle_url_main | \
     sed -n 's/.*$("#alert").load("\([^"]*\)".*/\1/p')
 fi
+$verbose && echo "County Alert URL: $county_alert_url" > /dev/stderr
 
+# Determine the content of the county's alert text
 if $xmllint && [[ $county_alert_url =~ ^https?://.*montgomerycountymd.gov ]]; then
   county_alert_text=$(curl -sL $county_alert_url | xmllint --html --xpath 'string(//body)' - 2> /dev/null | \
     sed -r 's/^\s*//;/^\s*$/d' | paste -sd " ")
@@ -127,22 +230,45 @@ elif [[ $county_alert_url =~ ^https?://.*montgomerycountymd.gov ]]; then
 else
   echo "Warning: Invalid MoCo Alert/Warning URL ($county_alert_url)" > /dev/stderr
 fi
+$verbose && echo "County Alert Text:"
+$verbose && echo "    $county_alert_text" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/"
 
-# user_message="My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Without explaining how you arrived at your conclusion, what weekday will the county come to pick up my recycle this week?"
-user_message=${user_message:-My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Briefly tell me which weekday will the county come to pick up my recycle this week?}
-user_message=${user_message/// }
+# Set the user message to send to the LLM
+# user_message=${user_message:-My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Briefly tell me which weekday will the county come to pick up my recycle this week?}
 
+user_message="${user_message:-County website notice:
+\"${county_alert_text/// }\"
+
+For the date $reference_date, will my recycling pickup day change due to the county website notice? If yes, by how many days will it be delayed?
+
+Return your answer in the following format (do not add any extra text or explanation):
+{
+  \"date\": \"[INSERT_DATE]\",
+  \"is_affected\": [true/false],
+  \"delay_days\": [number of days delayed, or 0 if not affected]
+}}"
+# user_message=${user_message//\"/\\\"}
+#user_message=${user_message//{/\\{}
+#user_message=${user_message//\}/\\\}}
+
+$verbose && echo "LLM User Message:"
+$verbose && echo "    $user_message" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/"
+
+# The grep string used to find a day of the week
 day_search='\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b'
 
+# If debug mode, print variables
 if $debug; then
-  for var in home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date min_agree user_message localai_enabled localai_url localai_model localai_prompt localai_api_key ollama_enabled ollama_url ollama_model ollama_api_key claude_enabled claude_model claude_api_key mistral_enabled mistral_api_key mistral_agent_id chatgpt_enabled chatgpt_model chatgpt_api_key; do
-    $debug && printf '%s=%s\n' "$var" "${!var}"
+  echo "Settings: " > /dev/stderr
+  for var in secrets_file home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date reference_ymd min_agree user_message localai_enabled localai_url localai_model local_ai_max_tokens localai_prompt localai_api_key localai_match ollama_enabled ollama_url ollama_model ollama_max_tokens ollama_api_key ollama_match chatgpt_enabled chatgpt_model chatgpt_max_tokens chatgpt_api_key chatgpt_match claude_enabled claude_model claude_max_tokens claude_api_key claude_match mistral_enabled mistral_max_tokens mistral_api_key mistral_agent_id mistral_match ; do
+    [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "$(echo "${!var}" | fold -sw $((COLUMNS - ${#var} - 3))|sed "2,\$s/^/$(printf '%*s' $((${#var} - 3)))/")" > /dev/stderr
+    ! [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "${!var}" > /dev/stderr
   done
   $debug_exit && exit
 fi
 
+# Function to check if the minimum number of LLMs agree on their answer
 check_agreement() {
-  #set -o xtrace
   [[ $min_agree = 1 ]] && [[ ${#answers[@]} = 1 ]] && echo ${answers[@]} && return 0
 
   local count
@@ -150,202 +276,152 @@ check_agreement() {
   local answer=""
   declare -A count
 
+  $verbose && echo "Checking agreement with $min_agree agreements needed" > /dev/stderr
   $debug && echo "methods = ${!answers[@]}" > /dev/stderr
   $debug && echo "answers = ${answers[@]}" > /dev/stderr
   for v in "${answers[@]}"; do [[ $v ]] && ((count["$v"]++)); done
   for v in "${!count[@]}"; do (( count[$v] > max )) && max=${count[$v]} && answer=$v; done
+  $verbose && echo "Agreements found: $max" > /dev/stderr
   (( $max < $min_agree )) && return 1
   [[ ! $answer ]] && return 1
   echo $answer
 }
 
-localai() {
-  [[ $answer ]] && return
-  ! $localai_enabled && return
-  [[ ! $localai_model ]] && return
-  [[ ! $localai_url ]] && return
-  $verbose && echo "Using Local AI LLM with ${use_model:-$localai_model}" > /dev/stderr
-  unset api_header_switch api_header
-  if [ -n "$localai_api_key" ]; then
+# Function to run the LLM engine
+run_engine() {
+  local engine=${1:-localai}
+
+  local engine_enabled="${engine}_enabled"
+  ! ${!engine_enabled} && { $verbose&&echo "$engine disabled">/dev/stderr;true; } && return
+  [[ ! -v "${engine}_url" ]] && { $verbose&&echo "${engine_url} not set">/dev/stderr;true; } && return
+  [[ $engine =~ ^(localai|ollama|chatgpt|claude)$ && ! -v "${engine}_model" ]] && return
+  [[ $engine =~ ^(chatgpt|claude|mistral)$ && ! -v "${engine}_api_key" ]] && return
+  [[ $engine =~ ^(mistral)$ && ! -v "${engine}_agent_id" ]] && return
+  [[ $answer ]] && { $verbose&&echo "Answer already set to $answer">/dev/stderr;true; } && return
+
+  local max_tokens="${engine}_max_tokens"
+  local prompt="${engine}_prompt"
+  local engine_url="${engine}_url"
+  local engine_model="${engine}_model"
+  local engine_match="${engine}_match"
+  local engine_api_key engine_agent_id
+  [ -v "${engine}_api_key" ] && engine_api_key="${engine}_api_key"
+  [ -v "${engine}_agent_id" ] && engine_agent_id="${engine}_agent_id"
+  $verbose && echo "Using $engine LLM${!engine_model:+ with ${!engine_model}}${!engine_agent_id:+ with an engine agent id}" > /dev/stderr
+
+  local api_header_switch api_header add_header_switch add_header message_content
+  if [ -v "${engine}_api_key" ]; then
     api_header_switch="-H "
-    api_header="Authorization: Bearer $localai_api_key"
+    local engine_api_key="${engine}_api_key"
+    case "$engine" in
+      claude)
+        api_header="x-api-key: ${!engine_api_key}"
+        add_header_switch="-H "
+        add_header="anthropic-version: $anthropic_version"
+        ;;
+      *) api_header="Authorization: Bearer ${!engine_api_key}" ;;
+    esac
   fi
-  if [ -n "$localai_prompt" ]; then
-    localai_prompt=${localai_prompt#\"}
-    localai_prompt="\"prompt\": \"${localai_prompt%\"}\","
-  fi
-  data="{
-        \"max_tokens\": 8192,
-        $localai_prompt
-        \"messages\": [
+  case "$engine" in
+    localai)
+      message_content="\"messages\": [
           {
             \"role\": \"user\",
             \"reasoning\": \"low\",
             \"content\": \"$user_message\"
           }
-        ],
-        \"model\": \"${use_model:-$localai_model}\"
-      }"
+        ]"
+      message_content=$(jq -n --arg message "$user_message" '{messages:[{role:"user",reasoning:"low",content:$message}]}')
+      ;;
+    ollama)
+      message_content="\"prompt\": \"$user_message\",
+        \"stream\": false"
+      message_content=$(jq -n --arg message "$user_message" '{prompt:$message,stream:false}')
+      ;;
+    chatgpt)
+      message_content="\"input\": \"$user_message\""
+      message_content=$(jq -n --arg message "$user_message" '{input:$message}')
+      ;;
+    claude)
+      message_content="\"messages\": [
+          {
+            \"role\": \"user\",
+            \"content\": \"$user_message\"
+          }
+        ]"
+      message_content=$(jq -n --arg message "$user_message" '{messages:[{role:"user",content:$message}]}')
+      ;;
+    mistral)
+      message_content="\"inputs\": [
+          {
+            \"role\": \"user\",
+            \"content\": \"$user_message\"
+          }
+        ]"
+      message_content=$(jq -n --arg message "$user_message" '{inputs:[{role:"user",content:$message}]}')
+      ;;
+  esac
+
+  local data=$(jq -n \
+    --arg max_tokens "${!max_tokens}" \
+    --arg prompt "${!prompt}" \
+    --arg model "${use_model:-${!engine_model}}" \
+    --arg agent_id "${!engine_agent_id}" \
+    'if $model != "" then . + {model: $model} else . end
+    | if $agent_id != "" then . + {agent_id: $agent_id} else . end
+    | if $max_tokens != "" then . + {max_tokens: ($max_tokens|tonumber)} else . end
+    | if $prompt != "" then . + {prompt: $prompt} else . end
+    ')
+  [[ "$data" == "null" ]] && data="{}"
+  data=$(jq -s '.[0] * .[1]' <(echo $data) <(echo "$message_content"))
   $debug && echo "$data" > /dev/stderr
-  tmpanswer=$(curl -s $localai_url/v1/chat/completions $api_header_switch"$api_header" \
-    -H "content-type: application/json" -d "$data")
-  $debug && echo "Local AI output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | jq -r '.choices[0].message.reasoning // .choices[0].message.content')
-  $debug && echo "Local AI post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
+  $debug && set -x
+  local tmpanswer=$(curl -s "${!engine_url}" \
+    $api_header_switch${api_header:+"$api_header"} $add_header_switch${add_header:+"$add_header"} \
+    -H "Content-Type: application/json" -d "$data")
+  $debug && set +x
+  $debug && echo "$engine output: $tmpanswer" > /dev/stderr
+  tmpanswer=$(echo "$tmpanswer" | jq -r "${!engine_match}")
+  $debug && echo "$engine post-jq-engine-match output: $tmpanswer" > /dev/stderr
+  tmpanswer=$(echo "$tmpanswer" | sed '/^```/d' | jq -Mr '"is_affected=\(.is_affected) delay_days=\(.delay_days)"')
+  ret=$?
+  $debug && echo "$engine post-jq output: $tmpanswer" > /dev/stderr
+  local is_affected delay_days
+  if [ $ret != 0 ]; then
+    tmpanswer="Bad json output"
+  else
+    if [[ $tmpanswer =~ ^is_affected=(true|false)" "delay_days=[0-6]$ ]]; then
+      eval "$tmpanswer"
+      tmpanswer=$(date -d @$(( $(date -d $reference_ymd +%s) + $delay_days * 86400 )) +%A)
+    else
+      tmpanswer="Invalid json format: $tmpanswer"
+    fi
+  fi
 
   unset api_header_switch api_header
   if [[ $tmpanswer ]]; then
-    $verbose && echo "Local AI answer: $tmpanswer" > /dev/stderr
-    answers[localai]=$tmpanswer
+    $verbose && echo "$engine answer: '$tmpanswer'" > /dev/stderr
+    answers[$engine]=$tmpanswer
     answer=$(check_agreement)
-    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
-  fi
-}
-
-ollama() {
-  [[ $answer ]] && return
-  ! $ollama_enabled && return
-  [[ ! $ollama_model ]] && return
-  [[ ! $ollama_url ]] && return
-
-  $verbose && echo "Using Ollama LLM with ${use_model:-$ollama_model}" > /dev/stderr
-  unset api_header_switch api_header
-  if [ -n "$ollama_api_key" ]; then
-    api_header_switch="-H "
-    api_header="Authorization: Bearer $ollama_api_key"
-  fi
-  data="{
-        \"model\": \"${use_model:-$ollama_model}\",
-        \"prompt\": \"$user_message\",
-        \"stream\": false
-      }"
-  $debug && echo "$data" > /dev/stderr
-  tmpanswer=$(curl -s $ollama_url/api/generate $api_header_switch -d "$data")
-  $debug && echo "Ollama output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | jq -r '.response')
-  $debug && echo "Ollama post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
-
-  unset api_header_switch api_header
-  if [[ $tmpanswer ]]; then
-    $verbose && echo "Ollama answer: $tmpanswer" > /dev/stderr
-    answers[ollama]=$tmpanswer
-    answer=$(check_agreement)
-    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
-  fi
-}
-
-mistral() {
-  [[ $answer ]] && return
-  ! $mistral_enabled && return
-  [[ ! $mistral_api_key ]] && return
-  [[ ! $mistral_agent_id ]] && return
-  $verbose && echo "Using Mistral LLM" > /dev/stderr
-  [ -z "$mistral_api_key" ] && echo "Error: Cannot use Mistral: No API key in $secrets_file" && exit 1
-  data="{
-          \"agent_id\": \"$mistral_agent_id\",
-          \"inputs\": [
-            {\"role\":\"user\",\"content\":\"$user_message\"}
-          ]
-        }"
-  tmpanswer=$(curl -s https://api.mistral.ai/v1/conversations \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $mistral_api_key" -d "$data")
-  $debug && echo "Mistral output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | jq -r '.outputs[0].content')
-  $debug && echo "Mistral post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
-
-  if [[ $tmpanswer ]]; then
-    $verbose && echo "Mistral answer: $tmpanswer" > /dev/stderr
-    answers[mistral]=$tmpanswer
-    answer=$(check_agreement)
-    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
-  fi
-}
-
-claude() {
-  [[ $answer ]] && return
-  ! $claude_enabled && return
-  [[ ! $claude_model ]] && return
-  [[ ! $claude_api_key ]] && return
-  $verbose && echo "Using Claude LLM" > /dev/stderr
-  [ -z "$claude_api_key" ] && echo "Error: Cannot use Claude: No API key in $secrets_file" && exit 1
-  data="{
-          \"model\": \"$claude_model\",
-          \"max_tokens\": 100,
-          \"messages\": [
-            {\"role\": \"user\", \"content\": \"$user_message\"}
-          ]
-        }"
-  tmpanswer=$(curl -s https://api.anthropic.com/v1/messages \
-    -H "x-api-key: $claude_api_key" \
-    -H "anthropic-version: 2023-06-01" \
-    -H "content-type: application/json" -d "$data")
-  $debug && echo "Claude output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | jq -r '.content[0].text')
-  $debug && echo "Claude post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
-
-  if [[ $tmpanswer ]]; then
-    $verbose && echo "Claude answer: $tmpanswer" > /dev/stderr
-    answers[claude]=$tmpanswer
-    answer=$(check_agreement)
-    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
-  fi
-}
-
-chatgpt() {
-  [[ $answer ]] && return
-  ! $chatgpt_enabled && return
-  [[ ! $chatgpt_model ]] && return
-  [[ ! $chatgpt_api_key ]] && return
-  $verbose && echo "Using ChatGPT LLM" > /dev/stderr
-  [ -z "$chatgpt_api_key" ] && echo "Error: Cannot use ChatGPT: No API key in $secrets_file" && exit 1
-  data="{
-          \"model\": \"$chatgpt_model\",
-          \"input\": \"$user_message\"
-        }"
-  tmpanswer=$(curl -s https://api.openai.com/v1/responses \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $chatgpt_api_key" -d "$data")
-  $debug && echo "Claude output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | jq -r '.output[0].content[0].text')
-  $debug && echo "Claude post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
-
-  if [[ $tmpanswer ]]; then
-    $verbose && echo "ChatGPT answer: $tmpanswer" > /dev/stderr
-    answers[chatgpt]=$tmpanswer
-    answer=$(check_agreement)
-    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
+    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}" > /dev/stderr
   fi
 }
 
 # Execute functions for LLMS
-localai
-ollama
-mistral
-claude
-chatgpt
+$verbose && echo "Running engines in this order: $engine_order" > /dev/stderr
+
+for engine in $engine_order; do
+  run_engine $engine
+done
 
 if [[ $answer ]]; then
   if $output_json; then
-    echo "{"
-    if [ ${#answers[@]} != 0 ]; then
-      comma=,
-      count=0
-      echo "  \"answers\": {"
-      for v in "${!answers[@]}"; do
-        ((count++))
-        (( count >= ${#answers[@]} )) && unset comma
-        echo "    \"$v\": \"${answers[$v]}\"$comma"
-      done
-      echo "  },"
-    fi
-    echo "  \"answer\": \"$answer\""
-    echo "}"
+    $verbose && echo "Answers contains: $(declare -p answers | sed -r 's/declare -[a-z]+ answers=//i;s/(\(|\) ?)//g')"
+    json=$(for k in "${!answers[@]}"; do
+      jq -n --arg k "$k" --arg v "${answers[$k]}" '{($k): $v}'
+    done | jq -s add)
+    [[ ! $json ]] && echo "Error: Cannot build json from answers" && exit
+    jq -M -n --arg a "$answer" --argjson as "$json" '{"answers": $as, "answer": $a}'
   else
     echo $answer
   fi
