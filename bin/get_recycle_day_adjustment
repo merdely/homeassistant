@@ -129,8 +129,10 @@ else
 fi
 
 # user_message="My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Without explaining how you arrived at your conclusion, what weekday will the county come to pick up my recycle this week?"
-user_message="My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Briefly tell me which weekday will the county come to pick up my recycle this week?"
+user_message=${user_message:-My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Briefly tell me which weekday will the county come to pick up my recycle this week?}
 user_message=${user_message/// }
+
+day_search='\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b'
 
 if $debug; then
   for var in home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date min_agree user_message localai_enabled localai_url localai_model localai_prompt localai_api_key ollama_enabled ollama_url ollama_model ollama_api_key claude_enabled claude_model claude_api_key mistral_enabled mistral_api_key mistral_agent_id chatgpt_enabled chatgpt_model chatgpt_api_key; do
@@ -190,7 +192,7 @@ localai() {
   $debug && echo "Local AI output: $tmpanswer" > /dev/stderr
   tmpanswer=$(echo "$tmpanswer" | jq -r '.choices[0].message.reasoning // .choices[0].message.content')
   $debug && echo "Local AI post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE '\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b' | tail -n1)
+  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
 
   unset api_header_switch api_header
   if [[ $tmpanswer ]]; then
@@ -223,7 +225,7 @@ ollama() {
   $debug && echo "Ollama output: $tmpanswer" > /dev/stderr
   tmpanswer=$(echo "$tmpanswer" | jq -r '.response')
   $debug && echo "Ollama post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE '\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b' | tail -n1)
+  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
 
   unset api_header_switch api_header
   if [[ $tmpanswer ]]; then
@@ -253,7 +255,7 @@ mistral() {
   $debug && echo "Mistral output: $tmpanswer" > /dev/stderr
   tmpanswer=$(echo "$tmpanswer" | jq -r '.outputs[0].content')
   $debug && echo "Mistral post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE '\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b' | tail -n1)
+  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
 
   if [[ $tmpanswer ]]; then
     $verbose && echo "Mistral answer: $tmpanswer" > /dev/stderr
@@ -284,7 +286,7 @@ claude() {
   $debug && echo "Claude output: $tmpanswer" > /dev/stderr
   tmpanswer=$(echo "$tmpanswer" | jq -r '.content[0].text')
   $debug && echo "Claude post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE '\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b' | tail -n1)
+  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
 
   if [[ $tmpanswer ]]; then
     $verbose && echo "Claude answer: $tmpanswer" > /dev/stderr
@@ -311,7 +313,7 @@ chatgpt() {
   $debug && echo "Claude output: $tmpanswer" > /dev/stderr
   tmpanswer=$(echo "$tmpanswer" | jq -r '.output[0].content[0].text')
   $debug && echo "Claude post-jq output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | grep -oE '\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b' | tail -n1)
+  tmpanswer=$(echo "$tmpanswer" | grep -oE "$day_search" | tail -n1)
 
   if [[ $tmpanswer ]]; then
     $verbose && echo "ChatGPT answer: $tmpanswer" > /dev/stderr
