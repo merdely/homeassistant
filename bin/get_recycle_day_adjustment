@@ -40,7 +40,7 @@ for var in home_assistant_base_url recycle_url_main recycle_default_day ; do
 done
 
 # Get program settings that do not overwrite previous values
-for var in hass_api_key min_agree engine_order localai_enabled localai_url localai_model localai_prompt localai_api_key ollama_enabled ollama_url ollama_model ollama_api_key chatgpt_enabled chatgpt_model chatgpt_api_key claude_enabled claude_model claude_api_key mistral_enabled mistral_api_key mistral_agent_id ; do
+for var in hass_api_key min_agree localai_enabled localai_url localai_model localai_prompt localai_api_key ollama_enabled ollama_url ollama_model ollama_api_key chatgpt_enabled chatgpt_model chatgpt_api_key claude_enabled claude_model claude_api_key mistral_enabled mistral_api_key mistral_agent_id ; do
   [[ ! "${!var}" ]] && declare "$var=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")"
   declare "$var=${!var# }"  # Trim space
   declare "$var=${!var% }"  # Trim space
@@ -54,7 +54,7 @@ done
 [[ $answer ]] && min_agree=1 && answers[manual]=$answer
 
 # Get program settings that do overwrite previous values
-for var in localai_max_tokens localai_match ollama_max_tokens ollama_match chatgpt_url chatgpt_max_tokens chatgpt_match claude_max_tokens claude_url claude_match mistral_url mistral_max_tokens mistral_match ; do
+for var in engine_order localai_max_tokens localai_match ollama_max_tokens ollama_match chatgpt_url chatgpt_max_tokens chatgpt_match claude_max_tokens claude_url claude_match mistral_url mistral_max_tokens mistral_match ; do
   tmpval=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")
   [[ $tmpval ]] && declare "$var=$tmpval"
   declare "$var=${!var# }"  # Trim space
@@ -260,7 +260,7 @@ day_search='\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b'
 # If debug mode, print variables
 if $debug; then
   echo "Settings: " > /dev/stderr
-  for var in secrets_file home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date reference_ymd min_agree user_message localai_enabled localai_url localai_model local_ai_max_tokens localai_prompt localai_api_key localai_match ollama_enabled ollama_url ollama_model ollama_max_tokens ollama_api_key ollama_match chatgpt_enabled chatgpt_model chatgpt_max_tokens chatgpt_api_key chatgpt_match claude_enabled claude_model claude_max_tokens claude_api_key claude_match mistral_enabled mistral_max_tokens mistral_api_key mistral_agent_id mistral_match ; do
+  for var in secrets_file home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date reference_ymd min_agree user_message engine_order localai_enabled localai_url localai_model local_ai_max_tokens localai_prompt localai_api_key localai_match ollama_enabled ollama_url ollama_model ollama_max_tokens ollama_api_key ollama_match chatgpt_enabled chatgpt_model chatgpt_max_tokens chatgpt_api_key chatgpt_match claude_enabled claude_model claude_max_tokens claude_api_key claude_match mistral_enabled mistral_max_tokens mistral_api_key mistral_agent_id mistral_match ; do
     [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "$(echo "${!var}" | fold -sw $((COLUMNS - ${#var} - 3))|sed "2,\$s/^/$(printf '%*s' $((${#var} - 3)))/")" > /dev/stderr
     ! [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "${!var}" > /dev/stderr
   done
