@@ -4,13 +4,11 @@ for f in curl jq; do
   ! command -v $f &> /dev/null && echo "Error: The '$f' command is required" > /dev/stderr && exit 1
 done
 
-use_local=${use_local:-true}
-use_mistral=${use_mistral:-true}
-use_claude=${use_claude:-true}
-use_chatgpt=${use_chatgpt:-true}
 debug=${debug:-false}
 debug_exit=${debug_exit:-false}
+verbose=${verbose:-false}
 output_json=${output_json:-false}
+today_date=$(date "+%Y-%m-%d")
 
 secrets_file="${secrets_file:-$(readlink -f $(dirname "$0")/../secrets.yaml)}"
 
@@ -25,30 +23,45 @@ for var in home_assistant_base_url recycle_url_main recycle_default_day; do
   [[ $var == recycle_url_main ]] && [[ ! $recycle_url_main ]] && recycle_url_main=https://www.montgomerycountymd.gov/DEP/trash-recycling/index.html
   [[ $var == recycle_default_day ]] && [[ ! $recycle_default_day ]] && recycle_default_day=Friday
 done
-for var in min_agree local_model local_url claude_api_key mistral_api_key mistral_agent_id openai_api_key hass_api_key; do
+for var in min_agree ollama_enabled ollama_model ollama_url ollama_api_key local_enabled local_model local_url local_api_key claude_enabled claude_api_key mistral_enabled mistral_api_key mistral_agent_id chatgpt_enabled chatgpt_api_key hass_api_key; do
   [[ ! "${!var}" ]] && declare "$var=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print}" "$secrets_file")"
+  [[ $var =~ _enabled$ ]] && [[ ${!var} != true || ! "${!var}" ]] && declare "$var=false"
   [[ $var == min_agree ]] && [[ ! $min_agree ]] && min_agree=2
 done
 [[ $answer ]] && min_agree=1 && answers[manual]=$answer
 
 usage() {
-  echo "usage: $(basename $0) [-h] [-d|-D] [-j] [-a ANSWER] [-m MIN_AGREE]"
+  echo "usage: $(basename $0) [-h] [-d|-D] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-m MIN_AGREE] [ENGINE] [MODEL]"
   echo "  -d           : Print debug information"
   echo "  -D           : Print debug information and exit"
+  echo "  -v           : Be verbose"
   echo "  -j           : Output using JSON"
   echo "  -J           : Output simple response (i.e. 'Friday')"
+  echo "  -t TESTDATE  : Use a test date instead of today (must be YYYY-mm-dd)"
   echo "  -a ANSWER    : Hardcode an answer"
   echo "  -m MIN_AGREE : Minimum number of LLMs must agree on answer (default: $min_agree)"
+  echo "  ENGINE can one of: local, ollama, mistral, claude, or chatgpt"
+  echo "  MODEL has not been implemented yet"
   exit $1
 }
 
-while getopts ":hdDJja:m:" opt; do
+while getopts ":hdDvJjt:a:m:" opt; do
   case $opt in
     d) debug=true ;;
     D) debug=true ; debug_exit=true ;;
+    v) verbose=true ;;
     j) output_json=true ;;
     J) output_json=false ;;
     a) answer=$OPTARG ;;
+    t)
+       if [[ $OPTARG =~ ^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$ ]]; then
+         today_date=$(date -d "$OPTARG" "+%Y-%m-%d")
+         [ $? != 0 ] && echo "Error: Could not use date '$OPTARG'" && exit 1
+       else
+         echo "Error: Invalid date format ($OPTARG)"
+         exit 1
+       fi
+       ;;
     m)
        [[ ! $OPTARG =~ ^[0-9]+$ ]] && echo "Error: MIN_AGREE must be a number" && exit 1
        min_agree=$OPTARG ;;
@@ -56,6 +69,26 @@ while getopts ":hdDJja:m:" opt; do
   esac
 done
 shift $((OPTIND -1))
+
+if [ -n "$1" ]; then
+  local_enabled=false
+  ollama_enabled=false
+  mistral_enabled=false
+  claude_enabled=false
+  chatgpt_enabled=false
+  min_agree=1
+  case "$1" in
+    local)   local_enabled=true ;;
+    ollama)  ollama_enabled=true ;;
+    mistral) mistral_enabled=true ;;
+    claude)  claude_enabled=true ;;
+    chatgpt) chatgpt_enabled=true ;;
+    * ) echo "Error: Invalid AI engine (must be: local, ollama, mistral, claude, or chatgpt" && exit 1 ;;
+  esac
+fi
+
+unset use_model
+[ -n "$2" ] && use_model=$2
 
 [[ ! $hass_api_key ]] && echo "Error: Cannot determine hass_api_key from $secrets_file" && exit 1
 
@@ -67,10 +100,10 @@ fi
 normal_recycle_day=$(curl -skSL -H "Authorization: Bearer $hass_api_key" $home_assistant_base_url/api/states/input_select.recycle_day | jq -r .state)
 [[ ! $normal_recycle_day ]] && normal_recycle_day=$recycle_default_day
 
-if [ "$(date +%A)" = Sunday ]; then
-  reference_date="${reference_date:-$(date "+%A, %B %_d, %Y")}"
+if [ "$(date -d "$today_date" +%A)" = Sunday ]; then
+  reference_date="${reference_date:-$(date -d "$today_date" "+%A, %B %_d, %Y")}"
 else
-  reference_date="${reference_date:-$(date -d "@$(( $(date +%s) - $(date +%w)*86400 ))" "+%A, %B %_d, %Y")}"
+  reference_date="${reference_date:-$(date -d "@$(( $(date -d "$today_date" +%s) - $(date -d "$today_date" +%w)*86400 ))" "+%A, %B %_d, %Y")}"
 fi
 reference_date=${reference_date//  / }
 
@@ -95,10 +128,11 @@ else
   echo "Warning: Invalid MoCo Alert/Warning URL ($county_alert_url)" > /dev/stderr
 fi
 
-prompt="My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Without explaining how you arrived at your conclusion, what weekday will the county come to pick up my recycle this week?"
+user_message="My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Without explaining how you arrived at your conclusion, what weekday will the county come to pick up my recycle this week?"
+user_message=${user_message/// }
 
 if $debug; then
-  for var in home_assistant_base_url recycle_url_main county_alert_url recycle_default_day normal_recycle_day reference_date min_agree local_url local_model claude_api_key mistral_api_key mistral_agent_id openai_api_key hass_api_key prompt; do
+  for var in home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date min_agree user_message local_enabled local_url local_model local_api_key ollama_enabled ollama_url ollama_model ollama_api_key claude_enabled claude_api_key mistral_enabled mistral_api_key mistral_agent_id chatgpt_enabled chatgpt_api_key; do
     $debug && printf '%s=%s\n' "$var" "${!var}"
   done
   $debug_exit && exit
@@ -122,39 +156,94 @@ check_agreement() {
   echo $answer
 }
 
-if [[ ! $answer ]] && $use_local && [[ $local_model ]] && [[ $local_url ]]; then
-  tmpanswer=$(curl -s $local_url/api/generate \
-    -d "{ 
-          \"model\": \"$local_model\",
-          \"prompt\": \"$prompt\",
-          \"stream\": false
-    }" | jq -r '.response' | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
+if [[ ! $answer ]] && $local_enabled && [[ $local_model ]] && [[ $local_url ]]; then
+  $verbose && echo "Using Local AI LLM" > /dev/stderr
+  unset api_header_switch api_header
+  if [ -n "$local_api_key" ]; then
+    api_header_switch="-H "
+    api_header="Authorization: Bearer $local_api_key"
+  fi
+  data="{
+        \"max_tokens\": 8192,
+        \"prompt\": \"You are a helpful assistant. Do not show your thought process. Give a simple answer to the question. Reasoning: low\",
+        \"messages\": [
+          {
+            \"role\": \"user\",
+            \"reasoning\": \"low\",
+            \"content\": \"$user_message\"
+          }
+        ],
+        \"model\": \"${use_model:-$local_model}\"
+      }"
+  $debug && echo "$data" > /dev/stderr
+  tmpanswer=$(curl -s $local_url/v1/chat/completions $api_header_switch"$api_header" \
+    -H "content-type: application/json" -d "$data")
+  $debug && echo "Local AI output: $tmpanswer" > /dev/stderr
+  tmpanswer=$(echo "$tmpanswer" | jq -r '.choices[0].message.reasoning')
+  $debug && echo "Local AI post-jq output: $tmpanswer" > /dev/stderr
+  tmpanswer=$(echo "$tmpanswer" | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
+
+  unset api_header_switch api_header
   if [[ $tmpanswer ]]; then
+    $verbose && echo "Local AI answer: $tmpanswer" > /dev/stderr
     answers[local]=$tmpanswer
     answer=$(check_agreement)
     [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
   fi
 fi
 
-if [[ ! $answer ]] && $use_mistral && [[ $mistral_api_key ]] && [[ $mistral_agent_id ]]; then
+if [[ ! $answer ]] && $ollama_enabled && [[ $ollama_model ]] && [[ $ollama_url ]]; then
+  $verbose && echo "Using Ollama LLM" > /dev/stderr
+  unset api_header_switch api_header
+  if [ -n "$ollama_api_key" ]; then
+    api_header_switch="-H "
+    api_header="Authorization: Bearer $ollama_api_key"
+  fi
+  data="{
+        \"model\": \"$ollama_model\",
+        \"prompt\": \"$user_message\",
+        \"stream\": false
+      }"
+  $debug && echo "$data" > /dev/stderr
+  tmpanswer=$(curl -s $ollama_url/api/generate $api_header_switch -d "$data")
+  $debug && echo "Ollama output: $tmpanswer" > /dev/stderr
+  tmpanswer=$(echo "$tmpanswer" | jq -r '.response')
+  $debug && echo "Ollama post-jq output: $tmpanswer" > /dev/stderr
+  tmpanswer=$(echo "$tmpanswer" | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
+
+  unset api_header_switch api_header
+  if [[ $tmpanswer ]]; then
+    $verbose && echo "Ollama answer: $tmpanswer" > /dev/stderr
+    answers[ollama]=$tmpanswer
+    answer=$(check_agreement)
+    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
+  fi
+fi
+
+if [[ ! $answer ]] && $mistral_enabled && [[ $mistral_api_key ]] && [[ $mistral_agent_id ]]; then
+  $verbose && echo "Using Mistral LLM" > /dev/stderr
+  [ -z "$mistral_api_key" ] && echo "Error: Cannot use Mistral: No API key in $secrets_file" && exit 1
   tmpanswer=$(curl -s https://api.mistral.ai/v1/conversations \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $mistral_api_key" \
     -d "{
           \"agent_id\": \"$mistral_agent_id\",
           \"inputs\": [
-            {\"role\":\"user\",\"content\":\"$prompt\"}
+            {\"role\":\"user\",\"content\":\"$user_message\"}
           ]
     }" | jq -r '.outputs[0].content' | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
 
   if [[ $tmpanswer ]]; then
+    $verbose && echo "Mistral answer: $tmpanswer" > /dev/stderr
     answers[mistral]=$tmpanswer
     answer=$(check_agreement)
     [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
   fi
 fi
 
-if [[ ! $answer ]] && $use_claude && [[ $claude_api_key ]]; then
+if [[ ! $answer ]] && $claude_enabled && [[ $claude_api_key ]]; then
+  $verbose && echo "Using Claude LLM" > /dev/stderr
+  [ -z "$claude_api_key" ] && echo "Error: Cannot use Claude: No API key in $secrets_file" && exit 1
   tmpanswer=$(curl -s https://api.anthropic.com/v1/messages \
     -H "x-api-key: $claude_api_key" \
     -H "anthropic-version: 2023-06-01" \
@@ -163,27 +252,31 @@ if [[ ! $answer ]] && $use_claude && [[ $claude_api_key ]]; then
           \"model\": \"claude-sonnet-4-20250514\",
           \"max_tokens\": 100,
           \"messages\": [
-            {\"role\": \"user\", \"content\": \"$prompt\"}
+            {\"role\": \"user\", \"content\": \"$user_message\"}
           ]
     }" | jq -r '.content[0].text' | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
 
   if [[ $tmpanswer ]]; then
+    $verbose && echo "Claude answer: $tmpanswer" > /dev/stderr
     answers[claude]=$tmpanswer
     answer=$(check_agreement)
     [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
   fi
 fi
 
-if [[ ! $answer ]] && $use_chatgpt && [[ $openai_api_key ]]; then
+if [[ ! $answer ]] && $chatgpt_enabled && [[ $chatgpt_api_key ]]; then
+  $verbose && echo "Using ChatGPT LLM" > /dev/stderr
+  [ -z "$chatgpt_api_key" ] && echo "Error: Cannot use ChatGPT: No API key in $secrets_file" && exit 1
   tmpanswer=$(curl -s https://api.openai.com/v1/responses \
     -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $openai_api_key" \
+    -H "Authorization: Bearer $chatgpt_api_key" \
     -d "{
           \"model\": \"gpt-5-mini\",
-          \"input\": \"$prompt\"
+          \"input\": \"$user_message\"
     }" | jq -r '.output[0].content[0].text' | grep -oE '\b[A-Za-z]*day\b' | tail -n1)
 
   if [[ $tmpanswer ]]; then
+    $verbose && echo "ChatGPT answer: $tmpanswer" > /dev/stderr
     answers[chatgpt]=$tmpanswer
     answer=$(check_agreement)
     [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}"
