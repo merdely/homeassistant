@@ -6,8 +6,9 @@ done
 
 supported_engines="localai|ollama|chatgpt|claude|mistral"
 debug="${debug:-false}"
-debug_exit="${debug_exit:-false}"
+extra_debug="${extra_debug:-false}"
 verbose="${verbose:-false}"
+extra_verbose="${extra_verbose:-false}"
 output_json="${output_json:-false}"
 today_date="$(date "+%Y-%m-%d")"
 chatgpt_url="${chatgpt_url:-https://api.openai.com/v1/responses}"
@@ -67,11 +68,10 @@ for var in engine_order localai_max_tokens localai_match ollama_max_tokens ollam
 done
 
 usage() {
-  echo "usage: $(basename $0) [-h] [-d|-D] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-m MIN_AGREE]"
+  echo "usage: $(basename $0) [-h] [-d] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-m MIN_AGREE]"
   echo "                      [ENGINELIST] [MODELLIST]"
-  echo "  -d           : Print debug information"
-  echo "  -D           : Print debug information and exit"
-  echo "  -v           : Be verbose"
+  echo "  -d           : Print debug information (second -d exits after printing)"
+  echo "  -v           : Be verbose (second -v is extra verbose)"
   echo "  -j           : Output using JSON"
   echo "  -J           : Output simple response (i.e. 'Friday')"
   echo "  -t TESTDATE  : Use a test date instead of today (must be YYYY-mm-dd)"
@@ -90,11 +90,15 @@ usage() {
   exit $1
 }
 
-while getopts ":hdDvJjt:a:m:" opt; do
+while getopts ":hdvJjt:a:m:" opt; do
   case $opt in
-    d) debug=true ;;
-    D) debug=true ; debug_exit=true ;;
-    v) verbose=true ;;
+    d)
+       $debug && extra_debug=true
+       debug=true ;;
+    v)
+       $verbose && extra_verbose=true
+       verbose=true
+       ;;
     j) output_json=true ;;
     J) output_json=false ;;
     a) answer=$OPTARG ; answers[commandline]=$answer; answers[given]=$answer;;
@@ -165,28 +169,6 @@ elif [ ${#engines[@]} -eq 1 ]; then
   fi
 fi
 
-## If a single engine is passed on the command line, disable the rest
-#if [ -n "$1" ]; then
-#  localai_enabled=false
-#  ollama_enabled=false
-#  mistral_enabled=false
-#  claude_enabled=false
-#  chatgpt_enabled=false
-#  min_agree=1
-#  case "$1" in
-#    localai) localai_enabled=true ;;
-#    ollama)  ollama_enabled=true ;;
-#    mistral) mistral_enabled=true ;;
-#    claude)  claude_enabled=true ;;
-#    chatgpt) chatgpt_enabled=true ;;
-#    * ) echo "Error: Invalid AI engine (must be: localai, ollama, mistral, claude, or chatgpt" && exit 1 ;;
-#  esac
-#fi
-#
-# If a model was passed on the command line, use it
-#unset use_model
-#[ -n "$2" ] && use_model=$2
-
 # Get whether Home Assistant toggle for using AI is enabled
 [[ ! $hass_api_key ]] && echo "Error: Cannot determine hass_api_key from $secrets_file" && exit 1
 use_ai=$(curl -skSL -H "Authorization: Bearer $hass_api_key" $home_assistant_base_url/api/states/input_boolean.use_ai_for_recycle_day | jq -r .state)
@@ -230,16 +212,35 @@ elif [[ $county_alert_url =~ ^https?://.*montgomerycountymd.gov ]]; then
 else
   echo "Warning: Invalid MoCo Alert/Warning URL ($county_alert_url)" > /dev/stderr
 fi
-$verbose && echo "County Alert Text:"
-$verbose && echo "    $county_alert_text" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/"
+if $extra_verbose; then
+  echo "County Notice:"
+  echo "    $county_alert_text" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/"
+elif $verbose; then
+  width=$((COLUMNS - 4))  # Number of columns - width of "County Notice: " - padding
+  unset dots
+  county_notice="$(echo "County Notice: \"$(echo "$county_alert_text" | paste -sd ' ')" | fold -sw $width | head -n1)"
+  [ ${#county_alert_text} -gt $width ] && dots=…
+  printf "%s%s\"\n" "$county_notice" "$dots"
+fi
 
 # Set the user message to send to the LLM
 # user_message=${user_message:-My normal recycling pickup weekday is $normal_recycle_day and today is $reference_date. $county_alert_text If nothing so far has indicated that the recycling will change this week, then the day the county will pick up my recycle should be the normal recycling pickup weekday. Briefly tell me which weekday will the county come to pick up my recycle this week?}
 
+#user_message="${user_message:-County website notice:
+#\"${county_alert_text/// }\"
+#
+#For the date $reference_date, will my recycling pickup day change due to the county website notice? If yes, by how many days will it be delayed?
+#
+#Return your answer in the following format (do not add any extra text or explanation):
+#{
+#  \"date\": \"[INSERT_DATE]\",
+#  \"is_affected\": [true/false],
+#  \"delay_days\": [number of days delayed, or 0 if not affected]
+#}}"
 user_message="${user_message:-County website notice:
 \"${county_alert_text/// }\"
 
-For the date $reference_date, will my recycling pickup day change due to the county website notice? If yes, by how many days will it be delayed?
+Consider whether a recycling pickup on $reference_date is during the same week as any holiday mentioned in the notice, if it is on or after the holiday during that week, and if my recycling pickup day will change due to the county website notice. If yes, by how many days will it be delayed?
 
 Return your answer in the following format (do not add any extra text or explanation):
 {
@@ -247,12 +248,17 @@ Return your answer in the following format (do not add any extra text or explana
   \"is_affected\": [true/false],
   \"delay_days\": [number of days delayed, or 0 if not affected]
 }}"
-# user_message=${user_message//\"/\\\"}
-#user_message=${user_message//{/\\{}
-#user_message=${user_message//\}/\\\}}
 
-$verbose && echo "LLM User Message:"
-$verbose && echo "    $user_message" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/"
+if $extra_verbose; then
+  echo "LLM User Message:"
+  echo "    $user_message" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/"
+elif $verbose; then
+  width=$((COLUMNS - 4))  # Number of columns - width of "County Notice: " - padding
+  unset dots
+  usermsg_text="$(echo "LLM User Message: \"$(echo "$user_message" | paste -sd ' ')" | fold -sw $width | head -n1)"
+  [ ${#user_message} -gt $width ] && dots=…
+  printf "%s%s\"\n" "$usermsg_text" "$dots"
+fi
 
 # The grep string used to find a day of the week
 day_search='\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b'
@@ -264,7 +270,7 @@ if $debug; then
     [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "$(echo "${!var}" | fold -sw $((COLUMNS - ${#var} - 3))|sed "2,\$s/^/$(printf '%*s' $((${#var} - 3)))/")" > /dev/stderr
     ! [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "${!var}" > /dev/stderr
   done
-  $debug_exit && exit
+  $extra_debug && exit
 fi
 
 # Function to check if the minimum number of LLMs agree on their answer
