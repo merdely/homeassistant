@@ -4,7 +4,7 @@ for f in curl jq; do
   ! command -v $f &> /dev/null && echo "Error: The '$f' command is required" > /dev/stderr && exit 1
 done
 
-supported_engines="chatgpt|claude|gemini|localai|mistral|ollama"
+supported_engines="chatgpt|claude|gemini|github|localai|mistral|ollama|openrouter"
 debug="${debug:-false}"
 extra_debug="${extra_debug:-false}"
 verbose="${verbose:-false}"
@@ -12,18 +12,28 @@ extra_verbose="${extra_verbose:-false}"
 output_json="${output_json:-false}"
 today_date="$(date "+%Y-%m-%d")"
 
-engine_order="${engine_order:-localai ollama chatgpt claude mistral}"
+engine_order="${engine_order:-localai ollama mistral openrouter gemini claude chatgpt}"
 chatgpt_url="${chatgpt_url:-https://api.openai.com/v1/responses}"
 chatgpt_model="${chatgpt_model:-gpt-5-mini}"
+chatgpt_match="${chatgpt_match:-.output[0].content[0].text}"
 claude_url="${claude_url:-https://api.anthropic.com/v1/messages}"
 claude_model="${claude_model:-claude-sonnet-4-20250514}"
 claude_max_tokens="${claude_max_tokens:-100}"
+claude_match="${claude_match:-.content[0].text}"
 anthropic_version="${anthropic_version:-2023-06-01}"
 gemini_url="${gemini_url:-https://generativelanguage.googleapis.com/v1beta/models/%%MODEL%%:generateContent}"
 gemini_model="${gemini_model:-gemini-3-flash-preview}"
 gemini_thinking_level="${gemini_thinking_level:-low}"
+gemini_match="${gemini_match:-.candidates[0].content.parts[0].text}"
+github_url="${github_url:-https://models.github.ai/inference/chat/completions}"
+github_model="${github_model:-microsoft/Phi-4-mini-reasoning}"
+github_match="${github_match:-.choices[0].message.content}"
 mistral_url="${mistral_url:-https://api.mistral.ai/v1/conversations}"
 mistral_model="${mistral_model:-mistral-medium-latest}"
+mistral_match="${mistral_match:-.outputs[0].content}"
+openrouter_url="${openrouter_url:-https://openrouter.ai/api/v1/chat/completions}"
+openrouter_model="${openrouter_model:-openai/gpt-5.2}"
+openrouter_match="${openrouter_match:-.output[0].content[0].text}"
 
 secrets_file="${secrets_file:-$(readlink -f $(dirname "$0")/../secrets.yaml)}"
 
@@ -48,7 +58,7 @@ for var in home_assistant_base_url recycle_url_main recycle_default_day ; do
 done
 
 # Get program settings that do not overwrite previous values
-for var in hass_api_key min_agree localai_enabled localai_url localai_model localai_prompt localai_api_key ollama_enabled ollama_url ollama_model ollama_api_key chatgpt_enabled chatgpt_api_key claude_enabled claude_api_key gemini_enabled gemini_api_key mistral_enabled mistral_api_key mistral_agent_id ; do
+for var in hass_api_key min_agree localai_enabled localai_url localai_model localai_prompt localai_api_key ollama_enabled ollama_url ollama_model ollama_api_key chatgpt_enabled chatgpt_api_key claude_enabled claude_api_key gemini_enabled gemini_api_key github_enabled github_api_key mistral_enabled mistral_api_key mistral_agent_id openrouter_enabled openrouter_api_key ; do
   [[ ! "${!var}" ]] && declare "$var=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")"
   declare "$var=${!var# }"  # Trim space
   declare "$var=${!var% }"  # Trim space
@@ -62,7 +72,7 @@ done
 [[ $answer ]] && min_agree=1 && answers[manual]=$answer
 
 # Get program settings that do overwrite previous values
-for var in engine_order localai_max_tokens localai_match ollama_max_tokens ollama_match chatgpt_url chatgpt_model chatgpt_max_tokens chatgpt_match claude_url claude_model claude_max_tokens claude_match gemini_url gemini_model gemini_thinking_level gemini_match mistral_url mistral_model mistral_max_tokens mistral_match ; do
+for var in engine_order localai_max_tokens localai_match ollama_max_tokens ollama_match chatgpt_url chatgpt_model chatgpt_max_tokens chatgpt_match claude_url claude_model claude_max_tokens claude_match gemini_url gemini_model gemini_thinking_level gemini_match github_url github_model github_match mistral_url mistral_model mistral_max_tokens mistral_match openrouter_model openrouter_match ; do
   tmpval=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")
   [[ $tmpval ]] && declare "$var=$tmpval"
   declare "$var=${!var# }"  # Trim space
@@ -273,7 +283,7 @@ day_search='\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b'
 # If debug mode, print variables
 if $debug; then
   echo "Settings: " > /dev/stderr
-  for var in secrets_file home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date reference_ymd min_agree user_message engine_order localai_enabled localai_url localai_model local_ai_max_tokens localai_prompt localai_api_key localai_match ollama_enabled ollama_url ollama_model ollama_max_tokens ollama_api_key ollama_match chatgpt_enabled chatgpt_model chatgpt_max_tokens chatgpt_api_key chatgpt_match claude_enabled claude_model claude_max_tokens claude_api_key claude_match gemini_enabled gemini_model gemini_api_key mistral_enabled mistral_max_tokens mistral_api_key mistral_agent_id mistral_match ; do
+  for var in secrets_file home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date reference_ymd min_agree user_message engine_order localai_enabled localai_url localai_model local_ai_max_tokens localai_prompt localai_api_key localai_match ollama_enabled ollama_url ollama_model ollama_max_tokens ollama_api_key ollama_match chatgpt_enabled chatgpt_url chatgpt_model chatgpt_max_tokens chatgpt_api_key chatgpt_match claude_enabled claude_url claude_model claude_max_tokens claude_api_key claude_match gemini_enabled gemini_url gemini_model gemini_api_key github_enabled github_url github_model github_api_key mistral_enabled mistral_url mistral_max_tokens mistral_api_key mistral_agent_id mistral_match openrouter_enabled openrouter_url openrouter_api_key openrouter_match ; do
     [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "$(echo "${!var}" | fold -sw $((COLUMNS - ${#var} - 3))|sed "2,\$s/^/$(printf '%*s' $((${#var} - 3)))/")" > /dev/stderr
     ! [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "${!var}" > /dev/stderr
   done
@@ -307,9 +317,9 @@ run_engine() {
   local engine_enabled="${engine}_enabled"
   ! ${!engine_enabled} && { $verbose&&echo "$engine disabled">/dev/stderr;true; } && return
   [[ ! -v "${engine}_url" ]] && { $verbose&&echo "${engine_url} not set">/dev/stderr;true; } && return
-  [[ $engine =~ ^(localai|ollama|chatgpt|claude)$ && ! -v "${engine}_model" ]] && return
-  [[ $engine =~ ^(chatgpt|claude|mistral)$ && ! -v "${engine}_api_key" ]] && return
-  [[ $engine =~ ^(mistral)$ && ! -v "${engine}_agent_id" ]] && return
+  [[ $engine =~ ^(localai|ollama|chatgpt|claude|gemini|openrouter)$ && ! -v "${engine}_model" ]] && return
+  [[ $engine =~ ^(chatgpt|claude|gemini|mistral|openrouter)$ && ! -v "${engine}_api_key" ]] && return
+  [[ $engine =~ ^(mistral)$ && ! -v "${engine}_agent_id" && ! -v "${engine}_model" ]] && return
   [[ $answer ]] && { $verbose&&echo "Answer already set to $answer">/dev/stderr;true; } && return
 
   local max_tokens="${engine}_max_tokens"
@@ -347,7 +357,7 @@ run_engine() {
         "input": $user_message
       }'
       ;;
-    claude)
+    claude|github|openrouter)
       message_content='{
         "messages": [
           {
@@ -445,6 +455,7 @@ run_engine() {
   $debug && echo "$engine output: $tmpanswer" > /dev/stderr
   tmpanswer=$(echo "$tmpanswer" | jq -r "${!engine_match}")
   $debug && echo "$engine post-jq-engine-match output: $tmpanswer" > /dev/stderr
+  tmpanswer="${tmpanswer#*</think>}"
   tmpanswer=$(echo "$tmpanswer" | sed '/^```/d' | jq -Mr '"is_affected=\(.is_affected) delay_days=\(.delay_days)"')
   ret=$?
   $debug && echo "$engine post-jq output: $tmpanswer" > /dev/stderr
