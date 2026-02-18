@@ -4,90 +4,117 @@ for f in curl jq; do
   ! command -v $f &> /dev/null && echo "Error: The '$f' command is required" > /dev/stderr && exit 1
 done
 
-supported_engines="chatgpt|claude|gemini|github|localai|mistral|ollama|openrouter"
+supported_engines=(chatgpt claude gemini github localai mistral ollama openrouter)
+engine_settings=(enabled url api_key model prompt match max_tokens extra thinking_level agent_id)
+declare -A ${supported_engines[@]}
 debug="${debug:-false}"
 extra_debug="${extra_debug:-false}"
+debug_exit=false
 verbose="${verbose:-false}"
 extra_verbose="${extra_verbose:-false}"
 output_json="${output_json:-false}"
 today_date="$(date "+%Y-%m-%d")"
 
 engine_order="${engine_order:-localai ollama mistral openrouter gemini claude chatgpt}"
-chatgpt_url="${chatgpt_url:-https://api.openai.com/v1/responses}"
-chatgpt_model="${chatgpt_model:-gpt-5-mini}"
-chatgpt_match="${chatgpt_match:-.output[0].content[0].text}"
-claude_url="${claude_url:-https://api.anthropic.com/v1/messages}"
-claude_model="${claude_model:-claude-sonnet-4-20250514}"
-claude_max_tokens="${claude_max_tokens:-100}"
-claude_match="${claude_match:-.content[0].text}"
-anthropic_version="${anthropic_version:-2023-06-01}"
-gemini_url="${gemini_url:-https://generativelanguage.googleapis.com/v1beta/models/%%MODEL%%:generateContent}"
-gemini_model="${gemini_model:-gemini-3-flash-preview}"
-gemini_thinking_level="${gemini_thinking_level:-low}"
-gemini_match="${gemini_match:-.candidates[0].content.parts[0].text}"
-github_url="${github_url:-https://models.github.ai/inference/chat/completions}"
-github_model="${github_model:-microsoft/Phi-4-mini-reasoning}"
-github_match="${github_match:-.choices[0].message.content}"
-mistral_url="${mistral_url:-https://api.mistral.ai/v1/conversations}"
-mistral_model="${mistral_model:-mistral-medium-latest}"
-mistral_match="${mistral_match:-.outputs[0].content}"
-openrouter_url="${openrouter_url:-https://openrouter.ai/api/v1/chat/completions}"
-openrouter_model="${openrouter_model:-openai/gpt-5.2}"
-openrouter_match="${openrouter_match:-.output[0].content[0].text}"
+
+declare -A url model match max_tokens thinking_level extra
+
+chatgpt[url]="${chatgpt_url:-https://api.openai.com/v1/responses}"
+chatgpt[model]="${chatgpt_model:-gpt-5-mini}"
+chatgpt[match]="${chatgpt_match:-.output[0].content[0].text}"
+
+claude[url]="${claude_url:-https://api.anthropic.com/v1/messages}"
+claude[model]="${claude_model:-claude-sonnet-4-20250514}"
+claude[max_tokens]="${claude_max_tokens:-100}"
+claude[match]="${claude_match:-.content[0].text}"
+claude[extra]="anthropic_version=${anthropic_version:-2023-06-01}|another_setting=a=1234%%PIPE%%5678|foobar=baz"
+
+gemini[url]="${gemini_url:-https://generativelanguage.googleapis.com/v1beta/models/%%MODEL%%:generateContent}"
+gemini[model]="${gemini_model:-gemini-3-flash-preview}"
+gemini[thinking_level]="${gemini_thinking_level:-low}"
+gemini[match]="${gemini_match:-.candidates[0].content.parts[0].text}"
+
+github[url]="${github_url:-https://models.github.ai/inference/chat/completions}"
+github[model]="${github_model:-microsoft/Phi-4-mini-reasoning}"
+github[match]="${github_match:-.choices[0].message.content}"
+
+mistral[url]="${mistral_url:-https://api.mistral.ai/v1/conversations}"
+mistral[model]="${mistral_model:-mistral-medium-latest}"
+mistral[match]="${mistral_match:-.outputs[0].content}"
+
+openrouter[url]="${openrouter_url:-https://openrouter.ai/api/v1/chat/completions}"
+openrouter[model]="${openrouter_model:-openai/gpt-5.2}"
+openrouter[match]="${openrouter_match:-.output[0].content[0].text}"
 
 secrets_file="${secrets_file:-$(readlink -f $(dirname "$0")/../secrets.yaml)}"
 
 declare -A answers count
 
+setvar() {
+  local var=$1
+  var=${var# }  # Trim space
+  var=${var% }  # Trim space
+  var=${var#\"}  # Trim quote
+  var=${var%\"}  # Trim quote
+  var=${var#\'}  # Trim quote
+  var=${var%\'}  # Trim quote
+  echo "$var"
+}
 # Validate secrets file
+
 [ ! -r "$secrets_file" ] && echo "Error: Cannot open secrets file" && exit 1
 ! grep -q "^recycle_day_" "$secrets_file" && echo "Error: No recycle_day secrets in secrets file" && exit 1
 
 # Get common settings
 for var in home_assistant_base_url recycle_url_main recycle_default_day ; do
-  [[ ! "${!var}" ]] && declare "$var=$(awk "/^$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")"
-  declare "$var=${!var# }"  # Trim space
-  declare "$var=${!var% }"  # Trim space
-  declare "$var=${!var#\"}"  # Trim quote
-  declare "$var=${!var%\"}"  # Trim quote
-  declare "$var=${!var#\'}"  # Trim quote
-  declare "$var=${!var%\'}"  # Trim quote
+  [[ ! "${!var}" ]] && declare "$var=$(setvar "$(awk "/^$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")")"
   [[ $var == home_assistant_base_url ]] && [[ ! $home_assistant_base_url ]] && home_assistant_base_url=http://localhost:8123
   [[ $var == recycle_url_main ]] && [[ ! $recycle_url_main ]] && recycle_url_main=https://www.montgomerycountymd.gov/DEP/trash-recycling/index.html
   [[ $var == recycle_default_day ]] && [[ ! $recycle_default_day ]] && recycle_default_day=Friday
 done
 
-# Get program settings that do not overwrite previous values
-for var in hass_api_key min_agree localai_enabled localai_url localai_model localai_prompt localai_api_key ollama_enabled ollama_url ollama_model ollama_api_key chatgpt_enabled chatgpt_api_key claude_enabled claude_api_key gemini_enabled gemini_api_key github_enabled github_api_key mistral_enabled mistral_api_key mistral_agent_id openrouter_enabled openrouter_api_key ; do
-  [[ ! "${!var}" ]] && declare "$var=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")"
-  declare "$var=${!var# }"  # Trim space
-  declare "$var=${!var% }"  # Trim space
-  declare "$var=${!var#\"}"  # Trim quote
-  declare "$var=${!var%\"}"  # Trim quote
-  declare "$var=${!var#\'}"  # Trim quote
-  declare "$var=${!var%\'}"  # Trim quote
-  [[ $var =~ _enabled$ ]] && [[ ${!var} != true || ! "${!var}" ]] && declare "$var=false"
-  [[ $var == min_agree ]] && [[ ! $min_agree ]] && min_agree=2
+# Get general program settings that do not overwrite previous values
+for var in hass_api_key min_agree ; do
+  [[ ! "${!var}" ]] && declare "$var=$(setvar "$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")")"
 done
+min_agree=${min_agree:-2}
 [[ $answer ]] && min_agree=1 && answers[manual]=$answer
 
-# Get program settings that do overwrite previous values
-for var in engine_order localai_max_tokens localai_match ollama_max_tokens ollama_match chatgpt_url chatgpt_model chatgpt_max_tokens chatgpt_match claude_url claude_model claude_max_tokens claude_match gemini_url gemini_model gemini_thinking_level gemini_match github_url github_model github_match mistral_url mistral_model mistral_max_tokens mistral_match openrouter_model openrouter_match ; do
+for var in engine_order ; do
   tmpval=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")
-  [[ $tmpval ]] && declare "$var=$tmpval"
-  declare "$var=${!var# }"  # Trim space
-  declare "$var=${!var% }"  # Trim space
-  declare "$var=${!var#\"}"  # Trim quote
-  declare "$var=${!var%\"}"  # Trim quote
-  declare "$var=${!var#\'}"  # Trim quote
-  declare "$var=${!var%\'}"  # Trim quote
+  [[ $tmpval ]] && declare "$var=$(setvar "$tmpval")"
   unset tmpval
 done
 
+# Get program settings that do overwrite previous values
+for engine in ${supported_engines[@]}; do
+  for setting in ${engine_settings[@]}; do
+    tmpval=$(awk "/^recycle_day_${engine}_$setting ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")
+    [[ $tmpval ]] && declare "$engine[$setting]=$(setvar "$tmpval")"
+    unset tmpval
+  done
+done
+
+# How to define extras
+for engine in ${supported_engines[@]}; do
+  declare -n ref=$engine
+  oifs=$IFS
+  IFS='|'
+  for word in ${ref[extra]}; do
+    [[ ! $word =~ ^[A-Za-z0-9_]+=. ]] && echo "Error: $word is not a valid extra setting" && exit 1
+    key=${word%%=*}
+    value=${word#*=}
+    value=${value//%%PIPE%%/|}
+    ref[$key]=$value
+  done
+  IFS=$oifs
+done
+
 usage() {
-  echo "usage: $(basename $0) [-h] [-d] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-m MIN_AGREE]"
+  echo "usage: $(basename $0) [-h] [-D] [-d] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-m MIN_AGREE]"
   echo "                      [ENGINELIST] [MODELLIST]"
-  echo "  -d           : Print debug information (second -d exits after printing)"
+  echo "  -d           : Print debug information (second -d is extra debug information)"
+  echo "  -d           : Print debug information and exit"
   echo "  -v           : Be verbose (second -v is extra verbose)"
   echo "  -j           : Output using JSON"
   echo "  -J           : Output simple response (i.e. 'Friday')"
@@ -95,7 +122,7 @@ usage() {
   echo "  -a ANSWER    : Hardcode an answer"
   echo "  -m MIN_AGREE : Minimum number of LLMs must agree on answer (default: $min_agree)"
   echo
-  echo "  ENGINELIST can one or more of: ${supported_engines[@]//|/ }"
+  echo "  ENGINELIST can one or more of: ${supported_engines[@]}"
   echo "  If specified, MODELLIST must be: A list of models that would have to match the ENGINE list"
   echo "  The first engine given would be matched with the first model given"
   echo "  ENGINELIST and MODELLIST are space separated on the command line"
@@ -107,11 +134,14 @@ usage() {
   exit $1
 }
 
-while getopts ":hdvJjt:a:m:" opt; do
+while getopts ":hdDvJjt:a:m:" opt; do
   case $opt in
     d)
        $debug && extra_debug=true
        debug=true ;;
+    D)
+       debug=true
+       debug_exit=true ;;
     v)
        $verbose && extra_verbose=true
        verbose=true
@@ -138,8 +168,10 @@ shift $((OPTIND -1))
 
 engines=()
 models=()
+engines_list="${supported_engines[@]}"
+engines_list="${engines_list// /|}"
 while [ -n "$1" ]; do
-  if [[ $1 =~ ^($supported_engines)$ ]]; then
+  if [[ $1 =~ ^($engines_list)$ ]]; then
     engines+=($1)
   else
     models+=($1)
@@ -147,7 +179,7 @@ while [ -n "$1" ]; do
   shift
 done
 if [ ${#engines[@]} -gt 0 ]; then
-  for engine in ${supported_engines//|/ }; do
+  for engine in ${supported_engines[@]}; do
     declare "${engine}_enabled=false"
   done
   for engine in "${engines[@]}"; do
@@ -175,15 +207,18 @@ if [ ${#engines[@]} -gt 1 ]; then
   fi
 elif [ ${#engines[@]} -eq 1 ]; then
   min_agree=1
-  if [ ${#models[@]} -eq 1 ]; then
-    declare "${engine}_model=${models[0]}"
-  else
-    if [ ${#models[@]} -ne 0 ]; then
-      echo "Error: Engine/Model mismatch. The same number of engines and models must be passed." > /dev/stderr
-      echo > /dev/stderr
-      usage 1
-    fi
-  fi
+  set -x
+  [ ${#models[@]} -gt 0 ] && declare "${engine}_model=${models[@]}"
+    set +x
+  #if [ ${#models[@]} -eq 1 ]; then
+  #  declare "${engine}_model=${models[0]}"
+  #else
+  #  if [ ${#models[@]} -ne 0 ]; then
+  #    echo "Error: Engine/Model mismatch. The same number of engines and models must be passed." > /dev/stderr
+  #    echo > /dev/stderr
+  #    usage 1
+  #  fi
+  #fi
 fi
 
 # Get whether Home Assistant toggle for using AI is enabled
@@ -283,11 +318,19 @@ day_search='\b([Ss]un|[Mm]on|[Tt]ues|[Ww]ednes|[Tt]hurs|[Ff]ri|[Ss]atur)day\b'
 # If debug mode, print variables
 if $debug; then
   echo "Settings: " > /dev/stderr
-  for var in secrets_file home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date reference_ymd min_agree user_message engine_order localai_enabled localai_url localai_model local_ai_max_tokens localai_prompt localai_api_key localai_match ollama_enabled ollama_url ollama_model ollama_max_tokens ollama_api_key ollama_match chatgpt_enabled chatgpt_url chatgpt_model chatgpt_max_tokens chatgpt_api_key chatgpt_match claude_enabled claude_url claude_model claude_max_tokens claude_api_key claude_match gemini_enabled gemini_url gemini_model gemini_api_key github_enabled github_url github_model github_api_key mistral_enabled mistral_url mistral_max_tokens mistral_api_key mistral_agent_id mistral_match openrouter_enabled openrouter_url openrouter_api_key openrouter_match ; do
+  for var in secrets_file home_assistant_base_url hass_api_key recycle_url_main county_alert_url recycle_default_day normal_recycle_day today_date reference_date reference_ymd min_agree user_message engine_order ; do
     [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "$(echo "${!var}" | fold -sw $((COLUMNS - ${#var} - 3))|sed "2,\$s/^/$(printf '%*s' $((${#var} - 3)))/")" > /dev/stderr
     ! [ $var = user_message ] && printf ' - %s = "%s"\n' "$var" "${!var}" > /dev/stderr
   done
-  $extra_debug && exit
+  list=$engine_order
+  $extra_debug && list=${supported_engines[@]}
+  for engine in $list; do
+    for setting in ${engine_settings[@]}; do
+      declare -n ref=$engine
+      printf ' - %s = "%s"\n' "$engine[$setting]" "${ref[$setting]}" > /dev/stderr
+    done
+  done
+  $debug_exit && exit
 fi
 
 # Function to check if the minimum number of LLMs agree on their answer
@@ -313,42 +356,34 @@ check_agreement() {
 # Function to run the LLM engine
 run_engine() {
   local engine=${1:-localai}
+  declare -n ref=$engine
 
-  local engine_enabled="${engine}_enabled"
-  ! ${!engine_enabled} && { $verbose&&echo "$engine disabled">/dev/stderr;true; } && return
-  [[ ! -v "${engine}_url" ]] && { $verbose&&echo "${engine_url} not set">/dev/stderr;true; } && return
-  [[ $engine =~ ^(localai|ollama|chatgpt|claude|gemini|openrouter)$ && ! -v "${engine}_model" ]] && return
-  [[ $engine =~ ^(chatgpt|claude|gemini|mistral|openrouter)$ && ! -v "${engine}_api_key" ]] && return
-  [[ $engine =~ ^(mistral)$ && ! -v "${engine}_agent_id" && ! -v "${engine}_model" ]] && return
+  ! ${ref[enabled]} && { $verbose&&echo "$engine disabled">/dev/stderr;true; } && return
+  [[ ! "${ref[url]}" ]] && { $verbose&&echo "$engine url not set">/dev/stderr;true; } && return
+  [[ $engine =~ ^(localai|ollama|chatgpt|claude|gemini|openrouter)$ && ! "${ref[model]}" ]] && return
+  [[ $engine =~ ^(chatgpt|claude|gemini|mistral|openrouter)$ && ! "${ref[api_key]}" ]] && return
+  [[ $engine =~ ^(mistral)$ && ! "${ref[agent_id]}" && ! "${ref[model]}" ]] && return
   [[ $answer ]] && { $verbose&&echo "Answer already set to $answer">/dev/stderr;true; } && return
 
-  local max_tokens="${engine}_max_tokens"
-  local prompt="${engine}_prompt"
-  local engine_url="${engine}_url"
-  local engine_model="${engine}_model"
-  local t
-  [ -n "${!engine_model}" ] && t="${!engine_url}";declare "${engine}_url=${t//%%MODEL%%/${!engine_model}}"; unset t
-  local engine_match="${engine}_match"
-  local engine_api_key engine_agent_id
-  [ -v "${engine}_api_key" ] && engine_api_key="${engine}_api_key"
-  [ -v "${engine}_agent_id" ] && engine_agent_id="${engine}_agent_id"
-  [ -n "${!engine_agent_id}" ] && unset engine_model
-  $verbose && echo "Using $engine LLM${!engine_model:+ with ${!engine_model}}${!engine_agent_id:+ with an engine agent id}" > /dev/stderr
+  [ -n "${ref[model]}" ] && ref[url]="${ref[url]//%%MODEL%%/${ref[model]}}"
+
+  [ -n "${ref[agent_id]}" ] && unset ref[model]
+  $verbose && echo "Using $engine LLM${ref[model]:+ with ${ref[model]}}${ref[agent_id]:+ with an engine agent id}" > /dev/stderr
 
   local api_header_switch api_header add_header_switch add_header message_content
-  if [ -v "${engine}_api_key" ]; then
+  if [ -n "${ref[api_key]}" ]; then
     api_header_switch="-H "
-    local engine_api_key="${engine}_api_key"
+    local engine_api_key="${ref[api_key]}"
     case "$engine" in
       claude)
-        api_header="x-api-key: ${!engine_api_key}"
+        api_header="x-api-key: ${ref[api_key]}"
         add_header_switch="-H "
-        add_header="anthropic-version: $anthropic_version"
+        add_header="anthropic-version: ${ref[anthropic_version]}"
         ;;
       gemini)
-        api_header="x-goog-api-key: ${!engine_api_key}"
+        api_header="x-goog-api-key: ${ref[api_key]}"
         ;;
-      *) api_header="Authorization: Bearer ${!engine_api_key}" ;;
+      *) api_header="Authorization: Bearer ${ref[api_key]}" ;;
     esac
   fi
   case "$engine" in
@@ -380,19 +415,18 @@ run_engine() {
         ]
       }'
       # Determine if model supports thinking (and is gemini-3)
-      if [[ ${!engine_model} =~ ^gemini-[3-9] ]]; then
-        t="${!engine_url}"
-        t=${t%:*Content}
-        thinking=$(curl -s "$t?key=${!engine_api_key}" | jq -r '.thinking')
+      if [[ ${ref[model]} =~ ^gemini-[3-9] ]]; then
+        t="${ref[url]%:*Content}"
+        thinking=$(curl -s "$t?key=${ref[api_key]}" | jq -r '.thinking')
         [ "$thinking" != true ] && thinking=false
 
-        $thinking && [ -n "$gemini_thinking_level" ] && \
+        $thinking && [ -n "${ref[thinking_level]}" ] && \
         message_content=$({
             jq -n --arg user_message "$user_message" "$message_content"
             jq -n '{
             "generationConfig": {
               "thinkingConfig": {
-                "thinkingLevel": "'${gemini_thinking_level:-low}'"
+                "thinkingLevel": "'${ref[thinking_level]:-low}'"
               }
             }
           }'
@@ -404,7 +438,7 @@ run_engine() {
         "messages": [
           {
             "role": "user",
-            "reasoning": "'${localai_reasoning_level:-low}'",
+            "reasoning": "'${ref[reasoning_level]:-low}'",
             "content": $user_message
           }
         ]
@@ -419,10 +453,10 @@ run_engine() {
           }
         ]
       }'
-      if [ -n "${!engine_agent_id}" ]; then
+      if [ -n "${ref[agent_id]}" ]; then
         message_content=$({
           jq -n --arg user_message "$user_message" "$message_content"
-          jq -n '{"agent_id": "'${!engine_agent_id}'"}'
+          jq -n '{"agent_id": "'${ref[agent_id]}'"}'
         } | jq -s add)
       fi
       ;;
@@ -437,9 +471,9 @@ run_engine() {
   message_content=$(jq -n --arg user_message "$user_message" "$message_content")
 
   local data=$(jq -n \
-    --arg max_tokens "${!max_tokens}" \
-    --arg prompt "${!prompt}" \
-    --arg model "${!engine_model}" \
+    --arg max_tokens "${ref[max_tokens]}" \
+    --arg prompt "${ref[prompt]}" \
+    --arg model "${ref[model]}" \
     'if $model != "" then . + {model: $model} else . end
     | if $max_tokens != "" then . + {max_tokens: ($max_tokens|tonumber)} else . end
     | if $prompt != "" then . + {prompt: $prompt} else . end
@@ -448,12 +482,12 @@ run_engine() {
   data=$(jq -s '.[0] * .[1]' <(echo $data) <(echo "$message_content"))
   $debug && { echo "JSON data for curl:" && echo "$data" | sed 's/^/  /'; } > /dev/stderr
   $debug && set -x
-  local tmpanswer=$(curl -s "${!engine_url}" \
+  local tmpanswer=$(curl -s "${ref[url]}" \
     $api_header_switch${api_header:+"$api_header"} $add_header_switch${add_header:+"$add_header"} \
     -H "Content-Type: application/json" -d "$data")
   $debug && set +x
   $debug && echo "$engine output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | jq -r "${!engine_match}")
+  tmpanswer=$(echo "$tmpanswer" | jq -r "${ref[match]}")
   $debug && echo "$engine post-jq-engine-match output: $tmpanswer" > /dev/stderr
   tmpanswer="${tmpanswer#*</think>}"
   tmpanswer=$(echo "$tmpanswer" | sed '/^```/d' | jq -Mr '"is_affected=\(.is_affected) delay_days=\(.delay_days)"')
@@ -470,8 +504,8 @@ run_engine() {
       tmpanswer="Invalid json format: $tmpanswer"
     fi
   fi
+  unset ref
 
-  unset api_header_switch api_header
   if [[ $tmpanswer ]]; then
     $verbose && echo "$engine answer: '$tmpanswer'" > /dev/stderr
     answers[$engine]=$tmpanswer
