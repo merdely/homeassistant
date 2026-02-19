@@ -369,8 +369,6 @@ check_agreement() {
   local answer=""
   declare -A count
 
-  local debug=true
-
   $verbose && echo "Checking agreement with $min_agree agreements needed" > /dev/stderr
   $debug && echo "methods = ${!answers[@]}" > /dev/stderr
   $debug && echo "answers = ${answers[@]}" > /dev/stderr
@@ -540,15 +538,10 @@ run_engine() {
 
     if [[ $tmpanswer ]]; then
       $verbose && echo "$engine ($model) answer: '$tmpanswer'" > /dev/stderr
-      #answers[${engine}_$model]='{
-      #  "day": "'$tmpanswer'",
-      #  "is_affected": '$is_affected',
-      #  "delay_days": '$delay_days'
-      #}'
       answers[${engine}_$model]="$tmpanswer"
       answer_json[${engine}_$model]='{
         "manual": {
-          "day": "'$answer'",
+          "day": "'$tmpanswer'",
           "is_affected": '$is_affected',
           "num_days": '$delay_days'
         }
@@ -577,7 +570,6 @@ if [[ $answer ]]; then
     done | jq -s add)
     [[ ! $json ]] && echo "Error: Cannot build json from answers" && exit
     jq -M -n --arg a "$answer" --argjson as "$json" '{"answers": $as, "answer": $a}'
-    # jq -M -n --arg a "$answer" --argjson as "${answer_json[@]}" '{"answers": $as, "answer": $a}'
   else
     echo $answer
   fi
