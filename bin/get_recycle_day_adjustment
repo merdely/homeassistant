@@ -48,7 +48,7 @@ openrouter[match]="${openrouter_match:-.output[0].content[0].text}"
 
 secrets_file="${secrets_file:-$(readlink -f $(dirname "$0")/../secrets.yaml)}"
 
-declare -A answers count
+declare -A answers answer_json count
 
 setvar() {
   local var=$1
@@ -78,7 +78,7 @@ for var in hass_api_key min_agree ; do
   [[ ! "${!var}" ]] && declare "$var=$(setvar "$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")")"
 done
 min_agree=${min_agree:-2}
-[[ $answer ]] && min_agree=1 && answers[manual]=$answer
+days=(Sunday Monday Tuesday Wednesday Thursday Friday Saturday)
 
 for var in engine_order ; do
   tmpval=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")
@@ -108,6 +108,7 @@ for engine in ${supported_engines[@]}; do
     ref[$key]=$value
   done
   IFS=$oifs
+  unset -n ref
 done
 
 usage() {
@@ -166,6 +167,29 @@ while getopts ":hdDvJjt:a:m:" opt; do
 done
 shift $((OPTIND -1))
 
+# Set up fake answer information
+if [[ $answer ]]; then
+  min_agree=1
+  days=$((${days[$answer]}-${days[$recycle_default_day]}))
+  [ $days != 0 ] && is_affected=true
+  answers[manual]=$answer
+  answer_json[commandline]='{
+    "commandline": {
+      "day": "'$answer'",
+      "is_affected": '${aff:-false}',
+      "num_days": '$days'
+    }
+  }'
+  answer_json[manual]='{
+    "manual": {
+      "day": "'$answer'",
+      "is_affected": '${aff:-false}',
+      "num_days": '$days'
+    }
+  }'
+  unset days aff
+fi
+
 engines=()
 models=()
 engines_list="${supported_engines[@]}"
@@ -179,7 +203,7 @@ while [ -n "$1" ]; do
   shift
 done
 if [ ${#engines[@]} -gt 0 ]; then
-  for engine in ${supported_engines[@]}; do
+  for engine in ${engines[@]}; do
     declare "${engine}_enabled=false"
   done
   for engine in "${engines[@]}"; do
@@ -190,13 +214,15 @@ fi
 if [ ${#engines[@]} -gt 1 ]; then
   if [ ${#models[@]} -eq 1 ]; then
     for engine in "${engines[@]}"; do
-      echo "${engine}_model=${models[0]}"
-      declare "${engine}_model=${models[0]}"
+      declare -n ref=$engine
+      ref[model]="${models[0]}"
+      unset -n ref
     done
   elif [ ${#engines[@]} -eq ${#models[@]} ]; then
     for i in $(seq 0 $((${#engines[@]} - 1))); do
-      echo "${engines[$i]}_model=${models[$i]}"
-      declare "${engines[$i]}_model=${models[$i]}"
+      declare -n ref=${engines[i]}
+      ref[model]="${models[$i]}"
+      unset -n ref
     done
   else
     if [ ${#models[@]} -ne 0 ]; then
@@ -206,19 +232,19 @@ if [ ${#engines[@]} -gt 1 ]; then
     fi
   fi
 elif [ ${#engines[@]} -eq 1 ]; then
-  min_agree=1
-  set -x
-  [ ${#models[@]} -gt 0 ] && declare "${engine}_model=${models[@]}"
-    set +x
-  #if [ ${#models[@]} -eq 1 ]; then
-  #  declare "${engine}_model=${models[0]}"
-  #else
-  #  if [ ${#models[@]} -ne 0 ]; then
-  #    echo "Error: Engine/Model mismatch. The same number of engines and models must be passed." > /dev/stderr
-  #    echo > /dev/stderr
-  #    usage 1
-  #  fi
-  #fi
+  if [ ${#models[@]} -eq 1 ]; then
+    declare -n ref=${engines[0]}
+    ref[model]="${models[0]}"
+    [[ ! ${ref[model]} =~ "|" ]] && min_agree=1
+    unset -n ref
+  else
+    min_agree=1
+    if [ ${#models[@]} -ne 0 ]; then
+      echo "Error: Engine/Model mismatch. The same number of engines and models must be passed." > /dev/stderr
+      echo > /dev/stderr
+      usage 1
+    fi
+  fi
 fi
 
 # Get whether Home Assistant toggle for using AI is enabled
@@ -265,14 +291,14 @@ else
   echo "Warning: Invalid MoCo Alert/Warning URL ($county_alert_url)" > /dev/stderr
 fi
 if $extra_verbose; then
-  echo "County Notice:"
-  echo "    $county_alert_text" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/"
+  echo "County Notice:" > /dev/stderr
+  echo "    $county_alert_text" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/" > /dev/stderr
 elif $verbose; then
   width=$((COLUMNS - 4))  # Number of columns - width of "County Notice: " - padding
   unset dots
   county_notice="$(echo "County Notice: \"$(echo "$county_alert_text" | paste -sd ' ')" | fold -sw $width | head -n1)"
   [ ${#county_alert_text} -gt $width ] && dots=…
-  printf "%s%s\"\n" "$county_notice" "$dots"
+  printf "%s%s\"\n" "$county_notice" "$dots" > /dev/stderr
 fi
 
 # Set the user message to send to the LLM
@@ -302,14 +328,14 @@ Return your answer in the following format (do not add any extra text or explana
 }}"
 
 if $extra_verbose; then
-  echo "LLM User Message:"
-  echo "    $user_message" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/"
+  echo "LLM User Message:" > /dev/stderr
+  echo "    $user_message" | fold -sw $((COLUMNS - 4)) | sed "2,\$s/^/$(printf '%*s' 4)/" > /dev/stderr
 elif $verbose; then
   width=$((COLUMNS - 4))  # Number of columns - width of "County Notice: " - padding
   unset dots
   usermsg_text="$(echo "LLM User Message: \"$(echo "$user_message" | paste -sd ' ')" | fold -sw $width | head -n1)"
   [ ${#user_message} -gt $width ] && dots=…
-  printf "%s%s\"\n" "$usermsg_text" "$dots"
+  printf "%s%s\"\n" "$usermsg_text" "$dots" > /dev/stderr
 fi
 
 # The grep string used to find a day of the week
@@ -328,6 +354,7 @@ if $debug; then
     for setting in ${engine_settings[@]}; do
       declare -n ref=$engine
       printf ' - %s = "%s"\n' "$engine[$setting]" "${ref[$setting]}" > /dev/stderr
+      unset -n ref
     done
   done
   $debug_exit && exit
@@ -341,6 +368,8 @@ check_agreement() {
   local max=0
   local answer=""
   declare -A count
+
+  local debug=true
 
   $verbose && echo "Checking agreement with $min_agree agreements needed" > /dev/stderr
   $debug && echo "methods = ${!answers[@]}" > /dev/stderr
@@ -364,16 +393,12 @@ run_engine() {
   [[ $engine =~ ^(chatgpt|claude|gemini|mistral|openrouter)$ && ! "${ref[api_key]}" ]] && return
   [[ $engine =~ ^(mistral)$ && ! "${ref[agent_id]}" && ! "${ref[model]}" ]] && return
   [[ $answer ]] && { $verbose&&echo "Answer already set to $answer">/dev/stderr;true; } && return
-
   [ -n "${ref[model]}" ] && ref[url]="${ref[url]//%%MODEL%%/${ref[model]}}"
-
   [ -n "${ref[agent_id]}" ] && unset ref[model]
-  $verbose && echo "Using $engine LLM${ref[model]:+ with ${ref[model]}}${ref[agent_id]:+ with an engine agent id}" > /dev/stderr
 
-  local api_header_switch api_header add_header_switch add_header message_content
+  local api_header_switch api_header add_header_switch add_header message_content is_affected delay_days
   if [ -n "${ref[api_key]}" ]; then
     api_header_switch="-H "
-    local engine_api_key="${ref[api_key]}"
     case "$engine" in
       claude)
         api_header="x-api-key: ${ref[api_key]}"
@@ -386,132 +411,155 @@ run_engine() {
       *) api_header="Authorization: Bearer ${ref[api_key]}" ;;
     esac
   fi
-  case "$engine" in
-    chatgpt)
-      message_content='{
-        "input": $user_message
-      }'
-      ;;
-    claude|github|openrouter)
-      message_content='{
-        "messages": [
-          {
-            "role": "user",
-            "content": $user_message
-          }
-        ]
-      }'
-      ;;
-    gemini)
-      message_content='{
-        "contents": [
-          {
-            "parts": [
-              {
-                "text": $user_message
-              }
-            ]
-          }
-        ]
-      }'
-      # Determine if model supports thinking (and is gemini-3)
-      if [[ ${ref[model]} =~ ^gemini-[3-9] ]]; then
-        t="${ref[url]%:*Content}"
-        thinking=$(curl -s "$t?key=${ref[api_key]}" | jq -r '.thinking')
-        [ "$thinking" != true ] && thinking=false
 
-        $thinking && [ -n "${ref[thinking_level]}" ] && \
-        message_content=$({
-            jq -n --arg user_message "$user_message" "$message_content"
-            jq -n '{
-            "generationConfig": {
-              "thinkingConfig": {
-                "thinkingLevel": "'${ref[thinking_level]:-low}'"
-              }
+  # Actually run against model
+  oifs=$IFS
+  IFS='|'
+  models="${ref[model]}"
+  for model in $models; do
+    IFS=$oifs
+    $verbose && echo "Using $engine LLM${model:+ with $model}${ref[agent_id]:+ with an engine agent id}" > /dev/stderr
+    case "$engine" in
+      chatgpt)
+        message_content='{
+          "input": $user_message
+        }'
+        ;;
+      claude|github|openrouter)
+        message_content='{
+          "messages": [
+            {
+              "role": "user",
+              "content": $user_message
             }
-          }'
+          ]
+        }'
+        ;;
+      gemini)
+        message_content='{
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": $user_message
+                }
+              ]
+            }
+          ]
+        }'
+        # Determine if model supports thinking (and is gemini-3)
+        if [[ $model =~ ^gemini-[3-9] ]]; then
+          t="${ref[url]%:*Content}"
+          thinking=$(curl -s "$t?key=${ref[api_key]}" | jq -r '.thinking')
+          [ "$thinking" != true ] && thinking=false
+
+          $thinking && [ -n "${ref[thinking_level]}" ] && \
+          message_content=$({
+              jq -n --arg user_message "$user_message" "$message_content"
+              jq -n '{
+              "generationConfig": {
+                "thinkingConfig": {
+                  "thinkingLevel": "'${ref[thinking_level]:-low}'"
+                }
+              }
+            }'
+            } | jq -s add)
+        fi
+        ;;
+      localai)
+        message_content='{
+          "messages": [
+            {
+              "role": "user",
+              "reasoning": "'${ref[reasoning_level]:-low}'",
+              "content": $user_message
+            }
+          ]
+        }'
+        ;;
+      mistral)
+        message_content='{
+          "inputs": [
+            {
+              "role": "user",
+              "content": $user_message
+            }
+          ]
+        }'
+        if [ -n "${ref[agent_id]}" ]; then
+          message_content=$({
+            jq -n --arg user_message "$user_message" "$message_content"
+            jq -n '{"agent_id": "'${ref[agent_id]}'"}'
           } | jq -s add)
-      fi
-      ;;
-    localai)
-      message_content='{
-        "messages": [
-          {
-            "role": "user",
-            "reasoning": "'${ref[reasoning_level]:-low}'",
-            "content": $user_message
-          }
-        ]
-      }'
-      ;;
-    mistral)
-      message_content='{
-        "inputs": [
-          {
-            "role": "user",
-            "content": $user_message
-          }
-        ]
-      }'
-      if [ -n "${ref[agent_id]}" ]; then
-        message_content=$({
-          jq -n --arg user_message "$user_message" "$message_content"
-          jq -n '{"agent_id": "'${ref[agent_id]}'"}'
-        } | jq -s add)
-      fi
-      ;;
-    ollama)
-      message_content='{
-        "stream": false,
-        "prompt": $user_message
-      }'
-      ;;
-  esac
-  [ -z "$message_content" ] && echo "Error: Could not generate message_content for LLM" && exit 1
-  message_content=$(jq -n --arg user_message "$user_message" "$message_content")
+        fi
+        ;;
+      ollama)
+        message_content='{
+          "stream": false,
+          "prompt": $user_message
+        }'
+        ;;
+    esac
+    [ -z "$message_content" ] && echo "Error: Could not generate message_content for LLM" && exit 1
+    message_content=$(jq -n --arg user_message "$user_message" "$message_content")
 
-  local data=$(jq -n \
-    --arg max_tokens "${ref[max_tokens]}" \
-    --arg prompt "${ref[prompt]}" \
-    --arg model "${ref[model]}" \
-    'if $model != "" then . + {model: $model} else . end
-    | if $max_tokens != "" then . + {max_tokens: ($max_tokens|tonumber)} else . end
-    | if $prompt != "" then . + {prompt: $prompt} else . end
-    ')
-  [[ "$data" == "null" ]] && data="{}"
-  data=$(jq -s '.[0] * .[1]' <(echo $data) <(echo "$message_content"))
-  $debug && { echo "JSON data for curl:" && echo "$data" | sed 's/^/  /'; } > /dev/stderr
-  $debug && set -x
-  local tmpanswer=$(curl -s "${ref[url]}" \
-    $api_header_switch${api_header:+"$api_header"} $add_header_switch${add_header:+"$add_header"} \
-    -H "Content-Type: application/json" -d "$data")
-  $debug && set +x
-  $debug && echo "$engine output: $tmpanswer" > /dev/stderr
-  tmpanswer=$(echo "$tmpanswer" | jq -r "${ref[match]}")
-  $debug && echo "$engine post-jq-engine-match output: $tmpanswer" > /dev/stderr
-  tmpanswer="${tmpanswer#*</think>}"
-  tmpanswer=$(echo "$tmpanswer" | sed '/^```/d' | jq -Mr '"is_affected=\(.is_affected) delay_days=\(.delay_days)"')
-  ret=$?
-  $debug && echo "$engine post-jq output: $tmpanswer" > /dev/stderr
-  local is_affected delay_days
-  if [ $ret != 0 ]; then
-    tmpanswer="Bad json output"
-  else
-    if [[ $tmpanswer =~ ^is_affected=(true|false)" "delay_days=[0-6]$ ]]; then
-      eval "$tmpanswer"
-      tmpanswer=$(date -d @$(( $(date -d $reference_ymd +%s) + $delay_days * 86400 )) +%A)
+    local data=$(jq -n \
+      --arg max_tokens "${ref[max_tokens]}" \
+      --arg prompt "${ref[prompt]}" \
+      --arg model "$model" \
+      'if $model != "" then . + {model: $model} else . end
+      | if $max_tokens != "" then . + {max_tokens: ($max_tokens|tonumber)} else . end
+      | if $prompt != "" then . + {prompt: $prompt} else . end
+      ')
+    [[ "$data" == "null" ]] && data="{}"
+    data=$(jq -s '.[0] * .[1]' <(echo $data) <(echo "$message_content"))
+    $debug && { echo "JSON data for curl:" && echo "$data" | sed 's/^/  /'; } > /dev/stderr
+    $debug && set -x
+    local tmpanswer=$(curl -s "${ref[url]}" \
+      $api_header_switch${api_header:+"$api_header"} $add_header_switch${add_header:+"$add_header"} \
+      -H "Content-Type: application/json" -d "$data")
+    $debug && set +x
+    $debug && echo "$engine ($model) output: $tmpanswer" > /dev/stderr
+    tmpanswer=$(echo "$tmpanswer" | jq -r "${ref[match]}")
+    $debug && echo "$engine ($model) post-jq-engine-match output: $tmpanswer" > /dev/stderr
+    tmpanswer="${tmpanswer#*</think>}"
+    tmpanswer=$(echo "$tmpanswer" | sed '/^```/d' | jq -Mr '"is_affected=\(.is_affected) delay_days=\(.delay_days)"')
+    ret=$?
+    $debug && echo "$engine ($model) post-jq output: $tmpanswer" > /dev/stderr
+    unset is_affected delay_days
+    if [ $ret != 0 ]; then
+      tmpanswer="Bad json output"
     else
-      tmpanswer="Invalid json format: $tmpanswer"
+      if [[ $tmpanswer =~ ^is_affected=(true|false)" "delay_days=[0-6]$ ]]; then
+        eval "$tmpanswer"
+        tmpanswer=$(date -d @$(( $(date -d $reference_ymd +%s) + $delay_days * 86400 )) +%A)
+      else
+        tmpanswer="Invalid json format: $tmpanswer"
+      fi
     fi
-  fi
-  unset ref
 
-  if [[ $tmpanswer ]]; then
-    $verbose && echo "$engine answer: '$tmpanswer'" > /dev/stderr
-    answers[$engine]=$tmpanswer
-    answer=$(check_agreement)
-    [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}" > /dev/stderr
-  fi
+    if [[ $tmpanswer ]]; then
+      $verbose && echo "$engine ($model) answer: '$tmpanswer'" > /dev/stderr
+      #answers[${engine}_$model]='{
+      #  "day": "'$tmpanswer'",
+      #  "is_affected": '$is_affected',
+      #  "delay_days": '$delay_days'
+      #}'
+      answers[${engine}_$model]="$tmpanswer"
+      answer_json[${engine}_$model]='{
+        "manual": {
+          "day": "'$answer'",
+          "is_affected": '$is_affected',
+          "num_days": '$delay_days'
+        }
+      }'
+      answer=$(check_agreement)
+      [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}" > /dev/stderr
+      [ -n "$answer" ] && return
+    fi
+  done
+  IFS=$oifs
+  unset -n ref
 }
 
 # Execute functions for LLMS
@@ -523,12 +571,13 @@ done
 
 if [[ $answer ]]; then
   if $output_json; then
-    $verbose && echo "Answers contains: $(declare -p answers | sed -r 's/declare -[a-z]+ answers=//i;s/(\(|\) ?)//g')"
-    json=$(for k in "${!answers[@]}"; do
-      jq -n --arg k "$k" --arg v "${answers[$k]}" '{($k): $v}'
+    $verbose && echo "Answers contains: $(declare -p answers | sed -r 's/declare -[a-z]+ answers=//i;s/(\(|\) ?)//g')" > /dev/stderr
+    json=$(for k in "${!answer_json[@]}"; do
+      jq -n --arg k "$k" --argjson v "${answer_json[$k]}" '{$k: $v}'
     done | jq -s add)
     [[ ! $json ]] && echo "Error: Cannot build json from answers" && exit
     jq -M -n --arg a "$answer" --argjson as "$json" '{"answers": $as, "answer": $a}'
+    # jq -M -n --arg a "$answer" --argjson as "${answer_json[@]}" '{"answers": $as, "answer": $a}'
   else
     echo $answer
   fi
