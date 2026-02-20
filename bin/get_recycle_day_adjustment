@@ -668,10 +668,12 @@ if [[ $answer_json && $responses_json ]]; then
   fi
   if $output_json; then
     jq -nr --argjson a "$answer_json" --argjson r "$responses_json" \
-      '{ "day": "\($a.day)", "answer": $a, "resonses": $r}' > /dev/stderr
+      '{ "day": "\($a.day)", "answer": $a, "resonses": $r}'
     [ $? != 0 ] && echo "Error: Cannot build json from answers" && exit 1
+    exit 0
   else
     echo "$json" | jq -r '.day'
+    exit 0
   fi
 else
   echo "Error: Could not determine answer" > /dev/stderr
