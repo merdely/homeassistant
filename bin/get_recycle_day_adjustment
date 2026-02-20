@@ -14,6 +14,7 @@ verbose="${verbose:-false}"
 extra_verbose="${extra_verbose:-false}"
 output_json="${output_json:-false}"
 today_date="$(date "+%Y-%m-%d")"
+run_all="${run_all:-false}"
 
 engine_order="${engine_order:-localai ollama mistral openrouter gemini claude chatgpt}"
 
@@ -48,7 +49,7 @@ openrouter[match]="${openrouter_match:-.output[0].content[0].text}"
 
 secrets_file="${secrets_file:-$(readlink -f $(dirname "$0")/../secrets.yaml)}"
 
-declare -A answers answer_json count
+unset answer_json responses_json
 
 setvar() {
   local var=$1
@@ -78,7 +79,9 @@ for var in hass_api_key min_agree ; do
   [[ ! "${!var}" ]] && declare "$var=$(setvar "$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")")"
 done
 min_agree=${min_agree:-2}
-days=(Sunday Monday Tuesday Wednesday Thursday Friday Saturday)
+declare -A days
+day_list=(Sunday Monday Tuesday Wednesday Thursday Friday Saturday)
+for i in "${!day_list[@]}"; do days["${day_list[$i]}"]=$i; done
 
 for var in engine_order ; do
   tmpval=$(awk "/^recycle_day_$var ?:/{sub(/^[^:]+ *: */,\"\");gsub(/^\"|\"$/,\"\");print;exit}" "$secrets_file")
@@ -112,13 +115,14 @@ for engine in ${supported_engines[@]}; do
 done
 
 usage() {
-  echo "usage: $(basename $0) [-h] [-D] [-d] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-m MIN_AGREE]"
+  echo "usage: $(basename $0) [-h] [-D] [-d] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-A] [-m MIN_AGREE]"
   echo "                      [ENGINELIST] [MODELLIST]"
   echo "  -d           : Print debug information (second -d is extra debug information)"
   echo "  -d           : Print debug information and exit"
   echo "  -v           : Be verbose (second -v is extra verbose)"
   echo "  -j           : Output using JSON"
   echo "  -J           : Output simple response (i.e. 'Friday')"
+  echo "  -A           : Run all configured engines/models, even after agreement requirements met"
   echo "  -t TESTDATE  : Use a test date instead of today (must be YYYY-mm-dd)"
   echo "  -a ANSWER    : Hardcode an answer"
   echo "  -m MIN_AGREE : Minimum number of LLMs must agree on answer (default: $min_agree)"
@@ -135,7 +139,8 @@ usage() {
   exit $1
 }
 
-while getopts ":hdDvJjt:a:m:" opt; do
+min_agree_set=false
+while getopts ":hdDvJjt:a:Am:" opt; do
   case $opt in
     d)
        $debug && extra_debug=true
@@ -149,7 +154,7 @@ while getopts ":hdDvJjt:a:m:" opt; do
        ;;
     j) output_json=true ;;
     J) output_json=false ;;
-    a) answer=$OPTARG ; answers[commandline]=$answer; answers[given]=$answer;;
+    a) answer=$OPTARG ;;
     t)
        if [[ $OPTARG =~ ^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$ ]]; then
          today_date=$(date -d "$OPTARG" "+%Y-%m-%d")
@@ -159,37 +164,77 @@ while getopts ":hdDvJjt:a:m:" opt; do
          exit 1
        fi
        ;;
+    A) run_all=true ;;
     m)
        [[ ! $OPTARG =~ ^[0-9]+$ ]] && echo "Error: MIN_AGREE must be a number" && exit 1
+       min_agree_set=true
        min_agree=$OPTARG ;;
     *) usage ;;
   esac
 done
 shift $((OPTIND -1))
+[ $run_all != true ] && run_all=false
+
+add_to_json_array() {
+  # usage: add_to_json_array json_array_string new_json_element
+  [ -z "$2" ] && return 1
+  echo "${1:-"[]"}" | jq -c --argjson e "$2" '. + [ $e ]'
+}
 
 # Set up fake answer information
 if [[ $answer ]]; then
   min_agree=1
-  days=$((${days[$answer]}-${days[$recycle_default_day]}))
-  [ $days != 0 ] && is_affected=true
-  answers[manual]=$answer
-  answer_json[commandline]='{
-    "commandline": {
-      "day": "'$answer'",
-      "is_affected": '${aff:-false}',
-      "num_days": '$days'
-    }
-  }'
-  answer_json[manual]='{
-    "manual": {
-      "day": "'$answer'",
-      "is_affected": '${aff:-false}',
-      "num_days": '$days'
-    }
-  }'
+  if ((${days[$answer]} < ${days[$recycle_default_day]})); then
+    num_days=$((7+${days[$answer]}-${days[$recycle_default_day]}))
+  else
+    num_days=$((${days[$answer]}-${days[$recycle_default_day]}))
+  fi
+  [ $num_days != 0 ] && is_affected=true
+
+  answer_json=$(echo "{\"day\":\"$answer\",\"is_affected\":${aff:-false},\"num_days\":$num_days}" | jq -c)
+  responses_json=$(add_to_json_array "$responses_json" '  {
+    "engine": "manual",
+    "model": "answer1",
+    "process_seconds": 0,
+    "day": "'$answer'",
+    "is_affected": '${aff:-false}',
+    "num_days": '$num_days'
+  }')
+  responses_json=$(add_to_json_array "$responses_json" '  {
+    "engine": "manual",
+    "model": "answer2",
+    "process_seconds": 0,
+    "day": "'$answer'",
+    "is_affected": '${aff:-false}',
+    "num_days": '$num_days'
+  }')
   unset days aff
 fi
 
+# Get min_agree ratio as a baseline
+if ! $min_agree_set; then
+  # Get original model count
+  min_agree_orig=$min_agree
+  model_count_orig=0
+  for engine in $engine_order; do
+    mycount=0
+    declare -n ref=$engine
+    if [ -n "${ref[model]}" ]; then
+      oifs=$IFS
+      IFS='|'
+      for word in ${ref[model]}; do
+        ((mycount++))
+      done
+      IFS=$oifs
+    fi
+    [ $mycount -eq 0 ] && mycount=1
+    unset -n ref
+    model_count_orig=$((model_count_orig + mycount))
+  done
+  ratio=$((min_agree * 100 / $model_count_orig))
+fi
+
+# Parse command line for engines and models
 engines=()
 models=()
 engines_list="${supported_engines[@]}"
@@ -198,38 +243,32 @@ while [ -n "$1" ]; do
   if [[ $1 =~ ^($engines_list)$ ]]; then
     engines+=($1)
   else
-    models+=($1)
+    models[$((${#engines[@]}-1))]=$1
   fi
   shift
 done
 if [ ${#engines[@]} -gt 0 ]; then
-  for engine in ${engines[@]}; do
-    declare "${engine}_enabled=false"
+  for engine in ${supported_engines[@]}; do
+    declare -n ref=$engine
+    ref[enabled]=false
+    unset -n ref
   done
   for engine in "${engines[@]}"; do
-    declare "${engine}_enabled=true"
+    declare -n ref=$engine
+    ref[enabled]=true
+    unset -n ref
   done
   engine_order="${engines[@]}"
 fi
 if [ ${#engines[@]} -gt 1 ]; then
-  if [ ${#models[@]} -eq 1 ]; then
-    for engine in "${engines[@]}"; do
-      declare -n ref=$engine
-      ref[model]="${models[0]}"
-      unset -n ref
-    done
-  elif [ ${#engines[@]} -eq ${#models[@]} ]; then
-    for i in $(seq 0 $((${#engines[@]} - 1))); do
-      declare -n ref=${engines[i]}
-      ref[model]="${models[$i]}"
-      unset -n ref
-    done
-  else
-    if [ ${#models[@]} -ne 0 ]; then
-      echo "Error: Engine/Model mismatch. The same number of engines and models must be passed." > /dev/stderr
-      echo > /dev/stderr
-      usage 1
-    fi
+  if [ ${#models[@]} -gt 0 ]; then
+     for i in $(seq 0 $((${#engines[@]} - 1))); do
+       if [ -n "${models[$i]}" ]; then
+         declare -n ref=${engines[i]}
+         ref[model]="${models[$i]}"
+         unset -n ref
+       fi
+     done
   fi
 elif [ ${#engines[@]} -eq 1 ]; then
   if [ ${#models[@]} -eq 1 ]; then
@@ -245,6 +284,29 @@ elif [ ${#engines[@]} -eq 1 ]; then
       usage 1
     fi
   fi
+fi
+
+# Adjust min_agree
+if ! $min_agree_set; then
+  model_count=0
+  for engine in $engine_order; do
+    if [ -n "${ref[model]}" ]; then
+    mycount=0
+    declare -n ref=$engine
+      oifs=$IFS
+      IFS='|'
+      for word in ${ref[model]}; do
+        ((mycount++))
+      done
+      IFS=$oifs
+    fi
+    [ $mycount -eq 0 ] && mycount=1
+    unset -n ref
+    model_count=$((model_count + mycount))
+  done
+  min_agree=$((model_count * ratio / 100))
+  [ $ratio != 100 ] && [ $model_count = $min_agree ] && min_agree=$((min_agree-1))
+  [ $min_agree = 1 ] && [ $min_agree_orig -gt 1 ] && [ $model_count -gt 1 ] && min_agree=2
 fi
 
 # Get whether Home Assistant toggle for using AI is enabled
@@ -362,27 +424,57 @@ fi
 
 # Function to check if the minimum number of LLMs agree on their answer
 check_agreement() {
-  [[ $min_agree = 1 ]] && [[ ${#answers[@]} = 1 ]] && echo ${answers[@]} && return 0
-
   local count
   local max=0
   local answer=""
   declare -A count
+  local day_count aff_count num_count
+  declare -A day_count aff_count num_count
 
-  $verbose && echo "Checking agreement with $min_agree agreements needed" > /dev/stderr
-  $debug && echo "methods = ${!answers[@]}" > /dev/stderr
-  $debug && echo "answers = ${answers[@]}" > /dev/stderr
-  for v in "${answers[@]}"; do [[ $v ]] && ((count["$v"]++)); done
-  for v in "${!count[@]}"; do (( count[$v] > max )) && max=${count[$v]} && answer=$v; done
-  $verbose && echo "Agreements found: $max" > /dev/stderr
-  (( $max < $min_agree )) && return 1
-  [[ ! $answer ]] && return 1
-  echo $answer
+  $debug && echo "responses_json = '$responses_json'" > /dev/stderr
+  eval_string=$(echo "$responses_json" | \
+    jq -r '.[] | "((day_count[\"\(.day)\"]++));
+                  ((aff_count[\"\(.is_affected)\"]++));
+                  ((num_count[\"\(.num_days)\"]++));"'
+  )
+
+  if [[ $eval_string =~ ^(\(\(day_count\[\"[^\"]+\"\]\+\+\)\)\;[[:space:]]*\(\(aff_count\[\"[^\"]+\"\]\+\+\)\)\;[[:space:]]*\(\(num_count\[\"[^\"]+\"\]\+\+\)\)\;?[[:space:]]*){1,}$ ]]; then
+    eval "$eval_string"
+  else
+    echo "Bad Agreement Eval String ($eval_string)" > /dev/stderr
+    exit 1
+  fi
+
+  local day_max=0 aff_max=0 num_max=0
+  for v in "${!day_count[@]}"; do (( day_count[$v] > day_max )) && day_max=${day_count[$v]} && day_answer=$v; done
+  for v in "${!aff_count[@]}"; do (( aff_count[$v] > aff_max )) && aff_max=${aff_count[$v]} && aff_answer=$v; done
+  for v in "${!num_count[@]}"; do (( num_count[$v] > num_max )) && num_max=${num_count[$v]} && num_answer=$v; done
+
+  $debug && echo "Day Agreements found: $day_max" > /dev/stderr
+  $debug && echo "Aff Agreements found: $aff_max" > /dev/stderr
+  $debug && echo "Num Agreements found: $num_max" > /dev/stderr
+  $debug && (( $day_max < $min_agree )) && echo "Not enough agreements for Day" > /dev/stderr
+  $debug && (( $aff_max < $min_agree )) && echo "Not enough agreements for Affected" > /dev/stderr
+  $debug && (( $num_max < $min_agree )) && echo "Not enough agreements for Num Days" > /dev/stderr
+
+  if (( $day_max >= $min_agree && $aff_max >= $min_agree && $num_max >= $min_agree )) &&
+     [[ $day_answer && $aff_answer && $num_answer ]]; then
+    $verbose && echo "Agreed upon answers (got $day_max of $min_agree): $day_answer, $aff_answer, $num_answer" > /dev/stderr
+    local json="{\"day\":\"$day_answer\",\"is_affected\":$aff_answer,\"num_days\":$num_answer}"
+    echo "$json" | jq -r > /dev/null
+    ret=$?
+    $debug && printf "Agreement Check Answer JSON: " > /dev/stderr && echo "$json" | jq -c > /dev/stderr
+    [ $ret != 0 ] && echo "Error: Invalid JSON in agreement check ($json)" > /dev/stderr && exit 1
+    echo "$json" | jq -c
+    return $ret
+  fi
+  return 1
 }
 
 # Function to run the LLM engine
 run_engine() {
   local engine=${1:-localai}
+  ! $run_all && [[ $answer ]] && { $verbose&&echo "[$engine] Answer already set to $answer">/dev/stderr;true; } && return
   declare -n ref=$engine
 
   ! ${ref[enabled]} && { $verbose&&echo "$engine disabled">/dev/stderr;true; } && return
@@ -390,7 +482,6 @@ run_engine() {
   [[ $engine =~ ^(localai|ollama|chatgpt|claude|gemini|openrouter)$ && ! "${ref[model]}" ]] && return
   [[ $engine =~ ^(chatgpt|claude|gemini|mistral|openrouter)$ && ! "${ref[api_key]}" ]] && return
   [[ $engine =~ ^(mistral)$ && ! "${ref[agent_id]}" && ! "${ref[model]}" ]] && return
-  [[ $answer ]] && { $verbose&&echo "Answer already set to $answer">/dev/stderr;true; } && return
   [ -n "${ref[model]}" ] && ref[url]="${ref[url]//%%MODEL%%/${ref[model]}}"
   [ -n "${ref[agent_id]}" ] && unset ref[model]
 
@@ -513,9 +604,11 @@ run_engine() {
     data=$(jq -s '.[0] * .[1]' <(echo $data) <(echo "$message_content"))
     $debug && { echo "JSON data for curl:" && echo "$data" | sed 's/^/  /'; } > /dev/stderr
     $debug && set -x
+    local starttime=$(date +%s)
     local tmpanswer=$(curl -s "${ref[url]}" \
       $api_header_switch${api_header:+"$api_header"} $add_header_switch${add_header:+"$add_header"} \
       -H "Content-Type: application/json" -d "$data")
+    local endtime=$(date +%s)
     $debug && set +x
     $debug && echo "$engine ($model) output: $tmpanswer" > /dev/stderr
     tmpanswer=$(echo "$tmpanswer" | jq -r "${ref[match]}")
@@ -538,17 +631,18 @@ run_engine() {
 
     if [[ $tmpanswer ]]; then
       $verbose && echo "$engine ($model) answer: '$tmpanswer'" > /dev/stderr
-      answers[${engine}_$model]="$tmpanswer"
-      answer_json[${engine}_$model]='{
-        "manual": {
-          "day": "'$tmpanswer'",
-          "is_affected": '$is_affected',
-          "num_days": '$delay_days'
-        }
-      }'
-      answer=$(check_agreement)
-      [ $? != 0 ] && $debug && echo "No agreement after ${!answers[@]}" > /dev/stderr
-      [ -n "$answer" ] && return
+      responses_json=$(add_to_json_array "$responses_json" '  {
+        "engine": "'$engine'",
+        "model": "'$model'",
+        "process_seconds": '$((endtime - starttime))',
+        "day": "'$tmpanswer'",
+        "is_affected": '$is_affected',
+        "num_days": '$delay_days'
+      }')
+      answer_json=$(check_agreement)
+      [ $? != 0 ] && $debug && echo "No agreement after $answer_json" > /dev/stderr
+      $debug && echo "Check Agreement Result answer_json = $answer_json" > /dev/stderr
+      [ -n "$answer_json" ] && ! $run_all && return
     fi
   done
   IFS=$oifs
@@ -557,26 +651,32 @@ run_engine() {
 
 # Execute functions for LLMS
 $verbose && echo "Running engines in this order: $engine_order" > /dev/stderr
+$verbose && echo "Checking $model_count (need $min_agree to agree)" > /dev/stderr
 
 for engine in $engine_order; do
   run_engine $engine
 done
 
-if [[ $answer ]]; then
-  if $output_json; then
-    $verbose && echo "Answers contains: $(declare -p answers | sed -r 's/declare -[a-z]+ answers=//i;s/(\(|\) ?)//g')" > /dev/stderr
-    json=$(for k in "${!answer_json[@]}"; do
-      jq -n --arg k "$k" --argjson v "${answer_json[$k]}" '{$k: $v}'
-    done | jq -s add)
-    [[ ! $json ]] && echo "Error: Cannot build json from answers" && exit
-    jq -M -n --arg a "$answer" --argjson as "$json" '{"answers": $as, "answer": $a}'
-  else
-    echo $answer
+if [[ $answer_json && $responses_json ]]; then
+  if ! echo "$answer_json" | jq -c > /dev/null; then
+    echo "Error: Invalid Answer JSON ($answer_json)" > /dev/stderr
+    exit 1
   fi
-elif [ ${#answers[@]} = 0 ]; then
-  echo "Error: No LLMs were used to determine date (none configured?)"
+  if ! echo "$responses_json" | jq -c > /dev/null; then
+    echo "Error: Invalid Responses JSON ($responses_json)" > /dev/stderr
+    exit 1
+  fi
+  if $output_json; then
+    jq -nr --argjson a "$answer_json" --argjson r "$responses_json" \
+      '{ "day": "\($a.day)", "answer": $a, "resonses": $r}' > /dev/stderr
+    [ $? != 0 ] && echo "Error: Cannot build json from answers" && exit 1
+  else
+    echo "$json" | jq -r '.day'
+  fi
 else
-  echo "Error: Could not determine answer"
+  echo "Error: Could not determine answer" > /dev/stderr
+  echo "       Answer JSON: $answer_json" > /dev/stderr
+  echo "       Responses JSON: $responses_json" > /dev/stderr
   exit 1
 fi
 
