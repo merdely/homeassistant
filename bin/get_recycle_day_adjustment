@@ -132,6 +132,7 @@ usage() {
   echo "  The first engine given would be matched with the first model given"
   echo "  ENGINELIST and MODELLIST are space separated on the command line"
   echo "  If MODELLIST is empty and ENGINELIST is set, models will be used from $secrets_file"
+  echo "  ENGINES must precede MODELS on command line"
   echo "  Examples:"
   echo "    $(basename $0) -j ollama gemma3:4b localai gemma-3-4b-it"
   echo "    $(basename $0) -j ollama localai gemma3:4b gemma-3-4b-it"
@@ -243,6 +244,7 @@ while [ -n "$1" ]; do
   if [[ $1 =~ ^($engines_list)$ ]]; then
     engines+=($1)
   else
+    [ ${#engines[@]} -eq 0 ] && echo "Error: engines must precede models on command line" > /dev/stderr && exit 1
     models[$((${#engines[@]}-1))]=$1
   fi
   shift
@@ -668,7 +670,7 @@ if [[ $answer_json && $responses_json ]]; then
   fi
   if $output_json; then
     jq -nr --argjson a "$answer_json" --argjson r "$responses_json" \
-      '{ "day": "\($a.day)", "answer": $a, "resonses": $r}'
+      '{ "day": "\($a.day)", "answer": $a, "responses": $r}'
     [ $? != 0 ] && echo "Error: Cannot build json from answers" && exit 1
     exit 0
   else
