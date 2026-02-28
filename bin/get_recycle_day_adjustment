@@ -50,6 +50,8 @@ openrouter[match]="${openrouter_match:-.output[0].content[0].text}"
 secrets_file="${secrets_file:-$(readlink -f $(dirname "$0")/../secrets.yaml)}"
 
 unset answer_json responses_json
+agreements=0
+run_count=0
 
 setvar() {
   local var=$1
@@ -112,6 +114,14 @@ for engine in ${supported_engines[@]}; do
   done
   IFS=$oifs
   unset -n ref
+done
+
+model_count=0
+for engine in $engine_order; do
+  declare -n ref=$engine
+  for model in ${ref[model]//|/ }; do
+    ((model_count++))
+  done
 done
 
 usage() {
@@ -184,7 +194,9 @@ add_to_json_array() {
 
 # Set up fake answer information
 if [[ $answer ]]; then
-  min_agree=1
+  min_agree=2
+  model_count=2
+  engine_order="manual"
   if ((${days[$answer]} < ${days[$recycle_default_day]})); then
     num_days=$((7+${days[$answer]}-${days[$recycle_default_day]}))
   else
@@ -192,7 +204,7 @@ if [[ $answer ]]; then
   fi
   [ $num_days != 0 ] && is_affected=true
 
-  answer_json=$(echo "{\"day\":\"$answer\",\"is_affected\":${aff:-false},\"num_days\":$num_days}" | jq -c)
+  answer_json=$(echo "{\"day\":\"$answer\",\"is_affected\":${aff:-false},\"num_days\":$num_days,\"agreements\":2,\"min_agree\":$min_agree,\"run_count\":2,\"error\":false}" | jq -c)
   responses_json=$(add_to_json_array "$responses_json" '  {
     "engine": "manual",
     "model": "answer1",
@@ -240,6 +252,7 @@ engines=()
 models=()
 engines_list="${supported_engines[@]}"
 engines_list="${engines_list// /|}"
+adjust_min_agree=false
 while [ -n "$1" ]; do
   if [[ $1 =~ ^($engines_list)$ ]]; then
     engines+=($1)
@@ -250,6 +263,7 @@ while [ -n "$1" ]; do
   shift
 done
 if [ ${#engines[@]} -gt 0 ]; then
+  adjust_min_agree=true
   for engine in ${supported_engines[@]}; do
     declare -n ref=$engine
     ref[enabled]=false
@@ -274,12 +288,14 @@ if [ ${#engines[@]} -gt 1 ]; then
   fi
 elif [ ${#engines[@]} -eq 1 ]; then
   if [ ${#models[@]} -eq 1 ]; then
+    adjust_min_agree=false
+    min_agree=1
+    model_count=1
     declare -n ref=${engines[0]}
     ref[model]="${models[0]}"
-    [[ ! ${ref[model]} =~ "|" ]] && min_agree=1
+    # [[ ! ${ref[model]} =~ "|" ]] && min_agree=1
     unset -n ref
   else
-    min_agree=1
     if [ ${#models[@]} -ne 0 ]; then
       echo "Error: Engine/Model mismatch. The same number of engines and models must be passed." > /dev/stderr
       echo > /dev/stderr
@@ -289,12 +305,12 @@ elif [ ${#engines[@]} -eq 1 ]; then
 fi
 
 # Adjust min_agree
-if ! $min_agree_set; then
+if $adjust_min_agree && ! $min_agree_set; then
   model_count=0
   for engine in $engine_order; do
-    if [ -n "${ref[model]}" ]; then
-    mycount=0
     declare -n ref=$engine
+    if [ -n "${ref[model]}" ]; then
+      mycount=0
       oifs=$IFS
       IFS='|'
       for word in ${ref[model]}; do
@@ -459,10 +475,14 @@ check_agreement() {
   $debug && (( $aff_max < $min_agree )) && echo "Not enough agreements for Affected" > /dev/stderr
   $debug && (( $num_max < $min_agree )) && echo "Not enough agreements for Num Days" > /dev/stderr
 
+  agreements=$day_max
   if (( $day_max >= $min_agree && $aff_max >= $min_agree && $num_max >= $min_agree )) &&
      [[ $day_answer && $aff_answer && $num_answer ]]; then
-    $verbose && echo "Agreed upon answers (got $day_max of $min_agree): $day_answer, $aff_answer, $num_answer" > /dev/stderr
-    local json="{\"day\":\"$day_answer\",\"is_affected\":$aff_answer,\"num_days\":$num_answer}"
+     agreements=$day_max
+     [ $aff_max -lt $agreements ] && agreements=$aff_max
+     [ $num_max -lt $agreements ] && agreements=$num_max
+    $verbose && echo "Agreed upon answers (got $agreements of $min_agree): $day_answer, $aff_answer, $num_answer" > /dev/stderr
+    local json="{\"day\":\"$day_answer\",\"is_affected\":$aff_answer,\"num_days\":$num_answer,\"agreements\":$agreements,\"min_agree\":$min_agree,\"run_count\":$run_count,\"error\":false}"
     echo "$json" | jq -r > /dev/null
     ret=$?
     $debug && printf "Agreement Check Answer JSON: " > /dev/stderr && echo "$json" | jq -c > /dev/stderr
@@ -476,7 +496,8 @@ check_agreement() {
 # Function to run the LLM engine
 run_engine() {
   local engine=${1:-localai}
-  ! $run_all && [[ $answer ]] && { $verbose&&echo "[$engine] Answer already set to $answer">/dev/stderr;true; } && return
+  [[ ! " ${supported_engines[@]} " =~ " $engine " ]] && return
+  ! $run_all && [[ $answer_json ]] && { $verbose&&echo "[$engine] Answer already set agreed upon">/dev/stderr;true; } && return
   declare -n ref=$engine
 
   ! ${ref[enabled]} && { $verbose&&echo "$engine disabled">/dev/stderr;true; } && return
@@ -487,7 +508,7 @@ run_engine() {
   [ -n "${ref[model]}" ] && ref[url]="${ref[url]//%%MODEL%%/${ref[model]}}"
   [ -n "${ref[agent_id]}" ] && unset ref[model]
 
-  local api_header_switch api_header add_header_switch add_header message_content is_affected delay_days
+  local api_header_switch api_header add_header_switch add_header message_content is_affected delay_days day
   if [ -n "${ref[api_key]}" ]; then
     api_header_switch="-H "
     case "$engine" in
@@ -507,6 +528,7 @@ run_engine() {
   oifs=$IFS
   IFS='|'
   models="${ref[model]}"
+  $verbose && echo "$engine model order: ${models//|/ }" > /dev/stderr
   for model in $models; do
     IFS=$oifs
     $verbose && echo "Using $engine LLM${model:+ with $model}${ref[agent_id]:+ with an engine agent id}" > /dev/stderr
@@ -616,28 +638,33 @@ run_engine() {
     tmpanswer=$(echo "$tmpanswer" | jq -r "${ref[match]}")
     $debug && echo "$engine ($model) post-jq-engine-match output: $tmpanswer" > /dev/stderr
     tmpanswer="${tmpanswer#*</think>}"
-    tmpanswer=$(echo "$tmpanswer" | sed '/^```/d' | jq -Mr '"is_affected=\(.is_affected) delay_days=\(.delay_days)"')
+    tmpanswer=$(echo "$tmpanswer" | \
+      sed -r 's/\[([0-9]),\s*[0-9]\]/\1/g;/^```/d;s/[][]//g' | \
+      jq -Mr '"is_affected=\(.is_affected) delay_days=\(.delay_days)"')
     ret=$?
     $debug && echo "$engine ($model) post-jq output: $tmpanswer" > /dev/stderr
-    unset is_affected delay_days
+    ((run_count++))
+    unset is_affected delay_days day
     if [ $ret != 0 ]; then
       tmpanswer="Bad json output"
     else
       if [[ $tmpanswer =~ ^is_affected=(true|false)" "delay_days=[0-6]$ ]]; then
         eval "$tmpanswer"
-        tmpanswer=$(date -d @$(( $(date -d $reference_ymd +%s) + $delay_days * 86400 )) +%A)
+        day=$(date -d @$(( $(date -d $reference_ymd +%s) + $delay_days * 86400 )) +%A)
+        # Fix is_affected if wrong, but everything else matches
+        [ $day = $normal_recycle_day ] && [ $delay_days = 0 ] && [ $is_affected = true ] && is_affected=false
       else
-        tmpanswer="Invalid json format: $tmpanswer"
+        day="Invalid json format: $tmpanswer"
       fi
     fi
 
-    if [[ $tmpanswer ]]; then
-      $verbose && echo "$engine ($model) answer: '$tmpanswer'" > /dev/stderr
+    if [[ $day ]]; then
+      $verbose && echo "$engine ($model) answer: '$day/$is_affected/$delay_days'" > /dev/stderr
       responses_json=$(add_to_json_array "$responses_json" '  {
         "engine": "'$engine'",
         "model": "'$model'",
         "process_seconds": '$((endtime - starttime))',
-        "day": "'$tmpanswer'",
+        "day": "'$day'",
         "is_affected": '$is_affected',
         "num_days": '$delay_days'
       }')
@@ -678,9 +705,22 @@ if [[ $answer_json && $responses_json ]]; then
     exit 0
   fi
 else
-  echo "Error: Could not determine answer" > /dev/stderr
-  echo "       Answer JSON: $answer_json" > /dev/stderr
-  echo "       Responses JSON: $responses_json" > /dev/stderr
+  echo '{'
+  echo '  "day": "Friday",'
+  echo '  "answer": {'
+  echo '    "day": "Friday",'
+  echo '    "is_affected": false,'
+  echo '    "num_days": 0,'
+  echo '    "agreements": '"$agreements"','
+  echo '    "min_agree": '"$min_agree"','
+  echo '    "run_count": '"$run_count"','
+  echo '    "error": true'
+  echo '  },'
+  echo '  "responses": []'
+  echo '}'
+  $verbose && echo "Error: Could not determine answer" > /dev/stderr
+  $verbose && echo "       Answer JSON: $answer_json" > /dev/stderr
+  $verbose && echo "       Responses JSON: $responses_json" > /dev/stderr
   exit 1
 fi
 
