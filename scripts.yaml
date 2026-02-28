@@ -182,6 +182,16 @@ home_thermostat_down:
 scene_good_night:
   alias: Good Night
   sequence:
+  - action: button.press
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - button.front_door_zwave_ping
+      - button.garage_entry_door_ping
+      - button.range_extender_ping
+    enabled: true
+    continue_on_error: true
   - if:
     - condition: and
       conditions:
@@ -211,12 +221,6 @@ scene_good_night:
       entity_id: alarm_control_panel.home_alarm
     action: alarm_control_panel.alarm_arm_home
     continue_on_error: true
-  - action: button.press
-    metadata: {}
-    data: {}
-    target:
-      entity_id: button.front_door_zwave_ping
-    continue_on_error: true
   - action: lock.lock
     metadata: {}
     data: {}
@@ -241,6 +245,7 @@ scene_good_night:
       - switch.god_damn_humidifier
       - switch.god_damn_tv
       - switch.living_room_tv
+      - light.globe
     data: {}
   - alias: Turn off Christmas Tree  Plug if Christmas Tree is up
     if:
@@ -303,6 +308,11 @@ scene_leaving_home:
       - b3ca852cf82011ea847d350a45336799
       entity_id: light.kitchen_overhead_light
     data: {}
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.kitchen_table_light
+    data: {}
   - target:
       entity_id:
       - switch.office_heater_plug
@@ -347,6 +357,7 @@ scene_night_night:
       entity_id:
       - switch.god_damn_humidifier
       - switch.office_heater_plug
+      - light.globe
       label_id: tvs
     action: homeassistant.turn_off
     data: {}
@@ -421,42 +432,6 @@ scene_turn_off_the_office:
     data: {}
   mode: single
   icon: mdi:desk
-fix_3_way_lights:
-  alias: Fix 3-way Lights
-  sequence:
-  - repeat:
-      for_each:
-      - god_damn_switch
-      - hallway_light
-      - kitchen_overhead_light
-      sequence:
-      - service: python_script.set_state
-        data:
-          entity_id: light.{{ repeat.item }}
-          state: 'off'
-      - if:
-        - condition: template
-          value_template: '{{ states("light." + repeat.item + "_load_sensor") == "on"
-            }}'
-        then:
-        - service: python_script.set_state
-          data:
-            entity_id: light.{{ repeat.item }}
-            state: 'on'
-        - service: system_log.write
-          data:
-            message: light.{{ repeat.item }} set to on
-            level: error
-        else:
-        - service: python_script.set_state
-          data:
-            entity_id: light.{{ repeat.item }}
-            state: 'off'
-        - service: system_log.write
-          data:
-            message: light.{{ repeat.item }} set to off
-            level: error
-  mode: single
 power_cycle_ymir:
   alias: Power Cycle Ymir
   sequence:

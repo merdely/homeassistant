@@ -300,17 +300,11 @@
       minutes: 0
       seconds: 30
       milliseconds: 0
-  - action: script.fix_3_way_lights
-    data: {}
-  - data: {}
-    target:
+  - data:
       entity_id:
       - sensor.opnsense_package_versions
       - sensor.opnsense_versions
       - sensor.unifi_ap_versions
-      - light.god_damn_switch
-      - light.kitchen_overhead_light
-      - light.hallway_light
       - sensor.unavailable_entities
     action: homeassistant.update_entity
   - data: {}
@@ -1056,7 +1050,7 @@
   - alias: Reset Recycle Is Out if day after Recycle Day
     if:
     - condition: numeric_state
-      entity_id: sensor.moco_recycle_days_adjusted
+      entity_id: sensor.moco_recycle_days_ai
       above: 2
     then:
     - action: input_boolean.turn_off
@@ -1139,6 +1133,7 @@
       - button.front_door_zwave_ping
       - button.garage_entry_door_ping
       - button.range_extender_ping
+    enabled: false
   trace:
     stored_traces: 20
   mode: single
@@ -1508,8 +1503,8 @@
   - alias: Send Recycle Notification if necessary
     if:
     - condition: template
-      value_template: '{{ states("sensor.moco_recycle_days_adjusted") | int(7) < 1
-        and states("input_boolean.recycle_is_out") == "off" }}'
+      value_template: '{{ states("sensor.moco_recycle_days_ai") | int(7) < 1 and states("input_boolean.recycle_is_out")
+        == "off" }}'
     then:
     - data:
         message: Recycling collection is tomorrow and Recycle is not out!
@@ -1978,38 +1973,6 @@
     data: {}
     action: homeassistant.turn_on
   mode: single
-- id: '1650048811718'
-  trace:
-    stored_traces: 20
-  alias: Lighting - Fix 3-way Lights
-  description: ''
-  triggers:
-  - entity_id: light.hallway_light
-    to: unknown
-    for:
-      hours: 0
-      minutes: 2
-      seconds: 0
-    trigger: state
-  - entity_id: light.god_damn_switch
-    to: unknown
-    for:
-      hours: 0
-      minutes: 2
-      seconds: 0
-    trigger: state
-  - entity_id: light.kitchen_overhead_light
-    to: unknown
-    for:
-      hours: 0
-      minutes: 2
-      seconds: 0
-    trigger: state
-  conditions: []
-  actions:
-  - action: script.fix_3_way_lights
-    data: {}
-  mode: single
 - id: '1650211137772'
   trace:
     stored_traces: 20
@@ -2468,10 +2431,6 @@
   - trigger: state
     entity_id:
     - light.front_porch_switch
-    from: 'on'
-  - trigger: state
-    entity_id:
-    - light.god_damn_switch
     from: 'on'
   conditions: []
   actions:
@@ -3803,7 +3762,7 @@
     stored_traces: 20
   max: 15
 - id: '1769550604359'
-  alias: Restart Frigate when PetCam Starts
+  alias: Enable/Disable Frigate MQTT PetCam State
   description: ''
   triggers:
   - trigger: state
@@ -3826,52 +3785,87 @@
       minutes: 0
       seconds: 3
     id: turned_off
+  - trigger: mqtt
+    id: mqtt_on
+    options:
+      topic: frigate/Pet_Cam/enabled/state
+      payload: 'ON'
+  - trigger: mqtt
+    id: mqtt_off
+    options:
+      topic: frigate/Pet_Cam/enabled/state
+      payload: 'OFF'
   conditions: []
   actions:
-  - alias: If PetCam turned on
-    if:
-    - condition: trigger
-      id:
-      - turned_on
-    then:
-    - action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        topic: frigate/Pet_Cam/enabled/set
-        payload: 'OFF'
-      alias: Turn Pet_Cam Frigate Camera off (mqtt)
-      enabled: false
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 30
-        milliseconds: 0
-      enabled: false
-    - action: shell_command.restart_frigate
-      metadata: {}
-      data: {}
-    - action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        topic: frigate/Pet_Cam/enabled/set
-        payload: 'ON'
-      alias: Turn Pet_Cam Frigate Camera on (mqtt)
-      enabled: true
-    else:
-    - action: mqtt.publish
-      metadata: {}
-      data:
-        evaluate_payload: false
-        qos: 0
-        retain: false
-        topic: frigate/Pet_Cam/enabled/set
-        payload: 'OFF'
-      alias: Turn Pet_Cam Frigate Camera off (mqtt)
-      enabled: true
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - turned_on
+      sequence:
+      - action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          topic: frigate/Pet_Cam/enabled/set
+          payload: 'ON'
+        alias: Turn Pet_Cam Frigate Camera on (mqtt)
+        enabled: true
+      - action: system_log.write
+        metadata: {}
+        data:
+          level: error
+          message: 'Frigate: PetCam Plug Turned on, enabling Camera in MQTT'
+      alias: Pet Cam Plug Turned On
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: trigger
+          id:
+          - turned_off
+        - alias: If Pet Cam Plug is Off and the Frigate MQTT Pet Cam State changes
+            to On
+          condition: and
+          conditions:
+          - condition: state
+            entity_id: switch.petcam_plug
+            state:
+            - 'off'
+          - condition: trigger
+            id:
+            - mqtt_on
+      sequence:
+      - action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          topic: frigate/Pet_Cam/enabled/set
+          payload: 'OFF'
+        alias: Turn Pet_Cam Frigate Camera off (mqtt)
+        enabled: true
+      - alias: Log for Camera Off
+        if:
+        - condition: trigger
+          id:
+          - turned_off
+        then:
+        - action: system_log.write
+          metadata: {}
+          data:
+            level: error
+            message: 'Frigate: PetCam Plug Turned off, disabling Camera in MQTT'
+          alias: Log that Pet Cam Plug Turned Off
+        else:
+        - action: system_log.write
+          metadata: {}
+          data:
+            level: error
+            message: 'Frigate: Frigate Restarted, disabling Camera in MQTT'
+          alias: Log that Frigate Restarted
+      alias: Pet Cam Plug Turrned Off (or Frigate Restarted)
+    alias: Pet Cam turns On or Off (Or Frigate Restarts)
   mode: single

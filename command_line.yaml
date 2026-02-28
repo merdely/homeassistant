@@ -174,7 +174,7 @@
 - sensor:
     name: OpnSense Core ABI Version Latest
     unique_id: opnsense_core_abi_version_latest
-    command: /config/bin/opnsense_get_abi.py
+    command: /config/bin/opnsense_get_abi.sh
     scan_interval: 3600
       # curl -s "https://opnsense.org/download/" | awk -F"'" '/data-version\s*=\s*/{print $2}'
       # curl -s "https://opnsense.org/download/" | awk -F'"' '/var version\s+=/{print $2}'
@@ -231,11 +231,13 @@
     name: MoCo Recycle Day Adjustment
     command: bin/get_recycle_day_adjustment -j
     unique_id: moco_recycle_day_adjustment
-    # Request every 24 hours
-    scan_interval: 86400
-    value_template: "{{ value_json.answer }}"
+    command_timeout: 120
+    # Request every 12 hours
+    scan_interval: 43200
+    value_template: "{{ value_json.day }}"
     json_attributes:
-      - answers
+      - responses
+      - answer
 
 - sensor:
     name: Fully Kiosk Browser Version Latest

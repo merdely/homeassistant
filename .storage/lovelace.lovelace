@@ -27,7 +27,7 @@
             {
               "type": "custom:mushroom-template-badge",
               "content": "{{ states(\"sensor.holly_location\") }}",
-              "picture": "https://ha.erdely.in:38123/local/images/hollymike512.png",
+              "picture": "https://ha.erdelynet.com:38123/local/images/hollymike512.png",
               "tap_action": {
                 "action": "navigate",
                 "navigation_path": "/lovelace/hollymike"
@@ -76,7 +76,7 @@
             {
               "type": "custom:mushroom-template-badge",
               "content": "{{ states(\"sensor.holly_location\") }}",
-              "picture": "https://ha.erdely.in:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512",
+              "picture": "https://ha.erdelynet.com:38123/api/image/serve/1eff89eb8cf2ec38f5f4701ab7a00689/512x512",
               "tap_action": {
                 "action": "navigate",
                 "navigation_path": "/lovelace/holly"
@@ -126,7 +126,7 @@
               "type": "custom:mushroom-template-badge",
               "content": "{{ states(\"sensor.mike_location\") }}",
               "entity": "person.michael_erdely",
-              "picture": "https://ha.erdely.in:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512",
+              "picture": "https://ha.erdelynet.com:38123/api/image/serve/dade8a881b4f376c3264e663e28fbda9/512x512",
               "tap_action": {
                 "action": "navigate",
                 "navigation_path": "/lovelace/mike"
@@ -420,8 +420,8 @@
             },
             {
               "type": "custom:mushroom-template-badge",
-              "content": "{{ states(entity) }}",
-              "entity": "sensor.moco_recycle_days_string_adjusted",
+              "content": "{{ states(entity) }}{% if state_attr('sensor.moco_recycle_day_adjustment', 'answer')['is_affected'] %} *{%endif%}",
+              "entity": "sensor.moco_recycle_days_string_ai",
               "icon": "mdi:recycle",
               "color": "{% if states(entity) == 'Today' %}red{% elif states(entity) == \"Tomorrow\" %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
               "tap_action": {
@@ -443,7 +443,7 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "sensor.moco_recycle_days_string_adjusted",
+                          "entity": "sensor.moco_recycle_days_string_ai",
                           "state": "Today"
                         },
                         {
@@ -458,7 +458,7 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "sensor.moco_recycle_days_string_adjusted",
+                          "entity": "sensor.moco_recycle_days_string_ai",
                           "state": "Tomorrow"
                         },
                         {
@@ -2319,7 +2319,7 @@
                     },
                     {
                       "type": "custom:multiple-entity-row",
-                      "entity": "sensor.moco_recycle_day_string_adjusted",
+                      "entity": "sensor.moco_recycle_day_string_ai",
                       "name": "Schedule",
                       "icon": "mdi:calendar",
                       "tap_action": {
@@ -2362,7 +2362,7 @@
                           }
                         },
                         {
-                          "entity": "sensor.moco_recycle_days_string_adjusted",
+                          "entity": "sensor.moco_recycle_days_string_ai",
                           "name": "Recycle",
                           "styles": {
                             "color": "var(--recycle-color)",
@@ -2377,7 +2377,7 @@
                           }
                         },
                         {
-                          "entity": "sensor.moco_recycle_day_string_adjusted",
+                          "entity": "sensor.moco_recycle_day_string_ai",
                           "name": "Rec Day",
                           "styles": {
                             "color": "var(--recycle-color)",
@@ -2688,7 +2688,7 @@
                     }
                   ],
                   "card_mod": {
-                    "style": "ha-card {\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fridges-color: {% if states('binary_sensor.fridge_and_freezer_doors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --int-doors-windows-color: {% if states('binary_sensor.interior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --ext-doors-gates-color: {% if states('binary_sensor.exterior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --front-door-sensor-color: {% if states('sensor.front_door_status') != \"Locked\" and states('sensor.front_door_status') != \"Closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-color: {% if states('cover.garage_door') != \"closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-motion-sensor-color: {% if states('binary_sensor.garage_door_motion_occupancy') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-motion-color: {% if states('binary_sensor.upstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-motion-color: {% if states('binary_sensor.middle_level_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-motion-color: {% if states('binary_sensor.downstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --out-motion-color: {% if states('binary_sensor.outside_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-water-color: {% if states('binary_sensor.upstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-water-color: {% if states('binary_sensor.middle_level_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-water-color: {% if states('binary_sensor.downstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if states('sensor.moco_recycle_days_string_adjusted') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif states('sensor.moco_recycle_days_string_adjusted') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --mercury-screensaver-color: {% if states('sensor.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('sensor.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --picframe-color: {% if states('sensor.picture_frame_status') == \"Down\" %}red{% elif states('sensor.picture_frame_status') == \"unknown\" %}yellow{% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zwave-color: {% if states('sensor.ood_zwave_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                    "style": "ha-card {\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fridges-color: {% if states('binary_sensor.fridge_and_freezer_doors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --int-doors-windows-color: {% if states('binary_sensor.interior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --ext-doors-gates-color: {% if states('binary_sensor.exterior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --front-door-sensor-color: {% if states('sensor.front_door_status') != \"Locked\" and states('sensor.front_door_status') != \"Closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-color: {% if states('cover.garage_door') != \"closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-motion-sensor-color: {% if states('binary_sensor.garage_door_motion_occupancy') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-motion-color: {% if states('binary_sensor.upstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-motion-color: {% if states('binary_sensor.middle_level_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-motion-color: {% if states('binary_sensor.downstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --out-motion-color: {% if states('binary_sensor.outside_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-water-color: {% if states('binary_sensor.upstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-water-color: {% if states('binary_sensor.middle_level_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-water-color: {% if states('binary_sensor.downstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if states('sensor.moco_recycle_days_string_ai') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif states('sensor.moco_recycle_days_string_ai') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --mercury-screensaver-color: {% if states('sensor.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('sensor.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --picframe-color: {% if states('sensor.picture_frame_status') == \"Down\" %}red{% elif states('sensor.picture_frame_status') == \"unknown\" %}yellow{% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zwave-color: {% if states('sensor.ood_zwave_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -2747,6 +2747,27 @@
                     {
                       "type": "entity",
                       "entity": "binary_sensor.bedroom_slider_contact"
+                    }
+                  ]
+                },
+                {
+                  "type": "heading",
+                  "icon": "mdi:bed",
+                  "heading_style": "subtitle",
+                  "badges": [
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.holly_is_in_bed",
+                      "icon": "mdi:face-woman"
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.mike_is_in_bed",
+                      "icon": "mdi:face-man"
                     }
                   ]
                 },
@@ -2865,7 +2886,7 @@
                   "features_position": "bottom",
                   "color": "var(--state-icon-color)",
                   "grid_options": {
-                    "columns": 4,
+                    "columns": 2,
                     "rows": 1
                   },
                   "vertical": true,
@@ -2877,6 +2898,21 @@
                       "text": "Turn off the Bedroom TV in 30 minutes"
                     }
                   }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "mdi:image-frame",
+                  "features_position": "bottom",
+                  "color": "{%if states(entity) == \"on\" %}var(--state-active-color){% else %}var(--state-icon-color){%endif%}",
+                  "grid_options": {
+                    "columns": 2,
+                    "rows": 1
+                  },
+                  "vertical": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "switch.sinope_plug"
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -5432,7 +5468,7 @@
                           },
                           "sort": "name"
                         },
-                        "entity_id": "sensor.moco_recycle_day_string_adjusted"
+                        "entity_id": "sensor.moco_recycle_day_string_ai"
                       }
                     ],
                     "exclude": []
