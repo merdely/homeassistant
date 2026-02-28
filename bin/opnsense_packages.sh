@@ -1,14 +1,14 @@
 #!/bin/sh
 
 if [ -z "$2" ]; then
-  eval $($(dirname "$(realpath "$0")")/opnsense_snmp_versions.py | jq  -r | awk -F'"' '$2=="core-abi"||$2=="sys-abi"{printf "%s=%s\n",gensub(/-/,"_","g",$2),$4}')
+  eval $($(dirname "$(realpath "$0")")/opnsense_snmp_versions.py | jq  -r '"sys_abi=\(."sys-abi") core_abi=\(."core-abi")"')
 else
   sys_abi=$1
   core_abi=$2
 fi
 
-#echo sys_abi=$sys_abi >> /dev/stderr
-#echo core_abi=$core_abi >> /dev/stderr
+# echo sys_abi=$sys_abi >> /dev/stderr
+# echo core_abi=$core_abi >> /dev/stderr
 
 tmpfile=$(mktemp)
 # Get mimugmail repo info
