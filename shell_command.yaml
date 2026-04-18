@@ -12,6 +12,7 @@ ntfy_send: >
     {{ "-c '" + click | default("") | string + "'" if click else "" }}
     {{ "-i '" + icon | default("") | string + "'" if icon else "" }}
 play_plex_on_roku: /config/bin/play_plex_on_roku "{{ roku }}" "{{ tvshow }}"
+reload_picframe: /config/bin/picframe_reload.sh
 restart_frigate: /config/bin/reboot_frigate
 restart_octoprint: /usr/bin/ssh -a -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/homeassistant ha@carpo.erdely.in restart_octoprint
 rotate_ha_logs: /config/bin/rotate_ha_logs

@@ -238,6 +238,7 @@ scene_good_night:
       - downstairs
       - outside
     data: {}
+    continue_on_error: true
   - action: homeassistant.turn_off
     metadata: {}
     target:
@@ -247,6 +248,7 @@ scene_good_night:
       - switch.living_room_tv
       - light.globe
     data: {}
+    continue_on_error: true
   - alias: Turn off Christmas Tree  Plug if Christmas Tree is up
     if:
     - condition: state
@@ -264,6 +266,16 @@ scene_good_night:
     entity_id: cover.garage_door
     action: cover.close_cover
     continue_on_error: true
+  - data: {}
+    target:
+      entity_id: button.front_door_wake
+    action: button.press
+    continue_on_error: true
+  - data: {}
+    target:
+      entity_id: lock.front_door
+    action: lock.lock
+    continue_on_error: true
   - condition: and
     conditions:
     - condition: state
@@ -275,16 +287,6 @@ scene_good_night:
     - condition: state
       entity_id: switch.bedroom_tv
       state: 'off'
-  - data: {}
-    target:
-      entity_id: button.front_door_wake
-    action: button.press
-    continue_on_error: true
-  - data: {}
-    target:
-      entity_id: lock.front_door
-    action: lock.lock
-    continue_on_error: true
   mode: single
   icon: mdi:weather-night
   description: ''
@@ -353,6 +355,7 @@ scene_night_night:
   - action: script.scene_good_night
     metadata: {}
     data: {}
+    continue_on_error: true
   - target:
       entity_id:
       - switch.god_damn_humidifier
@@ -1114,4 +1117,81 @@ bump_recycle_day:
         entity_id: input_number.recycle_bump
       data: {}
   alias: Bump Recycle Day
+  description: ''
+refresh_fully_kiosk_browser:
+  sequence:
+  - variables:
+      old_current_url: '{{ states(device_entities(device_id) | select("match", ".*_current_page$")
+        | first) }}'
+      current_url: '{{ state_attr("sensor.fully_kiosk_browser" + iif(device_name(device_id)
+        is search("fkbmbr", ignorecase=True), "_mbr", ""), "currentPageUrl") }}'
+      tag: '{{ iif(device_name(device_id) is search("fkbmbr", ignorecase=True), "_mbr",
+        "") }}'
+  - action: fully_kiosk.load_url
+    metadata: {}
+    data:
+      device_id: '{{ device_id }}'
+      url: '{{ current_url }}'
+  fields:
+    device_id:
+      selector:
+        device:
+          multiple: false
+          filter:
+          - integration: fully_kiosk
+          entity:
+          - domain: sensor
+  alias: Refresh Fully Kiosk Browser
+  description: ''
+power_cycle_entity:
+  sequence:
+  - action: homeassistant.turn_off
+    metadata: {}
+    target:
+      entity_id: '{{ entity_to_turn_off_and_back_on_again }}'
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - action: homeassistant.turn_on
+    metadata: {}
+    target:
+      entity_id: '{{ entity_to_turn_off_and_back_on_again }}'
+    data: {}
+  alias: Power Cycle Entity
+  mode: single
+  icon: mdi:sync
+  fields:
+    entity_to_turn_off_and_back_on_again:
+      selector:
+        entity: {}
+      name: Entity to Turn Off and Back On Again
+      required: true
+  description: ''
+update_unavailable_entities:
+  sequence:
+  - condition: numeric_state
+    entity_id: sensor.unavailable_entities
+    above: 0
+  - alias: 'Repeat an action for every item: Unavailable Entities List'
+    repeat:
+      for_each: '{{ state_attr("sensor.unavailable_entities_list", "entity_list").split(",")
+        | map(''trim'') | list }}
+
+        '
+      sequence:
+      - action: system_log.write
+        metadata: {}
+        data:
+          level: error
+          message: Updating {{ repeat.item }}
+        enabled: false
+      - action: homeassistant.update_entity
+        data:
+          entity_id: '{{ repeat.item }}
+
+            '
+  alias: Update Unavailable Entities
   description: ''

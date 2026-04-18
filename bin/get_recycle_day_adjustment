@@ -4,6 +4,7 @@ for f in curl jq; do
   ! command -v $f &> /dev/null && echo "Error: The '$f' command is required" > /dev/stderr && exit 1
 done
 
+progname=${0##*/}
 supported_engines=(chatgpt claude gemini github localai mistral ollama openrouter)
 engine_settings=(enabled url api_key model prompt match max_tokens extra thinking_level agent_id)
 declare -A ${supported_engines[@]}
@@ -15,6 +16,7 @@ extra_verbose="${extra_verbose:-false}"
 output_json="${output_json:-false}"
 today_date="$(date "+%Y-%m-%d")"
 run_all="${run_all:-false}"
+date_fmt="%Y-%m-%d %H:%M:%S.000"
 
 engine_order="${engine_order:-localai ollama mistral openrouter gemini claude chatgpt}"
 
@@ -125,7 +127,7 @@ for engine in $engine_order; do
 done
 
 usage() {
-  echo "usage: $(basename $0) [-h] [-D] [-d] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-A] [-m MIN_AGREE]"
+  echo "usage: $progname [-h] [-D] [-d] [-v] [-j] [-t TESTDATE] [-a ANSWER] [-A] [-m MIN_AGREE]"
   echo "                      [ENGINELIST] [MODELLIST]"
   echo "  -d           : Print debug information (second -d is extra debug information)"
   echo "  -d           : Print debug information and exit"
@@ -144,9 +146,9 @@ usage() {
   echo "  If MODELLIST is empty and ENGINELIST is set, models will be used from $secrets_file"
   echo "  ENGINES must precede MODELS on command line"
   echo "  Examples:"
-  echo "    $(basename $0) -j ollama gemma3:4b localai gemma-3-4b-it"
-  echo "    $(basename $0) -j ollama localai gemma3:4b gemma-3-4b-it"
-  echo "    $(basename $0) -j gemma3:4b gemma-3-4b-it ollama localai"
+  echo "    $progname -j ollama gemma3:4b localai gemma-3-4b-it"
+  echo "    $progname -j ollama localai gemma3:4b gemma-3-4b-it"
+  echo "    $progname -j gemma3:4b gemma-3-4b-it ollama localai"
   exit $1
 }
 
@@ -338,14 +340,14 @@ fi
 # Get normal recycle day from Home Assistant
 normal_recycle_day=$(curl -skSL -H "Authorization: Bearer $hass_api_key" $home_assistant_base_url/api/states/input_select.recycle_day | jq -r .state)
 [[ ! $normal_recycle_day ]] && normal_recycle_day=$recycle_default_day
-$verbose && echo "Normal recycle day: $normal_recycle_day" > /dev/stderr
+$verbose && date "+$date_fmt INFO ($progname) Normal recycle day: $normal_recycle_day" > /dev/stderr
 
 # Set reference day to the normal recycle day for this week (or of the passed week)
 epoch=$(date ${today_date:+-d $today_date} +%s)
 dow=$(date ${today_date:+-d $today_date} +%w)
 reference_date=$(date -d "@$(( epoch + (5 - dow) * 86400 ))" +"%A, %B %-d")
 reference_ymd=$(date -d "@$(( epoch + (5 - dow) * 86400 ))" +"%Y-%m-%d")
-$verbose && echo "Reference date: $reference_date ($reference_ymd)" > /dev/stderr
+$verbose && date "+$date_fmt INFO ($progname) Reference date: $reference_date ($reference_ymd)" > /dev/stderr
 
 # Determine the URL for the county's alert text on the recycle URL
 xmllint=false
@@ -358,7 +360,7 @@ else
   county_alert_url=$(curl -sL $recycle_url_main | \
     sed -n 's/.*$("#alert").load("\([^"]*\)".*/\1/p')
 fi
-$verbose && echo "County Alert URL: $county_alert_url" > /dev/stderr
+$verbose && date "+$date_fmt INFO ($progname) County Alert URL: $county_alert_url" > /dev/stderr
 
 # Determine the content of the county's alert text
 if $xmllint && [[ $county_alert_url =~ ^https?://.*montgomerycountymd.gov ]]; then
@@ -481,7 +483,7 @@ check_agreement() {
      agreements=$day_max
      [ $aff_max -lt $agreements ] && agreements=$aff_max
      [ $num_max -lt $agreements ] && agreements=$num_max
-    $verbose && echo "Agreed upon answers (got $agreements of $min_agree): $day_answer, $aff_answer, $num_answer" > /dev/stderr
+    $verbose && date "+$date_fmt INFO ($progname) Agreed upon answers (got $agreements of $min_agree): $day_answer, $aff_answer, $num_answer" > /dev/stderr
     local json="{\"day\":\"$day_answer\",\"is_affected\":$aff_answer,\"num_days\":$num_answer,\"agreements\":$agreements,\"min_agree\":$min_agree,\"run_count\":$run_count,\"error\":false}"
     echo "$json" | jq -r > /dev/null
     ret=$?
@@ -528,10 +530,10 @@ run_engine() {
   oifs=$IFS
   IFS='|'
   models="${ref[model]}"
-  $verbose && echo "$engine model order: ${models//|/ }" > /dev/stderr
+  $verbose && date "+$date_fmt INFO ($progname) $engine model order: ${models//|/ }" > /dev/stderr
   for model in $models; do
     IFS=$oifs
-    $verbose && echo "Using $engine LLM${model:+ with $model}${ref[agent_id]:+ with an engine agent id}" > /dev/stderr
+    $verbose && date "+$date_fmt INFO ($progname) Using $engine LLM${model:+ with $model}${ref[agent_id]:+ with an engine agent id}" > /dev/stderr
     case "$engine" in
       chatgpt)
         message_content='{
@@ -659,7 +661,7 @@ run_engine() {
     fi
 
     if [[ $day ]]; then
-      $verbose && echo "$engine ($model) answer: '$day/$is_affected/$delay_days'" > /dev/stderr
+      $verbose && date "+$date_fmt INFO ($progname) $engine ($model) answer: '$day/$is_affected/$delay_days'" > /dev/stderr
       responses_json=$(add_to_json_array "$responses_json" '  {
         "engine": "'$engine'",
         "model": "'$model'",
@@ -679,8 +681,8 @@ run_engine() {
 }
 
 # Execute functions for LLMS
-$verbose && echo "Running engines in this order: $engine_order" > /dev/stderr
-$verbose && echo "Checking $model_count (need $min_agree to agree)" > /dev/stderr
+$verbose && date "+$date_fmt INFO ($progname) Running engines in this order: $engine_order" > /dev/stderr
+$verbose && date "+$date_fmt INFO ($progname) Checking $model_count (need $min_agree to agree)" > /dev/stderr
 
 for engine in $engine_order; do
   run_engine $engine
@@ -718,9 +720,9 @@ else
   echo '  },'
   echo '  "responses": []'
   echo '}'
-  $verbose && echo "Error: Could not determine answer" > /dev/stderr
-  $verbose && echo "       Answer JSON: $answer_json" > /dev/stderr
-  $verbose && echo "       Responses JSON: $responses_json" > /dev/stderr
+  $verbose && date "+$date_fmt INFO ($progname) Error: Could not determine answer" > /dev/stderr
+  $verbose && date "+$date_fmt INFO ($progname)        Answer JSON: $answer_json" > /dev/stderr
+  $verbose && date "+$date_fmt INFO ($progname)        Responses JSON: $responses_json" > /dev/stderr
   exit 1
 fi
 

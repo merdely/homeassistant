@@ -420,10 +420,10 @@
             },
             {
               "type": "custom:mushroom-template-badge",
-              "content": "{{ states(entity) }}{% if state_attr('sensor.moco_recycle_day_adjustment', 'answer')['is_affected'] %} *{%endif%}",
-              "entity": "sensor.moco_recycle_days_string_ai",
+              "content": "{{ states(entity) }}{{ iif(states(\"sensor.recycle_day_is_affected\")|bool(False),\" *\",\"\") }}",
+              "entity": "sensor.recycle_days_string_from_now",
               "icon": "mdi:recycle",
-              "color": "{% if states(entity) == 'Today' %}red{% elif states(entity) == \"Tomorrow\" %}var(--state-active-color){% else %}var(--primary-color){% endif %}\n",
+              "color": "{{ iif(states(entity) == 'Today', \"red\", iif(states(entity) ==\n   \"Tomorrow\", \"var(--state-active-color)\", \"var(--primary-color)\")) }}\n",
               "tap_action": {
                 "action": "call-service",
                 "service": "input_boolean.toggle",
@@ -443,7 +443,7 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "sensor.moco_recycle_days_string_ai",
+                          "entity": "sensor.recycle_days_string_from_now",
                           "state": "Today"
                         },
                         {
@@ -458,7 +458,7 @@
                       "conditions": [
                         {
                           "condition": "state",
-                          "entity": "sensor.moco_recycle_days_string_ai",
+                          "entity": "sensor.recycle_days_string_from_now",
                           "state": "Tomorrow"
                         },
                         {
@@ -1861,6 +1861,36 @@
                     "columns": 12,
                     "rows": 2
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -2319,7 +2349,7 @@
                     },
                     {
                       "type": "custom:multiple-entity-row",
-                      "entity": "sensor.moco_recycle_day_string_ai",
+                      "entity": "sensor.recycle_day_string",
                       "name": "Schedule",
                       "icon": "mdi:calendar",
                       "tap_action": {
@@ -2362,7 +2392,7 @@
                           }
                         },
                         {
-                          "entity": "sensor.moco_recycle_days_string_ai",
+                          "entity": "sensor.recycle_days_string_from_now",
                           "name": "Recycle",
                           "styles": {
                             "color": "var(--recycle-color)",
@@ -2377,7 +2407,7 @@
                           }
                         },
                         {
-                          "entity": "sensor.moco_recycle_day_string_ai",
+                          "entity": "sensor.recycle_day_string",
                           "name": "Rec Day",
                           "styles": {
                             "color": "var(--recycle-color)",
@@ -2688,7 +2718,7 @@
                     }
                   ],
                   "card_mod": {
-                    "style": "ha-card {\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fridges-color: {% if states('binary_sensor.fridge_and_freezer_doors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --int-doors-windows-color: {% if states('binary_sensor.interior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --ext-doors-gates-color: {% if states('binary_sensor.exterior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --front-door-sensor-color: {% if states('sensor.front_door_status') != \"Locked\" and states('sensor.front_door_status') != \"Closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-color: {% if states('cover.garage_door') != \"closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-motion-sensor-color: {% if states('binary_sensor.garage_door_motion_occupancy') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-motion-color: {% if states('binary_sensor.upstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-motion-color: {% if states('binary_sensor.middle_level_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-motion-color: {% if states('binary_sensor.downstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --out-motion-color: {% if states('binary_sensor.outside_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-water-color: {% if states('binary_sensor.upstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-water-color: {% if states('binary_sensor.middle_level_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-water-color: {% if states('binary_sensor.downstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if states('sensor.moco_recycle_days_string_ai') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif states('sensor.moco_recycle_days_string_ai') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --mercury-screensaver-color: {% if states('sensor.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('sensor.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --picframe-color: {% if states('sensor.picture_frame_status') == \"Down\" %}red{% elif states('sensor.picture_frame_status') == \"unknown\" %}yellow{% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zwave-color: {% if states('sensor.ood_zwave_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
+                    "style": "ha-card {\n  --security-color: {% if states('binary_sensor.all_security_devices') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --alarm-color: {% if states('alarm_control_panel.home_alarm') != 'disarmed' %}red{% else %}var(--primary-text-color){% endif %};\n  --holly-bed-color: {% if states('sensor.holly_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mike-bed-color: {% if states('sensor.mike_is_in_bed') == 'In Bed' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fridges-color: {% if states('binary_sensor.fridge_and_freezer_doors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --oven-color: {% if states('binary_sensor.oven_is_on') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --int-doors-windows-color: {% if states('binary_sensor.interior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --ext-doors-gates-color: {% if states('binary_sensor.exterior_security_devices') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --front-door-sensor-color: {% if states('sensor.front_door_status') != \"Locked\" and states('sensor.front_door_status') != \"Closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mailbox-sensor-days-color: {% if states('sensor.mailbox_sensor_days_since_seen') | float(0) > 1 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-sensor-color: {% if states('cover.garage_door') != \"closed\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-door-motion-sensor-color: {% if states('binary_sensor.garage_door_motion_occupancy') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-motion-color: {% if states('binary_sensor.upstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-motion-color: {% if states('binary_sensor.middle_level_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-motion-color: {% if states('binary_sensor.downstairs_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --out-motion-color: {% if states('binary_sensor.outside_motion_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --up-water-color: {% if states('binary_sensor.upstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-water-color: {% if states('binary_sensor.middle_level_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --down-water-color: {% if states('binary_sensor.downstairs_water_leak_sensors') == \"on\" %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --upstairs-lights-color: {% if states('sensor.upstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --middle-level-lights-color: {% if states('sensor.middle_level_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --downstairs-lights-color: {% if states('sensor.downstairs_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --garage-lights-color: {% if states('sensor.garage_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --outside-lights-color: {% if states('sensor.outside_lights_on') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if states('sensor.recycle_days_from_now') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif states('sensor.recycle_days_from_now') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --photoblack-color: {% if state_attr('sensor.printer_ink', 'photoblack') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'photoblack') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --cyan-color: {% if state_attr('sensor.printer_ink', 'cyan') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'cyan') | int(0) < 30 %}orange{%else%}cyan{% endif %};\n  --magenta-color: {% if state_attr('sensor.printer_ink', 'magenta') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'magenta') | int(0) < 30 %}orange{%else%}magenta{% endif %};\n  --yellow-color: {% if state_attr('sensor.printer_ink', 'yellow') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'yellow') | int(0) < 30 %}orange{%else%}yellow{% endif %};\n  --black-color: {% if state_attr('sensor.printer_ink', 'black') | int(0) < 20 %}red{% elif state_attr('sensor.printer_ink', 'black') | int(0) < 30 %}orange{%else%}grey{% endif %};\n  --mercury-screensaver-color: {% if states('sensor.mercury_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --venus-screensaver-color: {% if states('sensor.venus_screensaver') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --picframe-color: {% if states('sensor.picture_frame_status') == \"Down\" %}red{% elif states('sensor.picture_frame_status') == \"unknown\" %}yellow{% endif %};\n  --fkb-color: {% if states('sensor.fully_kiosk_browser') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --fkb-mbr-color: {% if states('sensor.fully_kiosk_browser_mbr') | int(100) < 20 %}red{% elif states('sensor.fully_kiosk_browser_mbr') | int(100) < 30 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --jellyfin-color: {% if states('sensor.jellyfin_sessions') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --updates-color: {% if states('sensor.software_updates_available_count') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --unavailable-color: {% if states('sensor.unavailable_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --wyze-color: {% if states('sensor.ood_wyze_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zigbee-color: {% if states('sensor.ood_zigbee_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --zwave-color: {% if states('sensor.ood_zwave_entities') | int(0) > 0 %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n}\n"
                   }
                 },
                 {
@@ -2738,15 +2768,30 @@
                   "badges": [
                     {
                       "type": "entity",
-                      "entity": "sensor.bedroom_multisensor_temperature"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.bedroom_multisensor_temperature",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
-                      "entity": "sensor.bedroom_multisensor_humidity"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.bedroom_multisensor_humidity",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
-                      "entity": "binary_sensor.bedroom_slider_contact"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "binary_sensor.bedroom_slider_contact",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     }
                   ]
                 },
@@ -2760,14 +2805,20 @@
                       "show_state": true,
                       "show_icon": true,
                       "entity": "sensor.holly_is_in_bed",
-                      "icon": "mdi:face-woman"
+                      "icon": "mdi:face-woman",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
                       "show_state": true,
                       "show_icon": true,
                       "entity": "sensor.mike_is_in_bed",
-                      "icon": "mdi:face-man"
+                      "icon": "mdi:face-man",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     }
                   ]
                 },
@@ -2979,11 +3030,21 @@
                   "badges": [
                     {
                       "type": "entity",
-                      "entity": "sensor.master_bath_multisensor_temperature"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.master_bath_multisensor_temperature",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
-                      "entity": "sensor.master_bath_multisensor_humidity"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.master_bath_multisensor_humidity",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     }
                   ]
                 },
@@ -3012,6 +3073,36 @@
                   "hold_action": {
                     "action": "more-info"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -3025,25 +3116,41 @@
                   "badges": [
                     {
                       "type": "entity",
-                      "entity": "sensor.office_multisensor_temperature"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.office_multisensor_temperature",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
-                      "entity": "sensor.office_multisensor_humidity"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.office_multisensor_humidity",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
                       "show_state": true,
                       "show_icon": true,
                       "entity": "binary_sensor.office_presence_sensor_presence",
-                      "icon": "mdi:motion-sensor"
+                      "icon": "mdi:motion-sensor",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
                       "show_state": true,
                       "show_icon": true,
                       "entity": "binary_sensor.wyzesense_778e716f",
-                      "icon": "mdi:door"
+                      "icon": "mdi:door",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     }
                   ]
                 },
@@ -3087,12 +3194,25 @@
                   }
                 },
                 {
-                  "type": "custom:mushroom-light-card",
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(entity, 'icon') }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) == \"on\" %}var(--state-active-color){% endif %}",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
                   "entity": "light.mike_desk_lamp",
-                  "secondary_info": "none",
                   "hold_action": {
                     "action": "more-info"
-                  }
+                  },
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "primary": "{{ state_attr(entity, \"friendly_name\") }}"
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -3122,7 +3242,6 @@
                     "columns": 4,
                     "rows": 1
                   },
-                  "vertical": true,
                   "tap_action": {
                     "action": "toggle"
                   },
@@ -3132,7 +3251,50 @@
                   },
                   "icon_hold_action": {
                     "action": "more-info"
-                  }
+                  },
+                  "primary": "{{ state_attr(entity, \"friendly_name\") | replace(\"Office \", \"\") | replace(\" Plug\", \"\") }}"
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(entity, 'icon') }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) != \"on\" %}var(--state-active-color){% endif %}",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "switch.mercury_unlocked",
+                  "hold_action": {
+                    "action": "more-info"
+                  },
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "primary": "{{ state_attr(entity, \"friendly_name\") | replace(\"Unlocked\", \"Screensaver\") }}"
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "icon": "{{ state_attr(entity, 'icon') }}",
+                  "features_position": "bottom",
+                  "color": "{% if states(entity) != \"on\" %}var(--state-active-color){% endif %}",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "entity": "switch.venus_unlocked",
+                  "hold_action": {
+                    "action": "more-info"
+                  },
+                  "icon_hold_action": {
+                    "action": "more-info"
+                  },
+                  "primary": "{{ state_attr(entity, \"friendly_name\") | replace(\"Unlocked\", \"Screensaver\") }}"
                 },
                 {
                   "type": "heading",
@@ -3142,11 +3304,21 @@
                   "badges": [
                     {
                       "type": "entity",
-                      "entity": "sensor.guest_room_multisensor_temperature"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.guest_room_multisensor_temperature",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
-                      "entity": "sensor.guest_room_multisensor_humidity"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.guest_room_multisensor_humidity",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     }
                   ]
                 },
@@ -3185,11 +3357,21 @@
                   "badges": [
                     {
                       "type": "entity",
-                      "entity": "sensor.hallway_temperature"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.hallway_temperature",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
-                      "entity": "sensor.hallway_humidity"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.hallway_humidity",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     }
                   ]
                 },
@@ -3223,11 +3405,21 @@
                   "badges": [
                     {
                       "type": "entity",
-                      "entity": "sensor.hall_bath_multisensor_temperature"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.hall_bath_multisensor_temperature",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "entity",
-                      "entity": "sensor.hall_bath_multisensor_humidity"
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.hall_bath_multisensor_humidity",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     }
                   ]
                 },
@@ -3237,9 +3429,9 @@
                   "secondary_info": "none",
                   "grid_options": {
                     "columns": 6,
-                    "rows": 2
+                    "rows": 1
                   },
-                  "layout": "vertical",
+                  "layout": "default",
                   "hold_action": {
                     "action": "more-info"
                   }
@@ -3250,9 +3442,9 @@
                   "secondary_info": "none",
                   "grid_options": {
                     "columns": 6,
-                    "rows": 2
+                    "rows": 1
                   },
-                  "layout": "vertical",
+                  "layout": "default",
                   "hold_action": {
                     "action": "more-info"
                   }
@@ -3435,6 +3627,36 @@
                   "hold_action": {
                     "action": "more-info"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -3905,6 +4127,36 @@
                   "hold_action": {
                     "action": "more-info"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -4224,6 +4476,36 @@
                   "icon_hold_action": {
                     "action": "more-info"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -4449,6 +4731,36 @@
                   "name": {
                     "type": "area"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -4810,8 +5122,24 @@
                 {
                   "type": "heading",
                   "icon": "",
-                  "heading": "Plugs",
-                  "heading_style": "subtitle"
+                  "heading_style": "subtitle",
+                  "badges": [
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "sensor.picture_frame_status",
+                      "icon": "mdi:image-frame"
+                    },
+                    {
+                      "type": "entity",
+                      "show_state": true,
+                      "show_icon": true,
+                      "entity": "switch.sinope_plug",
+                      "icon": "mdi:power-plug"
+                    }
+                  ],
+                  "heading": "Plugs"
                 },
                 {
                   "show_name": true,
@@ -4829,23 +5157,19 @@
                   "show_icon": true,
                   "type": "button",
                   "entity": "switch.tarvos_plug",
-                  "name": "Tarvos",
-                  "icon": "mdi:power-plug",
+                  "name": "Front Door Lock",
+                  "icon": "mdi:restart",
                   "grid_options": {
                     "columns": 3,
                     "rows": 2
-                  }
-                },
-                {
-                  "show_name": true,
-                  "show_icon": true,
-                  "type": "button",
-                  "entity": "switch.sinope_plug",
-                  "name": "PicFrame",
-                  "icon": "mdi:power-plug",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 2
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.power_cycle_entity",
+                    "target": {},
+                    "data": {
+                      "entity_to_turn_off_and_back_on_again": "switch.tarvos_plug"
+                    }
                   }
                 },
                 {
@@ -4853,126 +5177,57 @@
                   "show_icon": true,
                   "type": "button",
                   "entity": "switch.garage_door_cam_plug",
-                  "name": "GrgDrCam",
-                  "icon": "mdi:power-plug",
+                  "name": "Garage DoorCam",
+                  "icon": "mdi:restart",
                   "grid_options": {
-                    "columns": 3,
+                    "columns": 2,
                     "rows": 2
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.power_cycle_entity",
+                    "target": {},
+                    "data": {
+                      "entity_to_turn_off_and_back_on_again": "switch.garage_door_cam_plug"
+                    }
                   }
                 },
                 {
-                  "type": "heading",
-                  "icon": "",
-                  "heading": "Bedroom Picture Frame",
-                  "heading_style": "subtitle",
-                  "badges": [
-                    {
-                      "type": "entity",
-                      "show_state": true,
-                      "show_icon": true,
-                      "entity": "sensor.picture_frame_status",
-                      "icon": "mdi:image-frame"
-                    },
-                    {
-                      "type": "entity",
-                      "show_state": true,
-                      "show_icon": true,
-                      "entity": "switch.sinope_plug",
-                      "icon": "mdi:power-plug"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:mushroom-template-card",
-                  "icon": "mdi:image-frame",
-                  "features_position": "bottom",
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
+                  "icon": "mdi:restart",
                   "grid_options": {
-                    "columns": 3,
-                    "rows": 1
+                    "columns": 2,
+                    "rows": 2
                   },
+                  "entity": "switch.sinope_plug",
+                  "name": "Picture Frame",
                   "tap_action": {
                     "action": "perform-action",
-                    "perform_action": "shell_command.ssh_command",
-                    "target": {},
-                    "service_data": {
-                      "server": "picframe@sinope.erdely.in",
-                      "command": "load_picframe"
-                    }
-                  },
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "vertical": true,
-                  "color": "var(--state-icon-color)"
-                },
-                {
-                  "type": "custom:mushroom-template-card",
-                  "icon": "mdi:clock",
-                  "features_position": "bottom",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 1
-                  },
-                  "tap_action": {
-                    "action": "perform-action",
-                    "perform_action": "shell_command.ssh_command",
+                    "perform_action": "script.power_cycle_entity",
                     "target": {},
                     "data": {
-                      "server": "picframe@sinope.erdely.in",
-                      "command": "load_clock"
+                      "entity_to_turn_off_and_back_on_again": "switch.sinope_plug"
                     }
-                  },
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "vertical": true,
-                  "color": "var(--state-icon-color)"
+                  }
                 },
                 {
-                  "type": "custom:mushroom-template-card",
-                  "icon": "mdi:square-outline",
-                  "features_position": "bottom",
-                  "grid_options": {
-                    "columns": 3,
-                    "rows": 1
-                  },
-                  "tap_action": {
-                    "action": "perform-action",
-                    "perform_action": "shell_command.ssh_command",
-                    "target": {},
-                    "data": {
-                      "server": "picframe@sinope.erdely.in",
-                      "command": "blank"
-                    }
-                  },
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "vertical": true,
-                  "color": "var(--state-icon-color)"
-                },
-                {
-                  "type": "custom:mushroom-template-card",
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
                   "icon": "mdi:reload",
-                  "features_position": "bottom",
                   "grid_options": {
-                    "columns": 3,
-                    "rows": 1
+                    "columns": 2,
+                    "rows": 2
                   },
+                  "entity": "sensor.picture_frame_status",
+                  "name": "Refresh PicFrame",
                   "tap_action": {
                     "action": "perform-action",
-                    "perform_action": "shell_command.ssh_command",
-                    "target": {},
-                    "data": {
-                      "server": "picframe@sinope.erdely.in",
-                      "command": "reload"
-                    }
-                  },
-                  "hold_action": {
-                    "action": "none"
-                  },
-                  "vertical": true,
-                  "color": "var(--state-icon-color)"
+                    "perform_action": "shell_command.reload_picframe",
+                    "target": {}
+                  }
                 },
                 {
                   "type": "custom:mushroom-template-card",
@@ -5231,6 +5486,36 @@
                     "columns": 3,
                     "rows": "auto"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -5298,6 +5583,11 @@
                   "heading": "Z-Wave Devices",
                   "heading_style": "subtitle",
                   "badges": [
+                    {
+                      "type": "button",
+                      "icon": "mdi:gesture-tap-button",
+                      "text": "Ping"
+                    },
                     {
                       "type": "entity",
                       "show_state": true,
@@ -5392,12 +5682,9 @@
                             "style": "* {\n  margin-top: -10px !important;\n  margin-bottom: -10px  !important;\n  {% if states(\"this.entity_id\") != \"0\" %}\n  color: var(--state-active-color);\n  {% endif %}\n}\n"
                           },
                           "tap_action": {
-                            "action": "call-service",
-                            "service": "homeassistant.update_entity",
-                            "service_data": {},
-                            "target": {
-                              "entity_id": "sensor.ood_zwave_entities_list"
-                            }
+                            "action": "perform-action",
+                            "perform_action": "script.update_unavailable_entities",
+                            "target": {}
                           }
                         },
                         "entity_id": "sensor.unavailable_entities"
@@ -5463,12 +5750,12 @@
                             "service": "homeassistant.update_entity",
                             "service_data": {},
                             "target": {
-                              "entity_id": "sensor.moco_recycle_day"
+                              "entity_id": "sensor.recycle_day_ai"
                             }
                           },
                           "sort": "name"
                         },
-                        "entity_id": "sensor.moco_recycle_day_string_ai"
+                        "entity_id": "sensor.recycle_day_string"
                       }
                     ],
                     "exclude": []
@@ -5485,7 +5772,19 @@
                   "tap_action": {
                     "action": "navigate",
                     "navigation_path": "/lovelace/unavailable-entities"
-                  }
+                  },
+                  "badges": [
+                    {
+                      "type": "button",
+                      "icon": "mdi:gesture-tap-button",
+                      "text": "Refresh",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.update_unavailable_entities",
+                        "target": {}
+                      }
+                    }
+                  ]
                 },
                 {
                   "type": "entities",
@@ -5745,6 +6044,36 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -5817,6 +6146,36 @@
                   "sort": {
                     "method": "name"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -5961,6 +6320,36 @@
                   "card_mod": {
                     "style": "#states > div {\n  margin-top: 0px;\n  margin-bottom: 0px;\n}\n"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -6227,6 +6616,36 @@
                       }
                     }
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -6400,6 +6819,36 @@
                       }
                     }
                   ]
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -6571,6 +7020,36 @@
                       }
                     }
                   ]
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -6645,6 +7124,36 @@
                     }
                   ],
                   "show_header_toggle": false
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -6828,6 +7337,36 @@
                   "type": "custom:html-template-card",
                   "ignore_line_breaks": true,
                   "content": "<style>\n  .error {\n    color: red;\n  }\n  .warn {\n    color: var(--state-active-color);\n  }\n</style>  Count: {{ state_attr('sensor.wyze_entities', 'count') }} ; Sensor Updated: {{ states('sensor.wyze_entities') }}\n<ol>  {% for entity in state_attr('sensor.wyze_entities', 'entity_list') | sort(attribute=iif(states('input_select.wyze_entities_sort')=='Friendly Name','friendly_name','timediff'),reverse=iif(states('input_select.wyze_entities_sort')=='Friendly Name',false,true)) -%}\n<li {% if entity['timediff'] >= states(\"input_number.ood_wyze_seconds\")|int(0) %} class=\"error\"{% elif entity['timediff'] >= (states(\"input_number.ood_wyze_seconds\")|int(0) * states(\"input_number.ood_warning_threshold\")|float(0.8)) %} class=\"warn\"{% endif %}>{{ entity['friendly_name'] }} - {{ entity['timediff'] }}</li> {% endfor -%} </ol>"
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -6964,6 +7503,36 @@
                   "sort": {
                     "method": "entity_id"
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -7076,6 +7645,36 @@
                     "reverse": false,
                     "numeric": true
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -7299,6 +7898,36 @@
                       "entity": "switch.jupiter_tv3_disk_plug"
                     }
                   ]
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -7367,6 +7996,12 @@
                     },
                     {
                       "entity": "switch.metis_kvm_plug"
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "entity": "switch.saturn_plug"
                     },
                     {
                       "type": "divider"
@@ -7448,6 +8083,36 @@
                       }
                     }
                   }
+                },
+                {
+                  "type": "custom:fab-card",
+                  "button_color": "#808080",
+                  "icon_color": "#FFFFFF",
+                  "active_color": "#2257FF",
+                  "icon": "mdi:refresh",
+                  "action": {
+                    "action": "call-service",
+                    "service": "script.refresh_fully_kiosk_browser",
+                    "service_data": {
+                      "device_id": "606b86eb304850b74e8d4077310a4ab1"
+                    }
+                  },
+                  "entity": "sensor.fkb_control_panel_current_page",
+                  "positive_states": [
+                    "on",
+                    "home"
+                  ],
+                  "position": "top-right",
+                  "offset_x": "100px",
+                  "offset_y": "-10px",
+                  "visibility": [
+                    {
+                      "condition": "user",
+                      "users": [
+                        "4fbaf0df07e74394adbf2e1750c69dd2"
+                      ]
+                    }
+                  ]
                 }
               ],
               "column_span": 2

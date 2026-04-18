@@ -1,0 +1,18 @@
+- resource: https://erdely.in/recycle/recycle_day.json
+  scan_interval: 3600
+  sensor:
+    - name: "MoCo Recycle Day"
+      unique_id: moco_recycle_day
+      value_template: "{{ value_json.day }}"
+      json_attributes:
+        - answer
+        - responses
+
+- resource: https://erdely.in/recycle/stats.json
+  scan_interval: 60
+  sensor:
+    - name: "MoCo Recycle Day Stats"
+      unique_id: moco_recycle_day_stats
+      value_template: "{{ value_json.program_status }}"
+      json_attributes:
+        - stats

@@ -926,8 +926,6 @@
     stored_traces: 20
   mode: single
 - id: '1608701107067'
-  trace:
-    stored_traces: 20
   alias: Tag - Disarm Security System and Unlock Front Door
   description: If the tag scanned is used by Mike or Holly and is at one of the designated
     places
@@ -1001,6 +999,8 @@
         level: warning
       action: system_log.write
       alias: Log Door Unlocked (August)
+  trace:
+    stored_traces: 20
   mode: single
   variables:
     do_unlock:
@@ -1017,10 +1017,10 @@
       494e4399-01f7-4ad4-91e4-940b1377cf60: Garage
       3eb9caa6-d3ed-4532-a368-8b9fd2a659a5: Front Door
       2aa97775-6bd0-4786-a767-058b393b35d5: Mailbox
-      0cb8568f-8feb-4f09-9422-e960f7890ed7: Mike S5
-      352fdc00-2ba9-44d4-90b5-0912c987e37d: Mike S5 Trunk
-      b4cde339-fb97-4619-9d7d-a8663a418753: Holly Santa Fe
-      40cf4348-6ab2-4823-aaca-9f0814793154: Holly Sante Fe Trunk
+      6c011180-768e-4bcc-98ce-ce3dd2a32ee6: Mike S5
+      b973423d-2a72-41b7-90ad-ba404f5cbce6: Mike S5 Trunk
+      53285862-0fe6-4776-8afa-d398dbaee12c: Holly Santa Fe
+      f7219531-6c59-4a5d-9f28-d4681a907d73: Holly Sante Fe Trunk
       85e387a4-90b1-4241-afe2-f5303bfb2aa1: Holly Tundra
     users:
       80ad218b0cf54379b5ee622fbb721c6b: Mike
@@ -1050,7 +1050,7 @@
   - alias: Reset Recycle Is Out if day after Recycle Day
     if:
     - condition: numeric_state
-      entity_id: sensor.moco_recycle_days_ai
+      entity_id: sensor.recycle_days_from_now
       above: 2
     then:
     - action: input_boolean.turn_off
@@ -1503,8 +1503,8 @@
   - alias: Send Recycle Notification if necessary
     if:
     - condition: template
-      value_template: '{{ states("sensor.moco_recycle_days_ai") | int(7) < 1 and states("input_boolean.recycle_is_out")
-        == "off" }}'
+      value_template: '{{ states("sensor.recycle_days_from_now") | int(6) < 1 and
+        states("input_boolean.recycle_is_out") == "off" }}'
     then:
     - data:
         message: Recycling collection is tomorrow and Recycle is not out!
@@ -2207,29 +2207,88 @@
       data: {}
   mode: single
 - id: '1671832619134'
-  trace:
-    stored_traces: 20
-  alias: Lighting - Bedroom - Holly in Bed LEDs off
-  description: Disable the LEDs on the light switches when Holly is in bed.
+  alias: Lighting - Bedroom - Toggle Switch LEDs
+  description: Toggle the LEDs on the switches
   triggers:
   - entity_id:
     - sensor.holly_is_in_bed
     to: In Bed
     trigger: state
+    id: holly_in_bed
+    enabled: false
+  - entity_id:
+    - sensor.holly_is_in_bed
+    trigger: state
+    id: holly_not_in_bed
+    from:
+    - In Bed
+    enabled: false
+  - entity_id:
+    - sensor.mike_is_in_bed
+    to:
+    - In Bed
+    trigger: state
+    id: mike_in_bed
+    enabled: false
+  - entity_id:
+    - sensor.mike_is_in_bed
+    trigger: state
+    id: mike_not_in_bed
+    from:
+    - In Bed
+    enabled: false
+  - alias: Sun down, Alarm armed_home, Bedroom lights off
+    trigger: template
+    value_template: "{{ (states(\"alarm_control_panel.home_alarm\") == \"armed_home\"\n
+      \  and states(\"light.dresser_lamp\") == \"off\"\n   and states(\"light.bedroom_fan_light\")
+      == \"off\"\n   and states(\"sun.sun\") == \"below_horizon\")\n   == True }}\n"
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+    id: sun_down_alarm_armedhome_lights_off
   conditions: []
   actions:
-  - data:
-      topic: cmnd/dresser_lamp/ledpower
-      payload: '1'
-    action: mqtt.publish
-  - data:
-      topic: cmnd/master_bath_light/ledpower
-      payload: '1'
-    action: mqtt.publish
-  - data:
-      topic: cmnd/master_bath_fan/ledpower
-      payload: '1'
-    action: mqtt.publish
+  - if:
+    - condition: trigger
+      id:
+      - holly_in_bed
+      - mike_in_bed
+      - sun_down_alarm_armedhome_lights_off
+    then:
+    - data:
+        topic: cmnd/dresser_lamp/ledpower
+        payload: '1'
+      action: mqtt.publish
+      alias: Turn off Dresser Lamp Switch LED
+    - data:
+        topic: cmnd/master_bath_light/ledpower
+        payload: '1'
+      action: mqtt.publish
+      alias: Turn off Master Bath Light Switch LED
+    - data:
+        topic: cmnd/master_bath_fan/ledpower
+        payload: '1'
+      action: mqtt.publish
+      alias: Turn off Master Bath Fan Switch LED
+    else:
+    - data:
+        topic: cmnd/dresser_lamp/ledstate
+        payload: '1'
+      action: mqtt.publish
+      alias: Turn on Dresser Lamp Switch LED
+    - data:
+        topic: cmnd/master_bath_light/ledstate
+        payload: '1'
+      action: mqtt.publish
+      alias: Turn on Master Bath Light Switch LED
+    - data:
+        topic: cmnd/master_bath_fan/ledstate
+        payload: '1'
+      action: mqtt.publish
+      alias: Turn on Master Bath Fan Switch LED
+  trace:
+    stored_traces: 20
   mode: single
 - id: '1671832783300'
   trace:
@@ -3868,4 +3927,33 @@
           alias: Log that Frigate Restarted
       alias: Pet Cam Plug Turrned Off (or Frigate Restarted)
     alias: Pet Cam turns On or Off (Or Frigate Restarts)
+  mode: single
+- id: '1772337695514'
+  alias: Turn off Hallway Light at 3 AM
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - light.hallway_light
+    to:
+    - 'on'
+  conditions:
+  - condition: time
+    after: 02:59:00
+    before: 03:15:00
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id: light.hallway_light
+    data: {}
+  - action: script.send_ntfy_notification
+    metadata: {}
+    data:
+      topic:
+      - homeassistant-mike
+      priority: 3
+      icon_url: '%ha%/local/images/homeassistant-icon.png'
+      title: Hallway Light Turned Off
+      message: The Hallway Light turned on at 3 AM and was turned off
   mode: single

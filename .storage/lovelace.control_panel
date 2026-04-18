@@ -159,7 +159,7 @@
                   "type": "custom:mushroom-template-card",
                   "icon": "mdi:recycle",
                   "features_position": "bottom",
-                  "color": "{% if state_attr(\"sensor.moco_recycle_day\", \"days_string\") == \"Today\" and states(\"input_boolean.recycle_is_out\") == \"off\" %}red{% elif state_attr(\"sensor.moco_recycle_day\", \"days_string\") == \"Tomorrow\" and states(\"input_boolean.recycle_is_out\") == \"off\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
+                  "color": "{% if states('sensor.recycle_days_string_from_now') == \"Today\" and states(\"input_boolean.recycle_is_out\") == \"off\" %}red{% elif states('sensor.recycle_days_string_from_now') == \"Tomorrow\" and states(\"input_boolean.recycle_is_out\") == \"off\" %}var(--state-active-color){% else %}var(--state-icon-color){% endif %}\n",
                   "grid_options": {
                     "columns": 2,
                     "rows": 1.34
@@ -175,7 +175,7 @@
                     "action": "none"
                   },
                   "vertical": true,
-                  "primary": "{{ state_attr('sensor.moco_recycle_day', 'days_string') }}",
+                  "primary": "{{ states('sensor.recycle_days_string_from_now') }}",
                   "card_mod": {
                     "style": "ha-tile-icon {\n  margin-top: -11px !important;\n  --tile-icon-size: 48px;\n  --mdc-icon-size: 46px;\n}\nha-tile-info {\n  margin-top: -15px;\n  --tile-info-primary-font-size: 16px;\n  --tile-info-secondary-font-size: 15px;\n}\n"
                   }
@@ -1597,7 +1597,7 @@
                     },
                     {
                       "type": "custom:multiple-entity-row",
-                      "entity": "sensor.moco_recycle_day",
+                      "entity": "sensor.recycle_day_string",
                       "name": "Schedule",
                       "icon": "mdi:calendar",
                       "tap_action": {
@@ -1654,8 +1654,7 @@
                           }
                         },
                         {
-                          "entity": "sensor.moco_recycle_day",
-                          "attribute": "days_string",
+                          "entity": "sensor.recycle_days_string_from_now",
                           "name": "Recycle",
                           "styles": {
                             "color": "var(--recycle-color)",
@@ -1670,7 +1669,7 @@
                           }
                         },
                         {
-                          "entity": "sensor.moco_recycle_day",
+                          "entity": "sensor.recycle_day_string",
                           "name": "Rec Day",
                           "styles": {
                             "color": "var(--recycle-color)",
@@ -1687,7 +1686,7 @@
                       ],
                       "show_state": false,
                       "card_mod": {
-                        "style": ".entity {\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if state_attr('sensor.moco_recycle_day', 'days_string') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif state_attr('sensor.moco_recycle_day', 'days_string') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n}\n"
+                        "style": ".entity {\n  --mail-color: {% if states('input_boolean.mail_delivered') == 'on' %}var(--state-active-color){% else %}var(--primary-text-color){% endif %};\n  --cleaners-color: {% if is_state('sensor.days_until_cleaners', 'Tomorrow') %}var(--state-active-color){% elif is_state('sensor.days_until_cleaners', 'Today') %}#00FF00{% else %}var(--primary-text-color){% endif %};\n  --trash-color: {% if is_state('sensor.trash', 'Tomorrow') and is_state('input_boolean.trash_is_out', 'off') %}var(--state-active-color){% elif is_state('sensor.trash', 'Today') and is_state('input_boolean.trash_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n  --recycle-color: {% if states('sensor.recycle_days_string_from_now') == 'Tomorrow' and is_state('input_boolean.recycle_is_out', 'off') %}var(--state-active-color){% elif states('sensor.recycle_days_string_from_now') == 'Today' and is_state('input_boolean.recycle_is_out', 'off') %}red{% else %}var(--primary-text-color){% endif %};\n}\n"
                       }
                     },
                     {
